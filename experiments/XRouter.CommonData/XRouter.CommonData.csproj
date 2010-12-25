@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C8B98D9A-D964-4EDD-8409-9CD0EC3795F5}</ProjectGuid>
+    <ProjectGuid>{2516115E-3517-425B-B18C-1B42BCD13D11}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XRouter.Simulator</RootNamespace>
-    <AssemblyName>XRouter.Simulator</AssemblyName>
+    <RootNamespace>XRouter.CommonData</RootNamespace>
+    <AssemblyName>XRouter.CommonData</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -54,17 +54,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Simulation.cs" />
-    <Compile Include="SimulatorControl.xaml.cs">
-      <DependentUpon>SimulatorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="FileComponentsDataStorage.cs" />
-    <Page Include="SimulatorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -89,14 +78,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XRouter.Components.Core\XRouter.Components.Core.csproj">
-      <Project>{D5C16C15-A034-4988-BB5C-9A697094B886}</Project>
-      <Name>XRouter.Components.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\XRouter.ComponentWatching\XRouter.ComponentWatching.csproj">
-      <Project>{A202088C-1E8D-476A-B663-339225901956}</Project>
-      <Name>XRouter.ComponentWatching</Name>
-    </ProjectReference>
+    <Folder Include="ComponentsDataStorage\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

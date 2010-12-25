@@ -55,10 +55,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component.cs" />
-    <Compile Include="ComponentWatcher.xaml.cs">
-      <DependentUpon>ComponentWatcher.xaml</DependentUpon>
+    <Compile Include="ComponentWatcherControl.xaml.cs">
+      <DependentUpon>ComponentWatcherControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IRepresentationProvider.cs" />
+    <Compile Include="IWatchableComponent.cs" />
     <Compile Include="IComponentsDataStorage.cs" />
     <Compile Include="WatchableComponentAttribute.cs" />
   </ItemGroup>
@@ -87,7 +87,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ComponentWatcher.xaml">
+    <Page Include="ComponentWatcherControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

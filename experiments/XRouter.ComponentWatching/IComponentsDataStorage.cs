@@ -8,7 +8,7 @@ namespace XRouter.ComponentWatching
 {
     public interface IComponentsDataStorage
     {        
-        Point GetLocation(object componentObject);
-        void SetLocation(object componentObject, Point location);
+        Point GetLocation(string componentName);
+        void SetLocation(string componentName, Point location);
     }
 }

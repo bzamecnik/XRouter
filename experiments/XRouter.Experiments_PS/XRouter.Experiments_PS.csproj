@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C8B98D9A-D964-4EDD-8409-9CD0EC3795F5}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{6B18084E-AAC6-4661-BEF7-69E2F0AD26E6}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XRouter.Simulator</RootNamespace>
-    <AssemblyName>XRouter.Simulator</AssemblyName>
+    <RootNamespace>XRouter.Experiments_PS</RootNamespace>
+    <AssemblyName>XRouter.Experiments_PS</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -35,9 +35,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -54,15 +51,22 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Simulation.cs" />
-    <Compile Include="SimulatorControl.xaml.cs">
-      <DependentUpon>SimulatorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="FileComponentsDataStorage.cs" />
-    <Page Include="SimulatorControl.xaml">
-      <SubType>Designer</SubType>
+    <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -89,6 +93,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Components\" />
+    <Folder Include="Simulations\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\XRouter.Components.Core\XRouter.Components.Core.csproj">
       <Project>{D5C16C15-A034-4988-BB5C-9A697094B886}</Project>
       <Name>XRouter.Components.Core</Name>
@@ -96,6 +104,14 @@
     <ProjectReference Include="..\XRouter.ComponentWatching\XRouter.ComponentWatching.csproj">
       <Project>{A202088C-1E8D-476A-B663-339225901956}</Project>
       <Name>XRouter.ComponentWatching</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XRouter.Experiments.Permanent\XRouter.Experiments.Permanent.csproj">
+      <Project>{1AA629AF-7F1B-4CCF-B953-2E3EAD4E4601}</Project>
+      <Name>XRouter.Experiments.Permanent</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XRouter.Simulator\XRouter.Simulator.csproj">
+      <Project>{C8B98D9A-D964-4EDD-8409-9CD0EC3795F5}</Project>
+      <Name>XRouter.Simulator</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using XRouter.Utils.DataStructures;
+using XRouter.Utils.DesignTemplates.NavigatedExploring;
 
 namespace XRouter.Utils.ObjectExploring
 {
@@ -27,7 +28,7 @@ namespace XRouter.Utils.ObjectExploring
             return context.Graph;
         }
 
-        private static void VisitObject(ObjectNavigator navigator, Context context)
+        private static void VisitObject(Navigator<ObjectInfo, ObjectLinkInfo> navigator, Context context)
         {
             object currentObject = navigator.Location.Object;
             if (context.Graph.Nodes.Contains(currentObject)) {
@@ -42,7 +43,7 @@ namespace XRouter.Utils.ObjectExploring
                 if (!context.ReferenceFilter(forwardLink.Info)) {
                     continue;
                 }
-                var targetNavigator = (ObjectNavigator)forwardLink.Navigate();
+                var targetNavigator = forwardLink.Navigate();
                 context.Graph.AddEdge(currentObject, targetNavigator.Location.Object);
                 VisitObject(targetNavigator, context);
             }

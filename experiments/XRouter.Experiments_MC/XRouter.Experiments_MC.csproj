@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{EBD1B7CF-320B-4DED-870E-25B66B937C52}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>XRouter.Experiments_MC</RootNamespace>
     <AssemblyName>XRouter.Experiments_MC</AssemblyName>
@@ -54,6 +54,12 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -67,6 +73,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Simulations\Trivial\SimulationProvider.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -79,7 +86,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Components\" />
-    <Folder Include="Permanent\Components\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XRouter.Components.Core\XRouter.Components.Core.csproj">
@@ -90,10 +96,24 @@
       <Project>{A202088C-1E8D-476A-B663-339225901956}</Project>
       <Name>XRouter.ComponentWatching</Name>
     </ProjectReference>
-    <ProjectReference Include="..\XRouter.Simulator.Api\XRouter.Simulator.Api.csproj">
-      <Project>{4696450A-9B0A-47BD-ABE6-5E879886C405}</Project>
-      <Name>XRouter.Simulator.Api</Name>
+    <ProjectReference Include="..\XRouter.Experiments.Permanent\XRouter.Experiments.Permanent.csproj">
+      <Project>{1AA629AF-7F1B-4CCF-B953-2E3EAD4E4601}</Project>
+      <Name>XRouter.Experiments.Permanent</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XRouter.Simulator\XRouter.Simulator.csproj">
+      <Project>{C8B98D9A-D964-4EDD-8409-9CD0EC3795F5}</Project>
+      <Name>XRouter.Simulator</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

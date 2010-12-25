@@ -9,9 +9,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Experiments_MC", "X
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Simulator", "XRouter.Simulator\XRouter.Simulator.csproj", "{C8B98D9A-D964-4EDD-8409-9CD0EC3795F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Simulator.Api", "XRouter.Simulator.Api\XRouter.Simulator.Api.csproj", "{4696450A-9B0A-47BD-ABE6-5E879886C405}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Utils", "XRouter.Utils\XRouter.Utils.csproj", "{81E634B5-2C5B-4483-8162-847020B7E240}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.CommonData", "XRouter.CommonData\XRouter.CommonData.csproj", "{2516115E-3517-425B-B18C-1B42BCD13D11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Experiments_SB", "XRouter.Experiments_SB\XRouter.Experiments_SB.csproj", "{E8AA9D88-62BC-47F5-BEB3-86FEFD9356BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Experiments_BZ", "XRouter.Experiments_BZ\XRouter.Experiments_BZ.csproj", "{F003197B-9D83-4D6E-91C9-8BE9E9DCFB3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Experiments_TK", "XRouter.Experiments_TK\XRouter.Experiments_TK.csproj", "{32280F70-D6CB-43AB-A940-3352844AC5D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Experiments_PS", "XRouter.Experiments_PS\XRouter.Experiments_PS.csproj", "{6B18084E-AAC6-4661-BEF7-69E2F0AD26E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Experiments.Permanent", "XRouter.Experiments.Permanent\XRouter.Experiments.Permanent.csproj", "{1AA629AF-7F1B-4CCF-B953-2E3EAD4E4601}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,14 +45,34 @@ Global
 		{C8B98D9A-D964-4EDD-8409-9CD0EC3795F5}.Debug|x86.Build.0 = Debug|x86
 		{C8B98D9A-D964-4EDD-8409-9CD0EC3795F5}.Release|x86.ActiveCfg = Release|x86
 		{C8B98D9A-D964-4EDD-8409-9CD0EC3795F5}.Release|x86.Build.0 = Release|x86
-		{4696450A-9B0A-47BD-ABE6-5E879886C405}.Debug|x86.ActiveCfg = Debug|x86
-		{4696450A-9B0A-47BD-ABE6-5E879886C405}.Debug|x86.Build.0 = Debug|x86
-		{4696450A-9B0A-47BD-ABE6-5E879886C405}.Release|x86.ActiveCfg = Release|x86
-		{4696450A-9B0A-47BD-ABE6-5E879886C405}.Release|x86.Build.0 = Release|x86
 		{81E634B5-2C5B-4483-8162-847020B7E240}.Debug|x86.ActiveCfg = Debug|x86
 		{81E634B5-2C5B-4483-8162-847020B7E240}.Debug|x86.Build.0 = Debug|x86
 		{81E634B5-2C5B-4483-8162-847020B7E240}.Release|x86.ActiveCfg = Release|x86
 		{81E634B5-2C5B-4483-8162-847020B7E240}.Release|x86.Build.0 = Release|x86
+		{2516115E-3517-425B-B18C-1B42BCD13D11}.Debug|x86.ActiveCfg = Debug|x86
+		{2516115E-3517-425B-B18C-1B42BCD13D11}.Debug|x86.Build.0 = Debug|x86
+		{2516115E-3517-425B-B18C-1B42BCD13D11}.Release|x86.ActiveCfg = Release|x86
+		{2516115E-3517-425B-B18C-1B42BCD13D11}.Release|x86.Build.0 = Release|x86
+		{E8AA9D88-62BC-47F5-BEB3-86FEFD9356BF}.Debug|x86.ActiveCfg = Debug|x86
+		{E8AA9D88-62BC-47F5-BEB3-86FEFD9356BF}.Debug|x86.Build.0 = Debug|x86
+		{E8AA9D88-62BC-47F5-BEB3-86FEFD9356BF}.Release|x86.ActiveCfg = Release|x86
+		{E8AA9D88-62BC-47F5-BEB3-86FEFD9356BF}.Release|x86.Build.0 = Release|x86
+		{F003197B-9D83-4D6E-91C9-8BE9E9DCFB3D}.Debug|x86.ActiveCfg = Debug|x86
+		{F003197B-9D83-4D6E-91C9-8BE9E9DCFB3D}.Debug|x86.Build.0 = Debug|x86
+		{F003197B-9D83-4D6E-91C9-8BE9E9DCFB3D}.Release|x86.ActiveCfg = Release|x86
+		{F003197B-9D83-4D6E-91C9-8BE9E9DCFB3D}.Release|x86.Build.0 = Release|x86
+		{32280F70-D6CB-43AB-A940-3352844AC5D8}.Debug|x86.ActiveCfg = Debug|x86
+		{32280F70-D6CB-43AB-A940-3352844AC5D8}.Debug|x86.Build.0 = Debug|x86
+		{32280F70-D6CB-43AB-A940-3352844AC5D8}.Release|x86.ActiveCfg = Release|x86
+		{32280F70-D6CB-43AB-A940-3352844AC5D8}.Release|x86.Build.0 = Release|x86
+		{6B18084E-AAC6-4661-BEF7-69E2F0AD26E6}.Debug|x86.ActiveCfg = Debug|x86
+		{6B18084E-AAC6-4661-BEF7-69E2F0AD26E6}.Debug|x86.Build.0 = Debug|x86
+		{6B18084E-AAC6-4661-BEF7-69E2F0AD26E6}.Release|x86.ActiveCfg = Release|x86
+		{6B18084E-AAC6-4661-BEF7-69E2F0AD26E6}.Release|x86.Build.0 = Release|x86
+		{1AA629AF-7F1B-4CCF-B953-2E3EAD4E4601}.Debug|x86.ActiveCfg = Debug|x86
+		{1AA629AF-7F1B-4CCF-B953-2E3EAD4E4601}.Debug|x86.Build.0 = Debug|x86
+		{1AA629AF-7F1B-4CCF-B953-2E3EAD4E4601}.Release|x86.ActiveCfg = Release|x86
+		{1AA629AF-7F1B-4CCF-B953-2E3EAD4E4601}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

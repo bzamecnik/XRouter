@@ -9,7 +9,22 @@ namespace XRouter.Utils.DataStructures
     {
         public OrientedGraph<TTargetNode> Clone<TTargetNode>(Func<TNode, TTargetNode> convert)
         {
-            return null;
+            var nodeMapping = new Dictionary<TNode, TTargetNode>();
+            OrientedGraph<TTargetNode> result = new OrientedGraph<TTargetNode>();
+
+            foreach (TNode node in Nodes) {
+                TTargetNode convertedNode = convert(node);
+                nodeMapping.Add(node, convertedNode);
+                result.Nodes.Add(convertedNode);
+            }
+
+            foreach (var edge in outboundEdges.SelectMany(lst => lst.Value)) {
+                var sourceNode = nodeMapping[edge.Source];
+                var targetNode = nodeMapping[edge.Target];
+                result.AddEdge(sourceNode, targetNode);
+            }
+
+            return result;
         }
     }
 }
