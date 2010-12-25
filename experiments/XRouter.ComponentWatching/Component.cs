@@ -73,6 +73,10 @@ namespace XRouter.ComponentWatching
             RepresentationContainer = CreateRepresentationContainer(representation, Name);
             Canvas.SetLeft(RepresentationContainer, Location.X);
             Canvas.SetTop(RepresentationContainer, Location.Y);
+
+            representation.SizeChanged += delegate {
+                VisualBoundsChanged();
+            };
         }
 
         private FrameworkElement CreateRepresentationContainer(FrameworkElement representation, string componentName)
@@ -95,7 +99,7 @@ namespace XRouter.ComponentWatching
             dragArea.MouseRightButtonDown += delegate { CancelDragging(); };
 
             FrameworkElement result = new Border {
-                BorderBrush = Brushes.LightGray,
+                BorderBrush = Brushes.Black,
                 BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(cornerRadius),
                 Child = new StackPanel {

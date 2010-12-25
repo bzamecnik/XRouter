@@ -6,6 +6,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <Canvas Name="uiCanvas" Width="2000" Height="2000" Background="LightYellow"/>
+        <Canvas Name="uiCanvas" Width="2000" Height="2000" />
     </ScrollViewer>
 </UserControl>

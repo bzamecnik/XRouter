@@ -47,8 +47,20 @@ namespace XRouter.ComponentWatching
         }
 
         private OrientedGraph<Component> CreateComponentGraph(IEnumerable<object> roots)
-        {            
-            OrientedGraph<object> objectGraph = ObjectGraphBuilder.CreateGraph(roots);
+        {
+            Func<ObjectInfo, bool> obejctFilter = objectInfo => true;
+            Func<ObjectLinkInfo, bool> referenceFilter = delegate(ObjectLinkInfo referenceInfo) {
+                if (referenceInfo.IsInField) {
+                    var hideReferenceAttributeType = typeof(HideReferenceAttribute);
+                    bool hideReference = referenceInfo.ContainerField.GetCustomAttributes(hideReferenceAttributeType, true).Any();
+                    if (hideReference) {
+                        return false;
+                    }
+                }
+                return true;
+            };
+
+            OrientedGraph<object> objectGraph = ObjectGraphBuilder.CreateGraph(roots, obejctFilter, referenceFilter);
             objectGraph.ContractNodes(obj => !Component.IsComponent(obj));
             var componentGraph = objectGraph.Clone(obj => new Component(obj, ComponentsDataStorage));
             return componentGraph;

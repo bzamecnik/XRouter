@@ -55,8 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonDelegates.cs" />
-    <Compile Include="IChannelInput.cs" />
-    <Compile Include="IChannelOutput.cs" />
+    <Compile Include="IMessageConsument.cs" />
+    <Compile Include="IMessageProducent.cs" />
     <Compile Include="IMessagingComponent.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -43,7 +43,10 @@ namespace XRouter.Utils.ObjectExploring
                 if (!context.ReferenceFilter(forwardLink.Info)) {
                     continue;
                 }
-                var targetNavigator = forwardLink.Navigate();
+                if (forwardLink.TargetLocation.RealKind == TypeKind.Null) {
+                    continue;
+                }
+                var targetNavigator = forwardLink.Navigate();                
                 context.Graph.AddEdge(currentObject, targetNavigator.Location.Object);
                 VisitObject(targetNavigator, context);
             }

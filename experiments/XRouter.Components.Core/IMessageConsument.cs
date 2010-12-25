@@ -5,8 +5,8 @@ using System.Text;
 
 namespace XRouter.Components.Core
 {
-    public interface IChannelOutput : IMessagingComponent
-    {        
-        event DispatchMessageDelegate MessageReceived;
+    public interface IMessageConsument : IMessagingComponent
+    {
+        void Send(Message message);
     }
 }

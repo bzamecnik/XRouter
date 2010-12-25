@@ -54,6 +54,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MC\Components\Common\Connector.cs" />
+    <Compile Include="MC\Components\Common\ManualMessageSender.cs" />
+    <Compile Include="MC\Components\Common\MessageDisplay.cs" />
     <Compile Include="MC\Simulations\Sample1\SampleSimulation1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -79,14 +82,13 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BZ\Compoenents\" />
+    <Folder Include="BZ\Components\" />
     <Folder Include="BZ\Simulations\" />
-    <Folder Include="MC\Compoenents\" />
-    <Folder Include="PS\Compoenents\" />
+    <Folder Include="PS\Components\" />
     <Folder Include="PS\Simulations\" />
-    <Folder Include="SB\Compoenents\" />
+    <Folder Include="SB\Components\" />
     <Folder Include="SB\Simulations\" />
-    <Folder Include="TK\Compoenents\" />
+    <Folder Include="TK\Components\" />
     <Folder Include="TK\Simulations\" />
   </ItemGroup>
   <ItemGroup>

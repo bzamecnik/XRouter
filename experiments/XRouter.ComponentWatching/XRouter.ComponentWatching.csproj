@@ -58,6 +58,7 @@
     <Compile Include="ComponentWatcherControl.xaml.cs">
       <DependentUpon>ComponentWatcherControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HideReferenceAttribute.cs" />
     <Compile Include="IWatchableComponent.cs" />
     <Compile Include="IComponentsDataStorage.cs" />
     <Compile Include="WatchableComponentAttribute.cs" />

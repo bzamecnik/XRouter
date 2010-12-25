@@ -38,7 +38,7 @@ namespace XRouter.Simulator
             StringBuilder result = new StringBuilder(name);
             for (int i = 0; i < name.Length; i++) {
                 char c = result[i];
-                bool isSafeChar = char.IsLetterOrDigit(c) || (c == ' ') || (c == '_');
+                bool isSafeChar = char.IsLetterOrDigit(c) || (c == ' ') || (c == '_') || (c == '-');
                 if (!isSafeChar) {
                     result[i] = '_';
                 }
