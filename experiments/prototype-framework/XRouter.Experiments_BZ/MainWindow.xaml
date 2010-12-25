@@ -1,0 +1,9 @@
+﻿<Window x:Class="XRouter.Experiments_BZ.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Simulator" Width="900" Height="500"
+        WindowState="Maximized">
+    <Grid>
+        <Border Name="uiMainContainer" />
+    </Grid>
+</Window>
