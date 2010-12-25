@@ -54,12 +54,22 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MC\Components\Common\Connector.cs" />
-    <Compile Include="MC\Components\Common\ManualMessageSender.cs" />
-    <Compile Include="MC\Components\Common\MessageDisplay.cs" />
-    <Compile Include="MC\Components\Common\WorkflowProcessor.cs" />
-    <Compile Include="MC\Components\Version1\BroadcastingWorkflowProcessor.cs" />
-    <Compile Include="MC\Simulations\Sample1\SampleSimulation1.cs" />
+    <Compile Include="BZ\Temp.cs" />
+    <Compile Include="MC\Components\Common\Connector_v1.cs" />
+    <Compile Include="MC\Components\Common\IFlowContext_v1.cs" />
+    <Compile Include="MC\Components\Common\IMessageFlowManagement_v1.cs" />
+    <Compile Include="MC\Components\Common\ManualMessageSender_v1.cs" />
+    <Compile Include="MC\Components\Common\MessageDisplay_v1.cs" />
+    <Compile Include="MC\Components\Common\MesageFlowProcessor_v1.cs" />
+    <Compile Include="MC\Components\Samples\_Flowprocessors\BroadcastingMessageFlowProcessor_v1.cs" />
+    <Compile Include="MC\Components\Samples\_FlowContext\FlowContext_v1.cs" />
+    <Compile Include="MC\Components\Samples\_Flowprocessors\BroadcastingMessageFlowProcessor_v2.cs" />
+    <Compile Include="MC\Components\Samples\_Management\BasicMessageFlowManagementStorage_v1.cs.cs" />
+    <Compile Include="MC\Components\Samples\_Management\BasicMessageFlowManagement_v1.cs" />
+    <Compile Include="MC\Components\Samples\_Management\IBasicMessageFlowManagementStorage_v1.cs" />
+    <Compile Include="MC\Components\Samples\_Management\IBasicMessageFlowManagement_v1.cs" />
+    <Compile Include="MC\Components\Samples\_Management\BasicMessageFlowManagementProxy_v1.cs" />
+    <Compile Include="MC\Simulations\Samples\SampleSimulation1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -73,6 +83,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="PS\Temp.cs" />
+    <Compile Include="SB\Temp.cs" />
+    <Compile Include="TK\Temp.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -9,7 +9,7 @@ Sender2;7;346
 Sender1;8;133
 Sender2->BroadcastingWorkflowProcessor_Input1;97;552
 Sender2->Broadcaster_Input1;151;550
-Broadcaster_Output1->Display2;500;614
+Broadcaster_Output1->Display2;500;610
 Broadcaster_Output0->Display1;501;22
 Sender1->Broadcaster_Input0;150;66
 Broadcaster;376;315

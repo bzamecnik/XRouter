@@ -7,7 +7,7 @@ using XRouter.Simulator;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace XRouter.Experiments.Permanent.MC.Simulations.Sample1
+namespace XRouter.Experiments.Permanent.MC.Simulations.Samples
 {
     public class SampleSimulation1 : Simulation
     {

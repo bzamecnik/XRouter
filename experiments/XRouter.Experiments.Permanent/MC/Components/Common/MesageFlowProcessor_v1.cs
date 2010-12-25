@@ -11,7 +11,20 @@ using System.Threading.Tasks;
 
 namespace XRouter.Experiments.Permanent.MC.Components.Common
 {
-    public abstract class WorkflowProcessor : IWatchableComponent
+    public abstract class MesageFlowProcessor_v1 : MesageFlowProcessor_v1<IMessageFlowManagement_v1>
+    {
+        public MesageFlowProcessor_v1(string name, int inputPoints, int outputPoints)
+            : base(name, inputPoints, outputPoints, new DefaultManagement())
+        {
+        }
+
+        private class DefaultManagement : IMessageFlowManagement_v1
+        {        
+        }
+    }
+
+    public abstract class MesageFlowProcessor_v1<TManagement> : IWatchableComponent
+        where TManagement : IMessageFlowManagement_v1
     {
         private List<InputPoint> InternalInputPoints { get; set; }
         private List<OutputPoint> InternalOutputPoints { get; set; }
@@ -24,9 +37,12 @@ namespace XRouter.Experiments.Permanent.MC.Components.Common
 
         public string Name { get; private set; }
 
-        public WorkflowProcessor(string name, int inputPoints, int outputPoints)
+        protected TManagement Management { get; private set; }
+
+        public MesageFlowProcessor_v1(string name, int inputPoints, int outputPoints, TManagement management)
         {
             Name = name;
+            Management = management;
 
             InternalInputPoints = new List<InputPoint>();
             InternalOutputPoints = new List<OutputPoint>();
@@ -63,7 +79,7 @@ namespace XRouter.Experiments.Permanent.MC.Components.Common
 
         protected class InputPoint : IMessageConsument
         {
-            private WorkflowProcessor Owner { get; set; }
+            private MesageFlowProcessor_v1<TManagement> Owner { get; set; }
             public int Index { get; private set; }
 
             public object MessagesLock { get; private set; }
@@ -75,7 +91,7 @@ namespace XRouter.Experiments.Permanent.MC.Components.Common
                 get { return string.Format("{0}_Input{1}", Owner.Name, Index); }
             }
 
-            public InputPoint(WorkflowProcessor owner, int index)
+            public InputPoint(MesageFlowProcessor_v1<TManagement> owner, int index)
             {
                 Owner = owner;
                 Index = index;
@@ -99,7 +115,7 @@ namespace XRouter.Experiments.Permanent.MC.Components.Common
 
         protected class OutputPoint : IMessageProducent
         {
-            private WorkflowProcessor Owner { get; set; }
+            private MesageFlowProcessor_v1<TManagement> Owner { get; set; }
             public int Index { get; private set; }
 
             private event DispatchMessageDelegate InternalMessageSent = delegate { };
@@ -112,7 +128,7 @@ namespace XRouter.Experiments.Permanent.MC.Components.Common
                 get { return string.Format("{0}_Output{1}", Owner.Name, Index); }
             }
 
-            public OutputPoint(WorkflowProcessor owner, int index)
+            public OutputPoint(MesageFlowProcessor_v1<TManagement> owner, int index)
             {
                 Owner = owner;
                 Index = index;

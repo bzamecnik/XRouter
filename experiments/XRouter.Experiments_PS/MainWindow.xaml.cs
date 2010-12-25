@@ -12,6 +12,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using XRouter.Simulator;
+using MC = XRouter.Experiments.Permanent.MC;
+using BZ = XRouter.Experiments.Permanent.BZ;
+using PS = XRouter.Experiments.Permanent.PS;
+using SB = XRouter.Experiments.Permanent.SB;
+using TK = XRouter.Experiments.Permanent.TK;
 
 namespace XRouter.Experiments_PS
 {
@@ -29,7 +34,7 @@ namespace XRouter.Experiments_PS
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Simulation simulation = new XRouter.Experiments.Permanent.MC.Simulations.Sample1.SampleSimulation1();
+            Simulation simulation = new MC.Simulations.Samples.SampleSimulation1();
 
             var uiSimulator = new SimulatorControl(simulation);
             uiMainContainer.Child = uiSimulator;

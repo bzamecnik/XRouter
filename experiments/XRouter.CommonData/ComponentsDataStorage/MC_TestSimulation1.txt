@@ -1,4 +1,4 @@
 Sender;120;125
 Display;701;100
 Connector_Sender_Display;632;276
-Sender->Display;431;174
+Sender->Display;455;194

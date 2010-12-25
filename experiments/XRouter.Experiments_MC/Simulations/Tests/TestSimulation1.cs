@@ -13,9 +13,9 @@ namespace XRouter.Experiments_MC.Simulations.Tests
         public TestSimulation1()
             : base("MC_TestSimulation1")
         {
-            var sender = new ManualMessageSender("Sender");
-            var display = new MessageDisplay("Display");
-            var connect_sender_display = new Connector(sender, display);
+            var sender = new ManualMessageSender_v1("Sender");
+            var display = new MessageDisplay_v1("Display");
+            var connect_sender_display = new Connector_v1(sender, display);
             
 
             Components.Add(sender);

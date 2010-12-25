@@ -210,5 +210,14 @@ namespace XRouter.ComponentWatching
         }
 
         #endregion
+
+        private void uiZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double scale = uiZoom.Value;
+            if (uiCanvas != null) {
+                uiCanvas.LayoutTransform = new ScaleTransform(scale, scale);                
+            }
+            uiZoomHeader.Text = string.Format("Zoom {0:0.00}x", scale);
+        }
     }
 }

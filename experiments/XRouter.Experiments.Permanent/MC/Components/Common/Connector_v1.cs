@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace XRouter.Experiments.Permanent.MC.Components.Common
 {
-    public class Connector : IWatchableComponent
+    public class Connector_v1 : IWatchableComponent
     {
         private Queue<Message> messages = new Queue<Message>();
 
@@ -33,7 +33,7 @@ namespace XRouter.Experiments.Permanent.MC.Components.Common
             }
         }
 
-        public Connector(IMessageProducent producent, IMessageConsument consument)
+        public Connector_v1(IMessageProducent producent, IMessageConsument consument)
         {
             Producent = producent;
             Consument = consument;

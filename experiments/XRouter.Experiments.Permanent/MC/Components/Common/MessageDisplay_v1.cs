@@ -9,11 +9,11 @@ using System.Windows.Controls;
 
 namespace XRouter.Experiments.Permanent.MC.Components.Common
 {
-    public class MessageDisplay : IMessageConsument, IWatchableComponent
+    public class MessageDisplay_v1 : IMessageConsument, IWatchableComponent
     {
         public string Name { get; private set; }
 
-        public MessageDisplay(string name)
+        public MessageDisplay_v1(string name)
         {
             Name = name;
         }
@@ -57,7 +57,7 @@ namespace XRouter.Experiments.Permanent.MC.Components.Common
 
             uiAutoClear = new CheckBox {
                 Content = "Auto clear",
-                IsChecked = false
+                IsChecked = true
             };
 
             var uiClear = new Button {

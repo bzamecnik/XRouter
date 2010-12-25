@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace XRouter.Experiments.Permanent.MC.Components.Common
 {
-    public class ManualMessageSender : IMessageProducent, IWatchableComponent
+    public class ManualMessageSender_v1 : IMessageProducent, IWatchableComponent
     {
         private static readonly string DefaultMessageContent = @"<Message>
 
@@ -22,7 +22,7 @@ namespace XRouter.Experiments.Permanent.MC.Components.Common
 
         public string Name { get; private set; }
 
-        public ManualMessageSender(string name)
+        public ManualMessageSender_v1(string name)
         {
             Name = name;
         }
