@@ -30,7 +30,7 @@ namespace XRouter.Experiments_MC
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Simulation simulation = new XRouter.Experiments_MC.Simulations.Tests.TestSimulation1();
+            Simulation simulation = new XRouter.Experiments_MC.Simulations.Tests.TestSimulation2();
 
             var uiSimulator = new SimulatorControl(simulation);
             uiMainContainer.Child = uiSimulator;

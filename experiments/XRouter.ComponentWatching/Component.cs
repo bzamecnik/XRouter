@@ -74,9 +74,11 @@ namespace XRouter.ComponentWatching
             Canvas.SetLeft(RepresentationContainer, Location.X);
             Canvas.SetTop(RepresentationContainer, Location.Y);
 
-            representation.SizeChanged += delegate {
-                VisualBoundsChanged();
-            };
+            if (representation != null) {
+                representation.SizeChanged += delegate {
+                    VisualBoundsChanged();
+                };
+            }
         }
 
         private FrameworkElement CreateRepresentationContainer(FrameworkElement representation, string componentName)

@@ -57,6 +57,8 @@
     <Compile Include="MC\Components\Common\Connector.cs" />
     <Compile Include="MC\Components\Common\ManualMessageSender.cs" />
     <Compile Include="MC\Components\Common\MessageDisplay.cs" />
+    <Compile Include="MC\Components\Common\WorkflowProcessor.cs" />
+    <Compile Include="MC\Components\Version1\BroadcastingWorkflowProcessor.cs" />
     <Compile Include="MC\Simulations\Sample1\SampleSimulation1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
