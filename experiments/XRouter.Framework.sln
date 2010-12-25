@@ -1,7 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Framework", "XRouter.Framework\XRouter.Framework.csproj", "{2F4E9F53-C4D0-41EA-A268-0110FD7A9E8D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.ComponentWatching", "XRouter.ComponentWatching\XRouter.ComponentWatching.csproj", "{A202088C-1E8D-476A-B663-339225901956}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Components.Core", "XRouter.Components.Core\XRouter.Components.Core.csproj", "{D5C16C15-A034-4988-BB5C-9A697094B886}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Experiments_MC", "XRouter.Experiments_MC\XRouter.Experiments_MC.csproj", "{EBD1B7CF-320B-4DED-870E-25B66B937C52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Simulator", "XRouter.Simulator\XRouter.Simulator.csproj", "{C8B98D9A-D964-4EDD-8409-9CD0EC3795F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Simulator.Api", "XRouter.Simulator.Api\XRouter.Simulator.Api.csproj", "{4696450A-9B0A-47BD-ABE6-5E879886C405}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Utils", "XRouter.Utils\XRouter.Utils.csproj", "{81E634B5-2C5B-4483-8162-847020B7E240}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,15 +19,32 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2F4E9F53-C4D0-41EA-A268-0110FD7A9E8D}.Debug|x86.ActiveCfg = Debug|x86
-		{2F4E9F53-C4D0-41EA-A268-0110FD7A9E8D}.Debug|x86.Build.0 = Debug|x86
-		{2F4E9F53-C4D0-41EA-A268-0110FD7A9E8D}.Release|x86.ActiveCfg = Release|x86
-		{2F4E9F53-C4D0-41EA-A268-0110FD7A9E8D}.Release|x86.Build.0 = Release|x86
+		{A202088C-1E8D-476A-B663-339225901956}.Debug|x86.ActiveCfg = Debug|x86
+		{A202088C-1E8D-476A-B663-339225901956}.Debug|x86.Build.0 = Debug|x86
+		{A202088C-1E8D-476A-B663-339225901956}.Release|x86.ActiveCfg = Release|x86
+		{A202088C-1E8D-476A-B663-339225901956}.Release|x86.Build.0 = Release|x86
+		{D5C16C15-A034-4988-BB5C-9A697094B886}.Debug|x86.ActiveCfg = Debug|x86
+		{D5C16C15-A034-4988-BB5C-9A697094B886}.Debug|x86.Build.0 = Debug|x86
+		{D5C16C15-A034-4988-BB5C-9A697094B886}.Release|x86.ActiveCfg = Release|x86
+		{D5C16C15-A034-4988-BB5C-9A697094B886}.Release|x86.Build.0 = Release|x86
+		{EBD1B7CF-320B-4DED-870E-25B66B937C52}.Debug|x86.ActiveCfg = Debug|x86
+		{EBD1B7CF-320B-4DED-870E-25B66B937C52}.Debug|x86.Build.0 = Debug|x86
+		{EBD1B7CF-320B-4DED-870E-25B66B937C52}.Release|x86.ActiveCfg = Release|x86
+		{EBD1B7CF-320B-4DED-870E-25B66B937C52}.Release|x86.Build.0 = Release|x86
+		{C8B98D9A-D964-4EDD-8409-9CD0EC3795F5}.Debug|x86.ActiveCfg = Debug|x86
+		{C8B98D9A-D964-4EDD-8409-9CD0EC3795F5}.Debug|x86.Build.0 = Debug|x86
+		{C8B98D9A-D964-4EDD-8409-9CD0EC3795F5}.Release|x86.ActiveCfg = Release|x86
+		{C8B98D9A-D964-4EDD-8409-9CD0EC3795F5}.Release|x86.Build.0 = Release|x86
+		{4696450A-9B0A-47BD-ABE6-5E879886C405}.Debug|x86.ActiveCfg = Debug|x86
+		{4696450A-9B0A-47BD-ABE6-5E879886C405}.Debug|x86.Build.0 = Debug|x86
+		{4696450A-9B0A-47BD-ABE6-5E879886C405}.Release|x86.ActiveCfg = Release|x86
+		{4696450A-9B0A-47BD-ABE6-5E879886C405}.Release|x86.Build.0 = Release|x86
+		{81E634B5-2C5B-4483-8162-847020B7E240}.Debug|x86.ActiveCfg = Debug|x86
+		{81E634B5-2C5B-4483-8162-847020B7E240}.Debug|x86.Build.0 = Debug|x86
+		{81E634B5-2C5B-4483-8162-847020B7E240}.Release|x86.ActiveCfg = Release|x86
+		{81E634B5-2C5B-4483-8162-847020B7E240}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(SpecExplorer.ActivityCompletionStatus) = preSolution
-		SpecExplorer.ActivityCompletionStatus = TestExisting: ;ModelFromScratch: 
 	EndGlobalSection
 EndGlobal

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace XRouter.Framework.Properties
+namespace XRouter.Utils.Properties
 {
 
 
