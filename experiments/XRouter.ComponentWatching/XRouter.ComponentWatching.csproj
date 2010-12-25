@@ -62,6 +62,7 @@
     <Compile Include="IWatchableComponent.cs" />
     <Compile Include="IComponentsDataStorage.cs" />
     <Compile Include="WatchableComponentAttribute.cs" />
+    <Compile Include="WatcherConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

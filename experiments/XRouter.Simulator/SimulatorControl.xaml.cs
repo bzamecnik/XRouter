@@ -36,6 +36,7 @@ namespace XRouter.Simulator
             ComponentWatcherControl uiWatcher = new ComponentWatcherControl();
             uiComponentWatcherContainer.Child = uiWatcher;
 
+            uiWatcher.Configuration = Simulation.WatcherConfiguration;            
             uiWatcher.LoadComponents(Simulation.Components, Simulation.Storage);
         }
     }

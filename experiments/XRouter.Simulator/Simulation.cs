@@ -14,12 +14,15 @@ namespace XRouter.Simulator
 
         public IComponentsDataStorage Storage { get; private set; }
 
+        public WatcherConfiguration WatcherConfiguration { get; private set; }
+
         public Simulation(string name)
         {
             Name = name;
 
             Storage = new FileComponentsDataStorage(this);
             Components = new List<object>();
+            WatcherConfiguration = new WatcherConfiguration();
         }
     }
 }

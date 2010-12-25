@@ -27,11 +27,17 @@ namespace XRouter.ComponentWatching
 
         private List<FrameworkElement> edgesElements = new List<FrameworkElement>();
 
+        internal Dictionary<string, int> NamesCounter { get; private set; }
+
+        public WatcherConfiguration Configuration { get; set; }
+
         public ComponentWatcherControl()
         {
             InitializeComponent();
 
             ComponentGraph = new OrientedGraph<Component>();
+            NamesCounter = new Dictionary<string, int>();
+            Configuration = new WatcherConfiguration();
         }
 
         public void LoadComponents(object root, IComponentsDataStorage storage)
@@ -41,6 +47,7 @@ namespace XRouter.ComponentWatching
 
         public void LoadComponents(IEnumerable<object> roots, IComponentsDataStorage storage)
         {
+            NamesCounter.Clear();
             ComponentsDataStorage = storage;
             ComponentGraph = CreateComponentGraph(roots);
             RedrawComponents();
@@ -48,6 +55,11 @@ namespace XRouter.ComponentWatching
 
         private OrientedGraph<Component> CreateComponentGraph(IEnumerable<object> roots)
         {
+            WatcherConfiguration configuration = Configuration;
+            if (configuration == null) {
+                configuration = new WatcherConfiguration();
+            }
+
             Func<ObjectInfo, bool> obejctFilter = objectInfo => true;
             Func<ObjectLinkInfo, bool> referenceFilter = delegate(ObjectLinkInfo referenceInfo) {
                 if (referenceInfo.IsInField) {
@@ -61,8 +73,21 @@ namespace XRouter.ComponentWatching
             };
 
             OrientedGraph<object> objectGraph = ObjectGraphBuilder.CreateGraph(roots, obejctFilter, referenceFilter);
-            objectGraph.ContractNodes(obj => !Component.IsComponent(obj));
-            var componentGraph = objectGraph.Clone(obj => new Component(obj, ComponentsDataStorage));
+            
+            if (!configuration.AllObjectsAreComponents) {                
+                objectGraph.ContractNodes(obj => !Component.IsComponent(obj));
+            }
+            if (configuration.CustomVisibilityFilter != null) {
+                objectGraph.ContractNodes(obj => !configuration.CustomVisibilityFilter(obj));
+            }
+            if (configuration.HidePrimitiveTypes) {
+                objectGraph.ContractNodes(obj => (obj.GetType() == typeof(string)) || (obj.GetType().IsPrimitive));
+            }
+            if (configuration.HideValueTypes) {
+                objectGraph.ContractNodes(obj => obj.GetType().IsValueType);
+            }
+
+            var componentGraph = objectGraph.Clone(obj => new Component(obj, ComponentsDataStorage, this));
             return componentGraph;
         }
 

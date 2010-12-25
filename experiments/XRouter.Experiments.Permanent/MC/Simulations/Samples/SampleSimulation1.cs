@@ -6,6 +6,7 @@ using XRouter.ComponentWatching;
 using XRouter.Simulator;
 using System.Windows;
 using System.Windows.Controls;
+using System.Xml.Linq;
 
 namespace XRouter.Experiments.Permanent.MC.Simulations.Samples
 {
@@ -14,9 +15,23 @@ namespace XRouter.Experiments.Permanent.MC.Simulations.Samples
         public SampleSimulation1()
             : base("MC_SampleSimulation1")
         {
-            Component1 component1 = new Component1();
-            component1.component2.component3.component1 = component1;
-            Components.Add(component1);
+            WatcherConfiguration.AllObjectsAreComponents = true;
+            //WatcherConfiguration.HidePrimitiveTypes = true;
+            //WatcherConfiguration.HideValueTypes = true;
+            //WatcherConfiguration.CustomVisibilityFilter = obj => (!(obj is Delegate)) && (!(obj is Array));
+
+            XDocument xDoc = XDocument.Parse(@"
+<Root>
+    <Child Name='Child1'/>
+    <Child Name='Child2'>text</Child>
+</Root>");
+
+            Components.Add(xDoc);
+
+
+            //Component1 component1 = new Component1();
+            //component1.component2.component3.component1 = component1;
+            //Components.Add(component1);            
         }
 
         [WatchableComponent("Component1")]

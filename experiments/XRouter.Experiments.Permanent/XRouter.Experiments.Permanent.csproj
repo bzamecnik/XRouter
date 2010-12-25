@@ -70,6 +70,7 @@
     <Compile Include="MC\Components\Samples\_Management\IBasicMessageFlowManagement_v1.cs" />
     <Compile Include="MC\Components\Samples\_Management\BasicMessageFlowManagementProxy_v1.cs" />
     <Compile Include="MC\Simulations\Samples\SampleSimulation1.cs" />
+    <Compile Include="MC\Simulations\Samples\SampleSimulation2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

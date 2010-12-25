@@ -18,7 +18,9 @@ namespace XRouter.ComponentWatching
 
         private IComponentsDataStorage Storage { get; set; }
 
-        public FrameworkElement RepresentationContainer { get; private set; }
+        public FrameworkElement RepresentationContainer { get; private set; }        
+
+        private ComponentWatcherControl Owner { get; set; }
         
         public Point Location {
             get { return Storage.GetLocation(Name); }
@@ -53,10 +55,11 @@ namespace XRouter.ComponentWatching
             return true;
         }
 
-        internal Component(object componentObject, IComponentsDataStorage storage)
+        internal Component(object componentObject, IComponentsDataStorage storage, ComponentWatcherControl owner)
         {
             ComponentObject = componentObject;
             Storage = storage;
+            Owner = owner;
 
             Type componentType = componentObject.GetType();
 
@@ -66,8 +69,20 @@ namespace XRouter.ComponentWatching
                 Name = watchableComponent.ComponentName;
                 representation = watchableComponent.CreateRepresentation();
             } else {
-                WatchableComponentAttribute componentAttribute = (WatchableComponentAttribute)componentType.GetCustomAttributes(typeof(WatchableComponentAttribute), true).Single();
-                Name = componentAttribute.ComponentName;
+                WatchableComponentAttribute componentAttribute = (WatchableComponentAttribute)componentType.GetCustomAttributes(typeof(WatchableComponentAttribute), true).SingleOrDefault();
+                if (componentAttribute != null) {
+                    Name = componentAttribute.ComponentName;
+                } else {
+                    Name = componentType.Name;
+                }
+            }
+
+            if (!Owner.NamesCounter.ContainsKey(Name)) {
+                Owner.NamesCounter.Add(Name, 0);
+            }
+            Owner.NamesCounter[Name]++;
+            if (Owner.NamesCounter[Name] > 1) {
+                Name = string.Format("{0}_{1}", Name, Owner.NamesCounter[Name] - 1);
             }
 
             RepresentationContainer = CreateRepresentationContainer(representation, Name);
@@ -127,10 +142,10 @@ namespace XRouter.ComponentWatching
 
         void DragArea_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            dragMouseLocationOnNode = e.GetPosition(RepresentationContainer);
-            isDragging = true;
-            dragArea.CaptureMouse();
+            dragMouseLocationOnNode = e.GetPosition(RepresentationContainer);                  
             currentDragLocation = Location;
+            dragArea.CaptureMouse();
+            isDragging = true;
         }
 
         void DragArea_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
