@@ -8,7 +8,7 @@ namespace XRouter.Simulator
 {
     public class Simulation
     {
-        public string Name { get; private set; }
+        public string Name { get; protected set; }
 
         public ICollection<object> Components { get; private set; }
 

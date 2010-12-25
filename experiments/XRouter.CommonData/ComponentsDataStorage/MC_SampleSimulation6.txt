@@ -1,0 +1,3 @@
+Consument;545;123
+Producent->Consument;312;211
+Producent;23;150

@@ -71,6 +71,13 @@
     <Compile Include="MC\Components\Samples\_Management\BasicMessageFlowManagementProxy_v1.cs" />
     <Compile Include="MC\Simulations\Samples\SampleSimulation1.cs" />
     <Compile Include="MC\Simulations\Samples\SampleSimulation2.cs" />
+    <Compile Include="MC\Simulations\Samples\SampleSimulation3.cs" />
+    <Compile Include="MC\Simulations\Samples\SampleSimulation4.cs" />
+    <Compile Include="MC\Simulations\Samples\SampleSimulation5.cs" />
+    <Compile Include="MC\Simulations\Samples\SampleSimulation6.cs" />
+    <Compile Include="MC\Simulations\Samples\SampleSimulation7.cs" />
+    <Compile Include="MC\Simulations\Samples\SampleSimulation8.cs" />
+    <Compile Include="MC\Simulations\Samples\SampleSimulation9.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

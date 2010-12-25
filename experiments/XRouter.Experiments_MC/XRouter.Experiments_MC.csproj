@@ -76,6 +76,7 @@
     <Compile Include="Simulations\Tests\TestSimulation1.cs" />
     <Compile Include="Simulations\Tests\TestSimulation2.cs" />
     <Compile Include="Simulations\Tests\TestSimulation3.cs" />
+    <Compile Include="Simulations\Tests\TestSimulation4.cs" />
     <Compile Include="Simulations\Trivial\SimulationProvider.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

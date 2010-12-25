@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Input;
 using XRouter.Utils.Wpf;
+using XRouter.Utils.Reflection;
 
 namespace XRouter.ComponentWatching
 {
@@ -73,7 +74,7 @@ namespace XRouter.ComponentWatching
                 if (componentAttribute != null) {
                     Name = componentAttribute.ComponentName;
                 } else {
-                    Name = componentType.Name;
+                    Name = ReflectionUtils.ToGenericTypeString(componentType);
                 }
             }
 
