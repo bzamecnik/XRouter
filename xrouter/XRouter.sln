@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Gateway", "XRouter.Gateway\XRouter.Gateway.csproj", "{67A83368-80F1-467D-950A-64DD5F1EAD6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Management", "XRouter.Management\XRouter.Management.csproj", "{8098E1D6-E891-4EEA-AC17-A3B8738B0B0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Scheduler", "XRouter.Scheduler\XRouter.Scheduler.csproj", "{7DD7E4D8-DF42-432A-AB51-979477D6774C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.EndpointsPlugins", "XRouter.EndpointsPlugins\XRouter.EndpointsPlugins.csproj", "{A4518F6C-4860-4D4C-9DF6-15C4318F9C74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.MessageProcessor", "XRouter.MessageProcessor\XRouter.MessageProcessor.csproj", "{A3505FDE-C617-451B-A07A-BE5F5FA4A1D8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{67A83368-80F1-467D-950A-64DD5F1EAD6C}.Debug|x86.ActiveCfg = Debug|x86
+		{67A83368-80F1-467D-950A-64DD5F1EAD6C}.Debug|x86.Build.0 = Debug|x86
+		{67A83368-80F1-467D-950A-64DD5F1EAD6C}.Release|x86.ActiveCfg = Release|x86
+		{67A83368-80F1-467D-950A-64DD5F1EAD6C}.Release|x86.Build.0 = Release|x86
+		{8098E1D6-E891-4EEA-AC17-A3B8738B0B0B}.Debug|x86.ActiveCfg = Debug|x86
+		{8098E1D6-E891-4EEA-AC17-A3B8738B0B0B}.Debug|x86.Build.0 = Debug|x86
+		{8098E1D6-E891-4EEA-AC17-A3B8738B0B0B}.Release|x86.ActiveCfg = Release|x86
+		{8098E1D6-E891-4EEA-AC17-A3B8738B0B0B}.Release|x86.Build.0 = Release|x86
+		{7DD7E4D8-DF42-432A-AB51-979477D6774C}.Debug|x86.ActiveCfg = Debug|x86
+		{7DD7E4D8-DF42-432A-AB51-979477D6774C}.Debug|x86.Build.0 = Debug|x86
+		{7DD7E4D8-DF42-432A-AB51-979477D6774C}.Release|x86.ActiveCfg = Release|x86
+		{7DD7E4D8-DF42-432A-AB51-979477D6774C}.Release|x86.Build.0 = Release|x86
+		{A4518F6C-4860-4D4C-9DF6-15C4318F9C74}.Debug|x86.ActiveCfg = Debug|x86
+		{A4518F6C-4860-4D4C-9DF6-15C4318F9C74}.Debug|x86.Build.0 = Debug|x86
+		{A4518F6C-4860-4D4C-9DF6-15C4318F9C74}.Release|x86.ActiveCfg = Release|x86
+		{A4518F6C-4860-4D4C-9DF6-15C4318F9C74}.Release|x86.Build.0 = Release|x86
+		{A3505FDE-C617-451B-A07A-BE5F5FA4A1D8}.Debug|x86.ActiveCfg = Debug|x86
+		{A3505FDE-C617-451B-A07A-BE5F5FA4A1D8}.Debug|x86.Build.0 = Debug|x86
+		{A3505FDE-C617-451B-A07A-BE5F5FA4A1D8}.Release|x86.ActiveCfg = Release|x86
+		{A3505FDE-C617-451B-A07A-BE5F5FA4A1D8}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(SpecExplorer.ActivityCompletionStatus) = preSolution
+		SpecExplorer.ActivityCompletionStatus = TestExisting: ;ModelFromScratch: 
+	EndGlobalSection
+EndGlobal
