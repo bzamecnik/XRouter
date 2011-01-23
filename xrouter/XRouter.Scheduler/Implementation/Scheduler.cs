@@ -26,7 +26,7 @@ namespace XRouter.Scheduler.Implementation
 
         public void Initialize()
         {
-            XElement configuration = XRouterManager.GetConfigData(string.Format("/xrouter/components/scheduler[@name=\"{0}\"]", Name));
+            XElement configuration = XRouterManager.GetConfigData(string.Format("/xrouter/components/scheduler[@name=\"{0}\"]", Name)).XElement;
 
             MessageProcessors = new List<IMessageProcessor>();
             var targetProcessors = configuration.Element("targetProcessors").Elements("targetProcessor");

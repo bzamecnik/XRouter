@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using XRouter.Management;
+using XRouter.Remoting;
 
-namespace XRouter.Management
+namespace XRouter.Gateway.Implementation
 {
-    public delegate void SendingResultHandler(bool isSucessfull);
-
-    public class OutputEndpoint : Endpoint
+    class OutputEndpoint : Endpoint, IOutputEndpoint
     {
-        private Action<Message, SendingResultHandler> sendAsync;
+        private Action<Message, MessageSendResultHandler> sendAsync;
 
-        public OutputEndpoint(EndpointAddress address, Action<Message, SendingResultHandler> sendAsync)
+        public OutputEndpoint(EndpointAddress address, Action<Message, MessageSendResultHandler> sendAsync)
             : base(address)
         {
             this.sendAsync = sendAsync;
@@ -22,7 +22,7 @@ namespace XRouter.Management
         {
             bool result = false;
             ManualResetEvent completedEvent = new ManualResetEvent(false);
-            SendingResultHandler onCompleted = delegate(bool isSucessfull) {
+            MessageSendResultHandler onCompleted = delegate(bool isSucessfull) {
                 completedEvent.Set();
                 result = isSucessfull;
             };
@@ -31,7 +31,7 @@ namespace XRouter.Management
             return result;
         }
 
-        public void SendAsync(Message message, SendingResultHandler resultHandler)
+        public void SendAsync(Message message, MessageSendResultHandler resultHandler)
         {
             sendAsync(message, resultHandler);
         }

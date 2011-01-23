@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using XRouter.Remoting;
 
 namespace XRouter.Management
 {
-    public delegate void ConfigChangeHandler(XElement changeRoot);
+    public delegate void ConfigChangedHandler(RemotableXElement changeRoot);
 
     public interface IXRouterManager
     {
-        event ConfigChangeHandler ConfigChanged;
+        RemotableXElement GetConfigData(string xpath);
 
-        XElement GetConfigData(string xpath);
+        event ConfigChangedHandler ConfigChanged;
 
         void ConnectComponent<T>(string name, T component)
             where T : IXRouterComponent;
@@ -20,12 +21,12 @@ namespace XRouter.Management
         T GetComponent<T>(string name)
             where T : IXRouterComponent;
 
-        void RegisterEndpoint(Endpoint endpoint);
-        void UnregisterEndpoint(Endpoint endpoint);
-        InputEndpoint GetInputEndpoint(EndpointAddress endpointAddress);
-        OutputEndpoint GetOutputEndpoint(EndpointAddress endpointAddress);
-        IEnumerable<InputEndpoint> GetInputEndpoints();
-        IEnumerable<OutputEndpoint> GetOutputEndpoints();
+        void RegisterEndpoint(IEndpoint endpoint);
+        void UnregisterEndpoint(IEndpoint endpoint);
+        IInputEndpoint GetInputEndpoint(EndpointAddress endpointAddress);
+        IOutputEndpoint GetOutputEndpoint(EndpointAddress endpointAddress);
+        IEnumerable<IInputEndpoint> GetInputEndpoints();
+        IEnumerable<IOutputEndpoint> GetOutputEndpoints();
 
         void Log(string category, string message);
     }

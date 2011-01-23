@@ -20,7 +20,7 @@ namespace XRouter.Gateway
             var xrouterManager = XRouterManagerProvider.GetManager(xrouterManagerAddress);
 
             string gatewayName = System.Configuration.ConfigurationManager.AppSettings["gatewayName"];
-            var gatewayService = new Implementation.GatewayService(xrouterManager, gatewayName);
+            var gatewayService = new Implementation.Gateway(xrouterManager, gatewayName);
 
             string schedulerName = System.Configuration.ConfigurationManager.AppSettings["schedulerName"];
             var scheduler = new Scheduler.Implementation.Scheduler(xrouterManager, schedulerName);

@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{8098E1D6-E891-4EEA-AC17-A3B8738B0B0B}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{6939C071-EE76-4F6F-AC78-4BC7C1C5EBA1}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XRouter.Management</RootNamespace>
-    <AssemblyName>XRouter.Management</AssemblyName>
+    <RootNamespace>XRouter.Remoting</RootNamespace>
+    <AssemblyName>XRouter.Remoting</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -35,7 +35,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\Resources\Libraries\Castle.Core\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -51,28 +57,24 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="Gui\App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="EndpointAddress.cs" />
-    <Compile Include="Gui\App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IEndpoint.cs" />
-    <Compile Include="IInputEndpoint.cs" />
-    <Compile Include="IOutputEndpoint.cs" />
-    <Compile Include="RemotableXDocument.cs" />
-    <Compile Include="RemotableXElement.cs" />
-    <Compile Include="IXRouterComponent.cs" />
-    <Compile Include="Implementation\LocalXRouterManager.cs" />
-    <Compile Include="IXRouterManager.cs" />
+    <Compile Include="IRemoteAction.cs" />
+    <Compile Include="IRemoteFunc.cs" />
+    <Compile Include="IRemotelyReferable.cs" />
+    <Compile Include="Marshaling.cs" />
+    <Compile Include="RemoteAction.cs" />
+    <Compile Include="RemoteCommunication\IClient.cs" />
+    <Compile Include="RemoteCommunication\IServer.cs" />
+    <Compile Include="RemoteCommunication\ServerAddress.cs" />
+    <Compile Include="RemoteCommunication\TcpClient.cs" />
+    <Compile Include="RemoteCommunication\TcpServer.cs" />
+    <Compile Include="RemoteFunc.cs" />
+    <Compile Include="RemoteObjectAddress.cs" />
+    <Compile Include="RemoteObjectProxyProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Message.cs" />
-    <Compile Include="Implementation\RemoteXRouterManager.cs" />
-    <Compile Include="XRouterManagerProvider.cs" />
+    <Compile Include="IRemotelyCloneable.cs" />
+    <Compile Include="IRemoteObjectProxy.cs" />
+    <Compile Include="ObjectServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -95,15 +97,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\XRouter.Remoting\XRouter.Remoting.csproj">
-      <Project>{6939C071-EE76-4F6F-AC78-4BC7C1C5EBA1}</Project>
-      <Name>XRouter.Remoting</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Data files\xrouter-config.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -7,10 +7,11 @@ using System.Text;
 using System.Xml.Linq;
 using XRouter.Management;
 using XRouter.Scheduler;
+using XRouter.Remoting;
 
 namespace XRouter.Gateway.Implementation
 {
-    class GatewayService : IGateway
+    class Gateway : IGateway
     {
         private static readonly string BinPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -20,9 +21,9 @@ namespace XRouter.Gateway.Implementation
 
         private IScheduler Scheduler { get; set; }
 
-        private Dictionary<string, IEndpointsPlugin> EndpointsPlugins { get; set; }        
+        private Dictionary<string, EndpointsPluginService> EndpointsPluginServices { get; set; }
 
-        public GatewayService(IXRouterManager xrouterManager, string name)
+        public Gateway(IXRouterManager xrouterManager, string name)
         {
             XRouterManager = xrouterManager;
             Name = name;
@@ -31,24 +32,24 @@ namespace XRouter.Gateway.Implementation
 
         public void Initialize()
         {
-            var configuration = XRouterManager.GetConfigData(string.Format("/xrouter/components/gateway[@name=\"{0}\"]", Name));
+            var configuration = XRouterManager.GetConfigData(string.Format("/xrouter/components/gateway[@name=\"{0}\"]", Name)).XElement;
 
             string targetSchedulerName = configuration.Attribute(XName.Get("targetScheduler")).Value;
             Scheduler = XRouterManager.GetComponent<IScheduler>(targetSchedulerName);
 
-            EndpointsPlugins = new Dictionary<string, IEndpointsPlugin>();
+            EndpointsPluginServices = new Dictionary<string, EndpointsPluginService>();
             var pluginsConfig = configuration.Element("endpointsPlugins").Elements("endpointsPlugin");
             foreach (var pluginConfig in pluginsConfig) {
                 string pluginName = pluginConfig.Attribute(XName.Get("name")).Value;
                 string typeAddress = pluginConfig.Attribute(XName.Get("type")).Value;
-                var plugin = GetEndpointsPluginInstance(typeAddress, pluginConfig);
-                EndpointsPlugins.Add(pluginName, plugin);
+                var pluginService = GetEndpointsPluginInstance(typeAddress, pluginConfig, pluginName);
+                EndpointsPluginServices.Add(pluginName, pluginService);
             }
 
             Start();
         }
 
-        private IEndpointsPlugin GetEndpointsPluginInstance(string typeAddress, XElement pluginConfig)
+        private EndpointsPluginService GetEndpointsPluginInstance(string typeAddress, XElement pluginConfig, string pluginName)
         {
             string[] addressParts = typeAddress.Split(';');
             string assemblyFile = addressParts[0].Trim();
@@ -58,31 +59,33 @@ namespace XRouter.Gateway.Implementation
             Assembly assembly = Assembly.LoadFile(assemblyFullPath);
             Type type = assembly.GetType(typeFullName, true);
 
-            var constructor = type.GetConstructor(new Type[] { typeof(XElement), typeof(IGateway) });
-            var pluginObject = constructor.Invoke(new object[] { pluginConfig, this });
-            var result = (IEndpointsPlugin)pluginObject;
-            return result;
+            var pluginService = new EndpointsPluginService(this, pluginName);
+            var constructor = type.GetConstructor(new Type[] { typeof(XElement), typeof(IEndpointsPluginService) });
+            var pluginObject = constructor.Invoke(new object[] { pluginConfig, pluginService });
+            var plugin = (IEndpointsPlugin)pluginObject;
+            pluginService.Client = plugin;
+            return pluginService;
         }
 
         public void Start()
         {
             #region Register endpoints
-            foreach (var plugin in EndpointsPlugins.Values) {
+            foreach (var pluginService in EndpointsPluginServices.Values) {
                 
-                foreach (var inputEndPoint in plugin.InputEndpoints) {                    
+                foreach (var inputEndPoint in pluginService.InputEndpoints) {                    
                     XRouterManager.RegisterEndpoint(inputEndPoint);
                     inputEndPoint.MessageReceived += DispatchInputMessage;
                 }
 
-                foreach (var outputEndPoint in plugin.OutputEndpoints) {
+                foreach (var outputEndPoint in pluginService.OutputEndpoints) {
                     XRouterManager.RegisterEndpoint(outputEndPoint);
                 }
             }
             #endregion
 
             #region Start endpoints
-            foreach (var plugin in EndpointsPlugins.Values) {
-                plugin.Start();
+            foreach (var pluginService in EndpointsPluginServices.Values) {
+                pluginService.Client.Start();
             }
             #endregion            
         }
@@ -90,13 +93,13 @@ namespace XRouter.Gateway.Implementation
         public void Stop()
         {
             #region Stop endpoints
-            foreach (var plugin in EndpointsPlugins.Values) {
-                plugin.Stop();
+            foreach (var pluginService in EndpointsPluginServices.Values) {
+                pluginService.Client.Stop();
             }
             #endregion
 
             #region Unregister endpoints
-            foreach (var plugin in EndpointsPlugins.Values) {
+            foreach (var plugin in EndpointsPluginServices.Values) {
 
                 foreach (var inputEndPoint in plugin.InputEndpoints) {                    
                     XRouterManager.UnregisterEndpoint(inputEndPoint);

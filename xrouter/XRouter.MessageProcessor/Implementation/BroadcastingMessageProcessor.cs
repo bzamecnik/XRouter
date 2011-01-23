@@ -22,7 +22,7 @@ namespace XRouter.MessageProcessor.Implementation
 
         public void Initialize()
         {
-            XElement configuration = XRouterManager.GetConfigData(string.Format("/xrouter/components/messageProcessor[@name=\"{0}\"]", Name));
+            XElement configuration = XRouterManager.GetConfigData(string.Format("/xrouter/components/messageProcessor[@name=\"{0}\"]", Name)).XElement;
         }
 
         public void Process(Message message)

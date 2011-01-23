@@ -72,7 +72,12 @@
   <ItemGroup>
     <Compile Include="IEndpointsPlugin.cs" />
     <Compile Include="IGateway.cs" />
-    <Compile Include="Implementation\GatewayService.cs" />
+    <Compile Include="IEndpointsPluginService.cs" />
+    <Compile Include="Implementation\Endpoint.cs" />
+    <Compile Include="Implementation\EndpointsPluginService.cs" />
+    <Compile Include="Implementation\Gateway.cs" />
+    <Compile Include="Implementation\InputEndpoint.cs" />
+    <Compile Include="Implementation\OutputEndpoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -106,6 +111,10 @@
     <ProjectReference Include="..\XRouter.MessageProcessor\XRouter.MessageProcessor.csproj">
       <Project>{A3505FDE-C617-451B-A07A-BE5F5FA4A1D8}</Project>
       <Name>XRouter.MessageProcessor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XRouter.Remoting\XRouter.Remoting.csproj">
+      <Project>{6939C071-EE76-4F6F-AC78-4BC7C1C5EBA1}</Project>
+      <Name>XRouter.Remoting</Name>
     </ProjectReference>
     <ProjectReference Include="..\XRouter.Scheduler\XRouter.Scheduler.csproj">
       <Project>{7DD7E4D8-DF42-432A-AB51-979477D6774C}</Project>

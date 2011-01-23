@@ -9,14 +9,11 @@ namespace XRouter.Gateway
     /// <summary>
     /// <remarks>
     /// Constructor must have signature:
-    ///     constructor(XElement configuration,  IGateway gateway)
+    ///     constructor(XElement configuration, IEndpointsPluginService service)
     /// </remarks>
     /// </summary>
     public interface IEndpointsPlugin
     {
-        IEnumerable<InputEndpoint> InputEndpoints { get; }
-        IEnumerable<OutputEndpoint> OutputEndpoints { get; }
-
         void Start();
         void Stop();
     }

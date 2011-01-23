@@ -16,35 +16,34 @@ namespace XRouter.EndpointsPlugins.TestingPlugins
     {
         public string Name { get; private set; }
 
-        private List<InputEndpoint> InternalInputEndpoints { get; set; }
-        private List<OutputEndpoint> InternalOutputEndpoints { get; set; }
+        private List<IInputEndpoint> InternalInputEndpoints { get; set; }
+        private List<IOutputEndpoint> InternalOutputEndpoints { get; set; }
 
-        public IEnumerable<InputEndpoint> InputEndpoints { get; private set; }
-        public IEnumerable<OutputEndpoint> OutputEndpoints { get; private set; }
+        public IEnumerable<IInputEndpoint> InputEndpoints { get; private set; }
+        public IEnumerable<IOutputEndpoint> OutputEndpoints { get; private set; }
 
-        private OutputEndpoint Output { get; set; }
+        private IOutputEndpoint Output { get; set; }
 
         private XElement Configuration { get; set; }
 
         private TextBox uiOutput;
         private Window window;
 
-        public DisplayOutputPlugin(XElement configuration, IGateway gateway)
+        public DisplayOutputPlugin(XElement configuration, IEndpointsPluginService service)
         {
             Configuration = configuration;
             Name = Configuration.Attribute(XName.Get("name")).Value;
 
-            InternalInputEndpoints = new List<InputEndpoint>();
-            InternalOutputEndpoints = new List<OutputEndpoint>();
-            InputEndpoints = new ReadOnlyCollection<InputEndpoint>(InternalInputEndpoints);
-            OutputEndpoints = new ReadOnlyCollection<OutputEndpoint>(InternalOutputEndpoints);
+            InternalInputEndpoints = new List<IInputEndpoint>();
+            InternalOutputEndpoints = new List<IOutputEndpoint>();
+            InputEndpoints = new ReadOnlyCollection<IInputEndpoint>(InternalInputEndpoints);
+            OutputEndpoints = new ReadOnlyCollection<IOutputEndpoint>(InternalOutputEndpoints);
 
-            var outputAddress = new EndpointAddress(gateway.Name, Name, "Output");
-            Output = new OutputEndpoint(outputAddress, SendAsync);
+            Output = service.CreateOutputEndpoint("Output", SendAsync);
             InternalOutputEndpoints.Add(Output);
         }
 
-        private void SendAsync(Message message, SendingResultHandler resultHandler)
+        private void SendAsync(Message message, MessageSendResultHandler resultHandler)
         {
             window.Dispatcher.Invoke(new Action(delegate {                                
                 uiOutput.Text += string.Format("From {0}:", message.Source.Address) + Environment.NewLine;

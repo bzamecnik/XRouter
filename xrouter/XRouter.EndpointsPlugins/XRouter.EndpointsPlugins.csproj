@@ -95,6 +95,10 @@
       <Project>{8098E1D6-E891-4EEA-AC17-A3B8738B0B0B}</Project>
       <Name>XRouter.Management</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XRouter.Remoting\XRouter.Remoting.csproj">
+      <Project>{6939C071-EE76-4F6F-AC78-4BC7C1C5EBA1}</Project>
+      <Name>XRouter.Remoting</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

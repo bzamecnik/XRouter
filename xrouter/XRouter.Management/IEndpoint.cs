@@ -6,10 +6,8 @@ using XRouter.Remoting;
 
 namespace XRouter.Management
 {
-    public interface IXRouterComponent : IRemotelyReferable
+    public interface IEndpoint : IRemotelyReferable
     {
-        string Name { get; }
-
-        void Initialize();
+        EndpointAddress Address { get; }
     }
 }

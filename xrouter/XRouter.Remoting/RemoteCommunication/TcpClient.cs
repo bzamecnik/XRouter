@@ -1,0 +1,46 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+
+namespace XRouter.Remoting.RemoteCommunication
+{
+    public class TcpClient : IClient
+    {
+        public ServerAddress ServerAddress { get; private set; }
+
+        public TcpClient(ServerAddress serverAddress)
+        {
+            ServerAddress = serverAddress;
+        }
+
+        public string Request(string command, string[] data)
+        {
+            var client = new System.Net.Sockets.TcpClient(ServerAddress.IPAddress.ToString(), ServerAddress.Port);
+            using (var clientStream = client.GetStream()) {
+                var sw = new StreamWriter(clientStream);
+
+                command = command
+                    .Replace("\r", TcpServer.CarriageReturnReplacement)
+                    .Replace("\n", TcpServer.LineFeedReplacement);
+                sw.WriteLine(command);
+
+                sw.WriteLine(data.Length.ToString());
+                foreach (string item in data) {
+                    string encodedItem = item
+                        .Replace("\r", TcpServer.CarriageReturnReplacement)
+                        .Replace("\n", TcpServer.LineFeedReplacement);
+                    sw.WriteLine(encodedItem);
+                }
+
+                var sr = new StreamReader(clientStream);
+                string result = sr.ReadLine();
+                result = result
+                    .Replace(TcpServer.CarriageReturnReplacement, "\r")
+                    .Replace(TcpServer.LineFeedReplacement, "\n");
+                return result;
+            }
+        }
+    }
+}
