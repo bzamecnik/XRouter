@@ -9,7 +9,7 @@ namespace XRouter.Management
 {
     public delegate void ConfigChangedHandler(RemotableXElement changeRoot);
 
-    public interface IXRouterManager
+    public interface IXRouterManager : IRemotelyReferable
     {
         RemotableXElement GetConfigData(string xpath);
 

@@ -34,6 +34,8 @@ namespace XRouter.Remoting.RemoteCommunication
                     sw.WriteLine(encodedItem);
                 }
 
+                sw.Flush();
+
                 var sr = new StreamReader(clientStream);
                 string result = sr.ReadLine();
                 result = result

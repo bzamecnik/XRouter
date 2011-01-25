@@ -76,6 +76,7 @@ namespace XRouter.Remoting.RemoteCommunication
 
                 var sw = new StreamWriter(clientStream);
                 sw.WriteLine(result);
+                sw.Flush();
             }            
         }
     }

@@ -17,7 +17,7 @@ namespace XRouter.MessageProcessor.Implementation
         {
             XRouterManager = xrouterManager;
             Name = name;
-            XRouterManager.ConnectComponent(Name, this);
+            XRouterManager.ConnectComponent<IMessageProcessor>(Name, this);
         }
 
         public void Initialize()

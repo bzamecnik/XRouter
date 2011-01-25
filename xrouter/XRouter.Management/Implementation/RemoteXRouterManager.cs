@@ -11,59 +11,68 @@ namespace XRouter.Management.Implementation
     {
         public event ConfigChangedHandler ConfigChanged = delegate { };
 
+        private IXRouterManager managerProxy;
+
         public RemoteXRouterManager(string[] arguments)
         {
-            string managerUrl = arguments[0];
-
+            var managerAddress = RemoteObjectAddress.Deserialize(arguments[0]);
+            managerProxy = RemoteObjectProxyProvider.GetProxy<IXRouterManager>(managerAddress);
+            managerProxy.ConfigChanged += new ConfigChangedHandler(managerProxy_ConfigChanged);
         }
+
+        void managerProxy_ConfigChanged(RemotableXElement changeRoot)
+        {
+            ConfigChanged(changeRoot);
+        }
+
         public RemotableXElement GetConfigData(string xpath)
         {
-            throw new NotImplementedException();
+            return managerProxy.GetConfigData(xpath);
         }
 
         public void ConnectComponent<T>(string name, T component) where T : IXRouterComponent
         {
-            throw new NotImplementedException();
+            managerProxy.ConnectComponent<T>(name, component);
         }
 
         public T GetComponent<T>(string name) where T : IXRouterComponent
         {
-            throw new NotImplementedException();
+            return managerProxy.GetComponent<T>(name);
         }
 
         public void RegisterEndpoint(IEndpoint endpoint)
         {
-            throw new NotImplementedException();
+            managerProxy.RegisterEndpoint(endpoint);
         }
 
         public void UnregisterEndpoint(IEndpoint endpoint)
         {
-            throw new NotImplementedException();
+            managerProxy.UnregisterEndpoint(endpoint);
         }
 
         public IInputEndpoint GetInputEndpoint(EndpointAddress endpointAddress)
         {
-            throw new NotImplementedException();
+            return managerProxy.GetInputEndpoint(endpointAddress);
         }
 
         public IOutputEndpoint GetOutputEndpoint(EndpointAddress endpointAddress)
         {
-            throw new NotImplementedException();
+            return managerProxy.GetOutputEndpoint(endpointAddress);
         }
 
         public IEnumerable<IInputEndpoint> GetInputEndpoints()
         {
-            throw new NotImplementedException();
+            return managerProxy.GetInputEndpoints();
         }
 
         public IEnumerable<IOutputEndpoint> GetOutputEndpoints()
         {
-            throw new NotImplementedException();
+            return managerProxy.GetOutputEndpoints();
         }
 
         public void Log(string category, string message)
         {
-            throw new NotImplementedException();
+            managerProxy.Log(category, message);
         }
     }
 }

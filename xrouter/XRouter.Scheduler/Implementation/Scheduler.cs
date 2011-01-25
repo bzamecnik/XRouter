@@ -21,7 +21,7 @@ namespace XRouter.Scheduler.Implementation
         {
             XRouterManager = xrouterManager;
             Name = name;
-            XRouterManager.ConnectComponent(Name, this);
+            XRouterManager.ConnectComponent<IScheduler>(Name, this);
         }
 
         public void Initialize()

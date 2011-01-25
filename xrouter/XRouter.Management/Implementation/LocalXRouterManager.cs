@@ -26,6 +26,9 @@ namespace XRouter.Management.Implementation
 
         public LocalXRouterManager()
         {
+            RemoteObjectAddress managerAddress = ObjectServer.PublishObject(this);
+            string managerAddressFile = Path.Combine(BinPath, "manager.addr");
+            File.WriteAllText(managerAddressFile, managerAddress.Serialize());
         }
 
         public void ConnectComponent<T>(string name, T component)

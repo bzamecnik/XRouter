@@ -27,7 +27,7 @@ namespace XRouter.Gateway.Implementation
         {
             XRouterManager = xrouterManager;
             Name = name;
-            xrouterManager.ConnectComponent(Name, this);
+            xrouterManager.ConnectComponent<IGateway>(Name, this);
         }
 
         public void Initialize()
