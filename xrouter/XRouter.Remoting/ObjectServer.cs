@@ -92,7 +92,10 @@ namespace XRouter.Remoting
                     string[] parts = parameterTypeName.Split('!');
                     string assemblyFullName = parts[0];
                     string typeFullName = parts[1];
-                    Assembly assembly = assemblies.First(a => a.FullName == assemblyFullName);
+                    Assembly assembly = assemblies.FirstOrDefault(a => a.FullName == assemblyFullName);
+                    if (assembly == null) {
+                        assembly = Assembly.Load(new AssemblyName(assemblyFullName));
+                    }
                     Type type = assembly.GetType(typeFullName, true);
                     parameterTypes.Add(type);
                 }

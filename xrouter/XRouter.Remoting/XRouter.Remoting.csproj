@@ -57,6 +57,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IInvocable.cs" />
     <Compile Include="IRemoteAction.cs" />
     <Compile Include="IRemoteFunc.cs" />
     <Compile Include="IRemotelyReferable.cs" />

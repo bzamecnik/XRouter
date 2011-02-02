@@ -44,6 +44,10 @@ namespace XRouter.Remoting
                 return result;
             }
 
+            if (type.FullName == "System.Void") {
+                return string.Empty;
+            }
+
             throw new ArgumentException("Cannot marshal given type.");
         }
 
@@ -72,13 +76,17 @@ namespace XRouter.Remoting
 
             if (typeof(Delegate).IsAssignableFrom(type)) {
                 var address = RemoteObjectAddress.Deserialize(marshaled);
-                Invocable invocable = RemoteObjectProxyProvider.GetProxy<Invocable>(address);
+                IInvocable invocable = RemoteObjectProxyProvider.GetProxy<IInvocable>(address);
 
                 Delegate result = CreateDynamicDelegate(type, delegate(object[] arguments) {
                     object res = invocable.Invoke(arguments);
                     return res;
                 });
                 return result;
+            }
+
+            if (type.FullName == "System.Void") {
+                return null;
             }
 
             throw new ArgumentException("Cannot unmarshal given type.");
@@ -105,7 +113,7 @@ namespace XRouter.Remoting
             il.Emit(OpCodes.Ldsfld, typeof(Marshaling).GetField("delegateTargets", BindingFlags.NonPublic | BindingFlags.Static));
             il.Emit(OpCodes.Ldc_I4, delegateTargetID);
             il.Emit(OpCodes.Ldnull);
-            il.Emit(OpCodes.Callvirt, typeof(ConcurrentDictionary<int, object>).GetMethod("GetOrAdd"));
+            il.Emit(OpCodes.Callvirt, typeof(ConcurrentDictionary<int, object>).GetMethod("GetOrAdd", new[] { typeof(int), typeof(object) }));
 
             // Push arguments
             il.Emit(OpCodes.Ldc_I4, parameterTypes.Length);
@@ -119,7 +127,7 @@ namespace XRouter.Remoting
                 }
                 il.Emit(OpCodes.Stelem_Ref);
             }
-
+            
             // Call body
             il.Emit(OpCodes.Callvirt, body.Method);
             il.Emit(OpCodes.Ret);
@@ -128,9 +136,9 @@ namespace XRouter.Remoting
             return result;
         }
 
-        #endregion
+        #endregion        
 
-        private class Invocable : IRemotelyReferable
+        private class Invocable : IInvocable
         {
             private Delegate target;
 

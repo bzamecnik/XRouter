@@ -9,13 +9,16 @@ namespace XRouter.Remoting.RemoteCommunication
 {
     public class ServerAddress
     {
-        private static readonly int DefaultPort = 16200;
+        private static readonly int PortRangeStart = 10000;
+        private static readonly int PortRangeEnd = 30000;
 
         public string Url { get; private set; }
 
         public int Port { get; private set; }
 
         public IPAddress IPAddress { get; private set; }
+
+        private static Random rnd = new Random();
 
         private ServerAddress(string url, IPAddress ipAddress, int port)
         {
@@ -24,11 +27,9 @@ namespace XRouter.Remoting.RemoteCommunication
             Port = port;            
         }
 
-        public static ServerAddress GetLocalServerAddress(int port = -1)
+        public static ServerAddress GetLocalServerAddress()
         {
-            if (port == -1) {
-                port = DefaultPort;
-            }
+            int port = PortRangeStart + rnd.Next(PortRangeEnd - PortRangeStart);
 
             IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
             string url = "127.0.0.1";
