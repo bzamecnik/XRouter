@@ -10,7 +10,7 @@ namespace XRouter.Management
 {
     public class Message : IRemotelyCloneable
     {
-        private static readonly string SerializationSeparator = "[[/!)^4g*@t=w+_}]]";
+        private static readonly string SerializationSeparator = "[[/!)^4g*@t=w+_a}]]";
 
         public IInputEndpoint Source { get; private set; }
 
