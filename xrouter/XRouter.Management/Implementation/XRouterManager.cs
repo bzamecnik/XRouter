@@ -7,10 +7,12 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using XRouter.Remoting;
+using XRouter.Management.Console;
+using XRouter.Management.Console.Implementation;
 
 namespace XRouter.Management.Implementation
 {
-    class LocalXRouterManager : IXRouterManager
+    class XRouterManager : IXRouterManager
     {
         private static readonly string BinPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private readonly string ConfigFilePath = Path.Combine(BinPath, @"..\..\..\XRouter.Management\Data files\xrouter-config.xml");
@@ -20,12 +22,15 @@ namespace XRouter.Management.Implementation
         public event ConfigChangedHandler ConfigChanged = delegate { };
 
         private Dictionary<string, IXRouterComponent> connectedComponents = new Dictionary<string, IXRouterComponent>();
-
-        private Dictionary<EndpointAddress, IInputEndpoint> inputEndpoints = new Dictionary<EndpointAddress, IInputEndpoint>();
         private Dictionary<EndpointAddress, IOutputEndpoint> outputEndpoints = new Dictionary<EndpointAddress, IOutputEndpoint>();
 
-        public LocalXRouterManager()
+        public XRouterManager()
         {
+            #region Prepare ConsoleServer
+            ConsoleServer consoleServer = new ConsoleServer(this);
+            ConnectComponent<IConsoleServer>(consoleServer.Name, consoleServer);
+            #endregion
+
             RemoteObjectAddress managerAddress = ObjectServer.PublishObject(this);
             string managerAddressFile = Path.Combine(BinPath, "manager.addr");
             File.WriteAllText(managerAddressFile, managerAddress.Serialize());
@@ -57,48 +62,8 @@ namespace XRouter.Management.Implementation
             where T : IXRouterComponent
         {
             var component = connectedComponents[name];
-            var result = (T)component;
+            T result = (T)component;
             return result;
-        }
-
-        public void RegisterEndpoint(IEndpoint endpoint)
-        {
-            if (endpoint is IInputEndpoint) {
-                inputEndpoints.Add(endpoint.Address, (IInputEndpoint)endpoint);
-            } else {
-                outputEndpoints.Add(endpoint.Address, (IOutputEndpoint)endpoint);
-            }
-        }
-
-        public void UnregisterEndpoint(IEndpoint endpoint)
-        {
-            if (endpoint is IInputEndpoint) {
-                inputEndpoints.Remove(endpoint.Address);
-            } else {
-                outputEndpoints.Remove(endpoint.Address);
-            }
-        }
-
-        public IInputEndpoint GetInputEndpoint(EndpointAddress endpointAddress)
-        {
-            var result = inputEndpoints[endpointAddress];
-            return result;
-        }
-
-        public IOutputEndpoint GetOutputEndpoint(EndpointAddress endpointAddress)
-        {
-            var result = outputEndpoints[endpointAddress];
-            return result;
-        }
-
-        public IEnumerable<IInputEndpoint> GetInputEndpoints()
-        {
-            return inputEndpoints.Values;
-        }
-
-        public IEnumerable<IOutputEndpoint> GetOutputEndpoints()
-        {
-            return outputEndpoints.Values;
         }
 
         public RemotableXElement GetConfigData(string xpath)
@@ -113,7 +78,46 @@ namespace XRouter.Management.Implementation
             return result;
         }
 
-        public void Log(string category, string message)
+        internal void NotifyConfigurationChanged(RemotableXElement changeRoot)
+        {
+            ConfigChanged(changeRoot);
+        }
+
+        public void RegisterOutputEndpoint(IOutputEndpoint endpoint)
+        {
+            outputEndpoints.Add(endpoint.Address, endpoint);
+        }
+
+        public void UnregisterOutputEndpoint(IOutputEndpoint endpoint)
+        {
+            outputEndpoints.Remove(endpoint.Address);
+        }
+
+        public IOutputEndpoint GetOutputEndpoint(EndpointAddress endpointAddress)
+        {
+            var result = outputEndpoints[endpointAddress];
+            return result;
+        }
+
+        public IEnumerable<IOutputEndpoint> GetOutputEndpoints()
+        {
+            return outputEndpoints.Values;
+        }
+
+        public void StoreMessageToken(Message message)
+        {
+        }
+
+        public void StoreErrorEvent(ErrorEvent errorEvent)
+        {
+        }
+
+        public IEnumerable<ErrorEvent> GetErrorEvents()
+        {
+            return new ErrorEvent[0];
+        }
+
+        public void Log(IXRouterComponent component, string category, string message)
         {
             if (!Directory.Exists(LogDirectory)) {
                 Directory.CreateDirectory(LogDirectory);

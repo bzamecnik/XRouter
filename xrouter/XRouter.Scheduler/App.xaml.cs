@@ -14,9 +14,8 @@ namespace XRouter.Scheduler
     public partial class App : Application
     {
         protected override void OnStartup(StartupEventArgs e)
-        {
-            string xrouterManagerAddress = System.Configuration.ConfigurationManager.AppSettings["xrouterManagerAddress"];
-            var xrouterManager = XRouterManagerProvider.GetManager(xrouterManagerAddress);
+        {            
+            var xrouterManager = XRouterManagerProvider.GetManager();
 
             string schedulerName = System.Configuration.ConfigurationManager.AppSettings["schedulerName"];
             var scheduler = new Implementation.Scheduler(xrouterManager, schedulerName);

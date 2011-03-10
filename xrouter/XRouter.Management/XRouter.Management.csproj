@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,7 +56,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Console\IConsoleServer.cs" />
+    <Compile Include="Console\Implementation\ConsoleServer.cs" />
     <Compile Include="EndpointAddress.cs" />
+    <Compile Include="ErrorEvent.cs" />
     <Compile Include="Gui\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -66,12 +70,12 @@
     <Compile Include="RemotableXDocument.cs" />
     <Compile Include="RemotableXElement.cs" />
     <Compile Include="IXRouterComponent.cs" />
-    <Compile Include="Implementation\LocalXRouterManager.cs" />
+    <Compile Include="Implementation\XRouterManager.cs" />
     <Compile Include="IXRouterManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Message.cs" />
-    <Compile Include="Implementation\RemoteXRouterManager.cs" />
+    <Compile Include="Implementation\XRouterManagerProxy.cs" />
     <Compile Include="XRouterManagerProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -105,6 +109,10 @@
   <ItemGroup>
     <Resource Include="Data files\xrouter-config.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Misc\Documents\persistent storage.txt" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

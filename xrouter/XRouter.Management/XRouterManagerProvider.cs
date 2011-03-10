@@ -8,7 +8,15 @@ namespace XRouter.Management
 {
     public class XRouterManagerProvider
     {
+        private static readonly string XRouterManagerAddressConfigurationKey = "xrouterManagerAddress";
+
         private static Dictionary<string, IXRouterManager> cachedManagers = new Dictionary<string, IXRouterManager>();
+
+        public static IXRouterManager GetManager()
+        {
+            string xrouterManagerAddress = System.Configuration.ConfigurationManager.AppSettings[XRouterManagerAddressConfigurationKey];
+            return GetManager(xrouterManagerAddress);
+        }
 
         public static IXRouterManager GetManager(string managerAddress)
         {

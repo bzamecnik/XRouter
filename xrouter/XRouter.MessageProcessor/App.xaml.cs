@@ -15,8 +15,7 @@ namespace XRouter.MessageProcessor
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            string xrouterManagerAddress = System.Configuration.ConfigurationManager.AppSettings["xrouterManagerAddress"];
-            var xrouterManager = XRouterManagerProvider.GetManager(xrouterManagerAddress);
+            var xrouterManager = XRouterManagerProvider.GetManager();
 
             string messageProcessorName = System.Configuration.ConfigurationManager.AppSettings["messageProcessorName"];
             var messageProcessor = new Implementation.BroadcastingMessageProcessor(xrouterManager, messageProcessorName);

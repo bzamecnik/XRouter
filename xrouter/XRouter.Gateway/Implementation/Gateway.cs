@@ -72,13 +72,12 @@ namespace XRouter.Gateway.Implementation
             #region Register endpoints
             foreach (var pluginService in EndpointsPluginServices.Values) {
                 
-                foreach (var inputEndPoint in pluginService.InputEndpoints) {                    
-                    XRouterManager.RegisterEndpoint(inputEndPoint);
+                foreach (var inputEndPoint in pluginService.InputEndpoints) {
                     inputEndPoint.MessageReceived += DispatchInputMessage;
                 }
 
                 foreach (var outputEndPoint in pluginService.OutputEndpoints) {
-                    XRouterManager.RegisterEndpoint(outputEndPoint);
+                    XRouterManager.RegisterOutputEndpoint(outputEndPoint);
                 }
             }
             #endregion
@@ -102,12 +101,11 @@ namespace XRouter.Gateway.Implementation
             foreach (var plugin in EndpointsPluginServices.Values) {
 
                 foreach (var inputEndPoint in plugin.InputEndpoints) {                    
-                    XRouterManager.UnregisterEndpoint(inputEndPoint);
                     inputEndPoint.MessageReceived -= DispatchInputMessage;
                 }
 
                 foreach (var outputEndPoint in plugin.OutputEndpoints) {
-                    XRouterManager.UnregisterEndpoint(outputEndPoint);
+                    XRouterManager.UnregisterOutputEndpoint(outputEndPoint);
                 }
             }
             #endregion

@@ -11,23 +11,34 @@ namespace XRouter.Management
 
     public interface IXRouterManager : IRemotelyReferable
     {
+        #region Managing components (registration and lookup)
+        void ConnectComponent<T>(string name, T component) where T : IXRouterComponent;
+        T GetComponent<T>(string name) where T : IXRouterComponent;
+        #endregion
+
+        #region Configuration services
         RemotableXElement GetConfigData(string xpath);
-
         event ConfigChangedHandler ConfigChanged;
+        #endregion
 
-        void ConnectComponent<T>(string name, T component)
-            where T : IXRouterComponent;
-
-        T GetComponent<T>(string name)
-            where T : IXRouterComponent;
-
-        void RegisterEndpoint(IEndpoint endpoint);
-        void UnregisterEndpoint(IEndpoint endpoint);
-        IInputEndpoint GetInputEndpoint(EndpointAddress endpointAddress);
+        #region Managing output endpoints (Gateway adapters can register them and MessageProcessors access them)
+        void RegisterOutputEndpoint(IOutputEndpoint endpoint);
+        void UnregisterOutputEndpoint(IOutputEndpoint endpoint);
         IOutputEndpoint GetOutputEndpoint(EndpointAddress endpointAddress);
-        IEnumerable<IInputEndpoint> GetInputEndpoints();
         IEnumerable<IOutputEndpoint> GetOutputEndpoints();
+        #endregion
 
-        void Log(string category, string message);
+        #region Storing message token
+        void StoreMessageToken(Message message); // Message token can be a fresh new message token straight from Gateway or a message token being processed in a message processor
+        #endregion
+
+        #region Error events
+        void StoreErrorEvent(ErrorEvent errorEvent);
+        IEnumerable<ErrorEvent> GetErrorEvents();
+        #endregion
+
+        #region General logging
+        void Log(IXRouterComponent component, string category, string message);
+        #endregion
     }
 }
