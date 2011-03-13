@@ -7,9 +7,9 @@ using XRouter.Management;
 using XRouter.MessageProcessor;
 using System.Threading.Tasks;
 
-namespace XRouter.Scheduler.Implementation
+namespace XRouter.Dispatcher.Implementation
 {
-    public class Scheduler : IScheduler
+    public class Dispatcher : IDispatcher
     {
         public string Name { get; private set; }
 
@@ -17,16 +17,16 @@ namespace XRouter.Scheduler.Implementation
 
         private List<IMessageProcessor> MessageProcessors { get; set; }
 
-        public Scheduler(IXRouterManager xrouterManager, string name)
+        public Dispatcher(IXRouterManager xrouterManager, string name)
         {
             XRouterManager = xrouterManager;
             Name = name;
-            XRouterManager.ConnectComponent<IScheduler>(Name, this);
+            XRouterManager.ConnectComponent<IDispatcher>(Name, this);
         }
 
         public void Initialize()
         {
-            XElement configuration = XRouterManager.GetConfigData(string.Format("/xrouter/components/scheduler[@name=\"{0}\"]", Name)).XElement;
+            XElement configuration = XRouterManager.GetConfigData(string.Format("/xrouter/components/dispatcher[@name=\"{0}\"]", Name)).XElement;
 
             MessageProcessors = new List<IMessageProcessor>();
             var targetProcessors = configuration.Element("targetProcessors").Elements("targetProcessor");
@@ -37,7 +37,7 @@ namespace XRouter.Scheduler.Implementation
             }
         }
 
-        public void ScheduleMessage(Message message)
+        public void DispatchMessage(Message message)
         {
             Task.Factory.StartNew(delegate {
                 var targetProcessor = MessageProcessors.First();

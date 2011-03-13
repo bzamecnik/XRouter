@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows;
 using XRouter.Management;
 
-namespace XRouter.Scheduler
+namespace XRouter.Dispatcher
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -17,8 +17,8 @@ namespace XRouter.Scheduler
         {            
             var xrouterManager = XRouterManagerProvider.GetManager();
 
-            string schedulerName = System.Configuration.ConfigurationManager.AppSettings["schedulerName"];
-            var scheduler = new Implementation.Scheduler(xrouterManager, schedulerName);
+            string dispatcherName = System.Configuration.ConfigurationManager.AppSettings["dispatcherName"];
+            var dispatcher = new Implementation.Dispatcher(xrouterManager, dispatcherName);
         }
     }
 }

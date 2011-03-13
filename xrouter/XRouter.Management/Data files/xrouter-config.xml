@@ -2,7 +2,7 @@
 <xrouter>
   <components>
     
-    <gateway name="Gateway1" targetScheduler="Scheduler1">
+    <gateway name="Gateway1" targetDispatcher="Dispatcher1">
       <endpointsPlugins>
         
         <endpointsPlugin name="EndpointTestInput1" type="..\..\..\XRouter.EndpointsPlugins\Bin\Debug\XRouter.EndpointsPlugins.exe; XRouter.EndpointsPlugins.TestingPlugins.ManualSendPlugin">          
@@ -17,11 +17,11 @@
       </endpointsPlugins>      
     </gateway>
     
-    <scheduler name="Scheduler1">
+    <dispatcher name="Dispatcher1">
       <targetProcessors>
         <targetProcessor name="Broadcaster1" />
       </targetProcessors>
-    </scheduler>
+    </dispatcher>
 
     <messageProcessor name="Broadcaster1">
       

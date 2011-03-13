@@ -116,9 +116,9 @@
       <Project>{6939C071-EE76-4F6F-AC78-4BC7C1C5EBA1}</Project>
       <Name>XRouter.Remoting</Name>
     </ProjectReference>
-    <ProjectReference Include="..\XRouter.Scheduler\XRouter.Scheduler.csproj">
+    <ProjectReference Include="..\XRouter.Dispatcher\XRouter.Dispatcher.csproj">
       <Project>{7DD7E4D8-DF42-432A-AB51-979477D6774C}</Project>
-      <Name>XRouter.Scheduler</Name>
+      <Name>XRouter.Dispatcher</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

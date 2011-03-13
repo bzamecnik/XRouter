@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace XRouter.Scheduler.Gui
+namespace XRouter.Dispatcher.Gui
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

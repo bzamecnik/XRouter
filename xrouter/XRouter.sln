@@ -1,11 +1,11 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Gateway", "XRouter.Gateway\XRouter.Gateway.csproj", "{67A83368-80F1-467D-950A-64DD5F1EAD6C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Management", "XRouter.Management\XRouter.Management.csproj", "{8098E1D6-E891-4EEA-AC17-A3B8738B0B0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Scheduler", "XRouter.Scheduler\XRouter.Scheduler.csproj", "{7DD7E4D8-DF42-432A-AB51-979477D6774C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Dispatcher", "XRouter.Dispatcher\XRouter.Dispatcher.csproj", "{7DD7E4D8-DF42-432A-AB51-979477D6774C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.EndpointsPlugins", "XRouter.EndpointsPlugins\XRouter.EndpointsPlugins.csproj", "{A4518F6C-4860-4D4C-9DF6-15C4318F9C74}"
 EndProject

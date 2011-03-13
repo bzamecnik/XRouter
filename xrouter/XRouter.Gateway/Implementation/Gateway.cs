@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 using XRouter.Management;
-using XRouter.Scheduler;
+using XRouter.Dispatcher;
 using XRouter.Remoting;
 
 namespace XRouter.Gateway.Implementation
@@ -19,7 +19,7 @@ namespace XRouter.Gateway.Implementation
 
         private IXRouterManager XRouterManager { get; set; }
 
-        private IScheduler Scheduler { get; set; }
+        private IDispatcher Dispatcher { get; set; }
 
         private Dictionary<string, EndpointsPluginService> EndpointsPluginServices { get; set; }
 
@@ -34,8 +34,8 @@ namespace XRouter.Gateway.Implementation
         {
             var configuration = XRouterManager.GetConfigData(string.Format("/xrouter/components/gateway[@name=\"{0}\"]", Name)).XElement;
 
-            string targetSchedulerName = configuration.Attribute(XName.Get("targetScheduler")).Value;
-            Scheduler = XRouterManager.GetComponent<IScheduler>(targetSchedulerName);
+            string targetDispatcherName = configuration.Attribute(XName.Get("targetDispatcher")).Value;
+            Dispatcher = XRouterManager.GetComponent<IDispatcher>(targetDispatcherName);
 
             EndpointsPluginServices = new Dictionary<string, EndpointsPluginService>();
             var pluginsConfig = configuration.Element("endpointsPlugins").Elements("endpointsPlugin");
@@ -113,7 +113,7 @@ namespace XRouter.Gateway.Implementation
 
         private void DispatchInputMessage(Message message)
         {
-            Scheduler.ScheduleMessage(message);
+            Dispatcher.DispatchMessage(message);
         }
     }
 }

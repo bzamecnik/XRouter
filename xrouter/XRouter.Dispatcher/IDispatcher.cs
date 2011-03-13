@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using XRouter.Management;
 
-namespace XRouter.Scheduler
+namespace XRouter.Dispatcher
 {
-    public interface IScheduler : IXRouterComponent
+    public interface IDispatcher : IXRouterComponent
     {
-        void ScheduleMessage(Message message);
+        void DispatchMessage(Message message);
     }
 }
