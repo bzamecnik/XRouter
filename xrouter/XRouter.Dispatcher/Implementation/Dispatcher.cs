@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 using XRouter.Management;
-using XRouter.MessageProcessor;
-using System.Threading.Tasks;
+using XRouter.Processor;
 
 namespace XRouter.Dispatcher.Implementation
 {
@@ -15,7 +12,7 @@ namespace XRouter.Dispatcher.Implementation
 
         private IXRouterManager XRouterManager { get; set; }
 
-        private List<IMessageProcessor> MessageProcessors { get; set; }
+        private List<IProcessor> Processors { get; set; }
 
         public Dispatcher(IXRouterManager xrouterManager, string name)
         {
@@ -24,25 +21,41 @@ namespace XRouter.Dispatcher.Implementation
             XRouterManager.ConnectComponent<IDispatcher>(Name, this);
         }
 
+        #region IXRouterComponent interface
+
         public void Initialize()
         {
             XElement configuration = XRouterManager.GetConfigData(string.Format("/xrouter/components/dispatcher[@name=\"{0}\"]", Name)).XElement;
 
-            MessageProcessors = new List<IMessageProcessor>();
-            var targetProcessors = configuration.Element("targetProcessors").Elements("targetProcessor");
+            Processors = new List<IProcessor>();
+            var targetProcessors = configuration.Element("targetProcessors").Elements("processor");
             foreach (var targetProcessor in targetProcessors) {
                 string targetProcessorName = targetProcessor.Attribute(XName.Get("name")).Value;
-                var messageProcessor = XRouterManager.GetComponent<IMessageProcessor>(targetProcessorName);
-                MessageProcessors.Add(messageProcessor);
+                var processor = XRouterManager.GetComponent<IProcessor>(targetProcessorName);
+                Processors.Add(processor);
             }
         }
 
-        public void DispatchMessage(Message message)
+        #endregion
+
+        #region IDispatcher interface
+
+        public void Dispatch(Message message)
         {
-            Task.Factory.StartNew(delegate {
-                var targetProcessor = MessageProcessors.First();
-                targetProcessor.Process(message);
-            });
+            var processor = ChooseProcessor();
+            processor.Process(message);
+            
+            // TODO:
+            // handle a situation when the pool is not available or does not
+            // accept the message
+        }
+
+        #endregion
+
+        private IProcessor ChooseProcessor()
+        {
+            // TODO: there could be some sofisticated load balancing
+            return Processors.First();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows;
 using XRouter.Management;
 
-namespace XRouter.MessageProcessor
+namespace XRouter.Processor
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -17,8 +17,8 @@ namespace XRouter.MessageProcessor
         {
             var xrouterManager = XRouterManagerProvider.GetManager();
 
-            string messageProcessorName = System.Configuration.ConfigurationManager.AppSettings["messageProcessorName"];
-            var messageProcessor = new Implementation.BroadcastingMessageProcessor(xrouterManager, messageProcessorName);
+            string processorName = System.Configuration.ConfigurationManager.AppSettings["processorName"];
+            var processor = new Implementation.Processor(xrouterManager, processorName);
         }
     }
 }

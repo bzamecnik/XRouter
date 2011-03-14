@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Xml.Linq;
 using XRouter.Management;
-using System.Xml.Linq;
 
-namespace XRouter.MessageProcessor.Implementation
+namespace XRouter.Processor.Implementation
 {
-    public class BroadcastingMessageProcessor : IMessageProcessor
+    public class Broadcaster : IProcessingProvider
     {
         public string Name { get; private set; }
 
         private IXRouterManager XRouterManager { get; set; }
 
-        public BroadcastingMessageProcessor(IXRouterManager xrouterManager, string name)
+        public Broadcaster(IXRouterManager xrouterManager, string name)
         {
             XRouterManager = xrouterManager;
             Name = name;
-            XRouterManager.ConnectComponent<IMessageProcessor>(Name, this);
+            XRouterManager.ConnectComponent<IProcessingProvider>(Name, this);
         }
 
         public void Initialize()
         {
-            XElement configuration = XRouterManager.GetConfigData(string.Format("/xrouter/components/messageProcessor[@name=\"{0}\"]", Name)).XElement;
+            XElement configuration = XRouterManager.GetConfigData(string.Format("/xrouter/components/processingProvider[@name=\"{0}\"]", Name)).XElement;
         }
 
         public void Process(Message message)

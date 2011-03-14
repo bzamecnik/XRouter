@@ -8,6 +8,8 @@ using XRouter.Remoting;
 
 namespace XRouter.Management
 {
+    // TODO: Why Message should be in the XRouter.Management project/namespace?
+
     public class Message : IRemotelyCloneable
     {
         private static readonly string SerializationSeparator = "[[/!)^4g*@t=w+_a}]]";

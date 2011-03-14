@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace XRouter.MessageProcessor.Gui
+namespace XRouter.Processor.Gui
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

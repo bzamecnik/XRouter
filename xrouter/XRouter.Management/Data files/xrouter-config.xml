@@ -19,13 +19,17 @@
     
     <dispatcher name="Dispatcher1">
       <targetProcessors>
-        <targetProcessor name="Broadcaster1" />
+        <processor name="Processor1" />
       </targetProcessors>
     </dispatcher>
 
-    <messageProcessor name="Broadcaster1">
-      
-    </messageProcessor>
+    <processor name="Processor1">
+      <processingProvider name="Broadcaster1" />
+    </processor>
+
+    <processingProvider name="Broadcaster1">
+
+    </processingProvider>
     
   </components>
 </xrouter>

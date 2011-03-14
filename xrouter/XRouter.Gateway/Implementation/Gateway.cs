@@ -113,7 +113,7 @@ namespace XRouter.Gateway.Implementation
 
         private void DispatchInputMessage(Message message)
         {
-            Dispatcher.DispatchMessage(message);
+            Dispatcher.Dispatch(message);
         }
     }
 }

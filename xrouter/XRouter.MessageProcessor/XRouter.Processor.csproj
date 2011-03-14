@@ -8,8 +8,8 @@
     <ProjectGuid>{A3505FDE-C617-451B-A07A-BE5F5FA4A1D8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XRouter.MessageProcessor</RootNamespace>
-    <AssemblyName>XRouter.MessageProcessor</AssemblyName>
+    <RootNamespace>XRouter.Processor</RootNamespace>
+    <AssemblyName>XRouter.Processor</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -65,8 +65,10 @@
     <Compile Include="Gui\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IMessageProcessor.cs" />
-    <Compile Include="Implementation\BroadcastingMessageProcessor.cs" />
+    <Compile Include="IProcessingProvider.cs" />
+    <Compile Include="IProcessor.cs" />
+    <Compile Include="Implementation\Broadcaster.cs" />
+    <Compile Include="Implementation\Processor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
