@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="AssertionInfo.cs" />
     <Compile Include="Consts.cs" />
-    <Compile Include="exceptions.cs" />
+    <Compile Include="Exceptions.cs" />
     <Compile Include="InclusionsFileResolver.cs" />
     <Compile Include="InclusionsResolver.cs" />
     <Compile Include="Preprocessing\Preprocessor.cs" />
