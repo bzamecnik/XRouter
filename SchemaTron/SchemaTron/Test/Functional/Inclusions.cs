@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
-using SchemaTron;
-
-namespace SchemaTron.Test
+﻿namespace SchemaTron.Test.Functional
 {
+    using System.Xml.Linq;
+    using SchemaTron;
+    using Xunit;
+
     public class Inclusions
     {
-        class InclusionsEmbededResourceResolver : SchemaTron.IInclusionResolver
-        {
-            public XDocument Resolve(string href)
-            {
-                return Resources.Provider.LoadXmlDocument(href); 
-            }
-        }
-
+        [Fact]
         public void SimpleValidation()
         {
             XDocument xSch = Resources.Provider.LoadXmlDocument("inclusions_sch.xml");
@@ -25,9 +15,10 @@ namespace SchemaTron.Test
             ValidatorSettings settings = new ValidatorSettings();
             settings.InclusionsResolver = new InclusionsEmbededResourceResolver();
             Validator validator = Validator.Create(xSch, settings);
-            ValidatorResults results = validator.Validate(xIn, true); 
+            ValidatorResults results = validator.Validate(xIn, true);
         }
 
+        [Fact]
         public void SimpleValidation_InvalidInstance()
         {
             XDocument xSch = Resources.Provider.LoadXmlDocument("inclusions_sch.xml");
@@ -39,9 +30,17 @@ namespace SchemaTron.Test
 
             // fully validation
             ValidatorResults results1 = validator.Validate(xIn, true);
-            
+
             // not fully validation
             ValidatorResults results2 = validator.Validate(xIn, false);
-        } 
+        }
+
+        class InclusionsEmbededResourceResolver : SchemaTron.IInclusionResolver
+        {
+            public XDocument Resolve(string href)
+            {
+                return Resources.Provider.LoadXmlDocument(href);
+            }
+        }
     }
 }

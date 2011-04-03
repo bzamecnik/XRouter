@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
-using SchemaTron;
-
-namespace SchemaTron.Test
+﻿namespace SchemaTron.Test.Functional
 {
+    using System.Xml.Linq;
+    using SchemaTron;
+    using Xunit;
+
     public class AbsPatterns
     {
+        [Fact]
         public void SimpleValidation()
         {
             XDocument xSch = Resources.Provider.LoadXmlDocument("abspatterns_sch.xml");
@@ -18,6 +16,7 @@ namespace SchemaTron.Test
             ValidatorResults results = validator.Validate(xIn, true);
         }
 
+        [Fact]
         public void SimpleValidation_InvalidInstance()
         {
             XDocument xSch = Resources.Provider.LoadXmlDocument("abspatterns_sch.xml");

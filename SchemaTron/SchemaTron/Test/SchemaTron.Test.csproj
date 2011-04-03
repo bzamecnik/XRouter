@@ -44,16 +44,23 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\..\..\..\..\..\..\..\..\..\..\Programs\xUnit-1.8\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbsPatterns.cs" />
-    <Compile Include="AbsRules.cs" />
-    <Compile Include="Basics.cs" />
-    <Compile Include="Inclusions.cs" />
-    <Compile Include="Phases.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Functional\AbstractPatterns.cs" />
+    <Compile Include="Functional\AbstractRules.cs" />
+    <Compile Include="Functional\Basics.cs" />
+    <Compile Include="Functional\Inclusions.cs" />
+    <Compile Include="Functional\Phases.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Provider.cs" />
+    <Compile Include="Unit\FileInclusionResolver.cs" />
+    <Compile Include="Unit\Preprocessing\Preprocessor.cs" />
+    <Compile Include="Unit\SyntaxModel\SchemaDeserializer.cs" />
+    <Compile Include="Unit\ValidationEvaluator.cs" />
+    <Compile Include="Unit\Validator.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\abspatterns_sch.xml" />

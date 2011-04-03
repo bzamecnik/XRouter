@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
-using System.IO;
-using System.Reflection;
-
-namespace SchemaTron.Test.Resources
+﻿namespace SchemaTron.Test.Resources
 {
+    using System;
+    using System.IO;
+    using System.Reflection;
+    using System.Xml.Linq;
+
     internal static class Provider
     {
         public static XDocument LoadXmlDocument(string name)

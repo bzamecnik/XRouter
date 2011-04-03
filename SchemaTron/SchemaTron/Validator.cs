@@ -33,7 +33,7 @@ namespace SchemaTron
         }
 
         /// <summary>
-        /// Gets adjusted schema syntax.
+        /// Gets schema syntax in minimal form.
         /// </summary>
         public XDocument MinSyntax { get; private set; }
 
