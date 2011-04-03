@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml.Linq;
 using SchemaTron;
 
-namespace UnitTests
+namespace SchemaTron.Test
 {
     class Program
     {

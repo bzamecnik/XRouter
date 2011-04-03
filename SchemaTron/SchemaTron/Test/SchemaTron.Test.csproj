@@ -6,10 +6,10 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{1DD52070-30C2-432A-89D5-484432A9B8E4}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UnitTests</RootNamespace>
-    <AssemblyName>UnitTests</AssemblyName>
+    <RootNamespace>SchemaTron.Test</RootNamespace>
+    <AssemblyName>SchemaTron.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -32,6 +32,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -71,7 +74,7 @@
     <EmbeddedResource Include="Resources\phases_xml_invalid.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SchemaTron\SchemaTron.csproj">
+    <ProjectReference Include="..\SchemaTron.csproj">
       <Project>{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}</Project>
       <Name>SchemaTron</Name>
     </ProjectReference>

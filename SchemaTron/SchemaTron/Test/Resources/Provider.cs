@@ -6,14 +6,14 @@ using System.Xml.Linq;
 using System.IO;
 using System.Reflection;
 
-namespace UnitTests.Resources
+namespace SchemaTron.Test.Resources
 {
     internal static class Provider
     {
         public static XDocument LoadXmlDocument(string name)
         {
             Assembly currentAssembly = Assembly.GetExecutingAssembly();
-            Stream stream = currentAssembly.GetManifestResourceStream(String.Format("UnitTests.Resources.{0}", name));
+            Stream stream = currentAssembly.GetManifestResourceStream(String.Format("SchemaTron.Test.Resources.{0}", name));
             XDocument xDoc = XDocument.Load(stream, LoadOptions.SetLineInfo);
             return xDoc;
         }
