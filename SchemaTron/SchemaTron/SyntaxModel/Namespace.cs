@@ -5,8 +5,14 @@ using System.Text;
 
 namespace SchemaTron.SyntaxModel
 {
-    internal sealed class Ns 
-    {        
+    /// <summary>
+    /// Represents a namespace.
+    /// </summary>
+    /// <remarks>
+    /// TODO: describe in more detail.
+    /// </remarks>
+    internal sealed class Namespace
+    {
         public String Prefix { set; get; }
 
         public String Uri { set; get; }

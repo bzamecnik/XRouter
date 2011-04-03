@@ -1,66 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
-using System.Xml.XPath;
 using System.Xml.Linq;
-using SchemaTron.SyntaxModel;
+using System.Xml.XPath;
 using SchemaTron.Preprocessing;
+using SchemaTron.SyntaxModel;
 
 namespace SchemaTron
 {
     /// <summary>
-    /// The native ISO Schematron validator over XPath 1.0 query language binding.
+    /// A native ISO Schematron validator using XPath 1.0 query language binding.
     /// </summary>
+    /// <remarks>
+    /// Validator instances can be created via Create() factory methods.
+    /// Validation itself is done using the Validate() method.
+    /// </remarks>
+    /// <see cref="Create(XDocument)"/>
+    /// <see cref="Create(XDocument, ValidatorSettings)"/>
+    /// <see cref="Validate(XDocument, Boolean)"/>
     public sealed class Validator
-    {            
+    {
         /// <summary>
         /// Gets adjusted schema syntax.
         /// </summary>
         public XDocument MinSyntax { private set; get; }
 
+        /// <summary>
+        /// Schematron schema for validation.
+        /// </summary>
         private Schema schema = null;
 
+        /// <summary>
+        /// Private constructor to force instance creation via factory methods.
+        /// </summary>
         private Validator()
         { }
 
         /// <summary>
-        /// Vytvori novy SchematronVal.Validator z dane System.Xml.Linq.XDocument s vychozim 
-        /// nastavenim validatoru. 
+        /// Creates a new Validator instance with default validator settings
+        /// given a Schematron syntax schema.
         /// </summary>
-        /// <param name="xSchema">ISO Schematron complex syntax schema.</param>
-        /// <returns></returns>
+        /// <param name="xSchema">ISO Schematron complex syntax schema</param>
+        /// <returns>A new Validator instance</returns>
         /// <exception cref="System.ArgumentException"/>
         /// <exception cref="System.ArgumentNullException"/>
-        /// <exception cref="ISOSchematronValidator.SyntaxException"/>
+        /// <exception cref="SyntaxException"/>
+        /// <see cref="System.Xml.Linq.XDocument"/>
         public static Validator Create(XDocument xSchema)
         {
             return Create(xSchema, null);
         }
 
         /// <summary>
-        /// Vytvori novy SchematronVal.Validator z dane System.Xml.Linq.XDocument.
+        /// Creates a new Validator instance given a Schematron syntax schema and custom
+        /// validator settings.
         /// </summary>
-        /// <param name="xSchema">ISO Schematron complex syntax schema.</param>
-        /// <param name="setting">Konfigurace validatoru.</param>
-        /// <returns></returns>     
+        /// <param name="xSchema">ISO Schematron complex syntax schema</param>
+        /// <param name="settings">Validator settings</param>
+        /// <returns>A new Validator instance</returns>     
         /// <exception cref="System.ArgumentException"/>
         /// <exception cref="System.ArgumentNullException"/>
-        /// <exception cref="ISOSchematronValidator.SyntaxException"/>
-        public static Validator Create(XDocument xSchema, ValidatorSetting setting)
+        /// <exception cref="SyntaxException"/>
+        public static Validator Create(XDocument xSchema, ValidatorSettings settings)
         {
             if (xSchema == null)
             {
                 throw new ArgumentNullException("xSchema");
             }
-            if (setting == null)
+            if (settings == null)
             {
-                setting = new ValidatorSetting();
+                settings = new ValidatorSettings();
             }
-            if (setting.InclusionsResolver == null)
+            if (settings.InclusionsResolver == null)
             {
-                setting.InclusionsResolver = new InclusionsFileResolver();
+                settings.InclusionsResolver = new FileInclusionResolver();
             }
 
             Validator validator = null;
@@ -68,15 +81,15 @@ namespace SchemaTron
             // make a deep copy of the supplied XML 
             XDocument xSchemaCopy = new XDocument(xSchema);
 
-            // resolve iso namespace
+            // resolve ISO namespace
             XmlNamespaceManager nsManager = new XmlNamespaceManager(new NameTable());
-            nsManager.AddNamespace("sch", Consts.ISONamespace);
+            nsManager.AddNamespace("sch", Constants.ISONamespace);
 
-            setting.Phase = DetermineSchemaPhase(xSchemaCopy.Root, setting.Phase, nsManager);
-          
+            settings.Phase = DetermineSchemaPhase(xSchemaCopy.Root, settings.Phase, nsManager);
+
             // preprocessing
-            Preprocessing(xSchemaCopy, nsManager, setting);
-       
+            Preprocess(xSchemaCopy, nsManager, settings);
+
             // deserialization                           
             Schema schema = SchemaDeserializer.Deserialize(xSchemaCopy, nsManager);
 
@@ -90,96 +103,132 @@ namespace SchemaTron
 
             return validator;
         }
-               
+
+        /// <summary>
+        /// Determines the name of the validation phase.
+        /// </summary>
+        /// <remarks>
+        /// Symbolic phase name #ALL is left as is, #DEFAULT is tried to be
+        /// resolved into a concrete phase name. Concrete phase names are
+        /// searched for in the schema to find out if they really exist.
+        /// </remarks>
+        /// <param name="xRoot">Root of a XML schema where to search for a phase.
+        /// Must not be null.</param>
+        /// <param name="phase">Symbolic (#ALL, #DEFAULT) or concrete phase name.
+        /// Must not be null.</param>
+        /// <param name="nsManager">Namespace manager. Must not be null.</param>
+        /// <returns>Symbolic phase name (#ALL) or a phase name of a concrete
+        /// existing phase</returns>
+        /// <exception cref="System.ArgumentException">if no default phase name
+        /// is specified in the schema or a concrete phase does not exist in the
+        /// schema</exception>
         private static String DetermineSchemaPhase(XElement xRoot, String phase, XmlNamespaceManager nsManager)
-        {           
+        {
             if (phase == null)
             {
                 throw new ArgumentNullException("Phase");
             }
-            else
-                if (phase == "#ALL")
+            else if (phase == "#ALL")
+            {
+                return phase;
+            }
+            else if (phase == "#DEFAULT")
+            {
+                XAttribute xPhase = xRoot.Attribute(XName.Get("defaultPhase"));
+                if (xPhase != null)
                 {
-                    return phase;
+                    return xPhase.Value;
                 }
                 else
-                    if (phase == "#DEFAULT")
-                    {
-                        XAttribute xPhase = xRoot.Attribute(XName.Get("defaultPhase"));
-                        if (xPhase != null)
-                        {
-                            return xPhase.Value;
-                        }
-                        else
-                        {
-                            throw new ArgumentException("@defaultPhase is not specified.", "Phase");
-                        }
-                    }
-                    else
-                    {
-                        if (xRoot.XPathSelectElement(String.Format("/sch:schema/sch:phase[@id='{0}']", phase), nsManager) != null)
-                        {
-                            return phase;
-                        }
-                        else
-                        {
-                            throw new ArgumentException(String.Format("Phase[@id='{0}'] is not specified.", phase), "Phase");
-                        }
-                    }
-        }
-
-        private static void Preprocessing(XDocument xSchema, XmlNamespaceManager nsManager, ValidatorSetting setting)
-        {
-            if (setting.Preprocessing)
+                {
+                    throw new ArgumentException("@defaultPhase is not specified.", "Phase");
+                }
+            }
+            else if (xRoot.XPathSelectElement(String.Format("/sch:schema/sch:phase[@id='{0}']", phase), nsManager) != null)
             {
-                ValidatorSetting valArgs = new ValidatorSetting();
-                valArgs.Preprocessing = false;
-                
-                // validation - phaseA 
-                XDocument xPhaseA = Resources.Provider.SchemaPhaseA;
-                Validator validatorPhaseA = Validator.Create(xPhaseA, valArgs);
-                ValidatorResults resultsA = validatorPhaseA.Validate(xSchema, true);
-                if (!resultsA.IsValid)
-                {
-                    throw new SyntaxException(resultsA.GetMessages());
-                }
-
-                Preprocessor.ResolveInclusions(xSchema, setting.InclusionsResolver, nsManager);
-
-                // validation - phaseB 
-                XDocument xPhaseB = Resources.Provider.SchemaPhaseB;
-                Validator validatorPhaseB = Validator.Create(xPhaseB, valArgs);
-                ValidatorResults resultsB = validatorPhaseB.Validate(xSchema, true);
-                if (!resultsB.IsValid)
-                {
-                    throw new SyntaxException(resultsB.GetMessages());
-                }
-
-                Preprocessor.ResolveAbstractPatterns(xSchema, nsManager);
-                Preprocessor.ResolveAbstractRules(xSchema, nsManager);
-                Preprocessor.ResolvePhase(xSchema, nsManager, setting.Phase);
-               
-                // validation - phaseC 
-                XDocument xPhaseC = Resources.Provider.SchemaPhaseC;
-                Validator validatorPhaseC = Validator.Create(xPhaseC, valArgs);
-                ValidatorResults resultsC = validatorPhaseC.Validate(xSchema, true);
-                if (!resultsC.IsValid)
-                {                   
-                    throw new SyntaxException(resultsC.GetMessages());
-                }
-
-                Preprocessor.ResolveLets(xSchema, nsManager);
-                Preprocessor.ResolveAncillaryElements(xSchema, nsManager);
+                return phase;
+            }
+            else
+            {
+                throw new ArgumentException(String.Format("Phase[@id='{0}'] is not specified.", phase), "Phase");
             }
         }
-                        
+
+        /// <summary>
+        /// Preprocesses the XML schema (in place).
+        /// </summary>
+        /// <remarks>
+        /// The preprocessing can be turned off in the validator settings.
+        /// </remarks>
+        /// <param name="xSchema">Schema</param>
+        /// <param name="nsManager">Namespace manager</param>
+        /// <param name="settings">Validator settings</param>
+        /// <exception cref="SyntaxException">If any of the intermediate
+        /// results is not valid.</exception>
+        private static void Preprocess(XDocument xSchema, XmlNamespaceManager nsManager, ValidatorSettings settings)
+        {
+            if (!settings.Preprocessing)
+            {
+                return;
+            }
+            ValidatorSettings valArgs = new ValidatorSettings();
+            valArgs.Preprocessing = false;
+
+            // validation - phaseA
+            XDocument xPhaseA = Resources.Provider.SchemaPhaseA;
+            Validator validatorPhaseA = Validator.Create(xPhaseA, valArgs);
+            ValidatorResults resultsA = validatorPhaseA.Validate(xSchema, true);
+            if (!resultsA.IsValid)
+            {
+                throw new SyntaxException(resultsA.GetMessages());
+            }
+
+            Preprocessor.ResolveInclusions(xSchema, settings.InclusionsResolver, nsManager);
+
+            // validation - phaseB
+            XDocument xPhaseB = Resources.Provider.SchemaPhaseB;
+            Validator validatorPhaseB = Validator.Create(xPhaseB, valArgs);
+            ValidatorResults resultsB = validatorPhaseB.Validate(xSchema, true);
+            if (!resultsB.IsValid)
+            {
+                throw new SyntaxException(resultsB.GetMessages());
+            }
+
+            Preprocessor.ResolveAbstractPatterns(xSchema, nsManager);
+            Preprocessor.ResolveAbstractRules(xSchema, nsManager);
+            Preprocessor.ResolvePhase(xSchema, nsManager, settings.Phase);
+
+            // validation - phaseC 
+            XDocument xPhaseC = Resources.Provider.SchemaPhaseC;
+            Validator validatorPhaseC = Validator.Create(xPhaseC, valArgs);
+            ValidatorResults resultsC = validatorPhaseC.Validate(xSchema, true);
+            if (!resultsC.IsValid)
+            {
+                throw new SyntaxException(resultsC.GetMessages());
+            }
+
+            Preprocessor.ResolveLets(xSchema, nsManager);
+            Preprocessor.ResolveAncillaryElements(xSchema, nsManager);
+        }
+
+        /// <summary>
+        /// Compiles XPath expressions in schema patterns.
+        /// </summary>
+        /// <remarks>
+        /// The XPath expression are compiled in place inside the schema.
+        /// </remarks>
+        /// <param name="schema">Schema which contains the expressions to be
+        /// compiled</param>
+        /// <exception cref="SyntaxException">Thrown if any of the expressions
+        /// does not conform to XPath 1.0. The exceptions may contain multiple
+        /// error messages.</exception>
         private static void CompileXPathExpressions(Schema schema)
         {
             List<String> messages = new List<String>();
 
             // resolve namespaces
             XmlNamespaceManager nsManager = new XmlNamespaceManager(new NameTable());
-            foreach (Ns ns in schema.Namespaces)
+            foreach (Namespace ns in schema.Namespaces)
             {
                 nsManager.AddNamespace(ns.Prefix, ns.Uri);
             }
@@ -196,10 +245,10 @@ namespace SchemaTron
                     {
                         context = String.Concat("//", context);
                     }
-                   
+
                     try
                     {
-                        rule.CompiledContext = System.Xml.XPath.XPathExpression.Compile(context, nsManager);  
+                        rule.CompiledContext = System.Xml.XPath.XPathExpression.Compile(context, nsManager);
                     }
                     catch (XPathException e)
                     {
@@ -220,7 +269,7 @@ namespace SchemaTron
 
                         // compile diagnostics
                         if (assert.Diagnostics.Length > 0)
-                        {                            
+                        {
                             assert.CompiledDiagnostics = new XPathExpression[assert.Diagnostics.Length];
                             for (Int32 i = 0; i < assert.Diagnostics.Length; i++)
                             {
@@ -240,10 +289,10 @@ namespace SchemaTron
                                         messages.Add(String.Format("Invalid XPath 1.0 path='{0}']: {1}", diag, e.Message));
                                     }
                                 }
-                            }                                                       
+                            }
                         }
                     }
-                }               
+                }
             }
 
             // syntax errors
@@ -252,20 +301,25 @@ namespace SchemaTron
                 throw new SyntaxException(messages.ToArray());
             }
         }
-        
+
         /// <summary>
-        /// Validacni funkce, ktera ocekava XML instanci jako System.Xml.Linq.XDocument. 
+        /// Validates an XML document with the current validator settings.
+        /// The process can stop at the first assertion or validate the whole
+        /// document.
         /// </summary>
-        /// <param name="xInstance">XML instance (pro lepsi diagnostiky je doporuceno dodat instanci s line information).</param>
-        /// <param name="fullyValidation">Urcuje, jestli se ma validace po prvni vyvolane assertion prerusit.</param>
-        /// <returns>Detailni vysledek validace.</returns>
-        /// <remarks>Metoda neni thread safe.</remarks>
-        public ValidatorResults Validate(XDocument xInstance, Boolean fullyValidation)
+        /// <remarks>This method is NOT thread-safe.</remarks>
+        /// <param name="xInstance">An instance of an XML document to be validated.
+        /// It is recommended to supply a document with line information
+        /// (TODO: clarify this) for better diagnostics.</param>
+        /// <param name="fullValidation">Indicates whether to validate the
+        /// whole document regardless of any assertion, or to stop validation at
+        /// the first assertion.
+        /// </param>
+        /// <returns>Detailed validation results.</returns>
+        public ValidatorResults Validate(XDocument xInstance, Boolean fullValidation)
         {
-            ValidatorResults results = null;
-            ValidationEvaluator evaluator = new ValidationEvaluator(this.schema, xInstance, fullyValidation);
-            results = evaluator.Evaulate();
-            return results;            
-        }                                               
+            ValidationEvaluator evaluator = new ValidationEvaluator(this.schema, xInstance, fullValidation);
+            return evaluator.Evaluate();
+        }
     }
 }

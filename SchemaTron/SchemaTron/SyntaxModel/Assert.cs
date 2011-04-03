@@ -6,6 +6,12 @@ using System.Xml.XPath;
 
 namespace SchemaTron.SyntaxModel
 {
+    /// <summary>
+    /// Represents an assertion.
+    /// </summary>
+    /// <remarks>
+    /// TODO: describe in more detail.
+    /// </remarks>
     internal sealed class Assert
     {
         public String Id { set; get; }
@@ -13,15 +19,15 @@ namespace SchemaTron.SyntaxModel
         public Boolean IsReport { set; get; }
 
         public String Test { set; get; }
-             
+
         public XPathExpression CompiledTest { set; get; }
 
         public String Message { set; get; }
-       
+
         public Boolean[] DiagnosticsIsValueOf { set; get; }
 
         public String[] Diagnostics { set; get; }
 
-        public XPathExpression[] CompiledDiagnostics { set; get; }        
+        public XPathExpression[] CompiledDiagnostics { set; get; }
     }
 }

@@ -8,23 +8,35 @@ using System.Xml.XPath;
 
 namespace SchemaTron.SyntaxModel
 {
+    /// <summary>
+    /// Provides a facility for converting a schema from the XML form
+    /// (XDocument) into the internal representation (Schema).
+    /// </summary>
+    /// <see cref="XDocument"/>
+    /// <see cref="Schema"/>
     internal static class SchemaDeserializer
     {
+        /// <summary>
+        /// Converts a schema from the XML form (XDocument) to the internal
+        /// representation (Schema).
+        /// </summary>
+        /// <param name="xSchema">Schema in serialized XML form</param>
+        /// <param name="nsManager">Namespace manager</param>
+        /// <returns>Schema in internal representation (Schema)</returns>
         public static Schema Deserialize(XDocument xSchema, XmlNamespaceManager nsManager)
         {
             Schema schema = new Schema();
             schema.Namespaces = DeserializeNamespaces(xSchema.Root, nsManager);
             schema.Patterns = DeserializePatterns(xSchema.Root, nsManager);
-
             return schema;
         }
 
-        private static Ns[] DeserializeNamespaces(XElement xRoot, XmlNamespaceManager nsManager)
+        private static Namespace[] DeserializeNamespaces(XElement xRoot, XmlNamespaceManager nsManager)
         {
-            List<Ns> listNs = new List<Ns>();
+            List<Namespace> listNs = new List<Namespace>();
             foreach (XElement xNs in xRoot.XPathSelectElements("sch:ns", nsManager))
             {
-                Ns ns = new Ns();
+                Namespace ns = new Namespace();
 
                 // @prefix
                 ns.Prefix = xNs.Attribute(XName.Get("prefix")).Value;
@@ -133,8 +145,8 @@ namespace SchemaTron.SyntaxModel
             List<String> diagnostics = new List<String>();
             List<Boolean> diagnosticsIsValueOf = new List<Boolean>();
 
-            XName nameElement = XName.Get("name", Consts.ISONamespace);
-            XName valueofElement = XName.Get("value-of", Consts.ISONamespace);
+            XName nameElement = XName.Get("name", Constants.ISONamespace);
+            XName valueofElement = XName.Get("value-of", Constants.ISONamespace);
 
             StringBuilder sbMessage = new StringBuilder();
             foreach (XNode node in xAssert.DescendantNodes())
@@ -186,7 +198,7 @@ namespace SchemaTron.SyntaxModel
             assert.Message = sbMessage.ToString();
             assert.Diagnostics = diagnostics.ToArray();
             assert.DiagnosticsIsValueOf = diagnosticsIsValueOf.ToArray();
-        }        
+        }
 
     }
 }

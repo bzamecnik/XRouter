@@ -9,7 +9,7 @@ namespace UnitTests
 {
     public class Inclusions
     {
-        class InclusionsEmbededResourceResolver : SchemaTron.InclusionsResolver
+        class InclusionsEmbededResourceResolver : SchemaTron.IInclusionResolver
         {
             public XDocument Resolve(String href)
             {
@@ -22,9 +22,9 @@ namespace UnitTests
             XDocument xSch = Resources.Provider.LoadXmlDocument("inclusions_sch.xml");
             XDocument xIn = Resources.Provider.LoadXmlDocument("inclusions_xml.xml");
 
-            ValidatorSetting setting = new ValidatorSetting();
-            setting.InclusionsResolver = new InclusionsEmbededResourceResolver();
-            Validator validator = Validator.Create(xSch, setting);
+            ValidatorSettings settings = new ValidatorSettings();
+            settings.InclusionsResolver = new InclusionsEmbededResourceResolver();
+            Validator validator = Validator.Create(xSch, settings);
             ValidatorResults results = validator.Validate(xIn, true); 
         }
 
@@ -33,9 +33,9 @@ namespace UnitTests
             XDocument xSch = Resources.Provider.LoadXmlDocument("inclusions_sch.xml");
             XDocument xIn = Resources.Provider.LoadXmlDocument("inclusions_xml_invalid.xml");
 
-            ValidatorSetting setting = new ValidatorSetting();
-            setting.InclusionsResolver = new InclusionsEmbededResourceResolver();
-            Validator validator = Validator.Create(xSch, setting);
+            ValidatorSettings settings = new ValidatorSettings();
+            settings.InclusionsResolver = new InclusionsEmbededResourceResolver();
+            Validator validator = Validator.Create(xSch, settings);
 
             // fully validation
             ValidatorResults results1 = validator.Validate(xIn, true);

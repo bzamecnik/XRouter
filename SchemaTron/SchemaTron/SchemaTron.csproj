@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\SchemaTron.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\SchemaTron.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,16 +43,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssertionInfo.cs" />
-    <Compile Include="Consts.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Exceptions.cs" />
-    <Compile Include="InclusionsFileResolver.cs" />
-    <Compile Include="InclusionsResolver.cs" />
+    <Compile Include="FileInclusionResolver.cs" />
+    <Compile Include="IInclusionResolver.cs" />
     <Compile Include="Preprocessing\Preprocessor.cs" />
-    <Compile Include="Preprocessing\structs.cs" />
+    <Compile Include="Preprocessing\Structs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Provider.cs" />
     <Compile Include="SyntaxModel\Assert.cs" />
-    <Compile Include="SyntaxModel\Ns.cs" />
+    <Compile Include="SyntaxModel\Namespace.cs" />
     <Compile Include="SyntaxModel\Pattern.cs" />
     <Compile Include="SyntaxModel\Rule.cs" />
     <Compile Include="SyntaxModel\Schema.cs" />
@@ -58,7 +60,7 @@
     <Compile Include="ValidationEvaluator.cs" />
     <Compile Include="Validator.cs" />
     <Compile Include="ValidatorResults.cs" />
-    <Compile Include="ValidatorSetting.cs" />
+    <Compile Include="ValidatorSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\schema_phaseA.xml" />

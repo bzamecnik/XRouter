@@ -2,15 +2,13 @@
 <schema xmlns="http://purl.oclc.org/dsdl/schematron">
   <ns prefix="ms" uri="http://purl.oclc.org/dsdl/schematron"/>
 
-  <!-- TODO: Obsahy elementu assert prelozit do AJ. Text se muze dostat k uzivateli. -->
-  
   <pattern id="root">
     <rule context="/">
-      <assert test="ms:schema">Korenovym elementem musi byt element schema.</assert>
+      <assert test="ms:schema">Only 'schema' can be used as the root element.</assert>
     </rule>
   </pattern>
-   
-  <pattern id="schema">              
+
+  <pattern id="schema">
     <rule context="/ms:schema/ms:title">
       <assert test="true()"/>
     </rule>
@@ -33,108 +31,146 @@
       <assert test="true()"/>
     </rule>
     <rule context="/ms:schema/ms:*">
-      <assert test="false()">Element <name/> neni povolen v elementu schema.</assert>
-    </rule>    
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'schema' element.
+      </assert>
+    </rule>
     <rule context="/ms:schema/@queryBinding">
-      <assert test=".='xpath'">Hodnota atributu <name/> '<value-of select="."/>' je neplatna.</assert>
-    </rule>            
-  </pattern>   
-       
-  <pattern id="ns">
-    <rule context="/ms:schema/ms:ns">      
-      <assert test="count(@prefix)=1">Element <name/> musi mit atribut @prefix.</assert>
-      <assert test="count(@uri)=1">Element <name/> musi mit atribut @uri.</assert> 
-    </rule>   
-    <rule context="/ms:schema/ms:ns/ms:*">
-      <assert test="false()">Element <name/> neni povolen v elementu ns.</assert>
-    </rule>
-  </pattern>  
-      
-  <pattern id="phase">
-    <rule context="/ms:schema/ms:phase">     
-      <assert test="count(@id)=1">Element <name/> musi mit atribut phase.</assert>    
-    </rule>   
-    <rule context="/ms:schema/ms:phase/@id">
-      <assert test=".!='#ALL' and .!='#DEFAULT'">Hodnota atributu <name/> '<value-of select="."/> je neplatna.</assert>         
-    </rule>  
-    <rule context="/ms:schema/ms:phase/ms:p">     
-      <assert test="true()"/>
-    </rule>
-    <rule context="/ms:schema/ms:phase/ms:let">     
-      <assert test="true()"/>
-    </rule>
-    <rule context="/ms:schema/ms:phase/ms:active">     
-      <assert test="true()"/>
-    </rule>
-    <rule context="/ms:schema/ms:phase/ms:*">     
-      <assert test="false()">Element <name/> neni povolen v elementu phase.</assert>
+      <assert test=".='xpath'">
+        The value of the '<name/>' attribute ('<value-of select="."/>') is not valid.
+      </assert>
     </rule>
   </pattern>
-     
+
+  <pattern id="ns">
+    <rule context="/ms:schema/ms:ns">
+      <assert test="count(@prefix)=1">
+        The '<name/>' element must contain the '@prefix' attribute.
+      </assert>
+      <assert test="count(@uri)=1">
+        The '<name/>' element must contain the '@uri' attribute.
+      </assert>
+    </rule>
+    <rule context="/ms:schema/ms:ns/ms:*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'ns' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="phase">
+    <rule context="/ms:schema/ms:phase">
+      <assert test="count(@id)=1">
+        The '<name/>' element must contain the 'phase' attribute.
+      </assert>
+    </rule>
+    <rule context="/ms:schema/ms:phase/@id">
+      <assert test=".!='#ALL' and .!='#DEFAULT'">
+        The value of the '<name/>' attribute ('<value-of select="."/>') is not valid.
+      </assert>
+    </rule>
+    <rule context="/ms:schema/ms:phase/ms:p">
+      <assert test="true()"/>
+    </rule>
+    <rule context="/ms:schema/ms:phase/ms:let">
+      <assert test="true()"/>
+    </rule>
+    <rule context="/ms:schema/ms:phase/ms:active">
+      <assert test="true()"/>
+    </rule>
+    <rule context="/ms:schema/ms:phase/ms:*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'phase' element.
+      </assert>
+    </rule>
+  </pattern>
+
   <pattern id="active">
-    <rule context="/ms:schema/ms:phase/ms:active">    
-      <assert test="count(@pattern)=1">Element <name/> musi mit atribut @pattern.</assert>        
-    </rule>    
-    <rule context="/ms:schema/ms:phase/ms:active/ms:dir">    
-      <assert test="true()"/>      
+    <rule context="/ms:schema/ms:phase/ms:active">
+      <assert test="count(@pattern)=1">
+        The '<name/>' element must contain the '@pattern' attribute.
+      </assert>
     </rule>
-    <rule context="/ms:schema/ms:phase/ms:active/ms:emph">    
-      <assert test="true()"/>      
+    <rule context="/ms:schema/ms:phase/ms:active/ms:dir">
+      <assert test="true()"/>
     </rule>
-    <rule context="/ms:schema/ms:phase/ms:active/ms:span">    
-      <assert test="true()"/>      
+    <rule context="/ms:schema/ms:phase/ms:active/ms:emph">
+      <assert test="true()"/>
     </rule>
-    <rule context="/ms:schema/ms:phase/ms:active/ms:*">    
-      <assert test="false()">Element <name/> neni povolen v elementu active.</assert>       
+    <rule context="/ms:schema/ms:phase/ms:active/ms:span">
+      <assert test="true()"/>
     </rule>
-  </pattern>  
-   
-  <pattern id="pattern">    
+    <rule context="/ms:schema/ms:phase/ms:active/ms:*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'active' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="pattern">
     <rule context="/ms:schema/ms:pattern/@abstract">
-      <assert test=".='true' or .='false'">Hodnota atributu <name/> '<value-of select="."/> je neplatna.</assert>   
+      <assert test=".='true' or .='false'">
+        The value of the '<name/>' attribute ('<value-of select="."/>') is not valid.
+      </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern[not(@is-a) and @abstract='true']">
-      <assert test="count(@id)=1">Element <name/> musi mit atribut id.</assert>   
+      <assert test="count(@id)=1">
+        The '<name/>' element must contain the 'id' attribute.
+      </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern[@is-a]/@abstract">
-      <assert test=".!='true'">Hodnota atributu <name/> '<value-of select="."/>' je neplatna.</assert>   
-    </rule>         
+      <assert test=".!='true'">
+        The value of the '<name/>' attribute ('<value-of select="."/>') is not valid.
+      </assert>
+    </rule>
     <rule context="/ms:schema/ms:pattern/ms:title">
-      <assert test="true()"/>   
-    </rule>  
+      <assert test="true()"/>
+    </rule>
     <rule context="/ms:schema/ms:pattern/ms:p">
-      <assert test="true()"/>   
-    </rule> 
+      <assert test="true()"/>
+    </rule>
     <rule context="/ms:schema/ms:pattern[not(@is-a)]/ms:let">
-      <assert test="true()"/>   
-    </rule> 
+      <assert test="true()"/>
+    </rule>
     <rule context="/ms:schema/ms:pattern[not(@is-a)]/ms:rule">
-      <assert test="true()"/>   
+      <assert test="true()"/>
     </rule>
     <rule context="/ms:schema/ms:pattern[@is-a]/ms:param">
-      <assert test="true()"/>   
+      <assert test="true()"/>
     </rule>
     <rule context="/ms:schema/ms:pattern[@is-a]/ms:*">
-      <assert test="false()">Element <name/> neni povolen v elementu pattern[@is-a].</assert>   
-    </rule>  
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'pattern[@is-a]' element.
+      </assert>
+    </rule>
     <rule context="/ms:schema/ms:pattern[not(@is-a)]/ms:*">
-      <assert test="false()">Element <name/> neni povolen v elementu pattern[not(@is-a)].</assert>   
-    </rule>                
-  </pattern> 
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'pattern[not(@is-a)]' element.
+      </assert>
+    </rule>
+  </pattern>
 
   <pattern id="param">
     <rule context="/ms:schema/ms:pattern[@is-a]/ms:param">
-      <assert test="count(@name)=1">Element <name/> musi mit atribut name.</assert>
-      <assert test="count(@value)=1">Element <name/> musi mit atribut value.</assert>
-    </rule>    
+      <assert test="count(@name)=1">
+        The '<name/>' element must contain the 'name' attribute.
+      </assert>
+      <assert test="count(@value)=1">
+        The '<name/>' element must contain the 'value' attribute.
+      </assert>
+    </rule>
     <rule context="/ms:schema/ms:pattern[@is-a]/ms:param/ms:*">
-      <assert test="false()">Element <name/> neni povolen v elementu param.</assert>
-    </rule>    
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'param' element.
+      </assert>
+    </rule>
   </pattern>
 
   <pattern id="diagnostic">
     <rule context="/ms:schema/ms:diagnostics/ms:diagnostic">
-      <assert test="count(@id)=1">Element <name/> musi mit atribut diagnostic.</assert>
+      <assert test="count(@id)=1">
+        The '<name/>' element must contain the 'diagnostic' attribute.
+      </assert>
     </rule>
     <rule context="/ms:schema/ms:diagnostics/ms:diagnostic/ms:value-of">
       <assert test="true()"/>
@@ -147,200 +183,244 @@
     </rule>
     <rule context="/ms:schema/ms:diagnostics/ms:diagnostic/ms:span">
       <assert test="true()"/>
-    </rule> 
+    </rule>
     <rule context="/ms:schema/ms:diagnostics/ms:diagnostic/ms:*">
-      <assert test="false()">Element <name/> neni povolen v elementu diagnostic.</assert> 
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'diagnostic' element.
+      </assert>
     </rule>
   </pattern>
-  
-  <pattern id="diagnostics">  
+
+  <pattern id="diagnostics">
     <rule context="/ms:schema/ms:diagnostics/ms:diagnostic">
       <assert test="true()"/>
     </rule>
     <rule context="/ms:schema/ms:diagnostics/ms:*">
-      <assert test="false()">Element <name/> neni povolen v elementu diagnostics.</assert>   
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'diagnostics' element.
+      </assert>
     </rule>
   </pattern>
-    
-  <pattern id="rule">            
+
+  <pattern id="rule">
     <rule context="/ms:schema/ms:pattern/ms:rule/@abstract">
-      <assert test=".='true' or .='false'">Hodnota atributu <name/> '<value-of select="."/> je neplatna.</assert>   
+      <assert test=".='true' or .='false'">
+        The value of the '<name/>' attribute ('<value-of select="."/>') is not valid.
+      </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule[not(@abstract='true')]">
-      <assert test="count(@context)=1">Element <name/> musi mit atribut context.</assert>          
+      <assert test="count(@context)=1">
+        The '<name/>' element must contain the 'context' attribute.
+      </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule">
-      <assert test="count(@context)=0">Element <name/> nesmi mit atribut context.</assert> 
-      <assert test="count(@id)=1">Element <name/> musi mit atribut id.</assert>          
-    </rule>       
+      <assert test="count(@context)=0">
+        The '<name/>' element must not contain the 'context' attribute.
+      </assert>
+      <assert test="count(@id)=1">
+        The '<name/>' element must contain the 'id' attribute.
+      </assert>
+    </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:let">
-      <assert test="true()"/> 
-    </rule>   
+      <assert test="true()"/>
+    </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:assert">
-      <assert test="true()"/> 
-    </rule> 
+      <assert test="true()"/>
+    </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:report">
-      <assert test="true()"/> 
-    </rule> 
+      <assert test="true()"/>
+    </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:extends">
-      <assert test="true()"/> 
+      <assert test="true()"/>
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:*">
-      <assert test="false()">Element <name/> neni povolen v elementu rule.</assert>  
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'rule' element.
+      </assert>
     </rule>
   </pattern>
-     
+
   <pattern id="extends">
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:extends">
-      <assert test="count(@rule)=1">Element <name/> musi mit atribut rule.</assert>
-    </rule>    
-    <rule context="/ms:schema/ms:pattern/ms:rule/ms:extends/ms:*">
-      <assert test="false()">Element <name/> neni povolen v elementu extends.</assert>  
+      <assert test="count(@rule)=1">
+        The '<name/>' element must contain the 'rule' attribute.
+      </assert>
     </rule>
-  </pattern> 
-   
+    <rule context="/ms:schema/ms:pattern/ms:rule/ms:extends/ms:*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'extends' element.
+      </assert>
+    </rule>
+  </pattern>
+
   <pattern id="assertion">
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:assert|/ms:schema/ms:pattern/ms:rule/ms:report">
-      <assert test="count(@test)=1">Element <name/> musi mit atribut test.</assert>          
-    </rule>       
+      <assert test="count(@test)=1">
+        The '<name/>' element must contain the 'test' attribute.
+      </assert>
+    </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:assert/ms:name|/ms:schema/ms:pattern/ms:rule/ms:report/ms:name">
-      <assert test="true()"/>         
+      <assert test="true()"/>
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:assert/ms:value-of|/ms:schema/ms:pattern/ms:rule/ms:report/ms:value-of">
-      <assert test="true()"/>         
+      <assert test="true()"/>
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:assert/ms:emph|/ms:schema/ms:pattern/ms:rule/ms:report/ms:emph">
-      <assert test="true()"/>         
+      <assert test="true()"/>
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:assert/ms:dir|/ms:schema/ms:pattern/ms:rule/ms:report/ms:dir">
-      <assert test="true()"/>         
+      <assert test="true()"/>
     </rule>
-     <rule context="/ms:schema/ms:pattern/ms:rule/ms:assert/ms:span|/ms:schema/ms:pattern/ms:rule/ms:report/ms:span">
+    <rule context="/ms:schema/ms:pattern/ms:rule/ms:assert/ms:span|/ms:schema/ms:pattern/ms:rule/ms:report/ms:span">
       <assert test="true()"/>
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:assert/ms:*|/ms:schema/ms:pattern/ms:rule/ms:report/ms:*">
-      <assert test="false()">Element <name/> neni povolen v elementu assertion.</assert>         
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'assertion' element.
+      </assert>
     </rule>
   </pattern>
-   
+
   <pattern id="let">
-    <rule context="ms:let">    
-      <assert test="count(@name)=1">Element <name/> musi mit atribut name.</assert>
-      <assert test="count(@value)=1">Element <name/> musi mit atribut value.</assert>                 
-    </rule>   
+    <rule context="ms:let">
+      <assert test="count(@name)=1">
+        The '<name/>' element must contain the 'name' attribute.
+      </assert>
+      <assert test="count(@value)=1">
+        The '<name/>' element must contain the 'value' attribute.
+      </assert>
+    </rule>
     <rule context="ms:let/ms:*">
-      <assert test="false()">Element <name/> neni povolen v elementu let.</assert>
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'let' element.
+      </assert>
     </rule>
   </pattern>
 
   <pattern id="name">
-    <rule context="ms:name/ms:*">    
-      <assert test="false()">Element <name/> neni povolen v elementu name.</assert>        
+    <rule context="ms:name/ms:*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'name' element.
+      </assert>
     </rule>
   </pattern>
-  
+
   <pattern id="value-of">
     <rule context="ms:value-of">
-      <assert test="count(@select)=1">Element <name/> musi mit atribut value-of.</assert>          
+      <assert test="count(@select)=1">
+        The '<name/>' element must contain the 'value-of' attribute.
+      </assert>
     </rule>
     <rule context="ms:value-of/ms:*">
-      <assert test="false()">Element <name/> neni povolen v elementu value-of.</assert>           
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'value-of' element.
+      </assert>
     </rule>
-  </pattern> 
+  </pattern>
 
   <pattern id="emph">
-    <rule context="ms:emph/ms:*">    
-      <assert test="false()">Element <name/> neni povolen v elementu emph.</assert>        
+    <rule context="ms:emph/ms:*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'emph' element.
+      </assert>
     </rule>
   </pattern>
 
   <pattern id="p">
-    <rule context="ms:p/ms:dir">    
-      <assert test="true()"/>      
+    <rule context="ms:p/ms:dir">
+      <assert test="true()"/>
     </rule>
-    <rule context="ms:p/ms:emph">    
-      <assert test="true()"/>      
+    <rule context="ms:p/ms:emph">
+      <assert test="true()"/>
     </rule>
-    <rule context="ms:p/ms:span">    
-      <assert test="true()"/>      
+    <rule context="ms:p/ms:span">
+      <assert test="true()"/>
     </rule>
-    <rule context="ms:p/ms:*">    
-      <assert test="false()">Element <name/> neni povolen v elementu p.</assert>        
+    <rule context="ms:p/ms:*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'p' element.
+      </assert>
     </rule>
   </pattern>
 
   <pattern id="span">
-    <rule context="ms:span">    
-      <assert test="count(@class)=1">Element <name/> musi mit atribut class.</assert>        
+    <rule context="ms:span">
+      <assert test="count(@class)=1">
+        The '<name/>' element must contain the 'class' attribute.
+      </assert>
     </rule>
-    <rule context="ms:span/ms:*">    
-      <assert test="false()">Element <name/> neni povolen v elementu span.</assert>        
+    <rule context="ms:span/ms:*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'span' element.
+      </assert>
     </rule>
   </pattern>
 
-  <pattern id="title">  
-    <rule context="ms:title/ms:dir">    
-      <assert test="true()"/>       
-    </rule>  
-    <rule context="ms:title/ms:*">    
-      <assert test="false()">Element <name/> neni povolen v elementu title.</assert>        
+  <pattern id="title">
+    <rule context="ms:title/ms:dir">
+      <assert test="true()"/>
+    </rule>
+    <rule context="ms:title/ms:*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'title' element.
+      </assert>
     </rule>
   </pattern>
-  
+
   <pattern id="ID_IDREF">
     <rule context="/ms:schema/@defaultPhase">
       <assert test=".=../ms:phase/@id">
-        Hodnota atributu <name/> '<value-of select="."/>' neodkazuje na nejakou phase.
+        The value of the '<name/>' attribute ('<value-of select="."/>') does not reference any phase.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:ns/@prefix">
       <assert test="not(.=../preceding-sibling::ms:ns/@prefix)">
-        Hodnota atributu <name/> '<value-of select="."/>' neni jednoznacna.
+        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:phase/@id">
       <assert test="not(.=../preceding-sibling::ms:phase/@id)">
-        Hodnota atributu <name/> '<value-of select="."/>' neni jednoznacna.
+        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:phase/ms:active/@pattern">
       <assert test=".=../../../ms:pattern[not(@abstract='true')]/@id">
-        Hodnota atributu <name/> '<value-of select="."/>' neodkazuje na nejaky pattern.
+        The value of the '<name/>' attribute ('<value-of select="."/>') does not reference any pattern.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern/@id">
       <assert test="not(.=../preceding-sibling::ms:pattern/@id)">
-        Hodnota atributu <name/> '<value-of select="."/>' neni jednoznacna.
+        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern[@is-a]/@is-a">
       <assert test=".=../../ms:pattern[@abstract='true']/@id">
-        Hodnota atributu <name/> '<value-of select="."/>' neodkazuje na nejaky abstract pattern.
+        The value of the '<name/>' attribute ('<value-of select="."/>') does not reference any abstract pattern.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern[@is-a]/ms:param/@name">
       <assert test="not(.=../preceding-sibling::ms:param/@name)">
-        Hodnota atributu <name/> '<value-of select="."/>' neni jednoznacna.
+        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/@id">
       <assert test="not(.=../preceding-sibling::ms:rule/@id)">
-        Hodnota atributu <name/> '<value-of select="."/>' neni jednoznacna.
+        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:extends/@rule">
       <assert test=".=../../../ms:rule[@abstract='true']/@id">
-        Hodnota atributu <name/> '<value-of select="."/>' neodkazuje na nejaky abstract rule.
+        The value of the '<name/>' attribute ('<value-of select="."/>') does not reference any abstract rule.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:assert/@id|/ms:schema/ms:pattern/ms:rule/ms:report/@id">
       <assert test="not(.=../preceding-sibling::ms:assert/@id) and not(.=../preceding-sibling::ms:report/@id)">
-        Hodnota atributu <name/> '<value-of select="."/>' neni jednoznacna.
+        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
       </assert>
     </rule>
     <rule context="ms:let/@name">
       <assert test="not(.=../preceding-sibling::ms:let/@name)">
-        Hodnota atributu <name/> '<value-of select="."/>' neni jednoznacna.
+        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
       </assert>
     </rule>
   </pattern>

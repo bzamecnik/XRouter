@@ -1,69 +1,85 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SchemaTron
 {
     /// <summary>
-    /// Returns detailed information related to the assertion.
+    /// Contains detailed information related to an assertion.
     /// </summary>
+    /// <remarks>
+    /// This class is a data-transfer object (DTO).
+    /// </remarks>
     public sealed class AssertionInfo
     {
+        /// <summary>
+        /// Prevent creating instances outside this assembly.
+        /// </summary>
         internal AssertionInfo()
         { }
-        
+
         /// <summary>
-        /// Indicates that the assertion is report. 
+        /// Indicates whether the assertion is a report.
         /// </summary>
         public Boolean IsReport { internal set; get; }
-        
+
         /// <summary>
-        /// Gets the assertion pattern id.
+        /// Represents the assertion pattern identifier.
         /// </summary>
         public String PatternId { internal set; get; }
 
         /// <summary>
-        /// Gets the assertion rule id.
+        /// Represents the assertion rule identifier.
         /// </summary>
         public String RuleId { internal set; get; }
 
         /// <summary>
-        /// Gets the assertion rule context.
+        /// Represents the assertion rule context.
         /// </summary>
         public String RuleContext { internal set; get; }
 
         /// <summary>
-        /// Gets the assertion id.
+        /// Represents the assertion identifier.
         /// </summary>
         public String AssertionId { internal set; get; }
 
         /// <summary>
-        /// Gets the assertion test.
+        /// Represents the assertion test.
         /// </summary>
         public String AssertionTest { internal set; get; }
 
         /// <summary>
-        /// Gets the node line number (pokud byla instance dodane s line information).
+        /// Represents the number of the line where the node was located.
         /// </summary>
+        /// <remarks>
+        /// Only in case the validated XML document instance contained the
+        /// line information.
+        /// </remarks>
         public Int32 LineNumber { internal set; get; }
 
         /// <summary>
-        /// Gets the node line position (pokud byla instance dodane s line information).
+        /// Represents the position of the node on a line.
         /// </summary>
+        /// <remarks>
+        /// Only in case the validated XML document instance contained the
+        /// line information.
+        /// </remarks>
         public Int32 LinePosition { internal set; get; }
 
         /// <summary>
-        /// Gets the node xpath location.
+        /// Represents the XPath location of the node.
         /// </summary>
         public String Location { internal set; get; }
 
         /// <summary>
-        /// Gets the assertion user-message (name and value-of
-        /// elements are substitued with selected values).      
+        /// Represents the assertion user message with the <c>name</c> and
+        /// <c>value-of</c> elements substitued with selected values.
         /// </summary>
         public String UserMessage { internal set; get; }
 
+        /// <summary>
+        /// Returns a System.String which represent the current AssertionInfo
+        /// instance.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return this.UserMessage;

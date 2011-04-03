@@ -7,14 +7,20 @@ using System.Xml.Linq;
 
 namespace SchemaTron.SyntaxModel
 {
-    internal sealed class Rule 
-    {                
+    /// <summary>
+    /// Represents a rule.
+    /// </summary>
+    /// <remarks>
+    /// TODO: describe in more detail.
+    /// </remarks>
+    internal sealed class Rule
+    {
         public String Id { set; get; }
 
         public String Context { set; get; }
 
         public XPathExpression CompiledContext { set; get; }
-        
-        public Assert[] Asserts { set; get; }       
+
+        public Assert[] Asserts { set; get; }
     }
 }

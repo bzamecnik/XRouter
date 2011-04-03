@@ -11,7 +11,7 @@ namespace SchemaTron.Resources
     internal static class Provider
     {
         private static XDocument schemaPhaseA = null;
-       
+
         public static XDocument SchemaPhaseA
         {
             get

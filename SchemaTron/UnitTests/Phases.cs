@@ -15,27 +15,27 @@ namespace UnitTests
             XDocument xIn = Resources.Provider.LoadXmlDocument("phases_xml.xml");
 
             // #ALL
-            ValidatorSetting setting = new ValidatorSetting();
-            setting.Phase = "#ALL";
-            Validator validator = Validator.Create(xSch, setting);
+            ValidatorSettings settings = new ValidatorSettings();
+            settings.Phase = "#ALL";
+            Validator validator = Validator.Create(xSch, settings);
             ValidatorResults results = validator.Validate(xIn, true);
 
             // #DEFAULT
-            setting = new ValidatorSetting();
-            setting.Phase = "#DEFAULT";
-            validator = Validator.Create(xSch, setting);
+            settings = new ValidatorSettings();
+            settings.Phase = "#DEFAULT";
+            validator = Validator.Create(xSch, settings);
             results = validator.Validate(xIn, true);
 
             // A
-            setting = new ValidatorSetting();
-            setting.Phase = "A";
-            validator = Validator.Create(xSch, setting);
+            settings = new ValidatorSettings();
+            settings.Phase = "A";
+            validator = Validator.Create(xSch, settings);
             results = validator.Validate(xIn, true);
 
             // B
-            setting = new ValidatorSetting();
-            setting.Phase = "B";
-            validator = Validator.Create(xSch, setting);
+            settings = new ValidatorSettings();
+            settings.Phase = "B";
+            validator = Validator.Create(xSch, settings);
             results = validator.Validate(xIn, true);
         }
 
@@ -45,27 +45,27 @@ namespace UnitTests
             XDocument xIn = Resources.Provider.LoadXmlDocument("phases_xml_invalid.xml");
 
             // #ALL
-            ValidatorSetting setting = new ValidatorSetting();
-            setting.Phase = "#ALL";
-            Validator validator = Validator.Create(xSch, setting);
+            ValidatorSettings settings = new ValidatorSettings();
+            settings.Phase = "#ALL";
+            Validator validator = Validator.Create(xSch, settings);
             ValidatorResults results = validator.Validate(xIn, true);
 
             // #DEFAULT
-            setting = new ValidatorSetting();
-            setting.Phase = "#DEFAULT";
-            validator = Validator.Create(xSch, setting);
+            settings = new ValidatorSettings();
+            settings.Phase = "#DEFAULT";
+            validator = Validator.Create(xSch, settings);
             results = validator.Validate(xIn, true);
 
             // A
-            setting = new ValidatorSetting();
-            setting.Phase = "A";
-            validator = Validator.Create(xSch, setting);
+            settings = new ValidatorSettings();
+            settings.Phase = "A";
+            validator = Validator.Create(xSch, settings);
             results = validator.Validate(xIn, true);
 
             // B
-            setting = new ValidatorSetting();
-            setting.Phase = "B";
-            validator = Validator.Create(xSch, setting);
+            settings = new ValidatorSettings();
+            settings.Phase = "B";
+            validator = Validator.Create(xSch, settings);
             results = validator.Validate(xIn, true);
         }
     }
