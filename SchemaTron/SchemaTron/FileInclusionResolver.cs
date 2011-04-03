@@ -15,7 +15,7 @@ namespace SchemaTron
         /// <summary>
         /// A cache of previously loaded documents.
         /// </summary>
-        private Dictionary<String, XDocument> loadedDocs = new Dictionary<String, XDocument>();
+        private Dictionary<string, XDocument> loadedDocs = new Dictionary<string, XDocument>();
 
         /// <summary>
         /// Loads an external XML document from a file specified in the
@@ -23,7 +23,7 @@ namespace SchemaTron
         /// </summary>
         /// <param name="href">Absolute path to the external XML document.</param>
         /// <returns>The loaded external XML document.</returns>    
-        public XDocument Resolve(String href)
+        public XDocument Resolve(string href)
         {
             // each external XML dokument is loaded only once
             XDocument doc;
@@ -32,6 +32,7 @@ namespace SchemaTron
                 doc = XDocument.Load(href, LoadOptions.SetLineInfo);
                 this.loadedDocs.Add(href, doc);
             }
+
             return doc;
         }
     }

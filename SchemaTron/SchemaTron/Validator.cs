@@ -21,11 +21,6 @@ namespace SchemaTron
     public sealed class Validator
     {
         /// <summary>
-        /// Gets adjusted schema syntax.
-        /// </summary>
-        public XDocument MinSyntax { private set; get; }
-
-        /// <summary>
         /// Schematron schema for validation.
         /// </summary>
         private Schema schema = null;
@@ -34,7 +29,13 @@ namespace SchemaTron
         /// Private constructor to force instance creation via factory methods.
         /// </summary>
         private Validator()
-        { }
+        {
+        }
+
+        /// <summary>
+        /// Gets adjusted schema syntax.
+        /// </summary>
+        public XDocument MinSyntax { get; private set; }
 
         /// <summary>
         /// Creates a new Validator instance with default validator settings
@@ -67,10 +68,12 @@ namespace SchemaTron
             {
                 throw new ArgumentNullException("xSchema");
             }
+
             if (settings == null)
             {
                 settings = new ValidatorSettings();
             }
+
             if (settings.InclusionsResolver == null)
             {
                 settings.InclusionsResolver = new FileInclusionResolver();
@@ -122,7 +125,7 @@ namespace SchemaTron
         /// <exception cref="System.ArgumentException">if no default phase name
         /// is specified in the schema or a concrete phase does not exist in the
         /// schema</exception>
-        private static String DetermineSchemaPhase(XElement xRoot, String phase, XmlNamespaceManager nsManager)
+        private static string DetermineSchemaPhase(XElement xRoot, string phase, XmlNamespaceManager nsManager)
         {
             if (phase == null)
             {
@@ -171,6 +174,7 @@ namespace SchemaTron
             {
                 return;
             }
+
             ValidatorSettings valArgs = new ValidatorSettings();
             valArgs.Preprocessing = false;
 
@@ -224,7 +228,7 @@ namespace SchemaTron
         /// error messages.</exception>
         private static void CompileXPathExpressions(Schema schema)
         {
-            List<String> messages = new List<String>();
+            List<string> messages = new List<string>();
 
             // resolve namespaces
             XmlNamespaceManager nsManager = new XmlNamespaceManager(new NameTable());
@@ -240,7 +244,7 @@ namespace SchemaTron
                 foreach (Rule rule in pattern.Rules)
                 {
                     // alter xpath context
-                    String context = rule.Context;
+                    string context = rule.Context;
                     if (context.Length > 0 && context[0] != '/')
                     {
                         context = String.Concat("//", context);
@@ -271,9 +275,9 @@ namespace SchemaTron
                         if (assert.Diagnostics.Length > 0)
                         {
                             assert.CompiledDiagnostics = new XPathExpression[assert.Diagnostics.Length];
-                            for (Int32 i = 0; i < assert.Diagnostics.Length; i++)
+                            for (int i = 0; i < assert.Diagnostics.Length; i++)
                             {
-                                String diag = assert.Diagnostics[i];
+                                string diag = assert.Diagnostics[i];
                                 try
                                 {
                                     assert.CompiledDiagnostics[i] = XPathExpression.Compile(diag);
@@ -316,7 +320,7 @@ namespace SchemaTron
         /// the first assertion.
         /// </param>
         /// <returns>Detailed validation results.</returns>
-        public ValidatorResults Validate(XDocument xInstance, Boolean fullValidation)
+        public ValidatorResults Validate(XDocument xInstance, bool fullValidation)
         {
             ValidationEvaluator evaluator = new ValidationEvaluator(this.schema, xInstance, fullValidation);
             return evaluator.Evaluate();

@@ -46,6 +46,7 @@ namespace SchemaTron.SyntaxModel
 
                 listNs.Add(ns);
             }
+
             return listNs.ToArray();
         }
 
@@ -68,6 +69,7 @@ namespace SchemaTron.SyntaxModel
 
                 listPattern.Add(pattern);
             }
+
             return listPattern.ToArray();
         }
 
@@ -93,6 +95,7 @@ namespace SchemaTron.SyntaxModel
 
                 listRule.Add(rule);
             }
+
             return listRule.ToArray();
         }
 
@@ -131,19 +134,20 @@ namespace SchemaTron.SyntaxModel
                 }
                 else
                 {
-                    assert.Diagnostics = new String[0];
+                    assert.Diagnostics = new string[0];
                     assert.Message = xAssert.Value;
                 }
 
                 listAssert.Add(assert);
             }
+
             return listAssert;
         }
 
         private static void ResolveAssertContent(XElement xAssert, Assert assert, XmlNamespaceManager nsManager)
         {
-            List<String> diagnostics = new List<String>();
-            List<Boolean> diagnosticsIsValueOf = new List<Boolean>();
+            List<string> diagnostics = new List<string>();
+            List<bool> diagnosticsIsValueOf = new List<bool>();
 
             XName nameElement = XName.Get("name", Constants.ISONamespace);
             XName valueofElement = XName.Get("value-of", Constants.ISONamespace);
@@ -160,7 +164,7 @@ namespace SchemaTron.SyntaxModel
                     XElement xEle = (XElement)node;
 
                     // resolve name, value-of
-                    String xpathDiagnostic = null;
+                    string xpathDiagnostic = null;
                     if (xEle.Name == nameElement)
                     {
                         diagnosticsIsValueOf.Add(false);
@@ -180,7 +184,7 @@ namespace SchemaTron.SyntaxModel
                     if (xpathDiagnostic != null)
                     {
                         // get collection index 
-                        Int32 index = diagnostics.IndexOf(xpathDiagnostic);
+                        int index = diagnostics.IndexOf(xpathDiagnostic);
                         if (index < 0)
                         {
                             diagnostics.Add(xpathDiagnostic);
@@ -199,6 +203,5 @@ namespace SchemaTron.SyntaxModel
             assert.Diagnostics = diagnostics.ToArray();
             assert.DiagnosticsIsValueOf = diagnosticsIsValueOf.ToArray();
         }
-
     }
 }

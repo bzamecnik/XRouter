@@ -19,6 +19,6 @@ namespace SchemaTron
         /// <param name="href">A reference to an external well-formed XML
         /// document.</param>
         /// <returns>The referenced external XML document</returns>
-        XDocument Resolve(String href);
+        XDocument Resolve(string href);
     }
 }

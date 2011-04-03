@@ -11,7 +11,7 @@ namespace UnitTests
     {
         class InclusionsEmbededResourceResolver : SchemaTron.IInclusionResolver
         {
-            public XDocument Resolve(String href)
+            public XDocument Resolve(string href)
             {
                 return Resources.Provider.LoadXmlDocument(href); 
             }

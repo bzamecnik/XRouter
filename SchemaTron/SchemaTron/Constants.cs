@@ -10,6 +10,6 @@ namespace SchemaTron
         /// <summary>
         /// Namespace of the ISO/IEC 19757-3 Schematron.
         /// </summary>
-        public static readonly String ISONamespace = "http://purl.oclc.org/dsdl/schematron";
+        public static readonly string ISONamespace = "http://purl.oclc.org/dsdl/schematron";
     }
 }

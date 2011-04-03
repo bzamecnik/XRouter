@@ -14,37 +14,38 @@ namespace SchemaTron
         /// Prevent creating instances outside this assembly.
         /// </summary>
         internal AssertionInfo()
-        { }
+        {
+        }
 
         /// <summary>
         /// Indicates whether the assertion is a report.
         /// </summary>
-        public Boolean IsReport { internal set; get; }
+        public bool IsReport { get; internal set; }
 
         /// <summary>
         /// Represents the assertion pattern identifier.
         /// </summary>
-        public String PatternId { internal set; get; }
+        public string PatternId { get; internal set; }
 
         /// <summary>
         /// Represents the assertion rule identifier.
         /// </summary>
-        public String RuleId { internal set; get; }
+        public string RuleId { get; internal set; }
 
         /// <summary>
         /// Represents the assertion rule context.
         /// </summary>
-        public String RuleContext { internal set; get; }
+        public string RuleContext { get; internal set; }
 
         /// <summary>
         /// Represents the assertion identifier.
         /// </summary>
-        public String AssertionId { internal set; get; }
+        public string AssertionId { get; internal set; }
 
         /// <summary>
         /// Represents the assertion test.
         /// </summary>
-        public String AssertionTest { internal set; get; }
+        public string AssertionTest { get; internal set; }
 
         /// <summary>
         /// Represents the number of the line where the node was located.
@@ -53,7 +54,7 @@ namespace SchemaTron
         /// Only in case the validated XML document instance contained the
         /// line information.
         /// </remarks>
-        public Int32 LineNumber { internal set; get; }
+        public int LineNumber { get; internal set; }
 
         /// <summary>
         /// Represents the position of the node on a line.
@@ -62,18 +63,18 @@ namespace SchemaTron
         /// Only in case the validated XML document instance contained the
         /// line information.
         /// </remarks>
-        public Int32 LinePosition { internal set; get; }
+        public int LinePosition { get; internal set; }
 
         /// <summary>
         /// Represents the XPath location of the node.
         /// </summary>
-        public String Location { internal set; get; }
+        public string Location { get; internal set; }
 
         /// <summary>
         /// Represents the assertion user message with the <c>name</c> and
         /// <c>value-of</c> elements substitued with selected values.
         /// </summary>
-        public String UserMessage { internal set; get; }
+        public string UserMessage { get; internal set; }
 
         /// <summary>
         /// Returns a System.String which represent the current AssertionInfo

@@ -3,24 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using System.Xml.XPath;
 
-namespace SchemaTron.SyntaxModel
+namespace SchemaTron.Preprocessing
 {
     /// <summary>
-    /// Represents a rule.
+    /// Represents an abstract rule.
     /// </summary>
     /// <remarks>
     /// TODO: describe in more detail.
     /// </remarks>
-    internal sealed class Rule
+    internal class AbstractRule
     {
         public string Id { get; set; }
 
-        public string Context { get; set; }
-
-        public XPathExpression CompiledContext { get; set; }
-
-        public Assert[] Asserts { get; set; }
+        public XElement Element { get; set; }
     }
 }

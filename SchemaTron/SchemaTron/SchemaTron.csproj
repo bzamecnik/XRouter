@@ -47,8 +47,10 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="FileInclusionResolver.cs" />
     <Compile Include="IInclusionResolver.cs" />
+    <Compile Include="Preprocessing\AbstractRule.cs" />
+    <Compile Include="Preprocessing\Parameter.cs" />
     <Compile Include="Preprocessing\Preprocessor.cs" />
-    <Compile Include="Preprocessing\Structs.cs" />
+    <Compile Include="Preprocessing\Let.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Provider.cs" />
     <Compile Include="SyntaxModel\Assert.cs" />

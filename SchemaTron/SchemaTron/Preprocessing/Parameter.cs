@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
-namespace SchemaTron.SyntaxModel
+namespace SchemaTron.Preprocessing
 {
     /// <summary>
-    /// Represents a namespace.
+    /// Represents a parameter reference.
     /// </summary>
     /// <remarks>
     /// TODO: describe in more detail.
     /// </remarks>
-    internal sealed class Namespace
+    internal class Parameter
     {
-        public string Prefix { get; set; }
+        public string Name { get; set; }
 
-        public string Uri { get; set; }
+        public string Value { get; set; }
     }
 }

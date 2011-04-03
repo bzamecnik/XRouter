@@ -19,11 +19,11 @@ namespace SchemaTron
     {
         private Schema schema = null;
         private XDocument xInstance = null;
-        private Boolean fullValidation;
+        private bool fullValidation;
         private XPathNavigator xNavigator = null;
         private List<XPathNavigator> usedContext = new List<XPathNavigator>();
         private ValidatorResults results = new ValidatorResults();
-        private Boolean isCanceled = false;
+        private bool isCanceled = false;
 
         /// <summary>
         /// Creates a new instance of the ValidationEvaluator containing the
@@ -34,7 +34,7 @@ namespace SchemaTron
         /// <param name="fullValidation">Indicates whether to validate the
         /// whole document regardless of any assertion, or to stop validation at
         /// the first assertion.</param>
-        public ValidationEvaluator(Schema schema, XDocument xInstance, Boolean fullValidation)
+        public ValidationEvaluator(Schema schema, XDocument xInstance, bool fullValidation)
         {
             this.schema = schema;
             this.xInstance = xInstance;
@@ -59,6 +59,7 @@ namespace SchemaTron
                     break;
                 }
             }
+
             return this.results;
         }
 
@@ -95,6 +96,7 @@ namespace SchemaTron
                             break;
                         }
                     }
+
                     this.usedContext.Add(contextNode.Clone());
                 }
 
@@ -105,7 +107,7 @@ namespace SchemaTron
             }
         }
 
-        private Boolean IsContextUsed(XPathNavigator contextNode)
+        private bool IsContextUsed(XPathNavigator contextNode)
         {
             foreach (XPathNavigator nav in this.usedContext)
             {
@@ -114,16 +116,17 @@ namespace SchemaTron
                     return true;
                 }
             }
+
             return false;
         }
 
         private void ValidateAssert(Pattern pattern, Rule rule, Assert assert, XPathNavigator context)
         {
             // evaluate test
-            Object objResult = context.Evaluate(assert.CompiledTest);
+            object objResult = context.Evaluate(assert.CompiledTest);
 
             // resolve object result
-            Boolean isViolated = false;
+            bool isViolated = false;
             switch (assert.CompiledTest.ReturnType)
             {
                 case XPathResultType.Boolean:
@@ -133,8 +136,8 @@ namespace SchemaTron
                     }
                 case XPathResultType.Number:
                     {
-                        Double value = Convert.ToDouble(objResult);
-                        isViolated = Double.IsNaN(value);
+                        double value = Convert.ToDouble(objResult);
+                        isViolated = double.IsNaN(value);
                         break;
                     }
                 case XPathResultType.NodeSet:
@@ -171,11 +174,11 @@ namespace SchemaTron
                 info.LineNumber = lineInfo.LineNumber;
                 info.LinePosition = lineInfo.LinePosition;
 
-                this.results.violatedAssertions.Add(info);
+                this.results.ViolatedAssertionsList.Add(info);
             }
         }
 
-        private String CreateUserMessage(Assert assert, XPathNavigator context)
+        private string CreateUserMessage(Assert assert, XPathNavigator context)
         {
             if (assert.Diagnostics.Length == 0)
             {
@@ -183,11 +186,11 @@ namespace SchemaTron
             }
             else
             {
-                List<String> diagValues = new List<String>();
+                List<string> diagValues = new List<string>();
 
                 foreach (XPathExpression xpeDiag in assert.CompiledDiagnostics)
                 {
-                    Object objDiagResult = context.Evaluate(xpeDiag);
+                    object objDiagResult = context.Evaluate(xpeDiag);
 
                     // resolve diag result object
                     switch (xpeDiag.ReturnType)
@@ -216,22 +219,23 @@ namespace SchemaTron
                                 }
                                 else
                                 {
-                                    diagValues.Add("");
+                                    diagValues.Add(string.Empty);
                                 }
                                 break;
                             }
                         default:
-                            diagValues.Add("");
+                            diagValues.Add(string.Empty);
                             break;
                     }
                 }
+
                 return String.Format(assert.Message, diagValues.ToArray());
             }
         }
 
-        private String CreateLocation(XPathNavigator context)
+        private string CreateLocation(XPathNavigator context)
         {
-            Stack<String> steps = new Stack<String>();
+            Stack<string> steps = new Stack<string>();
 
             if (context.NodeType == XPathNodeType.Attribute)
             {
@@ -254,8 +258,8 @@ namespace SchemaTron
                     nsManager.AddNamespace(current.Prefix, current.NamespaceURI);
 
                     // resolve name + position
-                    String name = current.Name;
-                    Int32 position = 1 + ancestors.Current.Select(String.Format("preceding-sibling::{0}", name), nsManager).Count;
+                    string name = current.Name;
+                    int position = 1 + ancestors.Current.Select(String.Format("preceding-sibling::{0}", name), nsManager).Count;
                     steps.Push(String.Format("{0}[{1}]", name, position));
                 }
             }
@@ -270,6 +274,5 @@ namespace SchemaTron
 
             return sb.ToString();
         }
-
     }
 }

@@ -12,10 +12,22 @@ namespace SchemaTron
     public sealed class ValidatorSettings
     {
         /// <summary>
+        /// Creates a new instance of validator settings with default values.
+        /// </summary>
+        /// <remarks>
+        /// Default values: all phases are enabled, preprocessing is enabled.
+        /// </remarks>
+        public ValidatorSettings()
+        {
+            this.Phase = "#ALL";
+            this.Preprocessing = true;
+        }
+
+        /// <summary>
         /// Implementation of resolving included Schematron elements.
         /// In case it is set to null a default implementation is used.
         /// </summary>
-        public IInclusionResolver InclusionsResolver { set; get; }
+        public IInclusionResolver InclusionsResolver { get; set; }
 
         /// <summary>
         /// Name of the validation phase to be performed.
@@ -35,24 +47,12 @@ namespace SchemaTron
         /// performed.
         /// </para>
         /// </remarks>
-        public String Phase { set; get; }
-
-        /// <summary>
-        /// Creates a new instance of validator settings with default values.
-        /// </summary>
-        /// <remarks>
-        /// Default values: all phases are enabled, preprocessing is enabled.
-        /// </remarks>
-        public ValidatorSettings()
-        {
-            this.Phase = "#ALL";
-            this.Preprocessing = true;
-        }
+        public string Phase { get; set; }
 
         /// <summary>
         /// Indicates whether validator should perform preprocessing
         /// during its initialization.
         /// </summary>
-        internal Boolean Preprocessing { set; get; }
+        internal bool Preprocessing { get; set; }
     }
 }

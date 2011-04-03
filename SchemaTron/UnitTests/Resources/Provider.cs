@@ -10,7 +10,7 @@ namespace UnitTests.Resources
 {
     internal static class Provider
     {
-        public static XDocument LoadXmlDocument(String name)
+        public static XDocument LoadXmlDocument(string name)
         {
             Assembly currentAssembly = Assembly.GetExecutingAssembly();
             Stream stream = currentAssembly.GetManifestResourceStream(String.Format("UnitTests.Resources.{0}", name));

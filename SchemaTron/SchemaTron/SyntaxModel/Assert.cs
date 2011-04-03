@@ -14,20 +14,20 @@ namespace SchemaTron.SyntaxModel
     /// </remarks>
     internal sealed class Assert
     {
-        public String Id { set; get; }
+        public string Id { get; set; }
 
-        public Boolean IsReport { set; get; }
+        public bool IsReport { get; set; }
 
-        public String Test { set; get; }
+        public string Test { get; set; }
 
-        public XPathExpression CompiledTest { set; get; }
+        public XPathExpression CompiledTest { get; set; }
 
-        public String Message { set; get; }
+        public string Message { get; set; }
 
-        public Boolean[] DiagnosticsIsValueOf { set; get; }
+        public bool[] DiagnosticsIsValueOf { get; set; }
 
-        public String[] Diagnostics { set; get; }
+        public string[] Diagnostics { get; set; }
 
-        public XPathExpression[] CompiledDiagnostics { set; get; }
+        public XPathExpression[] CompiledDiagnostics { get; set; }
     }
 }

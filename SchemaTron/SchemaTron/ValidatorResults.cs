@@ -8,23 +8,23 @@ namespace SchemaTron
     /// </summary>
     public sealed class ValidatorResults
     {
-        internal ValidatorResults()
-        {
-            this.IsValid = true;
-            this.violatedAssertions = new List<AssertionInfo>();
-        }
+        /// <summary>
+        /// The list of assertions violated during the validation process.
+        /// </summary>
+        internal List<AssertionInfo> ViolatedAssertionsList { get; set; }
 
         /// <summary>
         /// Indicates whether a given XML document instance is valid with
         /// respect to the validator's schema. In case of any violated
         /// assertion the XML instance cannot be valid.
         /// </summary>
-        public Boolean IsValid { internal set; get; }
+        public bool IsValid { get; internal set; }
 
-        /// <summary>
-        /// The list of assertions violated during the validation process.
-        /// </summary>
-        internal List<AssertionInfo> violatedAssertions = null;
+        internal ValidatorResults()
+        {
+            this.IsValid = true;
+            this.ViolatedAssertionsList = new List<AssertionInfo>();
+        }
 
         /// <summary>
         /// Gets the information on assertions violated during the validation.
@@ -33,8 +33,8 @@ namespace SchemaTron
         /// </summary>
         public AssertionInfo[] ViolatedAssertions
         {
-            // TODO: is it better to return list or array?
-            get { return violatedAssertions.ToArray(); }
+            // TODO: is it better to return an array or an unmodifiable list?
+            get { return ViolatedAssertionsList.ToArray(); }
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace SchemaTron
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("IsValid='{0}' ViolatedAssertions='{1}'", this.IsValid, this.ViolatedAssertions.Length);
+            return String.Format("IsValid='{0}' ViolatedAssertions='{1}'", this.IsValid, this.ViolatedAssertionsList.Count);
         }
 
         /// <summary>
@@ -53,13 +53,14 @@ namespace SchemaTron
         /// </summary>
         /// <returns>A list of error messages about the violated assertions
         /// </returns>
-        internal String[] GetMessages()
+        internal string[] GetMessages()
         {
-            List<String> messages = new List<String>();
-            foreach (AssertionInfo info in this.violatedAssertions)
+            List<string> messages = new List<string>();
+            foreach (AssertionInfo info in this.ViolatedAssertionsList)
             {
                 messages.Add(info.UserMessage);
             }
+
             return messages.ToArray();
         }
     }

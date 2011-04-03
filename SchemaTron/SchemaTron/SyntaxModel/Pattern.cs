@@ -14,8 +14,8 @@ namespace SchemaTron.SyntaxModel
     /// </remarks>
     internal sealed class Pattern
     {
-        public String Id { set; get; }
+        public string Id { get; set; }
 
-        public Rule[] Rules { set; get; }
+        public Rule[] Rules { get; set; }
     }
 }
