@@ -61,7 +61,7 @@
   <pattern id="phase">
     <rule context="/ms:schema/ms:phase">
       <assert test="count(@id)=1">
-        The '<name/>' element must contain the 'phase' attribute.
+        The '<name/>' element must contain the 'id' attribute.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:phase/@id">
@@ -88,7 +88,7 @@
   <pattern id="active">
     <rule context="/ms:schema/ms:phase/ms:active">
       <assert test="count(@pattern)=1">
-        The '<name/>' element must contain the '@pattern' attribute.
+        The '<name/>' element must contain the 'pattern' attribute.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:phase/ms:active/ms:dir">
@@ -169,7 +169,7 @@
   <pattern id="diagnostic">
     <rule context="/ms:schema/ms:diagnostics/ms:diagnostic">
       <assert test="count(@id)=1">
-        The '<name/>' element must contain the 'diagnostic' attribute.
+        The '<name/>' element must contain the 'id' attribute.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:diagnostics/ms:diagnostic/ms:value-of">
@@ -210,7 +210,7 @@
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule[not(@abstract='true')]">
       <assert test="count(@context)=1">
-        The '<name/>' element must contain the 'context' attribute.
+        The abstract '<name/>' element must contain the 'context' attribute.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule">
@@ -276,7 +276,7 @@
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:assert/ms:*|/ms:schema/ms:pattern/ms:rule/ms:report/ms:*">
       <assert test="false()">
-        The '<name/>' element is not allowed inside the 'assertion' element.
+        The '<name/>' element is not allowed inside the 'assert' or 'report' element.
       </assert>
     </rule>
   </pattern>
@@ -308,7 +308,7 @@
   <pattern id="value-of">
     <rule context="ms:value-of">
       <assert test="count(@select)=1">
-        The '<name/>' element must contain the 'value-of' attribute.
+        The '<name/>' element must contain the 'select' attribute.
       </assert>
     </rule>
     <rule context="ms:value-of/ms:*">
@@ -375,12 +375,12 @@
     </rule>
     <rule context="/ms:schema/ms:ns/@prefix">
       <assert test="not(.=../preceding-sibling::ms:ns/@prefix)">
-        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:phase/@id">
       <assert test="not(.=../preceding-sibling::ms:phase/@id)">
-        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:phase/ms:active/@pattern">
@@ -390,7 +390,7 @@
     </rule>
     <rule context="/ms:schema/ms:pattern/@id">
       <assert test="not(.=../preceding-sibling::ms:pattern/@id)">
-        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern[@is-a]/@is-a">
@@ -400,12 +400,12 @@
     </rule>
     <rule context="/ms:schema/ms:pattern[@is-a]/ms:param/@name">
       <assert test="not(.=../preceding-sibling::ms:param/@name)">
-        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/@id">
       <assert test="not(.=../preceding-sibling::ms:rule/@id)">
-        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
       </assert>
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:extends/@rule">
@@ -415,12 +415,12 @@
     </rule>
     <rule context="/ms:schema/ms:pattern/ms:rule/ms:assert/@id|/ms:schema/ms:pattern/ms:rule/ms:report/@id">
       <assert test="not(.=../preceding-sibling::ms:assert/@id) and not(.=../preceding-sibling::ms:report/@id)">
-        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
       </assert>
     </rule>
     <rule context="ms:let/@name">
       <assert test="not(.=../preceding-sibling::ms:let/@name)">
-        The value of the '<name/>' attribute ('<value-of select="."/>') is ambiguous.
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
       </assert>
     </rule>
   </pattern>
