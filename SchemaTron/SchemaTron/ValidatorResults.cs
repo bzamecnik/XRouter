@@ -1,51 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SchemaTron
 {
     /// <summary>
-    /// Vraci detailni vysledky validace.
+    /// Detailed results of a validation.
     /// </summary>
     public sealed class ValidatorResults
-    {       
+    {
+        /// <summary>
+        /// The list of assertions violated during the validation process.
+        /// </summary>
+        internal List<AssertionInfo> ViolatedAssertionsList { get; set; }
+
+        /// <summary>
+        /// Indicates whether a given XML document instance is valid with
+        /// respect to the validator's schema. In case of any violated
+        /// assertion the XML instance cannot be valid.
+        /// </summary>
+        public bool IsValid { get; internal set; }
+
         internal ValidatorResults()
         {
             this.IsValid = true;
-            this.violatedAssertions = new List<AssertionInfo>(); 
+            this.ViolatedAssertionsList = new List<AssertionInfo>();
         }
 
         /// <summary>
-        /// Urcuje, jestli je dana XML instance proti schematu validni. Pokud je 
-        /// vyvolana alespon jedna assertion, pak je instance nevalidni. 
+        /// Gets the information on assertions violated during the validation.
+        /// In case the XML document instance is valid the array of assertions
+        /// is empty.
         /// </summary>
-        public Boolean IsValid { internal set; get; }
-
-        internal List<AssertionInfo> violatedAssertions = null;
-
-        /// <summary>
-        /// Vraci informace o vyvolanych assertions. Pokud je XML instance validni,
-        /// pak je vraceno prazdne pole.
-        /// </summary>
-        public AssertionInfo[] ViolatedAssertions
+        public IEnumerable<AssertionInfo> ViolatedAssertions
         {
-            get { return violatedAssertions.ToArray(); }
+            // TODO: is it better to return an array or an unmodifiable list?
+            get { return ViolatedAssertionsList; }
         }
-       
+
+        /// <summary>
+        /// Returns a System.String which represent the current
+        /// ValidatorResults instance.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("IsValid='{0}' ViolatedAssertions='{1}'", this.IsValid, this.ViolatedAssertions.Length);
+            return String.Format("IsValid='{0}' ViolatedAssertions='{1}'", this.IsValid, this.ViolatedAssertionsList.Count);
         }
 
-        internal String[] GetMessages()
+        /// <summary>
+        /// Converts the list of violated assertions into a list of
+        /// user-readable error messages.
+        /// </summary>
+        /// <returns>A list of error messages about the violated assertions
+        /// </returns>
+        internal IEnumerable<string> GetMessages()
         {
-            List<String> messages = new List<String>();
-            foreach (AssertionInfo info in this.violatedAssertions)
+            List<string> messages = new List<string>();
+            foreach (AssertionInfo info in this.ViolatedAssertionsList)
             {
                 messages.Add(info.UserMessage);
             }
-            return messages.ToArray();
+
+            return messages;
         }
     }
 }

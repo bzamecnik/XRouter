@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Xml.Linq;
 
 namespace SchemaTron.Resources
@@ -11,7 +11,9 @@ namespace SchemaTron.Resources
     internal static class Provider
     {
         private static XDocument schemaPhaseA = null;
-       
+        private static XDocument schemaPhaseB = null;
+        private static XDocument schemaPhaseC = null;
+
         public static XDocument SchemaPhaseA
         {
             get
@@ -27,8 +29,6 @@ namespace SchemaTron.Resources
                 return schemaPhaseA;
             }
         }
-
-        private static XDocument schemaPhaseB = null;
 
         public static XDocument SchemaPhaseB
         {
@@ -46,8 +46,6 @@ namespace SchemaTron.Resources
             }
         }
 
-        private static XDocument schemaPhaseC = null;
-
         public static XDocument SchemaPhaseC
         {
             get
@@ -64,7 +62,7 @@ namespace SchemaTron.Resources
             }
         }
 
-        private static XDocument LoadXmlDocument(String name)
+        private static XDocument LoadXmlDocument(string name)
         {
             Assembly currentAssembly = Assembly.GetExecutingAssembly();
             Stream stream = currentAssembly.GetManifestResourceStream(name);

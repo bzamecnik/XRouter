@@ -8,23 +8,35 @@ using System.Xml.XPath;
 
 namespace SchemaTron.SyntaxModel
 {
+    /// <summary>
+    /// Provides a facility for converting a schema from the XML form
+    /// (XDocument) into the internal representation (Schema).
+    /// </summary>
+    /// <see cref="XDocument"/>
+    /// <see cref="Schema"/>
     internal static class SchemaDeserializer
     {
+        /// <summary>
+        /// Converts a schema from the XML form (XDocument) to the internal
+        /// representation (Schema).
+        /// </summary>
+        /// <param name="xSchema">Schema in serialized XML form</param>
+        /// <param name="nsManager">Namespace manager</param>
+        /// <returns>Schema in internal representation (Schema)</returns>
         public static Schema Deserialize(XDocument xSchema, XmlNamespaceManager nsManager)
         {
             Schema schema = new Schema();
             schema.Namespaces = DeserializeNamespaces(xSchema.Root, nsManager);
             schema.Patterns = DeserializePatterns(xSchema.Root, nsManager);
-
             return schema;
         }
 
-        private static Ns[] DeserializeNamespaces(XElement xRoot, XmlNamespaceManager nsManager)
+        private static IEnumerable<Namespace> DeserializeNamespaces(XElement xRoot, XmlNamespaceManager nsManager)
         {
-            List<Ns> listNs = new List<Ns>();
+            List<Namespace> listNs = new List<Namespace>();
             foreach (XElement xNs in xRoot.XPathSelectElements("sch:ns", nsManager))
             {
-                Ns ns = new Ns();
+                Namespace ns = new Namespace();
 
                 // @prefix
                 ns.Prefix = xNs.Attribute(XName.Get("prefix")).Value;
@@ -34,10 +46,11 @@ namespace SchemaTron.SyntaxModel
 
                 listNs.Add(ns);
             }
-            return listNs.ToArray();
+
+            return listNs;
         }
 
-        private static Pattern[] DeserializePatterns(XElement xRoot, XmlNamespaceManager nsManager)
+        private static IEnumerable<Pattern> DeserializePatterns(XElement xRoot, XmlNamespaceManager nsManager)
         {
             List<Pattern> listPattern = new List<Pattern>();
             foreach (XElement xPattern in xRoot.XPathSelectElements("sch:pattern", nsManager))
@@ -52,14 +65,15 @@ namespace SchemaTron.SyntaxModel
                 }
 
                 // rules 
-                pattern.Rules = DeserializeRules(xPattern, nsManager).ToArray();
+                pattern.Rules = DeserializeRules(xPattern, nsManager);
 
                 listPattern.Add(pattern);
             }
-            return listPattern.ToArray();
+
+            return listPattern;
         }
 
-        private static Rule[] DeserializeRules(XElement xPattern, XmlNamespaceManager nsManager)
+        private static IEnumerable<Rule> DeserializeRules(XElement xPattern, XmlNamespaceManager nsManager)
         {
             List<Rule> listRule = new List<Rule>();
             foreach (XElement xRule in xPattern.XPathSelectElements("sch:rule", nsManager))
@@ -77,14 +91,15 @@ namespace SchemaTron.SyntaxModel
                 rule.Context = xRule.Attribute(XName.Get("context")).Value;
 
                 // asserts
-                rule.Asserts = DeserializeAsserts(xRule, nsManager).ToArray();
+                rule.Asserts = DeserializeAsserts(xRule, nsManager);
 
                 listRule.Add(rule);
             }
-            return listRule.ToArray();
+
+            return listRule;
         }
 
-        private static List<Assert> DeserializeAsserts(XElement xRule, XmlNamespaceManager nsManager)
+        private static IEnumerable<Assert> DeserializeAsserts(XElement xRule, XmlNamespaceManager nsManager)
         {
             List<Assert> listAssert = new List<Assert>();
             foreach (XElement xAssert in xRule.XPathSelectElements("sch:assert|sch:report", nsManager))
@@ -119,22 +134,23 @@ namespace SchemaTron.SyntaxModel
                 }
                 else
                 {
-                    assert.Diagnostics = new String[0];
+                    assert.Diagnostics = new string[0];
                     assert.Message = xAssert.Value;
                 }
 
                 listAssert.Add(assert);
             }
+
             return listAssert;
         }
 
         private static void ResolveAssertContent(XElement xAssert, Assert assert, XmlNamespaceManager nsManager)
         {
-            List<String> diagnostics = new List<String>();
-            List<Boolean> diagnosticsIsValueOf = new List<Boolean>();
+            List<string> diagnostics = new List<string>();
+            List<bool> diagnosticsIsValueOf = new List<bool>();
 
-            XName nameElement = XName.Get("name", Consts.ISONamespace);
-            XName valueofElement = XName.Get("value-of", Consts.ISONamespace);
+            XName nameElement = XName.Get("name", Constants.ISONamespace);
+            XName valueofElement = XName.Get("value-of", Constants.ISONamespace);
 
             StringBuilder sbMessage = new StringBuilder();
             foreach (XNode node in xAssert.DescendantNodes())
@@ -148,7 +164,7 @@ namespace SchemaTron.SyntaxModel
                     XElement xEle = (XElement)node;
 
                     // resolve name, value-of
-                    String xpathDiagnostic = null;
+                    string xpathDiagnostic = null;
                     if (xEle.Name == nameElement)
                     {
                         diagnosticsIsValueOf.Add(false);
@@ -168,7 +184,7 @@ namespace SchemaTron.SyntaxModel
                     if (xpathDiagnostic != null)
                     {
                         // get collection index 
-                        Int32 index = diagnostics.IndexOf(xpathDiagnostic);
+                        int index = diagnostics.IndexOf(xpathDiagnostic);
                         if (index < 0)
                         {
                             diagnostics.Add(xpathDiagnostic);
@@ -186,7 +202,6 @@ namespace SchemaTron.SyntaxModel
             assert.Message = sbMessage.ToString();
             assert.Diagnostics = diagnostics.ToArray();
             assert.DiagnosticsIsValueOf = diagnosticsIsValueOf.ToArray();
-        }        
-
+        }
     }
 }

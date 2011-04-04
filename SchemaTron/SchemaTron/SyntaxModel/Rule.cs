@@ -2,19 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.XPath;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace SchemaTron.SyntaxModel
 {
-    internal sealed class Rule 
-    {                
-        public String Id { set; get; }
+    /// <summary>
+    /// Represents a rule.
+    /// </summary>
+    /// <remarks>
+    /// TODO: describe in more detail.
+    /// </remarks>
+    internal sealed class Rule
+    {
+        public string Id { get; set; }
 
-        public String Context { set; get; }
+        public string Context { get; set; }
 
-        public XPathExpression CompiledContext { set; get; }
-        
-        public Assert[] Asserts { set; get; }       
+        public XPathExpression CompiledContext { get; set; }
+
+        public IEnumerable<Assert> Asserts { get; set; }
     }
 }

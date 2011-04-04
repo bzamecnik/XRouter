@@ -3,27 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using System.Xml.XPath;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace SchemaTron.Preprocessing
-{    
+{
     /// <summary>
-    /// Poskytuje transformacni kroky, ktere upravi syntax schematu do minimalizovane formy.
+    /// Preprocessor provides transformation steps which help to resolve the
+    /// schema syntax into the minimal form.
     /// </summary>
     internal static class Preprocessor
     {
         /// <summary>
-        /// Resolve all inclusions by replacing the include element by the resource linked to.
+        /// Resolves all inclusions by replacing each <c>include</c> element by the
+        /// resource it references.
         /// </summary>
-        /// <param name="xSchema"></param>
-        /// <param name="resolver"></param>
-        /// <param name="nsManager"></param>    
-        public static void ResolveInclusions(XDocument xSchema, InclusionsResolver resolver, XmlNamespaceManager nsManager)
+        /// <remarks>
+        /// Potentially infinite <c>include</c> recursion is terminated after
+        /// a finite number of steps.
+        /// </remarks>
+        /// <param name="xSchema">Validation schema</param>
+        /// <param name="resolver">Resolver of included elements</param>
+        /// <param name="nsManager">Namespace manager</param>
+        /// <exception cref="InvalidOperationException">If the <c>include</c> 
+        /// recursion exceeds a limit.</exception>
+        public static void ResolveInclusions(XDocument xSchema, IInclusionResolver resolver, XmlNamespaceManager nsManager)
         {
-            Int32 maxSteps = 500;
-            Int32 i;
-            for (i = 0; i < maxSteps; i++) // sprava potencialne nekonecne rekurze
+            // TODO: extract a constant or make it a configurable parameter
+            // (eg. store it in ValidatorSettings instance)
+            int maxSteps = 500; // recursion termination limit
+            int i;
+            for (i = 0; i < maxSteps; i++)
             {
                 // select inclusions
                 List<XElement> listIncludes = new List<XElement>();
@@ -31,6 +41,7 @@ namespace SchemaTron.Preprocessing
                 {
                     listIncludes.Add(xInclude);
                 }
+
                 if (listIncludes.Count == 0)
                 {
                     break;
@@ -39,24 +50,27 @@ namespace SchemaTron.Preprocessing
                 // replace inclusions
                 foreach (XElement xInclude in listIncludes)
                 {
-                    String href = xInclude.Attribute(XName.Get("href")).Value;
+                    string href = xInclude.Attribute(XName.Get("href")).Value;
                     XDocument xHref = resolver.Resolve(href);
                     xInclude.ReplaceWith(xHref.Root);
                 }
             }
+
             if (maxSteps == i)
             {
-                throw new InvalidOperationException("The possibility exists of infinite include recursion.");
+                throw new InvalidOperationException(String.Format(
+                    "There is a possibility of infinite recursion of include elements. " +
+                    "Terminated after the maximum of {0} steps.", maxSteps));
             }
         }
 
         /// <summary>
-        /// Remove phases and non-active patterns.
+        /// Removes phases and non-active patterns.
         /// </summary>
-        /// <param name="xSchema"></param>
-        /// <param name="nsManager"></param>
-        /// <param name="phase"></param>      
-        public static void ResolvePhase(XDocument xSchema, XmlNamespaceManager nsManager, String phase)
+        /// <param name="xSchema">Validation schema</param>
+        /// <param name="nsManager">Namespace manager</param>   
+        /// <param name="phase">Validation phase name</param>
+        public static void ResolvePhase(XDocument xSchema, XmlNamespaceManager nsManager, string phase)
         {
             if (phase == "#ALL")
             {
@@ -66,6 +80,7 @@ namespace SchemaTron.Preprocessing
                 {
                     xPhasesGarbage.Add(xPhase);
                 }
+
                 foreach (XElement xPhase in xPhasesGarbage)
                 {
                     xPhase.Remove();
@@ -75,8 +90,8 @@ namespace SchemaTron.Preprocessing
             {
                 XElement xActivePhase = xSchema.XPathSelectElement(String.Format("//sch:phase[@id='{0}']", phase), nsManager);
 
-                XName nameActive = XName.Get("active", Consts.ISONamespace);
-                XName nameLet = XName.Get("let", Consts.ISONamespace);
+                XName nameActive = XName.Get("active", Constants.ISONamespace);
+                XName nameLet = XName.Get("let", Constants.ISONamespace);
 
                 // select active and let elements
                 List<XElement> xActivePatterns = new List<XElement>();
@@ -85,7 +100,7 @@ namespace SchemaTron.Preprocessing
                 {
                     if (xEle.Name == nameActive)
                     {
-                        String patternId = xEle.Attribute(XName.Get("pattern")).Value;
+                        string patternId = xEle.Attribute(XName.Get("pattern")).Value;
                         XElement xPattern = xSchema.XPathSelectElement(String.Format("//sch:pattern[@id='{0}']", patternId), nsManager);
                         xActivePatterns.Add(xPattern);
                     }
@@ -105,6 +120,7 @@ namespace SchemaTron.Preprocessing
                         xNonActivePatterns.Add(xPattern);
                     }
                 }
+
                 foreach (XElement xPattern in xNonActivePatterns)
                 {
                     xPattern.Remove();
@@ -116,16 +132,18 @@ namespace SchemaTron.Preprocessing
                 {
                     xPhasesGarbage.Add(xPhase);
                 }
+
                 foreach (XElement xPhase in xPhasesGarbage)
                 {
                     xPhase.Remove();
                 }
 
-                // override schema lets witch active phase lets
+                // override schema lets which active phase lets
+                // TODO: clarify the comment
                 List<XElement> xLetGarbage = new List<XElement>();
                 foreach (XElement xLet in xSchema.XPathSelectElements("/sch:schema/sch:let", nsManager))
                 {
-                    String name = xLet.Attribute(XName.Get("name")).Value;
+                    string name = xLet.Attribute(XName.Get("name")).Value;
                     foreach (XElement xPhaseLet in xLets)
                     {
                         if (name == xPhaseLet.Attribute(XName.Get("name")).Value)
@@ -134,6 +152,7 @@ namespace SchemaTron.Preprocessing
                         }
                     }
                 }
+
                 foreach (XElement xLet in xLetGarbage)
                 {
                     xLet.Remove();
@@ -141,23 +160,24 @@ namespace SchemaTron.Preprocessing
 
                 // remove active phase
                 xActivePhase.ReplaceWith(xLets);
-            }            
+            }
         }
-                        
+
         /// <summary>
-        /// Resolve all abstract patterns by replacing parameter references with actual parameter values in all
-        /// enclosed attributes that contain queries.
+        /// Resolves all abstract patterns in the schema by replacing
+        /// parameter references by actual parameter values in all enclosed
+        /// attributes that contain queries.
         /// </summary>
-        /// <param name="xSchema"></param>
-        /// <param name="nsManager"></param>
+        /// <param name="xSchema">Validation schema</param>
+        /// <param name="nsManager">Namespace manager</param>
         public static void ResolveAbstractPatterns(XDocument xSchema, XmlNamespaceManager nsManager)
         {
             // select abstract patterns
-            Dictionary<String, XElement> dicAPs = new Dictionary<String, XElement>();           
+            Dictionary<string, XElement> dicAPs = new Dictionary<string, XElement>();
             foreach (XElement xAbstractPattern in xSchema.XPathSelectElements("//sch:pattern[@abstract='true']", nsManager))
-            {             
-                String id = xAbstractPattern.Attribute(XName.Get("id")).Value;                
-                dicAPs.Add(id, xAbstractPattern);             
+            {
+                string id = xAbstractPattern.Attribute(XName.Get("id")).Value;
+                dicAPs.Add(id, xAbstractPattern);
             }
 
             if (dicAPs.Count > 0)
@@ -176,40 +196,40 @@ namespace SchemaTron.Preprocessing
                 }
 
                 // remove abstract patterns
-                foreach (KeyValuePair<String, XElement> item in dicAPs)
+                foreach (KeyValuePair<string, XElement> item in dicAPs)
                 {
                     item.Value.Remove();
-                }                              
-            }           
+                }
+            }
         }
 
-        private static void ReplaceAbstractPatternInstance(Dictionary<String, XElement> dicAPs, XElement xInstance, XmlNamespaceManager nsManager)
+        private static void ReplaceAbstractPatternInstance(Dictionary<string, XElement> dicAPs, XElement xInstance, XmlNamespaceManager nsManager)
         {
             // select is-a
-            String isa = xInstance.Attribute(XName.Get("is-a")).Value;
+            string isa = xInstance.Attribute(XName.Get("is-a")).Value;
 
             // select id
-            String id = null;
+            string id = null;
             XAttribute xAttId = xInstance.Attribute(XName.Get("id"));
             if (xAttId != null)
             {
                 id = xAttId.Value;
             }
-            
+
             // select params
-            XName paramName = XName.Get("param", Consts.ISONamespace);
-            Dictionary<String, Param> dicParams = new Dictionary<String, Param>();            
+            XName paramName = XName.Get("param", Constants.ISONamespace);
+            Dictionary<string, Parameter> dicParams = new Dictionary<string, Parameter>();
             foreach (XElement xParam in xInstance.Descendants())
             {
                 if (xParam.Name == paramName)
                 {
-                    Param param = new Param();
+                    Parameter param = new Parameter();
                     param.Name = String.Concat("$", xParam.Attribute(XName.Get("name")).Value);
                     param.Value = xParam.Attribute(XName.Get("value")).Value;
                     dicParams.Add(param.Name, param);
                 }
             }
-                      
+
             XElement newPattern = new XElement(dicAPs[isa]);
 
             // remove abstract attribute
@@ -229,11 +249,12 @@ namespace SchemaTron.Preprocessing
             foreach (XElement xRule in newPattern.XPathSelectElements("//sch:rule[@context]", nsManager))
             {
                 XAttribute xContext = xRule.Attribute(XName.Get("context"));
-                String context = xContext.Value;
-                foreach (KeyValuePair<String, Param> item in dicParams)
+                string context = xContext.Value;
+                foreach (KeyValuePair<string, Parameter> item in dicParams)
                 {
                     context = context.Replace(item.Value.Name, item.Value.Value);
                 }
+
                 xContext.Value = context;
             }
 
@@ -241,23 +262,25 @@ namespace SchemaTron.Preprocessing
             foreach (XElement xAssert in newPattern.XPathSelectElements("//sch:assert|//sch:report ", nsManager))
             {
                 XAttribute xTest = xAssert.Attribute(XName.Get("test"));
-                String test = xTest.Value;
-                foreach (KeyValuePair<String, Param> item in dicParams)
+                string test = xTest.Value;
+                foreach (KeyValuePair<string, Parameter> item in dicParams)
                 {
                     test = test.Replace(item.Value.Name, item.Value.Value);
-                }             
+                }
+
                 xTest.Value = test;
             }
 
             xInstance.ReplaceWith(newPattern);
         }
-               
+
         /// <summary>
-        /// Resolve all abstract rules in the schema by replacing the extends elements with the contents
-        /// of the abstract rule identified.
+        /// Resolves all abstract rules in the schema by replacing the
+        /// <c>extends</c> elements by the contents of the abstract rule
+        /// identified.
         /// </summary>
-        /// <param name="xSchema"></param>
-        /// <param name="nsManager"></param>    
+        /// <param name="xSchema">Validation schema</param>
+        /// <param name="nsManager">Namespace manager</param>    
         public static void ResolveAbstractRules(XDocument xSchema, XmlNamespaceManager nsManager)
         {
             // select abstract rules
@@ -283,7 +306,7 @@ namespace SchemaTron.Preprocessing
                 // replace selected extends with abstract rule contents
                 foreach (XElement xExtends in listExtends)
                 {
-                    String rule = xExtends.Attribute(XName.Get("rule")).Value;
+                    string rule = xExtends.Attribute(XName.Get("rule")).Value;
 
                     // select abstract rule contents
                     List<XElement> content = new List<XElement>();
@@ -307,26 +330,26 @@ namespace SchemaTron.Preprocessing
                 {
                     XElement xAbstractRule = abstractRule.Element;
                     XElement xPattern = xAbstractRule.Parent;
-                    xAbstractRule.Remove();                    
+                    xAbstractRule.Remove();
                 }
-            }                   
+            }
         }
-       
+
         /// <summary>
-        /// The variables are substitued into expressions before the expressions are evaluated. 
+        /// Substitutes variables into expressions before the expressions are evaluated. 
         /// </summary>
-        /// <param name="xSchema"></param>
-        /// <param name="nsManager"></param>        
+        /// <param name="xSchema">Validation schema</param>
+        /// <param name="nsManager">Namespace manager</param>        
         public static void ResolveLets(XDocument xSchema, XmlNamespaceManager nsManager)
         {
             ResolveRuleLets(xSchema, nsManager);
             ResolvePatternLets(xSchema, nsManager);
-            ResolveSchemaLets(xSchema, nsManager);                                               
+            ResolveSchemaLets(xSchema, nsManager);
         }
 
         private static List<Let> GetElementLets(XElement xEle, List<XElement> garbage)
         {
-            XName letName= XName.Get("let", Consts.ISONamespace);
+            XName letName = XName.Get("let", Constants.ISONamespace);
             List<Let> listLets = new List<Let>();
             foreach (XElement x in xEle.Descendants())
             {
@@ -336,24 +359,25 @@ namespace SchemaTron.Preprocessing
                     let.Name = String.Concat("$", x.Attribute(XName.Get("name")).Value);
                     let.Value = x.Attribute(XName.Get("value")).Value;
                     garbage.Add(x);
-                    listLets.Add(let);                   
+                    listLets.Add(let);
                 }
             }
+
             return listLets;
         }
 
         private static void ResolveRuleLets(XDocument xSchema, XmlNamespaceManager nsManager)
         {
             List<XElement> garbage = new List<XElement>();
-                     
+
             foreach (XElement xRule in xSchema.XPathSelectElements("//sch:rule[sch:let[@name and @value]]", nsManager))
             {
                 // select lets
                 List<Let> listLets = GetElementLets(xRule, garbage);
 
                 // select assertions
-                XName assertName = XName.Get("assert", Consts.ISONamespace);
-                XName reportName = XName.Get("report", Consts.ISONamespace);
+                XName assertName = XName.Get("assert", Constants.ISONamespace);
+                XName reportName = XName.Get("report", Constants.ISONamespace);
                 foreach (XElement xEle in xRule.Descendants())
                 {
                     if (xEle.Name == assertName || xEle.Name == reportName)
@@ -374,16 +398,16 @@ namespace SchemaTron.Preprocessing
             foreach (XElement xEle in garbage)
             {
                 xEle.Remove();
-            }            
+            }
         }
 
         private static void ResolvePatternLets(XDocument xSchema, XmlNamespaceManager nsManager)
         {
             List<XElement> garbage = new List<XElement>();
 
-            XName ruleName = XName.Get("rule", Consts.ISONamespace);
-            XName assertName = XName.Get("assert", Consts.ISONamespace);
-            XName reportName = XName.Get("report", Consts.ISONamespace);
+            XName ruleName = XName.Get("rule", Constants.ISONamespace);
+            XName assertName = XName.Get("assert", Constants.ISONamespace);
+            XName reportName = XName.Get("report", Constants.ISONamespace);
             foreach (XElement xPattern in xSchema.XPathSelectElements("//sch:pattern[sch:let[@name and @value]]", nsManager))
             {
                 List<Let> listLets = GetElementLets(xPattern, garbage);
@@ -417,7 +441,7 @@ namespace SchemaTron.Preprocessing
             foreach (XElement xEle in garbage)
             {
                 xEle.Remove();
-            }           
+            }
         }
 
         private static void ResolveSchemaLets(XDocument xSchema, XmlNamespaceManager nsManager)
@@ -425,9 +449,9 @@ namespace SchemaTron.Preprocessing
             List<XElement> garbage = new List<XElement>();
 
             // resolve schema lets 
-            XName ruleName = XName.Get("rule", Consts.ISONamespace);
-            XName assertName = XName.Get("assert", Consts.ISONamespace);
-            XName reportName = XName.Get("report", Consts.ISONamespace);
+            XName ruleName = XName.Get("rule", Constants.ISONamespace);
+            XName assertName = XName.Get("assert", Constants.ISONamespace);
+            XName reportName = XName.Get("report", Constants.ISONamespace);
             List<Let> schemaLets = GetElementLets(xSchema.Root, garbage);
             foreach (XElement xEle in xSchema.XPathSelectElements("//sch:rule|//sch:assert|//sch:report", nsManager))
             {
@@ -456,15 +480,15 @@ namespace SchemaTron.Preprocessing
             foreach (XElement xEle in garbage)
             {
                 xEle.Remove();
-            }  
-          
+            }
         }
 
         /// <summary>
-        /// Remove elements used for diagnostics and documentation.
+        /// Removes elements used for diagnostics and documentation from the
+        /// schema.
         /// </summary>
-        /// <param name="xSchema"></param>
-        /// <param name="nsManager"></param>
+        /// <param name="xSchema">Validation schema</param>
+        /// <param name="nsManager">Namespace manager</param>
         public static void ResolveAncillaryElements(XDocument xSchema, XmlNamespaceManager nsManager)
         {
             // select ancillary elements
@@ -480,9 +504,5 @@ namespace SchemaTron.Preprocessing
                 xEle.Remove();
             }
         }
-
     }
 }
-
-     
-

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemaTron", "SchemaTron.csproj", "{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "..\UnitTests\UnitTests.csproj", "{1DD52070-30C2-432A-89D5-484432A9B8E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemaTron.Test", "Test\SchemaTron.Test.csproj", "{1DD52070-30C2-432A-89D5-484432A9B8E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
