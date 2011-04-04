@@ -18,11 +18,15 @@
             Validator validator = Validator.Create(xSch, settings);
             ValidatorResults results = validator.Validate(xIn, true);
 
+            Assert.True(results.IsValid);
+
             // #DEFAULT
             settings = new ValidatorSettings();
             settings.Phase = "#DEFAULT";
             validator = Validator.Create(xSch, settings);
             results = validator.Validate(xIn, true);
+
+            Assert.True(results.IsValid);
 
             // A
             settings = new ValidatorSettings();
@@ -30,11 +34,15 @@
             validator = Validator.Create(xSch, settings);
             results = validator.Validate(xIn, true);
 
+            Assert.True(results.IsValid);
+
             // B
             settings = new ValidatorSettings();
             settings.Phase = "B";
             validator = Validator.Create(xSch, settings);
             results = validator.Validate(xIn, true);
+
+            Assert.True(results.IsValid);
         }
 
         [Fact]
@@ -49,11 +57,15 @@
             Validator validator = Validator.Create(xSch, settings);
             ValidatorResults results = validator.Validate(xIn, true);
 
+            Assert.False(results.IsValid);
+
             // #DEFAULT
             settings = new ValidatorSettings();
             settings.Phase = "#DEFAULT";
             validator = Validator.Create(xSch, settings);
             results = validator.Validate(xIn, true);
+
+            Assert.True(results.IsValid);
 
             // A
             settings = new ValidatorSettings();
@@ -61,11 +73,15 @@
             validator = Validator.Create(xSch, settings);
             results = validator.Validate(xIn, true);
 
+            Assert.True(results.IsValid);
+
             // B
             settings = new ValidatorSettings();
             settings.Phase = "B";
             validator = Validator.Create(xSch, settings);
             results = validator.Validate(xIn, true);
+
+            Assert.False(results.IsValid);
         }
     }
 }

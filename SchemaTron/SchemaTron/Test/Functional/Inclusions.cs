@@ -16,6 +16,8 @@
             settings.InclusionsResolver = new InclusionsEmbededResourceResolver();
             Validator validator = Validator.Create(xSch, settings);
             ValidatorResults results = validator.Validate(xIn, true);
+
+            Assert.True(results.IsValid);
         }
 
         [Fact]
@@ -28,11 +30,15 @@
             settings.InclusionsResolver = new InclusionsEmbededResourceResolver();
             Validator validator = Validator.Create(xSch, settings);
 
-            // fully validation
+            // full validation
             ValidatorResults results1 = validator.Validate(xIn, true);
 
-            // not fully validation
+            // partial validation
             ValidatorResults results2 = validator.Validate(xIn, false);
+
+            Assert.False(results1.IsValid);
+
+            Assert.False(results2.IsValid);
         }
 
         class InclusionsEmbededResourceResolver : SchemaTron.IInclusionResolver

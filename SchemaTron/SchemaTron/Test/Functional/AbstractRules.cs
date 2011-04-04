@@ -14,6 +14,8 @@
 
             Validator validator = Validator.Create(xSch);
             ValidatorResults results = validator.Validate(xIn, true);
+
+            Assert.True(results.IsValid);
         }
 
         [Fact]
@@ -24,6 +26,8 @@
 
             Validator validator = Validator.Create(xSch);
             ValidatorResults results = validator.Validate(xIn, true);
+
+            Assert.False(results.IsValid);
         }
     }
 }
