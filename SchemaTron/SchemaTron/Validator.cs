@@ -81,6 +81,11 @@ namespace SchemaTron
                 settings.InclusionsResolver = new FileInclusionResolver();
             }
 
+            if (xSchema.Root == null)
+            {
+                throw new ArgumentException("Schema must contain root node.");
+            }
+
             Validator validator = null;
 
             // make a deep copy of the supplied XML 

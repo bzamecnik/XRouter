@@ -7,7 +7,7 @@
     using SchemaTron;
     using Xunit;
 
-    public class FileInclusionResolver
+    public class ValidationEvaluatorTest
     {
     }
 }
