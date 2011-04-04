@@ -24,6 +24,8 @@ namespace SchemaTron.SyntaxModel
 
         public string Message { get; set; }
 
+        // TODO: use IEnumerable<T> or IList<T> instead of arrays
+
         public bool[] DiagnosticsIsValueOf { get; set; }
 
         public string[] Diagnostics { get; set; }

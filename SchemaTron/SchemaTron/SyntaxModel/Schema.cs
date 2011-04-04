@@ -14,8 +14,8 @@ namespace SchemaTron.SyntaxModel
     /// </remarks>
     internal sealed class Schema
     {
-        public Namespace[] Namespaces { get; set; }
+        public IEnumerable<Namespace> Namespaces { get; set; }
 
-        public Pattern[] Patterns { get; set; }
+        public IEnumerable<Pattern> Patterns { get; set; }
     }
 }

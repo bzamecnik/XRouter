@@ -21,6 +21,6 @@ namespace SchemaTron.SyntaxModel
 
         public XPathExpression CompiledContext { get; set; }
 
-        public Assert[] Asserts { get; set; }
+        public IEnumerable<Assert> Asserts { get; set; }
     }
 }

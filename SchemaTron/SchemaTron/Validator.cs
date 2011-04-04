@@ -302,7 +302,7 @@ namespace SchemaTron
             // syntax errors
             if (messages.Count > 0)
             {
-                throw new SyntaxException(messages.ToArray());
+                throw new SyntaxException(messages);
             }
         }
 

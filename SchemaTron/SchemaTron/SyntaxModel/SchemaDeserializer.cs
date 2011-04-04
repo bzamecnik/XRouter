@@ -31,7 +31,7 @@ namespace SchemaTron.SyntaxModel
             return schema;
         }
 
-        private static Namespace[] DeserializeNamespaces(XElement xRoot, XmlNamespaceManager nsManager)
+        private static IEnumerable<Namespace> DeserializeNamespaces(XElement xRoot, XmlNamespaceManager nsManager)
         {
             List<Namespace> listNs = new List<Namespace>();
             foreach (XElement xNs in xRoot.XPathSelectElements("sch:ns", nsManager))
@@ -47,10 +47,10 @@ namespace SchemaTron.SyntaxModel
                 listNs.Add(ns);
             }
 
-            return listNs.ToArray();
+            return listNs;
         }
 
-        private static Pattern[] DeserializePatterns(XElement xRoot, XmlNamespaceManager nsManager)
+        private static IEnumerable<Pattern> DeserializePatterns(XElement xRoot, XmlNamespaceManager nsManager)
         {
             List<Pattern> listPattern = new List<Pattern>();
             foreach (XElement xPattern in xRoot.XPathSelectElements("sch:pattern", nsManager))
@@ -65,15 +65,15 @@ namespace SchemaTron.SyntaxModel
                 }
 
                 // rules 
-                pattern.Rules = DeserializeRules(xPattern, nsManager).ToArray();
+                pattern.Rules = DeserializeRules(xPattern, nsManager);
 
                 listPattern.Add(pattern);
             }
 
-            return listPattern.ToArray();
+            return listPattern;
         }
 
-        private static Rule[] DeserializeRules(XElement xPattern, XmlNamespaceManager nsManager)
+        private static IEnumerable<Rule> DeserializeRules(XElement xPattern, XmlNamespaceManager nsManager)
         {
             List<Rule> listRule = new List<Rule>();
             foreach (XElement xRule in xPattern.XPathSelectElements("sch:rule", nsManager))
@@ -91,15 +91,15 @@ namespace SchemaTron.SyntaxModel
                 rule.Context = xRule.Attribute(XName.Get("context")).Value;
 
                 // asserts
-                rule.Asserts = DeserializeAsserts(xRule, nsManager).ToArray();
+                rule.Asserts = DeserializeAsserts(xRule, nsManager);
 
                 listRule.Add(rule);
             }
 
-            return listRule.ToArray();
+            return listRule;
         }
 
-        private static List<Assert> DeserializeAsserts(XElement xRule, XmlNamespaceManager nsManager)
+        private static IEnumerable<Assert> DeserializeAsserts(XElement xRule, XmlNamespaceManager nsManager)
         {
             List<Assert> listAssert = new List<Assert>();
             foreach (XElement xAssert in xRule.XPathSelectElements("sch:assert|sch:report", nsManager))

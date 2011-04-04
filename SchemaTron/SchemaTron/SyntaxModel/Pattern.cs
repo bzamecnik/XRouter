@@ -16,6 +16,6 @@ namespace SchemaTron.SyntaxModel
     {
         public string Id { get; set; }
 
-        public Rule[] Rules { get; set; }
+        public IEnumerable<Rule> Rules { get; set; }
     }
 }

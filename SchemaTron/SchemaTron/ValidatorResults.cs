@@ -31,10 +31,10 @@ namespace SchemaTron
         /// In case the XML document instance is valid the array of assertions
         /// is empty.
         /// </summary>
-        public AssertionInfo[] ViolatedAssertions
+        public IEnumerable<AssertionInfo> ViolatedAssertions
         {
             // TODO: is it better to return an array or an unmodifiable list?
-            get { return ViolatedAssertionsList.ToArray(); }
+            get { return ViolatedAssertionsList; }
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace SchemaTron
         /// </summary>
         /// <returns>A list of error messages about the violated assertions
         /// </returns>
-        internal string[] GetMessages()
+        internal IEnumerable<string> GetMessages()
         {
             List<string> messages = new List<string>();
             foreach (AssertionInfo info in this.ViolatedAssertionsList)
@@ -61,7 +61,7 @@ namespace SchemaTron
                 messages.Add(info.UserMessage);
             }
 
-            return messages.ToArray();
+            return messages;
         }
     }
 }

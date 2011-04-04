@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SchemaTron
 {
@@ -14,7 +15,7 @@ namespace SchemaTron
         /// user messages about the syntax errors.
         /// </summary>
         /// <param name="messages">user messages on the syntax errors</param>
-        internal SyntaxException(string[] messages)
+        internal SyntaxException(IEnumerable<string> messages)
         {
             this.UserMessages = messages;
         }
@@ -25,6 +26,6 @@ namespace SchemaTron
         /// Gets or sets user messages concerned with each of the syntax
         /// errors.
         /// </summary>
-        public string[] UserMessages { get; private set; }
+        public IEnumerable<string> UserMessages { get; private set; }
     }
 }
