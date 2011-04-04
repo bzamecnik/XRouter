@@ -21,7 +21,7 @@ namespace SchemaTron
     public sealed class Validator
     {
         /// <summary>
-        /// Schematron schema for validation.
+        /// Schematron schema for validation - in internal format.
         /// </summary>
         private Schema schema = null;
 
@@ -33,7 +33,7 @@ namespace SchemaTron
         }
 
         /// <summary>
-        /// Gets schema syntax in minimal form.
+        /// Gets schema syntax in minimal form - in original XML format.
         /// </summary>
         public XDocument MinSyntax { get; private set; }
 
@@ -41,7 +41,8 @@ namespace SchemaTron
         /// Creates a new Validator instance with default validator settings
         /// given a Schematron syntax schema.
         /// </summary>
-        /// <param name="xSchema">ISO Schematron complex syntax schema</param>
+        /// <param name="xSchema">ISO Schematron complex syntax schema.
+        /// Must not be null.</param>
         /// <returns>A new Validator instance</returns>
         /// <exception cref="System.ArgumentException"/>
         /// <exception cref="System.ArgumentNullException"/>
@@ -56,7 +57,8 @@ namespace SchemaTron
         /// Creates a new Validator instance given a Schematron syntax schema and custom
         /// validator settings.
         /// </summary>
-        /// <param name="xSchema">ISO Schematron complex syntax schema</param>
+        /// <param name="xSchema">ISO Schematron complex syntax schema.
+        /// Must not be null.</param>
         /// <param name="settings">Validator settings</param>
         /// <returns>A new Validator instance</returns>     
         /// <exception cref="System.ArgumentException"/>
@@ -90,18 +92,18 @@ namespace SchemaTron
 
             settings.Phase = DetermineSchemaPhase(xSchemaCopy.Root, settings.Phase, nsManager);
 
-            // preprocessing
+            // preprocessing - turn to minimal form
             Preprocess(xSchemaCopy, nsManager, settings);
 
             // deserialization                           
-            Schema schema = SchemaDeserializer.Deserialize(xSchemaCopy, nsManager);
+            Schema minimalizedSchema = SchemaDeserializer.Deserialize(xSchemaCopy, nsManager);
 
             // xpath preprocessing
-            CompileXPathExpressions(schema);
+            CompileXPathExpressions(minimalizedSchema);
 
             // create instance
             validator = new Validator();
-            validator.schema = schema;
+            validator.schema = minimalizedSchema;
             validator.MinSyntax = xSchemaCopy;
 
             return validator;
@@ -127,9 +129,13 @@ namespace SchemaTron
         /// schema</exception>
         private static string DetermineSchemaPhase(XElement xRoot, string phase, XmlNamespaceManager nsManager)
         {
+            if (xRoot == null)
+            {
+                throw new ArgumentNullException("xRoot - XML schema root element");
+            }
             if (phase == null)
             {
-                throw new ArgumentNullException("Phase");
+                throw new ArgumentNullException("phase");
             }
             else if (phase == "#ALL")
             {
@@ -313,6 +319,7 @@ namespace SchemaTron
         /// </summary>
         /// <remarks>This method is NOT thread-safe.</remarks>
         /// <param name="xInstance">An instance of an XML document to be validated.
+        /// Must not be null.
         /// It is recommended to supply a document with line information
         /// (TODO: clarify this) for better diagnostics.</param>
         /// <param name="fullValidation">Indicates whether to validate the
@@ -320,8 +327,13 @@ namespace SchemaTron
         /// the first assertion.
         /// </param>
         /// <returns>Detailed validation results.</returns>
+        /// <exception cref="ArgumentNullException">If xInstance is null.</exception>
         public ValidatorResults Validate(XDocument xInstance, bool fullValidation)
         {
+            if (xInstance == null)
+            {
+                throw new ArgumentNullException("xInstance - XML document instance");
+            }
             ValidationEvaluator evaluator = new ValidationEvaluator(this.schema, xInstance, fullValidation);
             return evaluator.Evaluate();
         }

@@ -20,11 +20,22 @@ namespace SchemaTron.SyntaxModel
         /// Converts a schema from the XML form (XDocument) to the internal
         /// representation (Schema).
         /// </summary>
-        /// <param name="xSchema">Schema in serialized XML form</param>
-        /// <param name="nsManager">Namespace manager</param>
+        /// <param name="xSchema">Schema in serialized XML form. Must not be null.</param>
+        /// <param name="nsManager">Namespace manager. Must not be null.</param>
         /// <returns>Schema in internal representation (Schema)</returns>
+        /// <exception cref="ArgumentNullException" />
         public static Schema Deserialize(XDocument xSchema, XmlNamespaceManager nsManager)
         {
+            if (xSchema == null)
+            {
+                throw new ArgumentNullException("xSchema");
+            }
+
+            if (nsManager == null)
+            {
+                throw new ArgumentNullException("nsManager");
+            }
+
             Schema schema = new Schema();
             schema.Namespaces = DeserializeNamespaces(xSchema.Root, nsManager);
             schema.Patterns = DeserializePatterns(xSchema.Root, nsManager);

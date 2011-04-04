@@ -21,10 +21,16 @@ namespace SchemaTron
         /// Loads an external XML document from a file specified in the
         /// <c>href</c> parameter.
         /// </summary>
-        /// <param name="href">Absolute path to the external XML document.</param>
+        /// <param name="href">Absolute path to the external XML document.
+        /// Must not be null.</param>
         /// <returns>The loaded external XML document.</returns>    
         public XDocument Resolve(string href)
         {
+            if (href == null)
+            {
+                throw new ArgumentNullException("href");
+            }
+
             // each external XML dokument is loaded only once
             XDocument doc;
             if (!this.loadedDocs.TryGetValue(href, out doc))

@@ -29,8 +29,9 @@ namespace SchemaTron
         /// Creates a new instance of the ValidationEvaluator containing the
         /// the validation schema and a specific XML document to be validated.
         /// </summary>
-        /// <param name="schema">Validation schema</param>
-        /// <param name="xInstance">An instance of an XML document to be validated</param>
+        /// <param name="schema">Validation schema. Must not be null.</param>
+        /// <param name="xInstance">An instance of an XML document to be validated.
+        /// Must not be null.</param>
         /// <param name="fullValidation">Indicates whether to validate the
         /// whole document regardless of any assertion, or to stop validation at
         /// the first assertion.</param>

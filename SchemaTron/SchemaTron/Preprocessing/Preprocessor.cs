@@ -22,13 +22,24 @@ namespace SchemaTron.Preprocessing
         /// Potentially infinite <c>include</c> recursion is terminated after
         /// a finite number of steps.
         /// </remarks>
-        /// <param name="xSchema">Validation schema</param>
+        /// <param name="xSchema">Validation schema.</param>
         /// <param name="resolver">Resolver of included elements</param>
         /// <param name="nsManager">Namespace manager</param>
         /// <exception cref="InvalidOperationException">If the <c>include</c> 
         /// recursion exceeds a limit.</exception>
+        /// <exception cref="ArgumentNullException" />
         public static void ResolveInclusions(XDocument xSchema, IInclusionResolver resolver, XmlNamespaceManager nsManager)
         {
+            if (xSchema == null)
+            {
+                throw new ArgumentNullException("xSchema");
+            }
+
+            if (nsManager == null)
+            {
+                throw new ArgumentNullException("nsManager");
+            }
+
             // TODO: extract a constant or make it a configurable parameter
             // (eg. store it in ValidatorSettings instance)
             int maxSteps = 500; // recursion termination limit
@@ -70,8 +81,24 @@ namespace SchemaTron.Preprocessing
         /// <param name="xSchema">Validation schema</param>
         /// <param name="nsManager">Namespace manager</param>   
         /// <param name="phase">Validation phase name</param>
+        /// <exception cref="ArgumentNullException" />
         public static void ResolvePhase(XDocument xSchema, XmlNamespaceManager nsManager, string phase)
         {
+            if (xSchema == null)
+            {
+                throw new ArgumentNullException("xSchema");
+            }
+
+            if (nsManager == null)
+            {
+                throw new ArgumentNullException("nsManager");
+            }
+
+            if (phase == null)
+            {
+                throw new ArgumentNullException("phase");
+            }
+
             if (phase == "#ALL")
             {
                 // remove all phases
@@ -169,8 +196,19 @@ namespace SchemaTron.Preprocessing
         /// </summary>
         /// <param name="xSchema">Validation schema</param>
         /// <param name="nsManager">Namespace manager</param>
+        /// <exception cref="ArgumentNullException" />
         public static void ResolveAbstractPatterns(XDocument xSchema, XmlNamespaceManager nsManager)
         {
+            if (xSchema == null)
+            {
+                throw new ArgumentNullException("xSchema");
+            }
+
+            if (nsManager == null)
+            {
+                throw new ArgumentNullException("nsManager");
+            }
+
             // select abstract patterns
             Dictionary<string, XElement> dicAPs = new Dictionary<string, XElement>();
             foreach (XElement xAbstractPattern in xSchema.XPathSelectElements("//sch:pattern[@abstract='true']", nsManager))
@@ -279,9 +317,20 @@ namespace SchemaTron.Preprocessing
         /// identified.
         /// </summary>
         /// <param name="xSchema">Validation schema</param>
-        /// <param name="nsManager">Namespace manager</param>    
+        /// <param name="nsManager">Namespace manager</param>
+        /// <exception cref="ArgumentNullException" />
         public static void ResolveAbstractRules(XDocument xSchema, XmlNamespaceManager nsManager)
         {
+            if (xSchema == null)
+            {
+                throw new ArgumentNullException("xSchema");
+            }
+
+            if (nsManager == null)
+            {
+                throw new ArgumentNullException("nsManager");
+            }
+
             // select abstract rules
             List<AbstractRule> listAbstractRules = new List<AbstractRule>();
             foreach (XElement xAbstractRule in xSchema.XPathSelectElements("//sch:rule[@abstract='true' and @id]", nsManager))
@@ -338,9 +387,20 @@ namespace SchemaTron.Preprocessing
         /// Substitutes variables into expressions before the expressions are evaluated. 
         /// </summary>
         /// <param name="xSchema">Validation schema</param>
-        /// <param name="nsManager">Namespace manager</param>        
+        /// <param name="nsManager">Namespace manager</param>
+        /// <exception cref="ArgumentNullException" />
         public static void ResolveLets(XDocument xSchema, XmlNamespaceManager nsManager)
         {
+            if (xSchema == null)
+            {
+                throw new ArgumentNullException("xSchema");
+            }
+
+            if (nsManager == null)
+            {
+                throw new ArgumentNullException("nsManager");
+            }
+
             ResolveRuleLets(xSchema, nsManager);
             ResolvePatternLets(xSchema, nsManager);
             ResolveSchemaLets(xSchema, nsManager);
@@ -471,8 +531,19 @@ namespace SchemaTron.Preprocessing
         /// </summary>
         /// <param name="xSchema">Validation schema</param>
         /// <param name="nsManager">Namespace manager</param>
+        /// <exception cref="ArgumentNullException" />
         public static void ResolveAncillaryElements(XDocument xSchema, XmlNamespaceManager nsManager)
         {
+            if (xSchema == null)
+            {
+                throw new ArgumentNullException("xSchema");
+            }
+
+            if (nsManager == null)
+            {
+                throw new ArgumentNullException("nsManager");
+            }
+
             // select ancillary elements
             List<XElement> garbage = new List<XElement>();
             foreach (XElement xEle in xSchema.XPathSelectElements("//sch:diagnostic|//sch:diagnostics|//sch:dir|//sch:emph|//sch:p|//sch:span|//sch:title", nsManager))
