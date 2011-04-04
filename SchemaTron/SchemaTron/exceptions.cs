@@ -20,8 +20,6 @@ namespace SchemaTron
             this.UserMessages = messages;
         }
 
-        // TODO: is it better to store the messages in a list or an array?
-
         /// <summary>
         /// Gets or sets user messages concerned with each of the syntax
         /// errors.

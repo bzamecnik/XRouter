@@ -104,11 +104,10 @@ namespace SchemaTron.Preprocessing
                         XElement xPattern = xSchema.XPathSelectElement(String.Format("//sch:pattern[@id='{0}']", patternId), nsManager);
                         xActivePatterns.Add(xPattern);
                     }
-                    else
-                        if (xEle.Name == nameLet)
-                        {
-                            xLets.Add(xEle);
-                        }
+                    else if (xEle.Name == nameLet)
+                    {
+                        xLets.Add(xEle);
+                    }
                 }
 
                 // remove non-active patterns
@@ -411,30 +410,7 @@ namespace SchemaTron.Preprocessing
             foreach (XElement xPattern in xSchema.XPathSelectElements("//sch:pattern[sch:let[@name and @value]]", nsManager))
             {
                 List<Let> listLets = GetElementLets(xPattern, garbage);
-
-                foreach (XElement xEle in xPattern.Descendants())
-                {
-                    foreach (Let let in listLets)
-                    {
-                        if (xEle.Name == ruleName)
-                        {
-                            XAttribute context = xEle.Attribute(XName.Get("context"));
-                            if (context != null)
-                            {
-                                context.Value = context.Value.Replace(let.Name, let.Value);
-                            }
-                        }
-                        else
-                            if (xEle.Name == assertName || xEle.Name == reportName)
-                            {
-                                XAttribute test = xEle.Attribute(XName.Get("test"));
-                                if (test != null)
-                                {
-                                    test.Value = test.Value.Replace(let.Name, let.Value);
-                                }
-                            }
-                    }
-                }
+                ResolveLets(xPattern.Descendants(), listLets, ruleName, assertName, reportName);
             }
 
             // remove lets
@@ -452,10 +428,22 @@ namespace SchemaTron.Preprocessing
             XName ruleName = XName.Get("rule", Constants.ISONamespace);
             XName assertName = XName.Get("assert", Constants.ISONamespace);
             XName reportName = XName.Get("report", Constants.ISONamespace);
-            List<Let> schemaLets = GetElementLets(xSchema.Root, garbage);
-            foreach (XElement xEle in xSchema.XPathSelectElements("//sch:rule|//sch:assert|//sch:report", nsManager))
+            IEnumerable<Let> schemaLets = GetElementLets(xSchema.Root, garbage);
+
+            IEnumerable<XElement> elements = xSchema.XPathSelectElements("//sch:rule|//sch:assert|//sch:report", nsManager);
+            ResolveLets(elements, schemaLets, ruleName, assertName, reportName);
+
+            foreach (XElement xEle in garbage)
             {
-                foreach (Let let in schemaLets)
+                xEle.Remove();
+            }
+        }
+
+        private static void ResolveLets(IEnumerable<XElement> elements, IEnumerable<Let> lets, XName ruleName, XName assertName, XName reportName)
+        {
+            foreach (XElement xEle in elements)
+            {
+                foreach (Let let in lets)
                 {
                     if (xEle.Name == ruleName)
                     {
@@ -465,21 +453,15 @@ namespace SchemaTron.Preprocessing
                             xContext.Value = xContext.Value.Replace(let.Name, let.Value);
                         }
                     }
-                    else
-                        if (xEle.Name == assertName || xEle.Name == reportName)
+                    else if (xEle.Name == assertName || xEle.Name == reportName)
+                    {
+                        XAttribute xTest = xEle.Attribute(XName.Get("test"));
+                        if (xTest != null)
                         {
-                            XAttribute xTest = xEle.Attribute(XName.Get("test"));
-                            if (xTest != null)
-                            {
-                                xTest.Value = xTest.Value.Replace(let.Name, let.Value);
-                            }
+                            xTest.Value = xTest.Value.Replace(let.Name, let.Value);
                         }
+                    }
                 }
-            }
-
-            foreach (XElement xEle in garbage)
-            {
-                xEle.Remove();
             }
         }
 
