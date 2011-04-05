@@ -183,7 +183,7 @@ namespace SchemaTron
         {
             if (assert.Diagnostics.Length == 0)
             {
-                return assert.Message;
+                return assert.Message.Trim();
             }
             else
             {
@@ -230,7 +230,7 @@ namespace SchemaTron
                     }
                 }
 
-                return String.Format(assert.Message, diagValues.ToArray());
+                return String.Format(assert.Message, diagValues.ToArray()).Trim();
             }
         }
 

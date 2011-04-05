@@ -6,16 +6,10 @@ using System.Xml.Linq;
 
 namespace SchemaTron.Preprocessing
 {
-    /// <summary>
-    /// Represents an abstract rule.
-    /// </summary>
-    /// <remarks>
-    /// TODO: describe in more detail.
-    /// </remarks>
-    internal sealed class AbstractRule
+    internal sealed class Diagnostic
     {
         public string Id { get; set; }
-
+      
         public XElement Element { get; set; }
     }
 }

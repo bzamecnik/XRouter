@@ -12,7 +12,7 @@ namespace SchemaTron.Preprocessing
     /// <remarks>
     /// TODO: describe in more detail.
     /// </remarks>
-    internal class Let
+    internal sealed class Let
     {
         public string Name { get; set; }
 

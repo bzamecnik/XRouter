@@ -212,6 +212,7 @@ namespace SchemaTron
             Preprocessor.ResolveAbstractPatterns(xSchema, nsManager);
             Preprocessor.ResolveAbstractRules(xSchema, nsManager);
             Preprocessor.ResolvePhase(xSchema, nsManager, settings.Phase);
+            Preprocessor.ResolveDiagnostics(xSchema, nsManager);
 
             // validation - phaseC 
             XDocument xPhaseC = Resources.Provider.SchemaPhaseC;
@@ -221,7 +222,7 @@ namespace SchemaTron
             {
                 throw new SyntaxException(resultsC.GetMessages());
             }
-
+           
             Preprocessor.ResolveLets(xSchema, nsManager);
             Preprocessor.ResolveAncillaryElements(xSchema, nsManager);
         }

@@ -437,9 +437,11 @@ namespace SchemaTron.Preprocessing
                 // select assertions
                 XName assertName = XName.Get("assert", Constants.ISONamespace);
                 XName reportName = XName.Get("report", Constants.ISONamespace);
+                XName nameName = XName.Get("name", Constants.ISONamespace);
+                XName valueofName = XName.Get("value-of", Constants.ISONamespace);
                 foreach (XElement xEle in xRule.Descendants())
                 {
-                    if (xEle.Name == assertName || xEle.Name == reportName)
+                    if (xEle.Name == assertName || xEle.Name == reportName || xEle.Name == nameName || xEle.Name == valueofName)
                     {
                         foreach (Let let in listLets)
                         {
@@ -447,6 +449,22 @@ namespace SchemaTron.Preprocessing
                             if (testAtt != null)
                             {
                                 testAtt.Value = testAtt.Value.Replace(let.Name, let.Value);
+                            }
+                            else
+                            {
+                                XAttribute pathAtt = xEle.Attribute(XName.Get("path"));
+                                if (pathAtt != null)
+                                {
+                                    pathAtt.Value = pathAtt.Value.Replace(let.Name, let.Value);
+                                }
+                                else
+                                {
+                                    XAttribute selectAtt = xEle.Attribute(XName.Get("select"));
+                                    if (selectAtt != null)
+                                    {
+                                        selectAtt.Value = selectAtt.Value.Replace(let.Name, let.Value);
+                                    }
+                                }
                             }
                         }
                     }
@@ -467,10 +485,12 @@ namespace SchemaTron.Preprocessing
             XName ruleName = XName.Get("rule", Constants.ISONamespace);
             XName assertName = XName.Get("assert", Constants.ISONamespace);
             XName reportName = XName.Get("report", Constants.ISONamespace);
+            XName nameName = XName.Get("name", Constants.ISONamespace);
+            XName valueofName = XName.Get("value-of", Constants.ISONamespace);
             foreach (XElement xPattern in xSchema.XPathSelectElements("//sch:pattern[sch:let[@name and @value]]", nsManager))
             {
                 List<Let> listLets = GetElementLets(xPattern, garbage);
-                ResolveLets(xPattern.Descendants(), listLets, ruleName, assertName, reportName);
+                ResolveLets(xPattern.Descendants(), listLets, ruleName, assertName, reportName, nameName, valueofName);
             }
 
             // remove lets
@@ -488,10 +508,12 @@ namespace SchemaTron.Preprocessing
             XName ruleName = XName.Get("rule", Constants.ISONamespace);
             XName assertName = XName.Get("assert", Constants.ISONamespace);
             XName reportName = XName.Get("report", Constants.ISONamespace);
+            XName nameName = XName.Get("name", Constants.ISONamespace);
+            XName valueofName = XName.Get("value-of", Constants.ISONamespace);
             IEnumerable<Let> schemaLets = GetElementLets(xSchema.Root, garbage);
 
-            IEnumerable<XElement> elements = xSchema.XPathSelectElements("//sch:rule|//sch:assert|//sch:report", nsManager);
-            ResolveLets(elements, schemaLets, ruleName, assertName, reportName);
+            IEnumerable<XElement> elements = xSchema.XPathSelectElements("//sch:rule|//sch:assert|//sch:report|//sch:name[@path]|//sch:value-of", nsManager);
+            ResolveLets(elements, schemaLets, ruleName, assertName, reportName, nameName, valueofName);
 
             foreach (XElement xEle in garbage)
             {
@@ -499,7 +521,8 @@ namespace SchemaTron.Preprocessing
             }
         }
 
-        private static void ResolveLets(IEnumerable<XElement> elements, IEnumerable<Let> lets, XName ruleName, XName assertName, XName reportName)
+        private static void ResolveLets(IEnumerable<XElement> elements, IEnumerable<Let> lets, XName ruleName, XName assertName,
+            XName reportName, XName nameName, XName valueofName)
         {
             foreach (XElement xEle in elements)
             {
@@ -521,13 +544,65 @@ namespace SchemaTron.Preprocessing
                             xTest.Value = xTest.Value.Replace(let.Name, let.Value);
                         }
                     }
+                    else if (xEle.Name == nameName)
+                    {
+                        XAttribute xPath = xEle.Attribute(XName.Get("path"));
+                        if (xPath != null)
+                        {
+                            xPath.Value = xPath.Value.Replace(let.Name, let.Value);
+                        }
+                    }
+                    else if (xEle.Name == valueofName)
+                    {
+                        XAttribute xSelect = xEle.Attribute(XName.Get("select"));
+                        if (xSelect != null)
+                        {
+                            xSelect.Value = xSelect.Value.Replace(let.Name, let.Value);
+                        }
+                    }
                 }
             }
         }
 
+        public static void ResolveDiagnostics(XDocument xSchema, XmlNamespaceManager nsManager)
+        {
+            if (xSchema == null)
+            {
+                throw new ArgumentNullException("xSchema");
+            }
+
+            if (nsManager == null)
+            {
+                throw new ArgumentNullException("nsManager");
+            }
+
+            XElement xDiagnostics = xSchema.XPathSelectElement("//sch:diagnostics", nsManager);
+
+            if (xDiagnostics != null)
+            {
+                Dictionary<string, Diagnostic> diagnostics = new Dictionary<string, Diagnostic>();
+                foreach (XElement xDiagnostic in xDiagnostics.XPathSelectElements("./sch:diagnostic", nsManager))
+                {
+                    Diagnostic diag = new Diagnostic();
+                    diag.Id = xDiagnostic.Attribute(XName.Get("id")).Value;                    
+                    diag.Element = xDiagnostic;
+                    diagnostics.Add(diag.Id, diag);
+                }
+
+                foreach (XElement xAssertion in xSchema.XPathSelectElements("//sch:assert[@diagnostics]|//sch:report[@diagnostics]", nsManager))
+                {
+                    String refDiag = xAssertion.Attribute(XName.Get("diagnostics")).Value;
+                    Diagnostic diag = diagnostics[refDiag];
+                    xAssertion.ReplaceNodes(xAssertion.DescendantNodes(), diag.Element.DescendantNodes());
+                    xAssertion.Attribute(XName.Get("diagnostics")).Remove();
+                }
+
+                xDiagnostics.Remove();
+            }
+        }
+
         /// <summary>
-        /// Removes elements used for diagnostics and documentation from the
-        /// schema.
+        /// Removes elements used for documentation from the schema.
         /// </summary>
         /// <param name="xSchema">Validation schema</param>
         /// <param name="nsManager">Namespace manager</param>
@@ -546,7 +621,7 @@ namespace SchemaTron.Preprocessing
 
             // select ancillary elements
             List<XElement> garbage = new List<XElement>();
-            foreach (XElement xEle in xSchema.XPathSelectElements("//sch:diagnostic|//sch:diagnostics|//sch:dir|//sch:emph|//sch:p|//sch:span|//sch:title", nsManager))
+            foreach (XElement xEle in xSchema.XPathSelectElements("//sch:dir|//sch:emph|//sch:p|//sch:span|//sch:title", nsManager))
             {
                 garbage.Add(xEle);
             }

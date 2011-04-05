@@ -48,6 +48,7 @@
     <Compile Include="FileInclusionResolver.cs" />
     <Compile Include="IInclusionResolver.cs" />
     <Compile Include="Preprocessing\AbstractRule.cs" />
+    <Compile Include="Preprocessing\Diagnostic.cs" />
     <Compile Include="Preprocessing\Parameter.cs" />
     <Compile Include="Preprocessing\Preprocessor.cs" />
     <Compile Include="Preprocessing\Let.cs" />

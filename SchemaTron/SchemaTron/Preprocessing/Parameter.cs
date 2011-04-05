@@ -12,7 +12,7 @@ namespace SchemaTron.Preprocessing
     /// <remarks>
     /// TODO: describe in more detail.
     /// </remarks>
-    internal class Parameter
+    internal sealed class Parameter
     {
         public string Name { get; set; }
 
