@@ -1,0 +1,20 @@
+<config>
+
+  <service type="DaemonNT.Test.TestService, ..\..\..\DaemonNT.Test\bin\Debug\DaemonNT.Test.dll" name="MyServer">
+
+   <installer>    
+      <description>Tady je nejaky popisek tehle sluzby...</description>
+      <start-type value="Automatic"/>
+      <account value="LocalSystem"></account>         
+    </installer>
+    
+    <setting>   
+     <!-- specifikace nastaveni timeru, interval je cele cislo v milisekundach -->
+     <section name="timer">
+       <param name="interval">1000</param> 
+     </section>                    
+   </setting>
+
+  </service>
+
+</config>

@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<schema xmlns="http://purl.oclc.org/dsdl/schematron">  
+  
+  <!-- TODO: Prelozit do AJ. Je velmi pravdepodobne, ze se bude jeste rozsirovat
+      dle dalsich featers, ktere budou konfigurovatelne. -->
+  
+  <title>Specifikace schematu souboru DaemonNT.xml.</title>
+  
+  <pattern id="root">
+    <rule context="/">
+      <assert test="config">Korenovym elementem musi byt element config.</assert>
+    </rule>
+  </pattern>
+  
+  <pattern id="config">
+    <let name="context" value="/config"/>
+    <rule context="$context">
+      <assert test="count(service)>0">
+        Element <name/> musi obsahovat alespon jeden element service.
+      </assert>
+    </rule>
+    <rule context="$context/service">
+      <assert test="true()"/>      
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        Element <name/> neni povolen v elementu config.
+      </assert>
+    </rule>
+  </pattern>
+  
+  <pattern id="service">
+    <let name="context" value="/config/service"/>
+    <rule context="$context">
+      <assert test="count(@type)=1">
+        Element <name/> musi mit atribut type.
+      </assert>
+      <assert test="count(@name)=1">
+        Element <name/> musi mit atribut name.
+      </assert>
+      <assert test="count(setting)=0 or count(setting)=1">
+        Element <name/> muze mit nejvys jeden element setting.
+      </assert>
+      <assert test="count(installer)=0 or count(installer)=1">
+        Element <name/> muze mit nejvys jeden element installer.
+      </assert>      
+    </rule>
+    <rule context="$context/@type">
+      <assert test="string-length(normalize-space(.))>0">
+        Atribut <name/> nemuze obsahovat prazdny retezec.
+      </assert>
+    </rule>
+    <rule context="$context/@name">
+      <assert test="string-length(normalize-space(.))>0">
+        Atribut <name/> nemuze obsahovat prazdny retezec.
+      </assert>
+      <assert test="not(normalize-space(.)=../preceding-sibling::service/@name)">
+        Hodnota atributu <name/> '<value-of select="."/>' neni jednoznacna.
+      </assert>
+    </rule>
+    <rule context="$context/setting">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/installer">
+      <assert test="true()"/>
+    </rule>  
+    <rule context="$context/*">
+      <assert test="false()">
+        Element <name/> neni povolen v elementu service.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="installer">
+    <let name="context" value="/config/service/installer"/>
+    <rule context="$context">
+      <assert test="count(description)=0 or count(description)=1">
+        Element <name/> muze mit nejvys jeden element description.
+      </assert>
+      <assert test="count(start-type)=0 or count(start-type)=1">
+        Element <name/> muze mit nejvys jeden element start-type.
+      </assert>
+      <assert test="count(account)=0 or count(account)=1">
+        Element <name/> muze mit nejvys jeden element account.
+      </assert>
+      <assert test="count(depended-on)=0 or count(depended-on)=1">
+        Element <name/> muze mit nejvys jeden element depended-on.
+      </assert>
+    </rule>
+    <rule context="$context/description">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/start-type">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/account">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/depended-on">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        Element <name/> neni povolen v elementu installer.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="description">
+    <let name="context" value="/config/service/installer/description"/>
+    <rule context="$context/*">
+      <assert test="false()">
+        Element <name/> neni povolen v elementu description.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="start-type">
+    <let name="context" value="/config/service/installer/start-type"/>
+    <rule context="$context">
+      <assert test="count(@value)=1">
+        Element <name/> musi mit atribut value.
+      </assert>          
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        Element <name/> neni povolen v elementu start-type.
+      </assert>
+    </rule>
+    <rule context="$context/@value">
+      <let name="value" value="normalize-space(.)"/>
+      <assert test="$value='Manual' or $value='Automatic' or $value='Disabled'">
+        Hodnota atributu <name/> '<value-of select="."/>' je neplatna.
+      </assert>
+    </rule>
+  </pattern>
+  
+  <pattern id="account">
+    <let name="context" value="/config/service/installer/account"/>
+    <rule context="$context">
+      <assert test="count(@value)=1">
+        Element <name/> musi mit atribut value.
+      </assert>
+    </rule>
+    <rule context="$context/@value">
+      <let name="value" value="normalize-space(.)"/>
+      <assert test="$value='LocalSystem' or $value='LocalService' or $value='NetworkService' or $value='User'">
+        Hodnota atributu <name/> '<value-of select="."/>' je neplatna.
+      </assert>
+    </rule>
+    <rule context="$context[normalize-space(@value)='User']/username">
+      <assert test="true()"/>       
+    </rule>
+    <rule context="$context[normalize-space(@value)='User']/password">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        Element <name/> neni povolen v elementu account.
+      </assert>
+    </rule>    
+  </pattern>
+
+  <pattern id="account_username_and_password">
+    <let name="context" value="/config/service/installer/account[normalize-space(@value)='User']"/>
+    <rule context="$context">
+      <assert test="count(username)=1">
+        Element <name/> musi obsahovat element username.
+      </assert>
+      <assert test="count(password)=1">
+        Element <name/> musi obsahovat element password.
+      </assert>
+    </rule>
+  </pattern>
+      
+  <pattern id="username">
+    <let name="context" value="/config/service/installer/account/username"/>
+    <rule context="$context/*">
+      <assert test="false()">
+        Element <name/> neni povolen v elementu username.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="password">
+    <let name="context" value="/config/service/installer/account/password"/>
+    <rule context="$context/*">
+      <assert test="false()">
+        Element <name/> neni povolen v elementu password.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="depended-on">
+    <let name="context" value="/config/service/installer/depended-on"/>
+    <rule context="$context/*">
+      <assert test="false()">
+        Element <name/> neni povolen v elementu depended-on.
+      </assert>
+    </rule>
+  </pattern>
+      
+  <pattern id="setting">
+    <let name="context" value="setting"/>
+    <rule context="$context/section">
+      <assert test="following-sibling::*[1][self::section or self::param] or not(following-sibling::*)">
+        Elementu <name/> muze nasledovat pouze element section nebo param nebo nic. 
+      </assert>
+    </rule>
+    <rule context="$context/param">
+      <assert test="following-sibling::*[1][self::param] or not(following-sibling::*)">
+        Elementu <name/> muze nasledovat pouze element param nebo nic.
+      </assert>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        Element <name/> neni povolen v elementu setting.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="section">
+    <let name="context" value="section"/>
+    <rule context="$context">
+      <assert test="count(@name)=1">
+        Element <name/> musi mit atribut name.
+      </assert>
+    </rule>
+    <rule context="$context/@name">
+      <assert test="string-length(normalize-space(.))>0">
+        Hodnota atributu <name/> nemuze obsahovat prazdny retezec.
+      </assert>
+      <assert test="not(normalize-space(.)=../preceding-sibling::section/@name)">
+        Hodnota atributu <name/> '<value-of select="."/>' neni jednoznacna.
+      </assert>      
+    </rule>
+    <rule context="$context/section">
+      <assert test="following-sibling::*[1][self::section or self::param] or not(following-sibling::*)">
+        Elementu <name/> muze nasledovat pouze element section nebo param nebo nic.
+      </assert>
+    </rule>
+    <rule context="$context/param">
+      <assert test="following-sibling::*[1][self::param] or not(following-sibling::*)">
+        Elementu <name/> muze nasledovat pouze element param nebo nic.
+      </assert>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        Element <name/> neni povolen v elementu section.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="param">
+    <let name="context" value="param"/>
+    <rule context="$context">
+      <assert test="count(@name)=1">
+        Element <name/> musi mit atribut name.
+      </assert>
+    </rule>
+    <rule context="$context/@name">
+      <assert test="string-length(normalize-space(.))>0">
+        Hodnota atributu <name/> nemuze obsahovat prazdny retezec.
+      </assert>
+      <assert test="not(normalize-space(.)=../preceding-sibling::param/@name)">
+        Hodnota atributu <name/> '<value-of select="."/>' neni jednoznacna.
+      </assert>
+    </rule>  
+    <rule context="$context/*">
+      <assert test="false()">
+        Element <name/> neni povolen v elementu param.
+      </assert>
+    </rule>
+  </pattern>
+  
+</schema>
