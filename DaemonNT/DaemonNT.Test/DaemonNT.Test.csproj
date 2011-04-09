@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DaemonNT">
-      <HintPath>..\DaemonNT\bin\Debug\DaemonNT.exe</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,6 +42,16 @@
   <ItemGroup>
     <Compile Include="TestService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SchemaTron\SchemaTron\SchemaTron.csproj">
+      <Project>{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}</Project>
+      <Name>SchemaTron</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DaemonNT\DaemonNT.csproj">
+      <Project>{3CF25136-3BF3-4213-9FDC-1E80F2C75171}</Project>
+      <Name>DaemonNT</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
