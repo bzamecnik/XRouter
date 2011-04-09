@@ -44,7 +44,7 @@
                 if (this.serviceProcessInstaller.Account == ServiceAccount.User)
                 {
                     this.serviceProcessInstaller.Username = setting.User;
-                    this.serviceProcessInstaller.Username = setting.Password;
+                    this.serviceProcessInstaller.Password = setting.Password;
                 }
             }
 

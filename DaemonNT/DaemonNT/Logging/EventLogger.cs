@@ -15,7 +15,7 @@
         public void Log(LogType logType, string message)
         {
             DateTime dateTime = DateTime.Now;
-            string dateTimeStr = DateTime.Now.ToString("HH:mm:ss.ff");
+            string dateTimeStr = dateTime.ToString("HH:mm:ss.ff");
 
             string logTypeStr = "I";
             switch (logType)
