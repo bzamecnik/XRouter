@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.IO;
-using System.Xml.Linq;
-
-namespace DaemonNT.Resources
+﻿namespace DaemonNT.Resources
 {
+    using System.IO;
+    using System.Reflection;
+    using System.Xml.Linq;
+
     /// <summary>
     /// Poskytuje pristup k embedded resources.
     /// </summary>

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DaemonNT.Configuration
+﻿namespace DaemonNT.Configuration
 {
+    // TODO: better rename to Settings
+
     public sealed class Setting : SectionBase
     {
         internal Setting()
-        { }        
+        {
+        }
     }
 }

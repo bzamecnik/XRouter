@@ -1,34 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-
-namespace DaemonNT.Logging
+﻿namespace DaemonNT.Logging
 {
+    using System;
+    using System.IO;
+    using System.Text;
+
     internal class LoggerFileStorage
     {
-        private String source = null;
+        private string source = null;
 
-        private String directory = null;
+        private string directory = null;
 
         private StreamWriter streamWriter = null;
 
         private DateTime lastLoggedDateTime = DateTime.MinValue;
 
-        private String lastLoggedFileName = null;
+        private string lastLoggedFileName = null;
         
-        public LoggerFileStorage(String source)
+        public LoggerFileStorage(string source)
         {
             this.source = source;
             this.directory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
         }
       
-        public void Save(DateTime logDateTime, String logItem)
+        public void Save(DateTime logDateTime, string logItem)
         {
-            String fileName = this.GetFileName(logDateTime);
+            string fileName = this.GetFileName(logDateTime);
 
-            if (lastLoggedFileName != fileName)
+            if (this.lastLoggedFileName != fileName)
             {
                 if (this.streamWriter != null)
                 {
@@ -56,13 +54,13 @@ namespace DaemonNT.Logging
         /// </summary>
         /// <param name="logDateTime">DateTime kdy bylo skutecne zalogovano.</param>
         /// <returns></returns>
-        private String GetFileName(DateTime logDateTime)
+        private string GetFileName(DateTime logDateTime)
         {
-            String fileName = this.lastLoggedFileName;
+            string fileName = this.lastLoggedFileName;
  
             if (logDateTime.Date != this.lastLoggedDateTime.Date)
             {
-                fileName = Path.Combine(this.directory, String.Format("{0}_{1}.log", logDateTime.ToString("yyyy-MM-dd"), this.source));                                            
+                fileName = Path.Combine(this.directory, string.Format("{0}_{1}.log", logDateTime.ToString("yyyy-MM-dd"), this.source));                                            
             }
 
             return fileName;

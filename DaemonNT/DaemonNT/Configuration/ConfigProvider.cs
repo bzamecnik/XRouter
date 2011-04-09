@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Xml.XPath;
-using System.Xml.Linq;
-using SchemaTron;
-
-namespace DaemonNT.Configuration
+﻿namespace DaemonNT.Configuration
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
+    using SchemaTron;
+
     /// <summary>
     /// Poskytuje pristup ke konfiguraci.
     /// 
@@ -17,26 +16,27 @@ namespace DaemonNT.Configuration
     /// </summary>
     internal static class ConfigProvider
     {
-        private static readonly String configFile = "DaemonNT.xml";
+        private static readonly string configFile = "DaemonNT.xml";
 
         /// <summary>
         /// Ze vstupniho XML souboru a dane service-name vraci jeji nastaveni jako objekt. 
         /// </summary>
         /// <param name="serviceName"></param>
         /// <returns></returns>
-        public static ServiceSetting LoadServiceSetting(String serviceName)
-        {         
-            String configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configFile);
+        public static ServiceSetting LoadServiceSetting(string serviceName)
+        {
+            string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configFile);
             XDocument xConfig = XDocument.Load(configPath, LoadOptions.SetLineInfo);
 
             Validation(xConfig);
-            
+
             // service
-            XElement xService = xConfig.XPathSelectElement(String.Format("/config/service[@name='{0}']", serviceName));
+            XElement xService = xConfig.XPathSelectElement(string.Format("/config/service[@name='{0}']", serviceName));
             if (xService == null)
             {
-                throw new InvalidOperationException(String.Format("The supplied service.name='{0}' is not specified in {1}.", serviceName, configFile));
+                throw new InvalidOperationException(string.Format("The supplied service.name='{0}' is not specified in {1}.", serviceName, configFile));
             }
+
             ServiceSetting serviceSetting = DeserializeServiceSetting(xService);
 
             return serviceSetting;
@@ -60,15 +60,17 @@ namespace DaemonNT.Configuration
             {
                 // create report
                 StringBuilder sb = new StringBuilder();
-                sb.Append(String.Format("{0} is invalid. ", configFile));
-                Int32 i = 1;
+                sb.Append(string.Format("{0} is invalid. ", configFile));
+                int i = 1;
                 foreach (AssertionInfo info in results.ViolatedAssertions)
                 {
-                    sb.Append(String.Format("{0}. At the LineNumber={1}, LinePosition={2}, XPathLocation={3} '{4}' ", i, info.LineNumber, info.LinePosition,
+                    sb.Append(string.Format(
+                        "{0}. At the LineNumber={1}, LinePosition={2}, XPathLocation={3} '{4}' ",
+                        i, info.LineNumber, info.LinePosition,
                         info.Location, info.UserMessage.Trim()));
                     i++;
                 }
-                
+
                 throw new InvalidOperationException(sb.ToString());
             }
         }
@@ -76,16 +78,16 @@ namespace DaemonNT.Configuration
         private static ServiceSetting DeserializeServiceSetting(XElement xService)
         {
             ServiceSetting result = new ServiceSetting();
-            
+
             // service.@type
-            String typeClass;
-            String typeAssembly;
+            string typeClass;
+            string typeAssembly;
             DeserializeType(xService, out typeClass, out typeAssembly);
             result.TypeClass = typeClass;
             result.TypeAssembly = typeAssembly;
-           
+
             // service.setting
-            XElement xSetting = xService.XPathSelectElement("./setting");       
+            XElement xSetting = xService.XPathSelectElement("./setting");
             if (xSetting == null)
             {
                 result.Setting = new Setting();
@@ -93,8 +95,8 @@ namespace DaemonNT.Configuration
             else
             {
                 result.Setting = DeserializeSetting(xSetting);
-            }         
-            
+            }
+
             // service.installer
             XElement xInstaller = xService.XPathSelectElement("./installer");
             if (xInstaller == null)
@@ -105,10 +107,10 @@ namespace DaemonNT.Configuration
             {
                 result.InstallerSetting = DeserializeInstallerSetting(xInstaller);
             }
-           
+
             return result;
         }
-               
+
         private static InstallerSetting DeserializeInstallerSetting(XElement xInstaller)
         {
             InstallerSetting result = new InstallerSetting();
@@ -141,56 +143,56 @@ namespace DaemonNT.Configuration
 
                     // password
                     XElement xPassword = xAccount.XPathSelectElement("./password");
-                    result.Pwd = xPassword.Value.Trim();
+                    result.Password = xPassword.Value.Trim();
                 }
             }
 
             // depended-on
-            XElement xDependedOn = xInstaller.XPathSelectElement("./depended-on");            
+            XElement xDependedOn = xInstaller.XPathSelectElement("./depended-on");
             if (xDependedOn != null)
             {
-                List<String> dependedNames = new List<String>();
-                String[] tokens = xDependedOn.Value.Split(',');                
-                for (Int32 i = 0; i < tokens.Length; i++)
+                List<string> dependedNames = new List<string>();
+                string[] tokens = xDependedOn.Value.Split(',');
+                for (int i = 0; i < tokens.Length; i++)
                 {
-                    String name = tokens[i].Trim();
-                    if (!String.IsNullOrEmpty(name))
+                    string name = tokens[i].Trim();
+                    if (!string.IsNullOrEmpty(name))
                     {
                         dependedNames.Add(name);
                     }
                 }
+
                 if (dependedNames.Count > 0)
                 {
-                    result.DependentOn = dependedNames.ToArray();
+                    result.RequiredServices = dependedNames;
                 }
             }
 
             return result;
         }
 
-        private static void DeserializeType(XElement xEle, out String ClassName, out String AssemblyName)
+        private static void DeserializeType(XElement xElement, out string className, out string assemblyName)
         {
-            ClassName = null;
-            AssemblyName = null;
+            className = null;
+            assemblyName = null;
 
-            String type = xEle.Attribute(XName.Get("type")).Value;
+            string type = xElement.Attribute(XName.Get("type")).Value;
 
             // resolve type value
-            String[] tokens = type.Split(',');
+            string[] tokens = type.Split(',');
             if (tokens.Length == 2)
             {
-                ClassName = tokens[0].Trim();
-                AssemblyName = tokens[1].Trim();
+                className = tokens[0].Trim();
+                assemblyName = tokens[1].Trim();
+            }
+            else if (tokens.Length == 1)
+            {
+                className = tokens[0].Trim();
             }
             else
-                if (tokens.Length == 1)
-                {
-                    ClassName = tokens[0].Trim();
-                }
-                else
-                {
-                    throw new InvalidOperationException(String.Format("Attribute '{0}' is invalid.", type));
-                }
+            {
+                throw new InvalidOperationException(string.Format("Attribute '{0}' is invalid.", type));
+            }
         }
 
         private static Setting DeserializeSetting(XElement xSetting)
@@ -198,24 +200,25 @@ namespace DaemonNT.Configuration
             Setting setting = new Setting();
             foreach (var node in xSetting.XPathSelectElements("child::*"))
             {
-                XElement xEle = (XElement)node;
-                if (xEle.Name == "section")
+                XElement xElement = (XElement)node;
+                if (xElement.Name == "section")
                 {
                     Section section = new Section();
-                    setting[xEle.Attribute(XName.Get("name")).Value] = section;
-                    DeserializeSection(section, xEle);
+                    setting[xElement.Attribute(XName.Get("name")).Value] = section;
+                    DeserializeSection(section, xElement);
                 }
                 else
                 {
-                    setting.Param[xEle.Attribute(XName.Get("name")).Value] = xEle.Value;
+                    setting.Param[xElement.Attribute(XName.Get("name")).Value] = xElement.Value;
                 }
             }
+
             return setting;
         }
 
-        private static void DeserializeSection(Section section, XElement xEle)
+        private static void DeserializeSection(Section section, XElement xElement)
         {
-            foreach (var node in xEle.XPathSelectElements("child::*"))
+            foreach (var node in xElement.XPathSelectElements("child::*"))
             {
                 XElement nextEle = (XElement)node;
                 if (nextEle.Name == "section")

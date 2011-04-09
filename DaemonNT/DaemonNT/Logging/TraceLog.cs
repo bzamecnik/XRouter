@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
-
-namespace DaemonNT.Logging
+﻿namespace DaemonNT.Logging
 {
+    using System;
+
     internal class TraceLog
     {
-        public DateTime DateTime { private set; get; }
-
-        public Int32 ThreadId { private set; get; }
-
-        public String ThreadName { private set; get; }
-
-        public String Content { private set; get; }
-
         private TraceLog()
-        { }
+        {
+        }
 
-        public static TraceLog Create(String xmlContent)
-        {                       
+        public DateTime DateTime { get; private set; }
+
+        public int ThreadId { get; private set; }
+
+        public string ThreadName { get; private set; }
+
+        public string Content { get; private set; }
+
+        public static TraceLog Create(string xmlContent)
+        {
             TraceLog traceLog = new TraceLog();
             traceLog.DateTime = DateTime.Now;
             traceLog.Content = xmlContent;
@@ -28,6 +25,6 @@ namespace DaemonNT.Logging
             traceLog.ThreadName = System.Threading.Thread.CurrentThread.Name;
 
             return traceLog;
-        }        
+        }
     }
 }

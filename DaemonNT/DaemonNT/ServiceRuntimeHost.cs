@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ServiceProcess;
-using System.Diagnostics;
+﻿namespace DaemonNT
+{
+    using System.ServiceProcess;
 
-namespace DaemonNT
-{  
     internal sealed class ServiceRuntimeHost : ServiceBase
     {
         private Service service = null;
@@ -14,9 +9,12 @@ namespace DaemonNT
         private DaemonNT.Logging.Logger logger = null;
 
         private DaemonNT.Configuration.ServiceSetting serviceSetting = null;
-      
-        public ServiceRuntimeHost(String serviceName, DaemonNT.Configuration.ServiceSetting serviceSetting, 
-            DaemonNT.Logging.Logger logger, Service service)
+
+        public ServiceRuntimeHost(
+            string serviceName,
+            DaemonNT.Configuration.ServiceSetting serviceSetting,
+            DaemonNT.Logging.Logger logger,
+            Service service)
         {
             this.service = service;
             this.serviceSetting = serviceSetting;
@@ -29,22 +27,23 @@ namespace DaemonNT
             this.CanHandleSessionChangeEvent = false;
             this.CanPauseAndContinue = false;
             this.CanStop = true;
-            this.CanShutdown = true;                        
+            this.CanShutdown = true;
         }
-             
+
         protected override void OnStart(string[] args)
         {
-            service.StartCommand(this.ServiceName, false, this.logger, this.serviceSetting.Setting);
+            // TODO: why the 'args' parameter is ignored?!
+            this.service.StartCommand(this.ServiceName, false, this.logger, this.serviceSetting.Setting);
         }
 
         protected override void OnStop()
         {
-            service.StopCommand(false);
+            this.service.StopCommand(false);
         }
 
         protected override void OnShutdown()
         {
-            service.StopCommand(true);
+            this.service.StopCommand(true);
         }
     }
 }

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DaemonNT.Configuration
+﻿namespace DaemonNT.Configuration
 {
     public sealed class Section : SectionBase
     {
         internal Section()
-        { }        
+        {
+        }
     }
 }

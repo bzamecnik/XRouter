@@ -1,33 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ServiceProcess;
+﻿namespace DaemonNT.Configuration
+{
+    using System.Collections.Generic;
 
-namespace DaemonNT.Configuration
-{  
     internal sealed class InstallerSetting
-    {                  
-        public String Description { set; get; }
-
-        public String StartMode { set; get; }
-
-        public String Account { set; get; }
-             
-        public String User { set; get; }
-
-        public String Pwd { set; get; }
-
-        public String[] DependentOn { set; get; }
-
+    {
         public InstallerSetting()
         {
-            this.Description = "";
+            this.Description = string.Empty;
             this.StartMode = "Manual";
             this.Account = "LocalSystem";
             this.User = null;
-            this.Pwd = null;
-            this.DependentOn = new String[0];
+            this.Password = null;
+            this.RequiredServices = new List<string>();
         }
+
+        public string Description { get; set; }
+
+        public string StartMode { get; set; }
+
+        public string Account { get; set; }
+
+        public string User { get; set; }
+
+        public string Password { get; set; }
+
+        /// <summary>
+        /// Names of services which this service depends on, ie. which must be runnning
+        /// before this service can be started.
+        /// </summary>
+        public IEnumerable<string> RequiredServices { get; set; }
     }
 }

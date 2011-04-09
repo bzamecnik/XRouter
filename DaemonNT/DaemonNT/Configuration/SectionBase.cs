@@ -1,36 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DaemonNT.Configuration
+﻿namespace DaemonNT.Configuration
 {
+    using System.Collections.Generic;
+
     public abstract class SectionBase
     {
-        private Dictionary<String, Section> sections = new Dictionary<String,Section>();
+        private Dictionary<string, Section> sections = new Dictionary<string, Section>();
 
         private Param param = new Param();
-                
-        public Section this[String name]
+
+        public Param Param
         {
-            internal set 
-            { 
-                sections[name] = value; 
-            }
-            get 
-            { 
+            get { return this.param; }
+        }
+
+        public Section this[string name]
+        {
+            get
+            {
                 Section result;
                 if (this.sections.TryGetValue(name, out result))
                 {
                     return result;
                 }
-                return null;             
+
+                return null;
+            }
+
+            internal set
+            {
+                this.sections[name] = value;
             }
         }
-
-        public Param Param 
-        {
-            get { return this.param; }
-        }        
     }
 }

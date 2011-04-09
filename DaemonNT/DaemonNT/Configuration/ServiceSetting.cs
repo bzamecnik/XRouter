@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DaemonNT.Configuration
+﻿namespace DaemonNT.Configuration
 {
+    // TODO: better rename to ServiceSettings
+
     internal sealed class ServiceSetting
-    {        
-        public String TypeClass { set; get; }
-
-        public String TypeAssembly { set; get; }
-
-        public Setting Setting { set; get; }
-       
-        public InstallerSetting InstallerSetting { set; get; }
-       
+    {
         public ServiceSetting()
-        { 
-        
+        {
         }
+
+        public string TypeClass { get; set; }
+
+        public string TypeAssembly { get; set; }
+
+        public Setting Setting { get; set; }
+
+        public InstallerSetting InstallerSetting { get; set; }
     }
 }

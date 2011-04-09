@@ -1,31 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DaemonNT.Configuration
+﻿namespace DaemonNT.Configuration
 {
+    using System.Collections.Generic;
+
     public sealed class Param
     {
+        private Dictionary<string, string> @params = new Dictionary<string, string>();
+
         internal Param()
-        { }
-
-        private Dictionary<String, String> @params = new Dictionary<String, String>();
-
-        public String this[String name]
         {
-            internal set 
-            { 
-                this.@params[name] = value; 
-            }
-            get 
+        }
+
+        public string this[string name]
+        {
+            get
             {
-                String value;
+                string value;
                 if (this.@params.TryGetValue(name, out value))
                 {
                     return value;
                 }
-                return null;             
+
+                return null;
+            }
+
+            internal set
+            {
+                this.@params[name] = value;
             }
         }
     }
