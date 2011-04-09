@@ -2,6 +2,10 @@
 <schema xmlns="http://purl.oclc.org/dsdl/schematron">
   <ns prefix="ms" uri="http://purl.oclc.org/dsdl/schematron"/>
 
+ <!-- TODO:
+ - use <let> for simplifying rule contexts (similar to config_schema.xml in DaemonNT)
+ -->
+  
   <pattern id="root">
     <rule context="/">
       <assert test="ms:schema">Only 'schema' can be used as the root element.</assert>
@@ -10,7 +14,9 @@
 
   <pattern id="schema">
     <rule context="/ms:schema">
-      <assert test="count(ms:diagnostics)=0 or count(ms:diagnostics)=1">Only one or zero 'diagnostics' can be used.</assert>
+      <assert test="count(ms:diagnostics)=0 or count(ms:diagnostics)=1">
+        The '<name/>' element must contain at most one 'diagnostics' element.
+      </assert>
     </rule>
     <rule context="/ms:schema/ms:title">
       <assert test="true()"/>
