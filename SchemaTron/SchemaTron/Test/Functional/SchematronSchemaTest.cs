@@ -28,8 +28,10 @@
         }
 
         [Fact]
-        public void BadSchemaContents()
+        public void BadSchema()
         {
+            // TODO:
+            // - test missing schema.@xmlns attribute
             TestBadSchema(GetBadFile("bad_schema_element.xml"), new string[] {
                 "The value of the 'queryBinding' attribute ('fooBinding') is not valid.",
                 "The 'schema' element must contain at most one 'diagnostics' element.",
@@ -41,6 +43,8 @@
         public void BadNamespace()
         {
             TestBadSchema(GetBadFile("bad_ns_element.xml"), new string[] {
+                "The 'ns' element must contain the 'prefix' attribute.",
+                "The 'ns' element must contain the 'uri' attribute.",
                 "The 'ns' element must contain the 'prefix' attribute.",
                 "The 'ns' element must contain the 'uri' attribute.",
                 "The 'fooElement' element is not allowed inside the 'ns' element.",
@@ -266,8 +270,6 @@
             }
             catch (SyntaxException ex)
             {
-                //Assert.Equal(expectedMessages, ex.UserMessages, messageComparer);
-
                 List<string> expectedList = new List<string>(expectedMessages);
                 List<string> actualList = new List<string>(ex.UserMessages);
                 expectedList.Sort();

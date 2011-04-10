@@ -10,6 +10,7 @@
     of the element. This could also go to a diagnostic, but a message without
     the element name is quite worthless.
   - there is no rule specific for the <dir> element
+  - test missing schema.@xmlns attribute (?)
  
   NOTES:
   - When modifying the assert/report messages, update corresponding expected

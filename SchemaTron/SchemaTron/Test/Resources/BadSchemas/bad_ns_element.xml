@@ -4,6 +4,12 @@
   <!-- missing ns.@prefix and ns.@uri attributes -->
   <ns />
 
+  <!-- missing ns.@prefix -->
+  <ns uri="http://www.w3schools.com/prices" />
+
+  <!-- ns.@uri attributes -->
+  <ns prefix="nsPrefix" />
+
   <!--
   - duplicate ns.@prefix or ns.@uri attributes:
     - directly throws System.Xml.XmlException when loading the XDocument:
