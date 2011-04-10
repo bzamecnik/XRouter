@@ -17,13 +17,6 @@
         private static readonly string BAD_SCHEMAS = "BadSchemas";
         private static readonly string GOOD_SCHEMAS = "GoodSchemas";
 
-        private CollectionEquivalenceComparer<string> messageComparer;
-
-        public SchematronSchemaTest()
-        {
-            messageComparer = new CollectionEquivalenceComparer<string>();
-        }
-
         #region Bay-day test methods
 
         [Fact]
@@ -319,45 +312,6 @@
         private static string GetGoodFile(string fileName)
         {
             return string.Format("{0}.{1}", GOOD_SCHEMAS, fileName);
-        }
-
-        /// <summary>
-        /// Compares elements of two collections without regard to their order.
-        /// </summary>
-        /// <typeparam name="T">Type of collection elements</typeparam>
-        private class CollectionEquivalenceComparer<T> : IEqualityComparer<IEnumerable<T>>
-            where T : IEquatable<T>
-        {
-            public bool Equals(IEnumerable<T> a, IEnumerable<T> b)
-            {
-                List<T> aList = new List<T>(a);
-                List<T> bList = new List<T>(b);
-                aList.Sort();
-                bList.Sort();
-
-                IEnumerator<T> aEnumerator = aList.GetEnumerator();
-                IEnumerator<T> bEnumerator = bList.GetEnumerator();
-                while (true)
-                {
-                    bool hasNextA = aEnumerator.MoveNext();
-                    bool hasNextB = bEnumerator.MoveNext();
-
-                    if (!hasNextA || !hasNextB)
-                    {
-                        return hasNextA == hasNextB;
-                    }
-
-                    if (!aEnumerator.Current.Equals(bEnumerator.Current))
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            public int GetHashCode(IEnumerable<T> obj)
-            {
-                return obj.GetHashCode();
-            }
         }
 
         #endregion
