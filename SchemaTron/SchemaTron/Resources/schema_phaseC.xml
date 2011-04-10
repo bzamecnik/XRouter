@@ -2,6 +2,15 @@
 <schema xmlns="http://purl.oclc.org/dsdl/schematron">
   <ns prefix="ms" uri="http://purl.oclc.org/dsdl/schematron"/>
 
+  <!--
+  NOTES:
+    - When modifying the assert/report messages, update corresponding expected
+      messages in SchematronSchemaTest.
+    - These rules are the same as some of those in schema_phaseB.xml.
+      Those are applied in the last phase of validation after abstract
+      patterns, abstract rules, phases and diagnostics are resolved.
+  -->
+
   <pattern id="ID_IDREF">
     <rule context="ms:let/@name">
       <assert test="not(.=../preceding-sibling::ms:let/@name)">
