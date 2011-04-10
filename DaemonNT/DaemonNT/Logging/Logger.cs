@@ -1,5 +1,14 @@
 ﻿namespace DaemonNT.Logging
 {
+    /// <summary>
+    /// Provides a logging facility.
+    /// </summary>
+    /// <remarks>
+    /// Two loggers are available: event logger and trace logger.
+    /// A new logger of logger can be created and started via the Start()
+    /// factory method. A running logger can be stopped by calling
+    /// the Stop() method.
+    /// </remarks>
     public sealed class Logger
     {
         public EventLogger Event { get; private set; }
@@ -12,13 +21,15 @@
             this.Trace.Stop();
         }
 
+        // TODO: It is good to join the two operations, creating a logger and
+        // starting it, into a single method?
+
         internal static Logger Start(string serviceName)
         {
-            Logger instance = new Logger();
-            instance.Event = EventLogger.Start(serviceName);
-            instance.Trace = TraceLogger.Start(serviceName);
-
-            return instance;
+            Logger logger = new Logger();
+            logger.Event = EventLogger.Start(serviceName);
+            logger.Trace = TraceLogger.Start(serviceName);
+            return logger;
         }
     }
 }

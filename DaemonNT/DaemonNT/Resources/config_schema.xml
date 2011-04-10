@@ -7,6 +7,8 @@
   
   TODO:
   - rename <depended-on> to something more meaningful, eg. <depends-on>
+  - rename <setting> to <settings>
+  - make normalize() symetrical, see below
   -->
 
   <title>Specification of the DaemonNT configuration file (DaemonNT.xml) schema.</title>

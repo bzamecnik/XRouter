@@ -2,9 +2,9 @@
 {
     using System.Collections.Generic;
 
-    internal sealed class InstallerSetting
+    internal sealed class InstallerSettings
     {
-        public InstallerSetting()
+        public InstallerSettings()
         {
             this.Description = string.Empty;
             this.StartMode = "Manual";
@@ -16,6 +16,11 @@
 
         public string Description { get; set; }
 
+        /// <summary>
+        /// Mode in which the service will be started.
+        /// Valid values are: 'Automatic', 'Manual', 'Disabled'.
+        /// </summary>
+        /// <see cref="ProjectInstaller.ServiceStartMode"/>
         public string StartMode { get; set; }
 
         public string Account { get; set; }
@@ -25,7 +30,7 @@
         public string Password { get; set; }
 
         /// <summary>
-        /// Names of services which this service depends on, ie. which must be runnning
+        /// Names of services which this service depends on, ie. which must be running
         /// before this service can be started.
         /// </summary>
         public IEnumerable<string> RequiredServices { get; set; }

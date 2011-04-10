@@ -11,13 +11,13 @@
     /// </summary>
     public sealed class TraceLogger
     {
-        private LoggerFileStorage storage = null;
+        private LoggerFileStorage storage;
 
-        private BlockingCollection<TraceLog> buffer = null;
+        private BlockingCollection<TraceLog> buffer;
 
-        private ManualResetEvent mreStopPending = null;
+        private ManualResetEvent mreStopPending;
 
-        private Thread flushingWorker = null;
+        private Thread flushingWorker;
 
         private TraceLogger()
         {
@@ -26,7 +26,6 @@
         public void Log(string xmlElement)
         {
             TraceLog log = TraceLog.Create(xmlElement);
-
             this.PushLog(log);
         }
 

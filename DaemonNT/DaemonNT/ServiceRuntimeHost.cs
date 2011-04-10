@@ -1,23 +1,25 @@
 ﻿namespace DaemonNT
 {
     using System.ServiceProcess;
+    using DaemonNT.Configuration;
+    using DaemonNT.Logging;
 
+    /// <summary>
+    /// Provides a full service host which runs the service within the NT
+    /// service framework. It is intended for production use.
+    /// </summary>
     internal sealed class ServiceRuntimeHost : ServiceBase
     {
-        private Service service = null;
+        private Service service;
 
-        private DaemonNT.Logging.Logger logger = null;
+        private Logger logger;
 
-        private DaemonNT.Configuration.ServiceSetting serviceSetting = null;
+        private ServiceSettings serviceSettings;
 
-        public ServiceRuntimeHost(
-            string serviceName,
-            DaemonNT.Configuration.ServiceSetting serviceSetting,
-            DaemonNT.Logging.Logger logger,
-            Service service)
+        public ServiceRuntimeHost(Service service, string serviceName, ServiceSettings settings, Logger logger)
         {
             this.service = service;
-            this.serviceSetting = serviceSetting;
+            this.serviceSettings = settings;
             this.logger = logger;
             this.ServiceName = serviceName;
 
@@ -32,18 +34,18 @@
 
         protected override void OnStart(string[] args)
         {
-            // TODO: why the 'args' parameter is ignored?!
-            this.service.StartCommand(this.ServiceName, false, this.logger, this.serviceSetting.Setting);
+            // TODO: why the 'args' parameter is ignored?
+            this.service.Start(this.ServiceName, false, this.logger, this.serviceSettings.Settings);
         }
 
         protected override void OnStop()
         {
-            this.service.StopCommand(false);
+            this.service.Stop(false);
         }
 
         protected override void OnShutdown()
         {
-            this.service.StopCommand(true);
+            this.service.Stop(true);
         }
     }
 }

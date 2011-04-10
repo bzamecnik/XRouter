@@ -16,16 +16,16 @@
     /// </summary>
     internal static class ConfigProvider
     {
-        private static readonly string configFile = "DaemonNT.xml";
+        private static readonly string DEFAULT_CONFIG_FILE_NAME = "DaemonNT.xml";
 
         /// <summary>
         /// Ze vstupniho XML souboru a dane service-name vraci jeji nastaveni jako objekt. 
         /// </summary>
         /// <param name="serviceName"></param>
         /// <returns></returns>
-        public static ServiceSetting LoadServiceSetting(string serviceName)
+        public static ServiceSettings LoadServiceSetting(string serviceName)
         {
-            string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configFile);
+            string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DEFAULT_CONFIG_FILE_NAME);
             XDocument xConfig = XDocument.Load(configPath, LoadOptions.SetLineInfo);
 
             Validation(xConfig);
@@ -34,10 +34,10 @@
             XElement xService = xConfig.XPathSelectElement(string.Format("/config/service[@name='{0}']", serviceName));
             if (xService == null)
             {
-                throw new InvalidOperationException(string.Format("The supplied service.name='{0}' is not specified in {1}.", serviceName, configFile));
+                throw new InvalidOperationException(string.Format("The supplied service.name='{0}' is not specified in {1}.", serviceName, DEFAULT_CONFIG_FILE_NAME));
             }
 
-            ServiceSetting serviceSetting = DeserializeServiceSetting(xService);
+            ServiceSettings serviceSetting = DeserializeServiceSetting(xService);
 
             return serviceSetting;
         }
@@ -60,7 +60,7 @@
             {
                 // create report
                 StringBuilder sb = new StringBuilder();
-                sb.Append(string.Format("{0} is invalid. ", configFile));
+                sb.Append(string.Format("{0} is invalid. ", DEFAULT_CONFIG_FILE_NAME));
                 int i = 1;
                 foreach (AssertionInfo info in results.ViolatedAssertions)
                 {
@@ -75,9 +75,9 @@
             }
         }
 
-        private static ServiceSetting DeserializeServiceSetting(XElement xService)
+        private static ServiceSettings DeserializeServiceSetting(XElement xService)
         {
-            ServiceSetting result = new ServiceSetting();
+            ServiceSettings result = new ServiceSettings();
 
             // service.@type
             string typeClass;
@@ -90,30 +90,30 @@
             XElement xSetting = xService.XPathSelectElement("./setting");
             if (xSetting == null)
             {
-                result.Setting = new Setting();
+                result.Settings = new Settings();
             }
             else
             {
-                result.Setting = DeserializeSetting(xSetting);
+                result.Settings = DeserializeSetting(xSetting);
             }
 
             // service.installer
             XElement xInstaller = xService.XPathSelectElement("./installer");
             if (xInstaller == null)
             {
-                result.InstallerSetting = new InstallerSetting();
+                result.InstallerSettings = new InstallerSettings();
             }
             else
             {
-                result.InstallerSetting = DeserializeInstallerSetting(xInstaller);
+                result.InstallerSettings = DeserializeInstallerSetting(xInstaller);
             }
 
             return result;
         }
 
-        private static InstallerSetting DeserializeInstallerSetting(XElement xInstaller)
+        private static InstallerSettings DeserializeInstallerSetting(XElement xInstaller)
         {
-            InstallerSetting result = new InstallerSetting();
+            InstallerSettings result = new InstallerSettings();
 
             // description
             XElement xDescription = xInstaller.XPathSelectElement("./description");
@@ -195,25 +195,25 @@
             }
         }
 
-        private static Setting DeserializeSetting(XElement xSetting)
+        private static Settings DeserializeSetting(XElement xSetting)
         {
-            Setting setting = new Setting();
+            Settings settings = new Settings();
             foreach (var node in xSetting.XPathSelectElements("child::*"))
             {
                 XElement xElement = (XElement)node;
                 if (xElement.Name == "section")
                 {
                     Section section = new Section();
-                    setting[xElement.Attribute(XName.Get("name")).Value] = section;
+                    settings[xElement.Attribute(XName.Get("name")).Value] = section;
                     DeserializeSection(section, xElement);
                 }
                 else
                 {
-                    setting.Param[xElement.Attribute(XName.Get("name")).Value] = xElement.Value;
+                    settings.Parameter[xElement.Attribute(XName.Get("name")).Value] = xElement.Value;
                 }
             }
 
-            return setting;
+            return settings;
         }
 
         private static void DeserializeSection(Section section, XElement xElement)
@@ -229,7 +229,7 @@
                 }
                 else
                 {
-                    section.Param[nextEle.Attribute(XName.Get("name")).Value] = nextEle.Value;
+                    section.Parameter[nextEle.Attribute(XName.Get("name")).Value] = nextEle.Value;
                 }
             }
         }

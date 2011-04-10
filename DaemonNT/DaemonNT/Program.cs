@@ -2,6 +2,7 @@
 {
     using System;
     using DaemonNT.Configuration;
+    using DaemonNT.Installation;
     using DaemonNT.Logging;
 
     /// <summary>
@@ -19,9 +20,9 @@
             Logger logger = Logger.Start(serviceName);
             try
             {
-                ServiceSetting serviceSetting = ConfigProvider.LoadServiceSetting(serviceName);
-                Service service = TypesProvider.CreateService(serviceSetting.TypeClass, serviceSetting.TypeAssembly);
-                ServiceDebugHost serviceHost = new ServiceDebugHost(serviceName, serviceSetting, logger, service);
+                ServiceSettings serviceSettings = ConfigProvider.LoadServiceSetting(serviceName);
+                Service service = TypesProvider.CreateService(serviceSettings.TypeClass, serviceSettings.TypeAssembly);
+                ServiceDebugHost serviceHost = new ServiceDebugHost(service, serviceName, serviceSettings, logger);
 
                 serviceHost.Start();
                 Console.WriteLine(string.Format("Press enter to stop service {0}...", serviceName));
@@ -46,9 +47,9 @@
             Logger logger = Logger.Start(serviceName);
             try
             {
-                ServiceSetting serviceSetting = ConfigProvider.LoadServiceSetting(serviceName);
-                Service service = TypesProvider.CreateService(serviceSetting.TypeClass, serviceSetting.TypeAssembly);
-                ServiceRuntimeHost serviceHost = new ServiceRuntimeHost(serviceName, serviceSetting, logger, service);
+                ServiceSettings serviceSettings = ConfigProvider.LoadServiceSetting(serviceName);
+                Service service = TypesProvider.CreateService(serviceSettings.TypeClass, serviceSettings.TypeAssembly);
+                ServiceRuntimeHost serviceHost = new ServiceRuntimeHost(service, serviceName, serviceSettings, logger);
 
                 ServiceRuntimeHost.Run(serviceHost);
             }
@@ -67,11 +68,11 @@
         /// <param name="serviceName"></param>
         public static void CommandInstall(string serviceName)
         {
-            // load installer setting
-            ServiceSetting serviceSetting = null;
+            // load installer settings
+            ServiceSettings serviceSettings = null;
             try
             {
-                serviceSetting = ConfigProvider.LoadServiceSetting(serviceName);
+                serviceSettings = ConfigProvider.LoadServiceSetting(serviceName);
             }
             catch (Exception e)
             {
@@ -81,8 +82,8 @@
             // install
             try
             {
-                Installation.ProjectInstaller.Initialize(serviceName, serviceSetting.InstallerSetting);
-                Installation.InstallerServices.Install(serviceName);
+                ProjectInstaller.Initialize(serviceName, serviceSettings.InstallerSettings);
+                InstallerServices.Install(serviceName);
             }
             catch (Exception e)
             {
@@ -99,8 +100,8 @@
         {
             try
             {
-                Installation.ProjectInstaller.Initialize(serviceName, null);
-                Installation.InstallerServices.Uninstall(serviceName);
+                ProjectInstaller.Initialize(serviceName, null);
+                InstallerServices.Uninstall(serviceName);
             }
             catch (Exception e)
             {

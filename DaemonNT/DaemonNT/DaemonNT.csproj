@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\DaemonNT.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\DaemonNT.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -46,12 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\ConfigProvider.cs" />
-    <Compile Include="Configuration\InstallerSetting.cs" />
-    <Compile Include="Configuration\ServiceSetting.cs" />
-    <Compile Include="Configuration\Param.cs" />
+    <Compile Include="Configuration\InstallerSettings.cs" />
+    <Compile Include="Configuration\ServiceSettings.cs" />
+    <Compile Include="Configuration\Parameter.cs" />
     <Compile Include="Configuration\Section.cs" />
     <Compile Include="Configuration\SectionBase.cs" />
-    <Compile Include="Configuration\Setting.cs" />
+    <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Installation\InstallerServices.cs" />
     <Compile Include="Logging\EventLogger.cs" />
     <Compile Include="Logging\TraceLog.cs" />

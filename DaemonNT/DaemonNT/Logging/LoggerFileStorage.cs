@@ -6,22 +6,38 @@
 
     internal class LoggerFileStorage
     {
-        private string source = null;
+        /// <summary>
+        /// A symbolic name of the service using the logger.
+        /// </summary>
+        private string source;
 
-        private string directory = null;
+        /// <summary>
+        /// Absolute path to a directory where to store the log files.
+        /// </summary>
+        private string directory;
 
-        private StreamWriter streamWriter = null;
+        private StreamWriter streamWriter;
 
         private DateTime lastLoggedDateTime = DateTime.MinValue;
 
-        private string lastLoggedFileName = null;
-        
+        private string lastLoggedFileName;
+
+        /// <summary>
+        /// Relative directory name where the log files will be stored.
+        /// </summary>
+        /// <remarks>
+        /// Currently it is based on the base directory of asseblies.
+        /// TODO: this should not be hard-coded, but rather configured,
+        /// eg. in the config file.
+        /// </remarks>
+        private static readonly string LOG_RELATIVE_DIRECTORY = "Logs";
+
         public LoggerFileStorage(string source)
         {
             this.source = source;
-            this.directory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
+            this.directory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, LOG_RELATIVE_DIRECTORY);
         }
-      
+
         public void Save(DateTime logDateTime, string logItem)
         {
             string fileName = this.GetFileName(logDateTime);
@@ -33,7 +49,7 @@
                     this.streamWriter.Close();
                 }
 
-                // vytvori adresar, pokud neexistuje
+                // create directory if it does not exist
                 if (!Directory.Exists(this.directory))
                 {
                     Directory.CreateDirectory(this.directory);
@@ -43,7 +59,7 @@
             }
 
             this.streamWriter.WriteLine(logItem);
-            this.streamWriter.Flush();  
+            this.streamWriter.Flush();
 
             this.lastLoggedFileName = fileName;
             this.lastLoggedDateTime = logDateTime;
@@ -57,13 +73,13 @@
         private string GetFileName(DateTime logDateTime)
         {
             string fileName = this.lastLoggedFileName;
- 
+
             if (logDateTime.Date != this.lastLoggedDateTime.Date)
             {
-                fileName = Path.Combine(this.directory, string.Format("{0}_{1}.log", logDateTime.ToString("yyyy-MM-dd"), this.source));                                            
+                fileName = Path.Combine(this.directory, string.Format("{0}_{1}.log", logDateTime.ToString("yyyy-MM-dd"), this.source));
             }
 
             return fileName;
-        }        
+        }
     }
 }

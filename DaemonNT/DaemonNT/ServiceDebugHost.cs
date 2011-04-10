@@ -1,35 +1,43 @@
 ﻿namespace DaemonNT
 {
+    using DaemonNT.Configuration;
+    using DaemonNT.Logging;
+
+    /// <summary>
+    /// Provides a simple host for services outside the NT service framework
+    /// in order to facilitate debugging.
+    /// </summary>
+    /// <remarks>
+    /// The service can be run in a regular console application without the
+    /// need to install it and running as an NT service. This can help save
+    /// some time in the debugging cycle.
+    /// </remarks>
     internal sealed class ServiceDebugHost
     {
         private string serviceName;
 
-        private DaemonNT.Configuration.ServiceSetting serviceSetting = null;
+        private ServiceSettings serviceSettings;
 
-        private DaemonNT.Logging.Logger logger = null;
+        private Logger logger;
 
-        private Service service = null;
+        private Service service;
 
-        public ServiceDebugHost(
-            string serviceName,
-            DaemonNT.Configuration.ServiceSetting serviceSetting,
-            DaemonNT.Logging.Logger logger,
-            Service service)
+        public ServiceDebugHost(Service service, string serviceName, ServiceSettings settings, Logger logger)
         {
             this.serviceName = serviceName;
-            this.serviceSetting = serviceSetting;
+            this.serviceSettings = settings;
             this.logger = logger;
             this.service = service;
         }
 
         internal void Start()
         {
-            this.service.StartCommand(this.serviceName, true, this.logger, this.serviceSetting.Setting);
+            this.service.Start(this.serviceName, true, this.logger, this.serviceSettings.Settings);
         }
 
         internal void Stop()
         {
-            this.service.StopCommand(false);
+            this.service.Stop(false);
         }
     }
 }

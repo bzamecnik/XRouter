@@ -6,24 +6,20 @@
     {
         private Dictionary<string, Section> sections = new Dictionary<string, Section>();
 
-        private Param param = new Param();
+        private Parameter parameter = new Parameter();
 
-        public Param Param
+        public Parameter Parameter
         {
-            get { return this.param; }
+            get { return this.parameter; }
         }
 
         public Section this[string name]
         {
             get
             {
-                Section result;
-                if (this.sections.TryGetValue(name, out result))
-                {
-                    return result;
-                }
-
-                return null;
+                Section result = null;
+                this.sections.TryGetValue(name, out result);
+                return result;
             }
 
             internal set

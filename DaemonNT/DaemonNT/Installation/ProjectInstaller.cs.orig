@@ -48,8 +48,13 @@
                 this.serviceProcessInstaller.Account = this.GetServiceAccountFromString(settings.Account);
                 if (this.serviceProcessInstaller.Account == ServiceAccount.User)
                 {
+<<<<<<< Updated upstream
+                    this.serviceProcessInstaller.Username = setting.User;
+                    this.serviceProcessInstaller.Password = setting.Password;
+=======
                     this.serviceProcessInstaller.Username = settings.User;
                     this.serviceProcessInstaller.Password = settings.Password;
+>>>>>>> Stashed changes
                 }
             }
 

@@ -1,33 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Timers;
-
-using DaemonNT;
-
-namespace DaemonNT.Test
+﻿namespace DaemonNT.Test
 {
-    // Implementace trivialni sluzby, ktera dle daneho intervalu zapise do trace-logu.
+    using System;
+    using System.Timers;
+    using DaemonNT;
+    using DaemonNT.Logging;
 
-    public class TestService : DaemonNT.Service
+    /// <summary>
+    /// An example trivial service implementation. It shows how to read
+    /// settings and how to override the Service hook methods.
+    /// </summary>
+    /// <remarks>
+    /// It writes a trace-log event in periodic intervals until it is stopped.
+    /// </remarks>
+    public class TestService : Service
     {
         private Timer timer = null;
 
-        private DaemonNT.Logging.Logger logger = null;
+        private Logger logger = null;
 
         protected override void OnStart(ServiceArgs args)
         {
             this.logger = args.Logger;
 
-            Int32 interval = Convert.ToInt32(args.Setting["timer"].Param["interval"]);
+            int interval = Convert.ToInt32(args.Settings["timer"].Parameter["interval"]);
 
-            // incializuje timer
             this.timer = new Timer();
             this.timer.Interval = interval;
             this.timer.Elapsed += new ElapsedEventHandler(timer_Elapsed);
             this.timer.AutoReset = false;
             this.timer.Enabled = true;
+
             this.logger.Trace.Log("Timer initialized!");
             this.logger.Event.LogInfo("Service started!");
         }
@@ -35,10 +37,11 @@ namespace DaemonNT.Test
         private void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             this.logger.Trace.Log("Tick");
+            // start the timer again
             this.timer.Enabled = true;
         }
 
-        protected override void OnStop(Boolean shutdown)
+        protected override void OnStop(bool shutdown)
         {
             this.logger.Event.LogInfo("Service stopped!");
         }
