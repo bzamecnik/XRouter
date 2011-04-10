@@ -80,7 +80,7 @@
                 "The value of the 'abstract' attribute ('False') is not valid.",
                 "The value of the 'abstract' attribute ('TRUE') is not valid.",
                 "An abstract 'pattern' element must contain the 'id' attribute.",
-                "The value of the 'pattern' attribute ('true') is not valid. " + 
+                "The value of the 'abstract' attribute ('true') is not valid. " + 
                 "The pattern cannot be simultaneously abstract and instance " +
                 "of an abstract pattern.",
                 "The 'let' element is not allowed inside the instance 'pattern' element.",

@@ -128,8 +128,13 @@
       </assert>
     </rule>
   </pattern>
-
+   
   <pattern id="pattern">
+    <rule context="/ms:schema/ms:pattern[@is-a]/@abstract">
+      <assert test=".!='true'">
+        The value of the '<name/>' attribute ('<value-of select="."/>') is not valid. The pattern cannot be simultaneously abstract and instance of an abstract pattern.
+      </assert>
+    </rule> 
     <rule context="/ms:schema/ms:pattern/@abstract">
       <assert test=".='true' or .='false'">
         The value of the '<name/>' attribute ('<value-of select="."/>') is not valid.
@@ -139,12 +144,7 @@
       <assert test="count(@id)=1">
         An abstract '<name/>' element must contain the 'id' attribute.
       </assert>
-    </rule>
-    <rule context="/ms:schema/ms:pattern[@is-a]/@abstract">
-      <assert test=".!='true'">
-        The value of the '<name/>' attribute ('<value-of select="."/>') is not valid. The pattern cannot be simultaneously abstract and instance of an abstract pattern.
-      </assert>
-    </rule>
+    </rule>   
     <rule context="/ms:schema/ms:pattern/ms:title">
       <assert test="true()"/>
     </rule>
