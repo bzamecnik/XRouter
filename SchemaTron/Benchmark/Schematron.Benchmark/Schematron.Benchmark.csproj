@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E28CC5AE-932C-4F1A-814D-7C6FAEAFA2D4}</ProjectGuid>
+    <ProjectGuid>{06685F62-9E66-46D9-B25A-AC00013DC711}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SchXsltValidator</RootNamespace>
-    <AssemblyName>SchXsltValidator</AssemblyName>
+    <RootNamespace>Schematron.Benchmark</RootNamespace>
+    <AssemblyName>Schematron.Benchmark</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -45,15 +45,25 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Validator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="sample_sch.xml" />
-    <Content Include="sample_xml.xml" />
-    <Content Include="iso_abstract_expand.xsl" />
-    <Content Include="iso_dsdl_include.xsl" />
-    <Content Include="iso_schematron_skeleton_for_xslt1.xsl" />
-    <Content Include="iso_svrl_for_xslt1.xsl" />
+    <ProjectReference Include="..\..\SchemaTron\SchemaTron.csproj">
+      <Project>{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}</Project>
+      <Name>SchemaTron</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\XsltValidator\Schematron.XsltValidator\Schematron.XsltValidator.csproj">
+      <Project>{E28CC5AE-932C-4F1A-814D-7C6FAEAFA2D4}</Project>
+      <Name>Schematron.XsltValidator</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="XML\sample_sch.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XML\sample_xml.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
