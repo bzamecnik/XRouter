@@ -8,7 +8,7 @@
     using Xunit;
 
     /// <summary>
-    /// Functional tests of Schematron's own schema.
+    /// Functional tests of Schematron schemas.
     /// </summary>
     public class SchematronSchemaTest
     {
@@ -16,6 +16,27 @@
         // '.' character instead of '/' or '\'
         private static readonly string BAD_SCHEMAS = "BadSchemas";
         private static readonly string GOOD_SCHEMAS = "GoodSchemas";
+
+        private ValidatorSettings goodSchemaSettings;
+        private ValidatorSettings badSchemaSettings;
+
+        public SchematronSchemaTest()
+        {
+            goodSchemaSettings = new ValidatorSettings()
+            {
+                InclusionsResolver = new CustomInclusionResolver()
+                {
+                    Prefix = GOOD_SCHEMAS
+                }
+            };
+            badSchemaSettings = new ValidatorSettings()
+            {
+                InclusionsResolver = new CustomInclusionResolver()
+                {
+                    Prefix = BAD_SCHEMAS
+                }
+            };
+        }
 
         #region Bay-day test methods
 
@@ -246,6 +267,72 @@
             });
         }
 
+        [Fact]
+        public void BadIncludeInfiniteRecursion()
+        {
+            XDocument xSchema = Resources.Provider.LoadXmlDocument(GetBadFile("infinite_recursion_include.xml"));
+
+            Assert.Throws<InvalidOperationException>(
+                () => Validator.Create(xSchema, badSchemaSettings));
+        }
+
+        [Fact]
+        public void BadXPathExpressions()
+        {
+            // bad rule.@context
+            // bad assert.@test or report.@test
+            // bad value-of.@select
+            // bad name.@path
+            TestBadSchema(GetBadFile("bad_xpath_expressions.xml"), new string[] {
+                "Invalid XPath 1.0 context='/invalidXPath/rule/context[@': Expression must evaluate to a node-set.",
+                "Invalid XPath 1.0 test='/invalidXPath/assert/test[@': Expression must evaluate to a node-set.",
+                "Invalid XPath 1.0 path='name(/invalidXPath/name/path[@)']: Expression must evaluate to a node-set.",
+                "Invalid XPath 1.0 select='/invalidXPath/value-of/select[@': Expression must evaluate to a node-set.",
+                "Invalid XPath 1.0 test='not(/invalidXPath/report/test[@)': Expression must evaluate to a node-set.",
+            });
+        }
+
+        /// <summary>
+        /// Note that references to variables in expressions are
+        /// resolved by the query language binding, here XPath.
+        /// </summary>
+        [Fact]
+        public void ReferenceToUndefinedLet()
+        {
+            TestBadSchema(GetBadFile("undefined_let.xml"), new string[] {
+                // NOTE: Notice the odd XPath message for using an undefined variable.
+                "Invalid XPath 1.0 test='$nonExistentLet': XsltContext is needed for this query because of an unknown function.",
+            });
+        }
+
+        #endregion
+
+        #region Happy-day test methods
+
+        [Fact]
+        public void GoodAssertOrReport()
+        {
+            TestGoodSchema(GetGoodFile("good_assert_or_report.xml"));
+        }
+
+        [Fact]
+        public void GoodLet()
+        {
+            TestGoodSchema(GetGoodFile("good_let.xml"));
+        }
+
+        [Fact]
+        public void GoodDiagnostics()
+        {
+            TestGoodSchema(GetGoodFile("good_diagnostics.xml"));
+        }
+
+        [Fact]
+        public void GoodAncillaryElements()
+        {
+            TestGoodSchema(GetGoodFile("good_ancillary_elements.xml"));
+        }
+
         #endregion
 
         #region Test helpers
@@ -266,7 +353,7 @@
 
             try
             {
-                Validator.Create(xSchema);
+                Validator.Create(xSchema, badSchemaSettings);
             }
             catch (SyntaxException ex)
             {
@@ -302,7 +389,17 @@
         public void TestGoodSchema(string schemaFileName)
         {
             XDocument xSchema = Resources.Provider.LoadXmlDocument(schemaFileName);
-            Validator validator = Validator.Create(xSchema);
+            Validator validator = null;
+            try
+            {
+                validator = Validator.Create(xSchema, goodSchemaSettings);
+            }
+            catch (SyntaxException ex)
+            {
+                Assert.True(false, string.Format(
+                    "Unexpected SyntaxException with messages:\n{0}",
+                    string.Join("\n", ex.UserMessages)));
+            }
             Assert.NotNull(validator);
         }
 
@@ -314,6 +411,24 @@
         private static string GetGoodFile(string fileName)
         {
             return string.Format("{0}.{1}", GOOD_SCHEMAS, fileName);
+        }
+
+        public class CustomInclusionResolver : SchemaTron.IInclusionResolver
+        {
+            /// <summary>
+            /// Resource prefix.
+            /// </summary>
+            public string Prefix { get; set; }
+
+            public XDocument Resolve(string href)
+            {
+                string absoluteHref = href;
+                if (!string.IsNullOrEmpty(Prefix))
+                {
+                    absoluteHref = Prefix + "." + href;
+                }
+                return Resources.Provider.LoadXmlDocument(absoluteHref);
+            }
         }
 
         #endregion

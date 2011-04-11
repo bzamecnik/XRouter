@@ -164,8 +164,7 @@ namespace SchemaTron.Preprocessing
                     xPhase.Remove();
                 }
 
-                // override schema lets which active phase lets
-                // TODO: clarify the comment
+                // override schema lets using active phase lets
                 List<XElement> xLetGarbage = new List<XElement>();
                 foreach (XElement xLet in xSchema.XPathSelectElements("/sch:schema/sch:let", nsManager))
                 {
@@ -441,6 +440,13 @@ namespace SchemaTron.Preprocessing
                 XName valueofName = XName.Get("value-of", Constants.ISONamespace);
                 foreach (XElement xEle in xRule.Descendants())
                 {
+                    // TODO:
+                    // Variable substitution should be separated for each element type.
+                    // The current code could potentially lead to incorrect behavior.
+                    // Consider:
+                    //   <assert select="...">
+                    //   <name test="...">
+                    //   <value-of path="...">
                     if (xEle.Name == assertName || xEle.Name == reportName || xEle.Name == nameName || xEle.Name == valueofName)
                     {
                         foreach (Let let in listLets)
@@ -584,7 +590,7 @@ namespace SchemaTron.Preprocessing
                 foreach (XElement xDiagnostic in xDiagnostics.XPathSelectElements("./sch:diagnostic", nsManager))
                 {
                     Diagnostic diag = new Diagnostic();
-                    diag.Id = xDiagnostic.Attribute(XName.Get("id")).Value;                    
+                    diag.Id = xDiagnostic.Attribute(XName.Get("id")).Value;
                     diag.Element = xDiagnostic;
                     diagnostics.Add(diag.Id, diag);
                 }

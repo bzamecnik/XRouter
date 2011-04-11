@@ -81,6 +81,8 @@ namespace SchemaTron
                 settings.InclusionsResolver = new FileInclusionResolver();
             }
 
+            // TODO: The XDocument.Root can probably never be null.
+            // (Eg. opening an empty XML document results in null XDocument.)
             if (xSchema.Root == null)
             {
                 throw new ArgumentException("Schema must contain root node.");
@@ -155,7 +157,7 @@ namespace SchemaTron
                 }
                 else
                 {
-                    throw new ArgumentException("@defaultPhase is not specified.", "Phase");
+                    throw new ArgumentException("schema.@defaultPhase is not specified.", "Phase");
                 }
             }
             else if (xRoot.XPathSelectElement(String.Format("/sch:schema/sch:phase[@id='{0}']", phase), nsManager) != null)
@@ -222,7 +224,7 @@ namespace SchemaTron
             {
                 throw new SyntaxException(resultsC.GetMessages());
             }
-           
+
             Preprocessor.ResolveLets(xSchema, nsManager);
             Preprocessor.ResolveAncillaryElements(xSchema, nsManager);
         }

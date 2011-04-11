@@ -150,6 +150,33 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\BadSchemas\bad_include_element.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\GoodSchemas\good_name_element.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\GoodSchemas\no_default_phase.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\GoodSchemas\good_assert_or_report.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\BadSchemas\bad_xpath_expressions.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\GoodSchemas\good_ancillary_elements.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\BadSchemas\infinite_recursion_include.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\GoodSchemas\good_let.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\GoodSchemas\good_diagnostics.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\BadSchemas\undefined_let.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

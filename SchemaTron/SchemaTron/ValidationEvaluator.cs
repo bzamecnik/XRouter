@@ -242,11 +242,10 @@ namespace SchemaTron
             {
                 steps.Push(String.Format("@{0}", context.Name));
             }
-            else
-                if (context.NodeType == XPathNodeType.Text)
-                {
-                    steps.Push("text()");
-                }
+            else if (context.NodeType == XPathNodeType.Text)
+            {
+                steps.Push("text()");
+            }
 
             XPathNodeIterator ancestors = context.SelectAncestors(XPathNodeType.Element, true);
             while (ancestors.MoveNext())
