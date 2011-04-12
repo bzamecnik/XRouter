@@ -1,10 +1,10 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schematron.Benchmark", "Schematron.Benchmark\Schematron.Benchmark.csproj", "{06685F62-9E66-46D9-B25A-AC00013DC711}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schematron.Benchmark", "Benchmark\Schematron.Benchmark\Schematron.Benchmark.csproj", "{06685F62-9E66-46D9-B25A-AC00013DC711}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schematron.XsltValidator", "..\XsltValidator\Schematron.XsltValidator\Schematron.XsltValidator.csproj", "{E28CC5AE-932C-4F1A-814D-7C6FAEAFA2D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schematron.XsltValidator", "XsltValidator\Schematron.XsltValidator\Schematron.XsltValidator.csproj", "{E28CC5AE-932C-4F1A-814D-7C6FAEAFA2D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemaTron", "..\SchemaTron\SchemaTron.csproj", "{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemaTron", "SchemaTron\SchemaTron.csproj", "{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References", "References", "{D245D9B5-9842-4FC5-B6B9-56F14F3E4DCA}"
 EndProject

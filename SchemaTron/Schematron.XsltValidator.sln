@@ -1,8 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schematron.XsltValidator", "Schematron.XsltValidator\Schematron.XsltValidator.csproj", "{E28CC5AE-932C-4F1A-814D-7C6FAEAFA2D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schematron.XsltValidator", "XsltValidator\Schematron.XsltValidator\Schematron.XsltValidator.csproj", "{E28CC5AE-932C-4F1A-814D-7C6FAEAFA2D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schematron.XsltValidator.App", "Schematron.XsltValidator.App\Schematron.XsltValidator.App.csproj", "{6A70149B-4E43-4712-84B7-6D3981F439F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schematron.XsltValidator.App", "XsltValidator\Schematron.XsltValidator.App\Schematron.XsltValidator.App.csproj", "{6A70149B-4E43-4712-84B7-6D3981F439F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
