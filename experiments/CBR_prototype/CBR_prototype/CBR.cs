@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using System.Xml.Serialization;
-using SchematronVal;
 using System.Xml.Linq;
+using System.Xml.Serialization;
+using SchemaTron;
 
 namespace CBR_prototype
 {
+    /// <summary>
+    /// Content-based XML message router prototype.
+    /// </summary>
     [XmlRoot("cbr")]
     public class CBR
     {
@@ -21,7 +22,7 @@ namespace CBR_prototype
         /// <returns></returns>
         public static CBR Deserialize(String fileName)
         {
-            CBR instance = null;           
+            CBR instance = null;
             FileStream stream = null;
             stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
             XmlSerializer serializer = new XmlSerializer(typeof(CBR));

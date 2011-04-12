@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 
 namespace CBR_prototype
@@ -23,10 +20,10 @@ namespace CBR_prototype
             try
             {
                 // načte nějaký xml obsah (zprávu)
-               // String messagePath = args[0];  
+                // String messagePath = args[0];  
                 String messagePath = @"..\..\message.xml";
                 XDocument xMessage = XDocument.Load(messagePath, LoadOptions.SetLineInfo);
-                    
+
                 // připraví CBR
                 CBR cbr = CBR.Deserialize(@"..\..\CBR_prototype.xml");
                 cbr.Compile();
@@ -37,7 +34,7 @@ namespace CBR_prototype
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);                
+                Console.WriteLine(e);
             }
             Console.ReadLine();
         }

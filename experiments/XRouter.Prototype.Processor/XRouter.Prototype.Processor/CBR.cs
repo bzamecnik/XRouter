@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using SchematronVal;
+using SchemaTron;
 
 namespace XRouter.Prototype.Processor
 {
     class CBR : INodeFunction
-    {        
+    {
         private String[] tests = null;
 
         private Int32[] steps = null;
@@ -18,7 +18,7 @@ namespace XRouter.Prototype.Processor
         private String name = null;
 
         public CBR(String name, String[] tests, Int32[] steps)
-        {                      
+        {
             this.name = name;
             this.tests = tests;
             this.steps = steps;
@@ -28,7 +28,7 @@ namespace XRouter.Prototype.Processor
         {
             Logger.LogInfo("Init CBR." + name);
 
-            // vytvoří validátory pro kešovací sénář
+            // vytvoří validátory pro kešovací scénář
             this.validators = new Validator[this.tests.Length - 1];
             for (Int32 i = 0; i < this.tests.Length - 1; i++)
             {
@@ -55,7 +55,7 @@ namespace XRouter.Prototype.Processor
                 }
                 else
                 {
-                    AssertionInfo info = results.ViolatedAssertions[0];
+                    AssertionInfo info = results.ViolatedAssertions.ElementAt(0);
                     Logger.LogInfo(String.Format("LineNumber={0} LinePosition={1} Location={2} UserMessage={3}.", info.LineNumber, info.LinePosition, info.Location, info.UserMessage));
                 }
             }

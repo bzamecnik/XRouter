@@ -34,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SchematronVal">
-      <HintPath>..\..\sb_xrouter\SchematronVal\SchematronVal\bin\Debug\SchematronVal.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -65,6 +62,12 @@
     <Content Include="Schematron\p3.xml" />
     <Content Include="workflow.xml" />
     <Content Include="XML\message.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\SchemaTron\SchemaTron\SchemaTron.csproj">
+      <Project>{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}</Project>
+      <Name>SchemaTron</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
