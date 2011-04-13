@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using System.Data.SqlClient;
-using System.Xml;
 using System.IO;
+using System.Xml;
+using XRouter.Data;
 
-namespace DBAccessConsole
+namespace DataAccessExample
 {
     class Program
     {
         static void Main(string[] args)
         {
-            XRouter.DBAccess DBAccess = new XRouter.DBAccess();
+            MsSqlDataAccess dataAccess = new MsSqlDataAccess();
 
             /* all messages retrieval test */
             Console.WriteLine("Stored messages:");
-            List<XmlDocument> messages = DBAccess.GetAllMessages();
+            List<XmlDocument> messages = dataAccess.GetAllMessages();
             foreach (XmlDocument xml in messages)
             {
                 WriteXML(xml);
@@ -25,9 +22,9 @@ namespace DBAccessConsole
             Console.WriteLine();
 
             /* message retrieval test */
-            int messageID = 5;
-            Console.WriteLine("Message with ID {0}:", messageID);
-            XmlDocument message = DBAccess.GetMessage(messageID);
+            int messageId = 5;
+            Console.WriteLine("Message with ID {0}:", messageId);
+            XmlDocument message = dataAccess.GetMessage(messageId);
             WriteXML(message);
             Console.WriteLine();
 
@@ -36,35 +33,35 @@ namespace DBAccessConsole
             List<string> interests = new List<string>();
             interests.Add("//nazdar/auto");
             interests.Add("//ahojky");
-            DBAccess.UpdateComponentConfigInterests(componentName, interests);
+            dataAccess.UpdateComponentConfigInterests(componentName, interests);
             Console.WriteLine("Stored interests of {0}:", componentName);
-            IEnumerable<string> storedInterests = DBAccess.GetComponentConfigInterests(componentName);
+            IEnumerable<string> storedInterests = dataAccess.GetComponentConfigInterests(componentName);
             foreach (string interest in storedInterests)
             {
                 Console.WriteLine(interest);
             }
             Console.WriteLine();
 
-            /* Safe config test */
+            /* Save config */
             XmlDocument config = new XmlDocument();
             config.LoadXml("<conf><a>test</a><b>nic'</b></conf>");
-            DBAccess.SaveConfig(config);
-            WriteXML(DBAccess.GetConfig());
+            dataAccess.SaveConfig(config);
+            WriteXML(dataAccess.GetConfig());
 
             /* Save message and tokens */
             XmlDocument msg = new XmlDocument();
             msg.LoadXml("<msg><a>t''est</a>zprava<b>nic'</b></msg>");
-            int msgID = DBAccess.SaveMessage(DateTime.Now, msg, "TestPoint");
+            int msgID = dataAccess.SaveMessage(DateTime.Now, msg, "TestPoint");
             Console.WriteLine("New message ID: {0}", msgID);
             XmlDocument token = new XmlDocument();
             token.LoadXml("<token>nejaka data<msg><a>t''est</a>zprava<b>nic'</b></msg></token>");
-            DBAccess.SaveToken(msgID, componentName, DateTime.Now, token, XRouter.TokenState.Received);
+            dataAccess.SaveToken(msgID, componentName, DateTime.Now, token, TokenState.Received);
 
             /* Save logs / errors */
-            DBAccess.SaveLog(componentName, DateTime.Now, 2, "pokusny log");
+            dataAccess.SaveLog(componentName, DateTime.Now, 2, "pokusny log");
             XmlDocument error = new XmlDocument();
             error.LoadXml("<error>nejaka chyba</error>");
-            DBAccess.SaveErrorAndLog(componentName, DateTime.Now, error, "pokusny error");
+            dataAccess.SaveErrorAndLog(componentName, DateTime.Now, error, "pokusny error");
 
             //press any key..
             Console.WriteLine();

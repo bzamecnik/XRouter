@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DBAccessConsole")]
+[assembly: AssemblyTitle("XRouter.Data")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("JBS")]
-[assembly: AssemblyProduct("DBAccessConsole")]
-[assembly: AssemblyCopyright("Copyright © JBS 2011")]
+[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyProduct("XRouter.Data")]
+[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("0b53f7cd-899d-461f-8975-e54df66ee0ad")]
+[assembly: Guid("d36ec632-25ad-4acb-81f2-c334eee86291")]
 
 // Version information for an assembly consists of the following four values:
 //

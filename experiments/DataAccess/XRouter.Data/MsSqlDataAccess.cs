@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using System.Data.SqlClient;
-using System.Xml;
 using System.IO;
+using System.Xml;
 
-namespace XRouter
+namespace XRouter.Data
 {
-    class DBAccess : XRouter.DBAccessInterface
+    public class MsSqlDataAccess : IDataAccess
     {
         private string IPAddress;
         private string instance;
@@ -20,7 +17,7 @@ namespace XRouter
 
         private string ConnectionString;
 
-        public DBAccess
+        public MsSqlDataAccess
         (
             string IPAddress = "localhost",
             string instance = "DOMA",
@@ -35,74 +32,13 @@ namespace XRouter
                 IPAddress, instance, DBName, login, password);
         }
 
-        private SqlConnection GetConnection()
-        {
-            //Will use SQL Server Connection Pooling -> effective for repeated use
-            SqlConnection DB = new SqlConnection();
-            DB.ConnectionString = ConnectionString;
-            DB.Open();
-
-            return DB;
-        }
-
-        private class SQLParameter
-        {
-            public SQLParameter(string name, object value)
-            {
-                this.name = name;
-                this.value = value.ToString().Replace("'", "''");
-            }
-
-            public string name { get; private set; }
-            public string value { get; private set; }
-        }
-
-        private SqlDataReader ExecuteProcedure(string procedure, SQLParameter[] parameters)
-        {
-            string parameterstring = "";
-            bool isFirst = true;
-            foreach (SQLParameter parameter in parameters)
-            {
-                if (!isFirst)
-                {
-                    parameterstring += ", ";
-                }
-                isFirst = false;
-                parameterstring += "@" + parameter.name + "=";
-                parameterstring += "'" + parameter.value + "'";
-            }
-
-            SqlDataReader sqlDataReader;
-            try
-            {
-                SqlConnection DB = GetConnection();
-                SqlCommand sqlCommand = DB.CreateCommand();
-                sqlCommand.CommandText = String.Format("EXECUTE executable.{0} {1}", procedure, parameterstring);
-                sqlDataReader = sqlCommand.ExecuteReader();
-
-            }
-            catch (Exception)
-            {
-                //TODO throw specialized exceptions...
-                sqlDataReader = null;
-            }
-
-            return sqlDataReader;
-        }
-
-        private string GetXMLString(XmlDocument xml)
-        {
-            StringWriter stringWriter = new StringWriter();
-            xml.WriteTo(new XmlTextWriter(stringWriter));
-
-            return stringWriter.ToString();
-        }
+        #region Public methods - interface IDataProvider
 
         public List<XmlDocument> GetAllMessages()
         {
             List<XmlDocument> messages = new List<XmlDocument>();
 
-            SqlDataReader sqlDataReader = ExecuteProcedure("GetAllMessages", new SQLParameter[]{});
+            SqlDataReader sqlDataReader = ExecuteProcedure("GetAllMessages", new SQLParameter[] { });
             while (sqlDataReader.Read())
             {
                 XmlDocument xml = new XmlDocument();
@@ -115,14 +51,14 @@ namespace XRouter
             return messages;
         }
 
-        public XmlDocument GetMessage(int messageID)
+        public XmlDocument GetMessage(int messageId)
         {
             XmlDocument message = new XmlDocument();
 
             SqlDataReader sqlDataReader = ExecuteProcedure("GetMessage",
                 new SQLParameter[]
                 {
-                    new SQLParameter("MessageID", messageID)
+                    new SQLParameter("MessageID", messageId)
                 });
             if (sqlDataReader.Read())
             {
@@ -264,7 +200,6 @@ namespace XRouter
                 });
         }
 
-
         public void SaveLog(string componentName, DateTime created, int category, string message)
         {
             ExecuteProcedure("SaveLog",
@@ -287,6 +222,71 @@ namespace XRouter
                     new SQLParameter("ErrorContent", GetXMLString(errorContent)),
                     new SQLParameter("LogMessage", logMessage)
                 });
+        }
+
+        #endregion
+
+        private SqlConnection GetConnection()
+        {
+            //Will use SQL Server Connection Pooling -> effective for repeated use
+            SqlConnection DB = new SqlConnection();
+            DB.ConnectionString = ConnectionString;
+            DB.Open();
+
+            return DB;
+        }
+
+        private SqlDataReader ExecuteProcedure(string procedure, SQLParameter[] parameters)
+        {
+            string parameterstring = "";
+            bool isFirst = true;
+            foreach (SQLParameter parameter in parameters)
+            {
+                if (!isFirst)
+                {
+                    parameterstring += ", ";
+                }
+                isFirst = false;
+                parameterstring += "@" + parameter.name + "=";
+                parameterstring += "'" + parameter.value + "'";
+            }
+
+            SqlDataReader sqlDataReader;
+            try
+            {
+                SqlConnection DB = GetConnection();
+                SqlCommand sqlCommand = DB.CreateCommand();
+                sqlCommand.CommandText = String.Format("EXECUTE executable.{0} {1}", procedure, parameterstring);
+                sqlDataReader = sqlCommand.ExecuteReader();
+
+            }
+            catch (Exception)
+            {
+                //TODO throw specialized exceptions...
+                sqlDataReader = null;
+            }
+
+            return sqlDataReader;
+        }
+
+        private string GetXMLString(XmlDocument xml)
+        {
+            StringWriter stringWriter = new StringWriter();
+            xml.WriteTo(new XmlTextWriter(stringWriter));
+
+            return stringWriter.ToString();
+        }
+
+        private class SQLParameter
+        {
+            public SQLParameter(string name, object value)
+            {
+                this.name = name;
+                this.value = value.ToString().Replace("'", "''");
+            }
+
+            public string name { get; private set; }
+            public string value { get; private set; }
         }
     }
 }
