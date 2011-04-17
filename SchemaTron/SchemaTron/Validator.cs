@@ -18,7 +18,7 @@ namespace SchemaTron
     /// <see cref="Create(XDocument)"/>
     /// <see cref="Create(XDocument, ValidatorSettings)"/>
     /// <see cref="Validate(XDocument, Boolean)"/>
-    public sealed class Validator
+    public sealed class Validator : IValidator
     {
         /// <summary>
         /// Schematron schema for validation - in internal format.
@@ -326,7 +326,7 @@ namespace SchemaTron
         /// document.
         /// </summary>
         /// <remarks>This method is NOT thread-safe.</remarks>
-        /// <param name="xInstance">An instance of an XML document to be validated.
+        /// <param name="xDocument">An instance of an XML document to be validated.
         /// Must not be null.
         /// It is recommended to supply a document with line information
         /// (TODO: clarify this) for better diagnostics.</param>
@@ -335,14 +335,14 @@ namespace SchemaTron
         /// the first assertion.
         /// </param>
         /// <returns>Detailed validation results.</returns>
-        /// <exception cref="ArgumentNullException">If xInstance is null.</exception>
-        public ValidatorResults Validate(XDocument xInstance, bool fullValidation)
+        /// <exception cref="ArgumentNullException">If xDocument is null.</exception>
+        public ValidatorResults Validate(XDocument xDocument, bool fullValidation)
         {
-            if (xInstance == null)
+            if (xDocument == null)
             {
-                throw new ArgumentNullException("xInstance - XML document instance");
+                throw new ArgumentNullException("xDocument - XML document instance");
             }
-            ValidationEvaluator evaluator = new ValidationEvaluator(this.schema, xInstance, fullValidation);
+            ValidationEvaluator evaluator = new ValidationEvaluator(this.schema, xDocument, fullValidation);
             return evaluator.Evaluate();
         }
     }

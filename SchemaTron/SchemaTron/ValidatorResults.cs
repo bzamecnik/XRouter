@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace SchemaTron
 {
+    // TODO: probably rename to ValidationResult
+
     /// <summary>
     /// Detailed results of a validation.
     /// </summary>
@@ -11,16 +13,16 @@ namespace SchemaTron
         /// <summary>
         /// The list of assertions violated during the validation process.
         /// </summary>
-        internal List<AssertionInfo> ViolatedAssertionsList { get; set; }
+        public List<AssertionInfo> ViolatedAssertionsList { get; set; }
 
         /// <summary>
         /// Indicates whether a given XML document instance is valid with
         /// respect to the validator's schema. In case of any violated
         /// assertion the XML instance cannot be valid.
         /// </summary>
-        public bool IsValid { get; internal set; }
+        public bool IsValid { get; set; }
 
-        internal ValidatorResults()
+        public ValidatorResults()
         {
             this.IsValid = true;
             this.ViolatedAssertionsList = new List<AssertionInfo>();
@@ -53,7 +55,7 @@ namespace SchemaTron
         /// </summary>
         /// <returns>A list of error messages about the violated assertions
         /// </returns>
-        internal IEnumerable<string> GetMessages()
+        public IEnumerable<string> GetMessages()
         {
             List<string> messages = new List<string>();
             foreach (AssertionInfo info in this.ViolatedAssertionsList)

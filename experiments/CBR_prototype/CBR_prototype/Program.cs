@@ -26,6 +26,7 @@ namespace CBR_prototype
 
                 // připraví CBR
                 CBR cbr = CBR.Deserialize(@"..\..\CBR_prototype.xml");
+                cbr.ValidatorImplementation = CBR.ValidatorImplementationType.Native;
                 cbr.Compile();
 
                 // provede routování

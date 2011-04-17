@@ -16,48 +16,69 @@ namespace CBR_prototype
         [XmlElement("predicate")]
         public Predicate[] Predicate = null;
 
-        /// <summary>
-        /// Pouze načte konfiguraci.
-        /// </summary>
-        /// <returns></returns>
-        public static CBR Deserialize(String fileName)
+        private IValidator[] validators = null;
+
+        public ValidatorImplementationType ValidatorImplementation { get; set; }
+
+        public CBR()
         {
-            CBR instance = null;
-            FileStream stream = null;
-            stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-            XmlSerializer serializer = new XmlSerializer(typeof(CBR));
-            instance = (CBR)serializer.Deserialize(stream);
-            stream.Close();
-            return instance;
+            ValidatorImplementation = ValidatorImplementationType.Native;
         }
 
-        private Validator[] validators = null;
+        /// <summary>
+        /// Creates a new CBR instance from a config file.
+        /// </summary>
+        /// <param name="configFileName">File name of the configuration file.</param>
+        /// <returns></returns>
+        public static CBR Deserialize(String configFileName)
+        {
+            using (FileStream stream = new FileStream(configFileName,
+                FileMode.Open, FileAccess.Read))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(CBR));
+                return (CBR)serializer.Deserialize(stream);
+            }
+        }
 
         /// <summary>
         /// Připraví si (zkompiluje) predikáty (Schematron schémata). 
         /// </summary>
         public void Compile()
         {
-            List<Validator> vals = new List<Validator>();
+            List<IValidator> validators = new List<IValidator>();
             foreach (Predicate predicate in this.Predicate)
             {
-                XDocument xSchema = XDocument.Load(predicate.SchematronPath, LoadOptions.SetLineInfo);
+                XDocument xSchema = XDocument.Load(predicate.SchematronPath,
+                    LoadOptions.SetLineInfo);
                 try
                 {
-                    Validator val = Validator.Create(xSchema);
-                    vals.Add(val);
+                    IValidator validator = CreateValidator(xSchema);
+                    validators.Add(validator);
                 }
-                catch (SyntaxException e)
+                catch (SyntaxException ex)
                 {
-                    Console.WriteLine("Chyba syntaxe Schematron.");
-                    foreach (String s in e.UserMessages)
+                    Console.WriteLine("Schematron syntax error:");
+                    foreach (String message in ex.UserMessages)
                     {
-                        Console.WriteLine(s);
+                        Console.WriteLine(message);
                     }
-                    throw e;
+                    throw ex;
                 }
             }
-            this.validators = vals.ToArray();
+            this.validators = validators.ToArray();
+        }
+
+        private IValidator CreateValidator(XDocument xSchema)
+        {
+            switch (ValidatorImplementation)
+            {
+                case ValidatorImplementationType.Native:
+                    return Validator.Create(xSchema);
+                case ValidatorImplementationType.XSLT:
+                    return Schematron.XsltValidator.Validator.Create(xSchema);
+                default:
+                    throw new InvalidOperationException();
+            }
         }
 
         /// <summary>
@@ -70,8 +91,8 @@ namespace CBR_prototype
         {
             for (Int32 i = 0; i < this.validators.Length; i++)
             {
-                Validator val = validators[i];
-                ValidatorResults results = val.Validate(xMessage, false);
+                IValidator validator = validators[i];
+                ValidatorResults results = validator.Validate(xMessage, false);
                 if (results.IsValid)
                 {
                     return this.Predicate[i].Id;
@@ -81,5 +102,10 @@ namespace CBR_prototype
             return "default";
         }
 
+        public enum ValidatorImplementationType
+        {
+            Native,
+            XSLT
+        }
     }
 }

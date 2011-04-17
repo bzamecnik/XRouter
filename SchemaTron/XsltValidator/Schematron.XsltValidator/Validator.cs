@@ -1,17 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
 using System.Xml;
-using System.Xml.Xsl;
 using System.Xml.Linq;
+using System.Xml.XPath;
+using System.Xml.Xsl;
+using System.Diagnostics;
 
 namespace Schematron.XsltValidator
 {
-    public class Validator
+    public class Validator : SchemaTron.IValidator
     {
         private XslCompiledTransform xslTranform = null;
+
+        private XmlNamespaceManager nsManager;
+
+        public Validator()
+        {
+            nsManager = new XmlNamespaceManager(new NameTable());
+            // Note: this should not be hard-coded but rather read from the
+            // SVRL report
+            nsManager.AddNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
+        }
 
         /// <summary>
         /// Creates a XSTL-based ISO Schematron validator.
@@ -46,6 +57,71 @@ namespace Schematron.XsltValidator
             validator.xslTranform.Load(xDoc3);
 
             return validator;
+        }
+
+        private static Validator CreateWithMeasurement(XDocument xSchema)
+        {
+            Validator validator = new Validator();
+
+            XslCompiledTransform xsl1 = LoadXsl("iso_dsdl_include.xsl");
+            XslCompiledTransform xsl2 = LoadXsl("iso_abstract_expand.xsl");
+            XslCompiledTransform xsl3 = LoadXsl("iso_svrl_for_xslt1.xsl");
+
+            int iterationCount = 1000;
+            Console.WriteLine("Action description: Create XSLT validator");
+            Console.WriteLine("Number of iterations: {0}", iterationCount);
+
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Reset();
+            stopWatch.Start();
+
+            for (int i = 0; i < iterationCount; i++)
+            {
+                XmlDocument xDoc0 = new XmlDocument();
+                xDoc0.LoadXml(xSchema.ToString());
+
+                XmlDocument xDoc1 = Transform(xsl1, xDoc0);
+                XmlDocument xDoc2 = Transform(xsl2, xDoc1);
+                XmlDocument xDoc3 = Transform(xsl3, xDoc2);
+
+                validator.xslTranform = new XslCompiledTransform();
+                validator.xslTranform.Load(xDoc3);
+
+            }
+            stopWatch.Stop();
+            float avgTime = stopWatch.ElapsedMilliseconds / (float)iterationCount;
+            Console.WriteLine("Total time: {0} ms", stopWatch.ElapsedMilliseconds);
+            Console.WriteLine("Average time: {0} ms", avgTime);
+            Console.WriteLine("Throughput: {0} / sec", 1000 / avgTime);
+            Console.WriteLine();
+
+            return validator;
+        }
+
+        /// <summary>
+        /// Validates an XML document using the prepared XSTL-based ISO
+        /// Schematron validator.
+        /// </summary>
+        /// <param name="xDocument">XML document to be validated</param>
+        /// <param name="fullValidation">This parameter is ignored. Documents
+        /// are always fully validated.</param>
+        /// <returns>validation results</returns>
+        public SchemaTron.ValidatorResults Validate(XDocument xDocument, bool fullValidation)
+        {
+            XDocument svrlReport = Validate(xDocument);
+            // TODO: Find out from the SVRL report if the document was valid
+            // and possibly the reasons of non-validity and fill them to the
+            // ValidatorResults.
+            // Extract svrl:failed-assert/svrl:text and svrl:successful-report/svrl:text.
+
+            IEnumerable<XElement> failedAsserts = svrlReport.XPathSelectElements("/svrl:schematron-output/svrl:failed-assert|/svrl:schematron-output/svrl:successful-report", nsManager);
+
+            SchemaTron.ValidatorResults results = new SchemaTron.ValidatorResults()
+            {
+                IsValid = failedAsserts.Count() == 0
+                // ViolatedAssertions = ... // TODO
+            };
+            return results;
         }
 
         /// <summary>

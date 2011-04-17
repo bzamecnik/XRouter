@@ -53,13 +53,19 @@
     <Content Include="message.xml" />
     <Content Include="p1.xml" />
     <Content Include="p2.xml" />
-    <Content Include="p3.xml" />
+    <Content Include="p3.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="p4.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\SchemaTron\SchemaTron\SchemaTron.csproj">
       <Project>{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}</Project>
       <Name>SchemaTron</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\SchemaTron\XsltValidator\Schematron.XsltValidator\Schematron.XsltValidator.csproj">
+      <Project>{E28CC5AE-932C-4F1A-814D-7C6FAEAFA2D4}</Project>
+      <Name>Schematron.XsltValidator</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
