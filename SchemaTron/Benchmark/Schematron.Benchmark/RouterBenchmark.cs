@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 using CBR_prototype;
+using CBR_prototype.Validator;
 
 namespace Schematron.Benchmark
 {
@@ -33,7 +34,7 @@ namespace Schematron.Benchmark
             Console.WriteLine("Note: full validation is performed.");
             Console.WriteLine();
 
-            MeasureRouter(xMessage, routerConfigFileName, CBR.ValidatorImplementationType.XSLT);
+            MeasureRouter(xMessage, routerConfigFileName, ValidatorImplementation.XSLT);
 
             Console.WriteLine();
 
@@ -41,14 +42,13 @@ namespace Schematron.Benchmark
             Console.WriteLine("Note: partial validation is performed.");
             Console.WriteLine();
 
-            MeasureRouter(xMessage, routerConfigFileName, CBR.ValidatorImplementationType.Native);
+            MeasureRouter(xMessage, routerConfigFileName, ValidatorImplementation.Native);
         }
 
-        private static void MeasureRouter(XDocument xMessage, String routerConfigFileName, CBR.ValidatorImplementationType implementation)
+        private static void MeasureRouter(XDocument xMessage, String routerConfigFileName, ValidatorImplementation implementation)
         {
             CBR router = CBR.Deserialize(routerConfigFileName);
-            router.ValidatorImplementation = implementation;
-            router.Compile();
+            router.Compile(implementation);
 
             Meter.MeasureActionByTime(() =>
             {

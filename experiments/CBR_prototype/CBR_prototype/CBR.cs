@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using SchemaTron;
+using CBR_prototype.Validator;
 
 namespace CBR_prototype
 {
@@ -16,20 +16,16 @@ namespace CBR_prototype
         [XmlElement("predicate")]
         public Predicate[] Predicate = null;
 
-        private IValidator[] validators = null;
-
-        public ValidatorImplementationType ValidatorImplementation { get; set; }
-
-        public CBR()
-        {
-            ValidatorImplementation = ValidatorImplementationType.Native;
-        }
+        private IValidatorAdapter[] validators = null;
 
         /// <summary>
         /// Creates a new CBR instance from a config file.
         /// </summary>
+        /// <remarks>
+        /// Prior to routing the validation predicates within CBR must be
+        /// compiled using the Compile() method.</remarks>
         /// <param name="configFileName">File name of the configuration file.</param>
-        /// <returns></returns>
+        /// <returns>a new CBR instance</returns>
         public static CBR Deserialize(String configFileName)
         {
             using (FileStream stream = new FileStream(configFileName,
@@ -41,44 +37,31 @@ namespace CBR_prototype
         }
 
         /// <summary>
-        /// Připraví si (zkompiluje) predikáty (Schematron schémata). 
+        /// Compiles the predicate validators (from the respective schemas)
+        /// with native Schematron validator implementation.
         /// </summary>
         public void Compile()
         {
-            List<IValidator> validators = new List<IValidator>();
+            Compile(ValidatorImplementation.Native);
+        }
+
+        /// <summary>
+        /// Compiles the predicate validators (from the respective schemas)
+        /// with given Schematron validator implementation.
+        /// </summary>
+        public void Compile(ValidatorImplementation implementation)
+        {
+            List<IValidatorAdapter> validators = new List<IValidatorAdapter>();
             foreach (Predicate predicate in this.Predicate)
             {
                 XDocument xSchema = XDocument.Load(predicate.SchematronPath,
                     LoadOptions.SetLineInfo);
-                try
-                {
-                    IValidator validator = CreateValidator(xSchema);
-                    validators.Add(validator);
-                }
-                catch (SyntaxException ex)
-                {
-                    Console.WriteLine("Schematron syntax error:");
-                    foreach (String message in ex.UserMessages)
-                    {
-                        Console.WriteLine(message);
-                    }
-                    throw ex;
-                }
+                IValidatorAdapter validator = ValidatorFactory.CreateValidator(xSchema,
+                    implementation);
+                validators.Add(validator);
             }
-            this.validators = validators.ToArray();
-        }
 
-        private IValidator CreateValidator(XDocument xSchema)
-        {
-            switch (ValidatorImplementation)
-            {
-                case ValidatorImplementationType.Native:
-                    return Validator.Create(xSchema);
-                case ValidatorImplementationType.XSLT:
-                    return Schematron.XsltValidator.Validator.Create(xSchema);
-                default:
-                    throw new InvalidOperationException();
-            }
+            this.validators = validators.ToArray();
         }
 
         /// <summary>
@@ -89,23 +72,23 @@ namespace CBR_prototype
         /// <returns></returns>
         public String Route(XDocument xMessage)
         {
+            if (validators == null)
+            {
+                throw new InvalidOperationException("The predicates are not yet compiled. "
+                + "You must call Compile() prior to routing.");
+            }
+
             for (Int32 i = 0; i < this.validators.Length; i++)
             {
-                IValidator validator = validators[i];
-                ValidatorResults results = validator.Validate(xMessage, false);
-                if (results.IsValid)
+                IValidatorAdapter validator = validators[i];
+                bool isValid = validator.IsValid(xMessage, false);
+                if (isValid)
                 {
                     return this.Predicate[i].Id;
                 }
             }
 
             return "default";
-        }
-
-        public enum ValidatorImplementationType
-        {
-            Native,
-            XSLT
         }
     }
 }

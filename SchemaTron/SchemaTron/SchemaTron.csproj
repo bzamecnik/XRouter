@@ -47,7 +47,6 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="FileInclusionResolver.cs" />
     <Compile Include="IInclusionResolver.cs" />
-    <Compile Include="IValidator.cs" />
     <Compile Include="Preprocessing\AbstractRule.cs" />
     <Compile Include="Preprocessing\Diagnostic.cs" />
     <Compile Include="Preprocessing\Parameter.cs" />
