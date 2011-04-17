@@ -7,8 +7,7 @@
   
   TODO:
   - rename <depended-on> to something more meaningful, eg. <depends-on>
-  - rename <setting> to <settings>
-  - make normalize() symetrical, see below
+  - rename <setting> to <settings>  
   -->
 
   <title>Specification of the DaemonNT configuration file (DaemonNT.xml) schema.</title>
@@ -19,12 +18,7 @@
     </rule>
   </pattern>
 
-  <pattern id="config">
-    <!--
-    TODO: Is it ok that the result of concatenation will be eg.:
-    '/config//service'? Or there should be no slash at the end?
-    This applies for all similar lets further in this file.
-    -->
+  <pattern id="config">   
     <let name="context" value="/config"/>
     <rule context="$context">
       <assert test="count(service)>0">
@@ -65,10 +59,8 @@
     <rule context="$context/@name">
       <assert test="string-length(normalize-space(.))>0">
         The '<name/>' attribute must contain a non-empty string.
-      </assert>
-      <!-- TODO: maybe normalize also the other attribute:
-      normalize-space(../preceding-sibling::service/@name))-->
-      <assert test="not(normalize-space(.)=../preceding-sibling::service/@name)">
+      </assert>  
+      <assert test="not(normalize-space(.)=normalize-space(../preceding-sibling::service/@name))">
         The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
       </assert>
     </rule>
@@ -276,7 +268,7 @@
       <assert test="string-length(normalize-space(.))>0">
         The '<name/>' attribute must contain a non-empty string.
       </assert>
-      <assert test="not(normalize-space(.)=../preceding-sibling::param/@name)">
+      <assert test="not(normalize-space(.)=normalize-space(../preceding-sibling::param/@name))">
         The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
       </assert>
     </rule>

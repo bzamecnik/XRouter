@@ -17,24 +17,56 @@
         /// <param name="serviceName"></param>
         public static void CommandDebug(string serviceName)
         {
-            Logger logger = Logger.Start(serviceName);
+            Logger logger = null;
             try
             {
-                ServiceSettings serviceSettings = ConfigProvider.LoadServiceSetting(serviceName);
-                Service service = TypesProvider.CreateService(serviceSettings.TypeClass, serviceSettings.TypeAssembly);
-                ServiceDebugHost serviceHost = new ServiceDebugHost(service, serviceName, serviceSettings, logger);
+                // create event logger
+                logger = Logger.Create(serviceName);
+                logger.CreateEventLogger();
 
-                serviceHost.Start();
-                Console.WriteLine(string.Format("Press enter to stop service {0}...", serviceName));
-                Console.ReadLine();
-                serviceHost.Stop();
+                // load settings and initialize constructs                
+                ServiceDebugHost serviceHost = null;
+                try
+                {
+                    ServiceSettings serviceSettings = ConfigProvider.LoadServiceSetting(serviceName);
+                    Service service = TypesProvider.CreateService(serviceSettings.TypeClass, serviceSettings.TypeAssembly);
+                    serviceHost = new ServiceDebugHost(service, serviceName, serviceSettings, logger);
+
+                    // TODO: vytvorit instance trace-loggeru, ktere jsou definovany v konfiguraci
+                    logger.CreateTraceLogger();
+                }
+                catch (Exception e)
+                {                   
+                    logger.Event.LogError(e.Message);
+                    throw e;
+                }
+
+                // service hosting
+                try
+                {
+                    serviceHost.Start();
+                    Console.WriteLine(string.Format("Press enter to stop service {0}...", serviceName));
+                    Console.ReadLine();
+                    serviceHost.Stop();
+                }
+                catch (Exception e)
+                {                   
+                    logger.Event.LogError(e.Message);
+                    throw e;
+                }
             }
             catch (Exception e)
             {
-                logger.Event.LogError(e.Message);
+                Console.WriteLine(String.Format("Error: {0}", e.Message));               
             }
-
-            logger.Stop();
+            finally
+            {
+                if (logger != null)
+                {
+                    logger.CloseTraceLogger();
+                    logger.CloseEventLogger();
+                }
+            }
         }
 
         /// <summary>
@@ -44,21 +76,53 @@
         /// <param name="serviceName"></param>
         public static void CommandRun(string serviceName)
         {
-            Logger logger = Logger.Start(serviceName);
+            Logger logger = null;
             try
             {
-                ServiceSettings serviceSettings = ConfigProvider.LoadServiceSetting(serviceName);
-                Service service = TypesProvider.CreateService(serviceSettings.TypeClass, serviceSettings.TypeAssembly);
-                ServiceRuntimeHost serviceHost = new ServiceRuntimeHost(service, serviceName, serviceSettings, logger);
+                // create logger
+                logger = Logger.Create(serviceName);
+                logger.CreateEventLogger();
 
-                ServiceRuntimeHost.Run(serviceHost);
+                // load settings and initialize constructs 
+                ServiceRuntimeHost serviceHost = null;
+                try
+                {
+                    ServiceSettings serviceSettings = ConfigProvider.LoadServiceSetting(serviceName);
+                    Service service = TypesProvider.CreateService(serviceSettings.TypeClass, serviceSettings.TypeAssembly);
+                    serviceHost = new ServiceRuntimeHost(service, serviceName, serviceSettings, logger);
+
+                    // TODO: vytvorit instance trace-loggeru, ktere jsou definovany v konfiguraci
+                    logger.CreateTraceLogger();                   
+                }
+                catch (Exception e)
+                {
+                    logger.Event.LogError(e.Message);
+                    throw e;
+                }
+
+                // service hosting
+                try
+                {
+                    ServiceRuntimeHost.Run(serviceHost);
+                }
+                catch (Exception e)
+                {
+                    logger.Event.LogError(e.Message);
+                    throw e;
+                }
             }
             catch (Exception e)
             {
-                logger.Event.LogError(e.Message);
+                throw e;
             }
-
-            logger.Stop();
+            finally
+            {
+                if (logger != null)
+                {
+                    logger.CloseTraceLogger();
+                    logger.CloseEventLogger();
+                }
+            }
         }
 
         /// <summary>

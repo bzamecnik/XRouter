@@ -2,11 +2,11 @@
 {
     using System.Collections.Generic;
 
-    public sealed class Parameter
+    public sealed class Param
     {
         private Dictionary<string, string> parameters = new Dictionary<string, string>();
 
-        internal Parameter()
+        internal Param()
         {
         }
 

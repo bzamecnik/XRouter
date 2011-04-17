@@ -6,9 +6,9 @@
     {
         private Dictionary<string, Section> sections = new Dictionary<string, Section>();
 
-        private Parameter parameter = new Parameter();
+        private Param parameter = new Param();
 
-        public Parameter Parameter
+        public Param Parameter
         {
             get { return this.parameter; }
         }

@@ -1,4 +1,6 @@
-﻿namespace DaemonNT
+﻿using System;
+
+namespace DaemonNT
 {
     /// <summary>
     /// Provides an abstract class for a DaemonNT service that will exist as
@@ -6,24 +8,33 @@
     /// </summary>
     public abstract class Service
     {
+        public DaemonNT.Logging.Logger Logger { internal set; get; }           
+  
         /// <summary>
         /// Starts the service.
         /// </summary>
         /// <remarks>
         /// OnStart() hook methods are called upon starting the service.
-        /// </remarks>
-        /// <param name="serviceName"></param>
-        /// <param name="debugModeEnabled"></param>
-        /// <param name="logger"></param>
-        /// <param name="settings"></param>
-        internal void Start(
-            string serviceName,
-            bool debugModeEnabled,
-            DaemonNT.Logging.Logger logger,
-            DaemonNT.Configuration.Settings settings)
+        /// </remarks>    
+        internal void Start(string serviceName, bool isDebugMode, 
+            DaemonNT.Logging.Logger logger, DaemonNT.Configuration.Settings settings)
         {
-            ServiceArgs args = new ServiceArgs(serviceName, debugModeEnabled, logger, settings);
-            this.OnStart(args);
+            OnStartArgs args = new OnStartArgs();
+            args.ServiceName = serviceName;
+            args.IsDebugMode = isDebugMode;                      
+            args.Settings = settings;
+
+            this.Logger.Event.LogInfo("Sluzba se spousti...");
+            try
+            {
+                this.OnStart(args);
+                this.Logger.Event.LogInfo("Sluzba byla uspesne spustena!");    
+            }
+            catch (Exception e)
+            {
+                this.Logger.Event.LogError("Pri startu sluzby doslo k neocekavane chybe.");
+                throw e;
+            }                   
         }
 
         /// <summary>
@@ -35,7 +46,20 @@
         /// <param name="shutdown">Indicates that the system is shutting down</param>
         internal void Stop(bool shutdown)
         {
-            this.OnStop(shutdown);
+            OnStopArgs args = new OnStopArgs();
+            args.Shutdown = shutdown;
+
+            this.Logger.Event.LogInfo("Sluzba se zastavuje...");
+            try
+            {
+                this.OnStop(args);
+                this.Logger.Event.LogInfo("Sluzba byla uspesne zastavena!");
+            }
+            catch (Exception e)
+            {
+                this.Logger.Event.LogError("Pri zastaveni sluzby doslo k neocekavane chybe.");
+                throw e;
+            }
         }
 
         /// <summary>
@@ -43,7 +67,7 @@
         /// started. It is intended to be implemented in a derived class.
         /// </summary>
         /// <param name="args">Service start-up arguments</param>
-        protected virtual void OnStart(ServiceArgs args)
+        protected virtual void OnStart(OnStartArgs args)
         {
         }
 
@@ -54,7 +78,7 @@
         /// </summary>
         /// <param name="shutdown">Indicates that the system is shutting down
         /// </param>
-        protected virtual void OnStop(bool shutdown)
+        protected virtual void OnStop(OnStopArgs args)
         {
         }
     }

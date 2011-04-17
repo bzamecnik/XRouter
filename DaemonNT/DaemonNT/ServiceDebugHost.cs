@@ -15,19 +15,21 @@
     internal sealed class ServiceDebugHost
     {
         private string serviceName;
-
+        
         private ServiceSettings serviceSettings;
 
         private Logger logger;
 
         private Service service;
 
-        public ServiceDebugHost(Service service, string serviceName, ServiceSettings settings, Logger logger)
+        public ServiceDebugHost(Service service, string serviceName, 
+            ServiceSettings settings, Logger logger)
         {
             this.serviceName = serviceName;
-            this.serviceSettings = settings;
-            this.logger = logger;
             this.service = service;
+            this.service.Logger = logger;
+            this.serviceSettings = settings;
+            this.logger = logger;                                                                
         }
 
         internal void Start()

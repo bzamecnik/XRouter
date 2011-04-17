@@ -16,14 +16,16 @@
 
         private ServiceSettings serviceSettings;
 
-        public ServiceRuntimeHost(Service service, string serviceName, ServiceSettings settings, Logger logger)
+        public ServiceRuntimeHost(Service service, string serviceName, 
+            ServiceSettings serviceSettings, Logger logger)
         {
             this.service = service;
-            this.serviceSettings = settings;
+            this.service.Logger = logger;
             this.logger = logger;
-            this.ServiceName = serviceName;
-
+            this.serviceSettings = serviceSettings;
+                                           
             // service base properties
+            this.ServiceName = serviceName;
             this.AutoLog = false;
             this.CanHandlePowerEvent = false;
             this.CanHandleSessionChangeEvent = false;

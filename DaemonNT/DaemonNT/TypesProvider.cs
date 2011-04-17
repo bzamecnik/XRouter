@@ -47,9 +47,7 @@
         /// If the type cannot be created.
         /// </exception>
         private static object CreateTypeInstance(string typeClass, string typeAssembly)
-        {
-            // TODO: possibly catch exceptions from the following methods
-            // and wrap them to a single exception type
+        {        
             Assembly assembly = Assembly.LoadFrom(typeAssembly);
 
             object instance = assembly.CreateInstance(typeClass);

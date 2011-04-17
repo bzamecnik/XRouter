@@ -23,7 +23,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\DaemonNT.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -50,12 +51,15 @@
     <Compile Include="Configuration\ConfigProvider.cs" />
     <Compile Include="Configuration\InstallerSettings.cs" />
     <Compile Include="Configuration\ServiceSettings.cs" />
-    <Compile Include="Configuration\Parameter.cs" />
+    <Compile Include="Configuration\Param.cs" />
     <Compile Include="Configuration\Section.cs" />
     <Compile Include="Configuration\SectionBase.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Installation\InstallerServices.cs" />
+    <Compile Include="Logging\EventLog.cs" />
     <Compile Include="Logging\EventLogger.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\LoggerImplementation.cs" />
     <Compile Include="Logging\TraceLog.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LoggerFileStorage.cs" />
@@ -64,12 +68,13 @@
     <Compile Include="Installation\ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="OnStartArgs.cs" />
+    <Compile Include="OnStopArgs.cs" />
     <Compile Include="Resources\Provider.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypesProvider.cs" />
-    <Compile Include="ServiceArgs.cs" />
     <Compile Include="ServiceDebugHost.cs" />
     <Compile Include="ServiceRuntimeHost.cs">
       <SubType>Component</SubType>

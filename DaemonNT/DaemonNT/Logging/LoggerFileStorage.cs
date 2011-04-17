@@ -4,7 +4,7 @@
     using System.IO;
     using System.Text;
 
-    internal class LoggerFileStorage
+    internal class LoggerFileStorage 
     {
         /// <summary>
         /// A symbolic name of the service using the logger.
@@ -38,7 +38,7 @@
             this.directory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, LOG_RELATIVE_DIRECTORY);
         }
 
-        public void Save(DateTime logDateTime, string logItem)
+        private void Save(DateTime logDateTime, string logItem)
         {
             string fileName = this.GetFileName(logDateTime);
 
@@ -80,6 +80,11 @@
             }
 
             return fileName;
+        }
+
+        public void SaveLog(Log log)
+        {
+            this.Save(log.DateTime, log.ToString());
         }
     }
 }

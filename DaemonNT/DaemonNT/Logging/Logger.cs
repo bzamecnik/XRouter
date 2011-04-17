@@ -1,35 +1,61 @@
 ﻿namespace DaemonNT.Logging
 {
+    using DaemonNT.Configuration;
+
     /// <summary>
     /// Provides a logging facility.
     /// </summary>
     /// <remarks>
-    /// Two loggers are available: event logger and trace logger.
-    /// A new logger of logger can be created and started via the Start()
-    /// factory method. A running logger can be stopped by calling
-    /// the Stop() method.
+    /// Two loggers are available: event logger and trace logger.   
     /// </remarks>
     public sealed class Logger
     {
+        private string serviceName;
+
+        /// <summary>
+        /// Poskytuje efektivní, tread-safe logování významných událostí, které jsou čitelné 
+        /// pro správce služby.
+        /// </summary>
         public EventLogger Event { get; private set; }
 
+        /// <summary>
+        /// Poskytuje efektivní, thread-safe logování low-level informací, které jsou čitelné 
+        /// vývojáři či odborníky dané problémové domény. 
+        /// </summary>
         public TraceLogger Trace { get; private set; }
 
-        public void Stop()
-        {
-            this.Event.Stop();
-            this.Trace.Stop();
-        }
-
-        // TODO: It is good to join the two operations, creating a logger and
-        // starting it, into a single method?
-
-        internal static Logger Start(string serviceName)
+        internal static Logger Create(string serviceName)
         {
             Logger logger = new Logger();
-            logger.Event = EventLogger.Start(serviceName);
-            logger.Trace = TraceLogger.Start(serviceName);
+            logger.serviceName = serviceName;
+
             return logger;
         }
+
+        internal void CreateEventLogger()
+        {
+            this.Event = EventLogger.Create(serviceName, 1000);          
+        }
+
+        internal void CloseEventLogger()
+        {
+            if (this.Event != null)
+            {
+                this.Event.Close();
+            }
+        }
+
+        internal void CreateTraceLogger()
+        {
+            this.Trace = TraceLogger.Create(serviceName, 1000);
+        }
+
+        internal void CloseTraceLogger()
+        {
+            if (this.Trace != null)
+            {
+                this.Trace.Close();
+            }
+        }       
     }
 }

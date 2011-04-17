@@ -15,35 +15,30 @@
     public class TestService : Service
     {
         private Timer timer = null;
-
-        private Logger logger = null;
-
-        protected override void OnStart(ServiceArgs args)
-        {
-            this.logger = args.Logger;
-
+      
+        protected override void OnStart(OnStartArgs args)
+        {                       
             int interval = Convert.ToInt32(args.Settings["timer"].Parameter["interval"]);
 
             this.timer = new Timer();
             this.timer.Interval = interval;
             this.timer.Elapsed += new ElapsedEventHandler(timer_Elapsed);
             this.timer.AutoReset = false;
-            this.timer.Enabled = true;
-
-            this.logger.Trace.Log("Timer initialized!");
-            this.logger.Event.LogInfo("Service started!");
+            this.timer.Enabled = true;        
         }
 
         private void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            this.logger.Trace.Log("Tick");
+            
+           
+
             // start the timer again
             this.timer.Enabled = true;
         }
 
-        protected override void OnStop(bool shutdown)
+        protected override void OnStop(OnStopArgs args)
         {
-            this.logger.Event.LogInfo("Service stopped!");
+           
         }
     }
 }
