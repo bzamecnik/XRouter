@@ -8,7 +8,7 @@ namespace DaemonNT.Logging
     /// <summary>
     /// Reprezentuje jeden event log záznam vytvořený EventLoggerem. 
     /// </summary>
-    public sealed class EventLog : Log
+    internal sealed class EventLog : Log
     {    
         public LogType LogType { private set; get; }
 
@@ -30,6 +30,10 @@ namespace DaemonNT.Logging
             return eventLog;
         }
 
+        /// <summary>
+        /// Prevede informace dane instance do Stringu. 
+        /// </summary>
+        /// <returns></returns>
         private string SerializeToStr()
         {      
             String dateTimeStr = this.DateTime.ToString("HH:mm:ss.ff");
@@ -45,7 +49,7 @@ namespace DaemonNT.Logging
                     break;
                 case LogType.Error:
                     logTypeStr = "E";
-                    break;
+                    break;         
                 default:
                     throw new ArgumentException(String.Format("Unsupported log type: {0}", logTypeStr));
             }

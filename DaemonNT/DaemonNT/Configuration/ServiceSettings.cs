@@ -13,5 +13,7 @@
         public Settings Settings { get; set; }
 
         public InstallerSettings InstallerSettings { get; set; }
+
+        public TraceLoggerSettings TraceLoggerSettings { get; set; }
     }
 }

@@ -4,7 +4,7 @@
     using System.IO;
     using System.Text;
 
-    internal class LoggerFileStorage 
+    internal class LoggerFileStorage : ILoggerStorage
     {
         /// <summary>
         /// A symbolic name of the service using the logger.
@@ -85,6 +85,6 @@
         public void SaveLog(Log log)
         {
             this.Save(log.DateTime, log.ToString());
-        }
+        }        
     }
 }

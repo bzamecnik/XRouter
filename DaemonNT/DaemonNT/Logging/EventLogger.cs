@@ -3,6 +3,10 @@
     using System;
     using System.Collections.Generic;
           
+    /// <summary>
+    /// Poskytuje efektivni, vice-vlaknove logovani vyznamnych udalosti, 
+    /// ktere jsou citelne pro spravce systemu. 
+    /// </summary>
     public class EventLogger
     {
         private LoggerImplementation loggerImpl = null;
@@ -13,9 +17,13 @@
         internal static EventLogger Create(String serviceName, Int32 bufferSize)
         {
             EventLogger instance = new EventLogger(); 
-           
-            LoggerFileStorage storage = new LoggerFileStorage(serviceName);
-            instance.loggerImpl = LoggerImplementation.Start(storage, bufferSize);
+                      
+            // create storages
+            List<ILoggerStorage> storages = new List<ILoggerStorage>();
+            storages.Add(new LoggerFileStorage(serviceName));
+
+            // start logger
+            instance.loggerImpl = LoggerImplementation.Start(storages.ToArray(), bufferSize);
 
             return instance;
         }

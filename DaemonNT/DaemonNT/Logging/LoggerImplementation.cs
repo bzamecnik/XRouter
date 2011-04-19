@@ -6,36 +6,28 @@ using System.Collections.Concurrent;
 using System.Threading;
 
 namespace DaemonNT.Logging
-{   
-    public delegate void LogSaved(Log log);
-
+{      
     /// <summary>
-    /// Poskytuje obecnou implementaci efektivního, více-vláknového logování. 
+    /// Implementace více-vláknového producents/consument logování.
     /// </summary>
-    internal sealed class LoggerImplementation
+    internal sealed class LoggerImplementation           
     {       
-        private LoggerFileStorage storage;
-
+        private ILoggerStorage[] storages;
+        
         private BlockingCollection<Log> buffer;
 
         private ManualResetEvent mreStopPending;
-
+        
         private Thread flushingWorker;
     
         private LoggerImplementation()
         { }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="storage"></param>
-        /// <param name="bufferSize"></param>
-        /// <returns></returns>
-        public static LoggerImplementation Start(LoggerFileStorage storage, Int32 bufferSize)
+       
+        public static LoggerImplementation Start(ILoggerStorage[] storages, Int32 bufferSize)
         {
             LoggerImplementation instance = new LoggerImplementation();      
             instance.buffer = new BlockingCollection<Log>(bufferSize);
-            instance.storage = storage;     
+            instance.storages = storages;    
             instance.mreStopPending = new ManualResetEvent(false);
             instance.flushingWorker = new Thread(new ParameterizedThreadStart(instance.Flushing));
             instance.flushingWorker.Start();
@@ -47,24 +39,26 @@ namespace DaemonNT.Logging
         {
             this.buffer.Add(log);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
+        
         private void Flushing(object data)
         {
             foreach (Log log in this.buffer.GetConsumingEnumerable())
             {
-                storage.SaveLog(log);              
+                foreach (ILoggerStorage storage in this.storages)
+                {
+                    storage.SaveLog(log);
+                }
             }
 
+            // notifikuje vlákno, které hostuje metodu Stop, že může pokračovat v běhu
             this.mreStopPending.Set();
         }
 
         public void Stop()
         {
             this.buffer.CompleteAdding();
+
+            // čeká na dokončení práce konzumenta
             this.mreStopPending.WaitOne();
         }
     }

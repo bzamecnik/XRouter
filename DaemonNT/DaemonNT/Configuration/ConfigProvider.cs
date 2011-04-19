@@ -9,10 +9,7 @@
     using SchemaTron;
 
     /// <summary>
-    /// Poskytuje pristup ke konfiguraci.
-    /// 
-    /// TODO: Je velmi pravdepodobne, ze se bude konfigurace sluzby rozsirovat (mozna logovani, 
-    /// ale urcite watchdog apod.)
+    /// Poskytuje pristup ke konfiguraci.    
     /// </summary>
     internal static class ConfigProvider
     {
@@ -37,15 +34,13 @@
                 throw new InvalidOperationException(string.Format("The supplied service.name='{0}' is not specified in {1}.", serviceName, DEFAULT_CONFIG_FILE_NAME));
             }
 
-            ServiceSettings serviceSetting = DeserializeServiceSetting(xService);
+            ServiceSettings serviceSetting = DeserializeServiceSettings(xService);
 
             return serviceSetting;
         }
 
         /// <summary>
-        /// Provede validaci vstupniho XML souboru. 
-        /// 
-        /// V projektu je definovano Schematron schema, ktere specifikuje pozadavky na dany XML soubor. 
+        /// Provede validaci vstupniho XML souboru.        
         /// </summary>
         /// <param name="xConfig"></param>
         private static void Validation(XDocument xConfig)
@@ -75,7 +70,7 @@
             }
         }
 
-        private static ServiceSettings DeserializeServiceSetting(XElement xService)
+        private static ServiceSettings DeserializeServiceSettings(XElement xService)
         {
             ServiceSettings result = new ServiceSettings();
 
@@ -87,33 +82,28 @@
             result.TypeAssembly = typeAssembly;
 
             // service.setting
-            XElement xSetting = xService.XPathSelectElement("./setting");
-            if (xSetting == null)
-            {
-                result.Settings = new Settings();
-            }
-            else
-            {
-                result.Settings = DeserializeSetting(xSetting);
-            }
-
+            XElement xSettings = xService.XPathSelectElement("./settings");
+            result.Settings = DeserializeSettings(xSettings);
+            
             // service.installer
             XElement xInstaller = xService.XPathSelectElement("./installer");
-            if (xInstaller == null)
-            {
-                result.InstallerSettings = new InstallerSettings();
-            }
-            else
-            {
-                result.InstallerSettings = DeserializeInstallerSetting(xInstaller);
-            }
+            result.InstallerSettings = DeserializeInstallerSettings(xInstaller);
+            
+            // service.trace-logger
+            XElement xTraceLogger = xService.XPathSelectElement("./trace-logger");
+            result.TraceLoggerSettings = DeserializeTraceLoggerSettings(xTraceLogger);
 
             return result;
         }
 
-        private static InstallerSettings DeserializeInstallerSetting(XElement xInstaller)
+        private static InstallerSettings DeserializeInstallerSettings(XElement xInstaller)
         {
             InstallerSettings result = new InstallerSettings();
+
+            if (xInstaller == null)
+            {
+                return result;
+            }
 
             // description
             XElement xDescription = xInstaller.XPathSelectElement("./description");
@@ -170,6 +160,47 @@
 
             return result;
         }
+       
+        private static TraceLoggerSettings DeserializeTraceLoggerSettings(XElement xTraceLogger)
+        {
+            TraceLoggerSettings result = new TraceLoggerSettings();
+
+            if (xTraceLogger == null)
+            {
+                return result;
+            }
+
+            // @buffer-size
+            XAttribute xTraceBufferSize = xTraceLogger.Attribute(XName.Get("buffer-size"));
+            if (xTraceBufferSize != null)
+            {
+                result.BufferSize = Convert.ToInt32(xTraceBufferSize.Value);
+            }
+
+            // storage
+            foreach (XElement xStorage in xTraceLogger.XPathSelectElements("./storage"))
+            {
+                TraceLoggerStorageSettings traceLogger = new TraceLoggerStorageSettings();
+
+                // @name
+                traceLogger.Name = xStorage.Attribute(XName.Get("name")).Value;
+                
+                // @type
+                string className;
+                string assemblyName;
+                DeserializeType(xStorage, out className, out assemblyName);
+                traceLogger.TypeClass = className;
+                traceLogger.TypeAssembly = assemblyName;
+                
+                // settings
+                XElement xSettings = xStorage.XPathSelectElement("./settings");
+                traceLogger.Settings = DeserializeSettings(xSettings);
+
+                result.Storages.Add(traceLogger);
+            }
+
+            return result;
+        }
 
         private static void DeserializeType(XElement xElement, out string className, out string assemblyName)
         {
@@ -195,9 +226,15 @@
             }
         }
 
-        private static Settings DeserializeSetting(XElement xSetting)
+        private static Settings DeserializeSettings(XElement xSetting)
         {
             Settings settings = new Settings();
+
+            if (xSetting == null)
+            {
+                return settings;
+            }
+
             foreach (var node in xSetting.XPathSelectElements("child::*"))
             {
                 XElement xElement = (XElement)node;

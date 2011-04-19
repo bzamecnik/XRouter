@@ -11,33 +11,29 @@
     internal class Program
     {
         /// <summary>
-        /// Spusti sluzbu v ladicim modu. 
-        /// TODO: Pozdeji lepe zdokumentovat dle GoogleDocu. 
+        /// Spusti sluzbu v ladicim modu.        
         /// </summary>
         /// <param name="serviceName"></param>
         public static void CommandDebug(string serviceName)
         {
-            Logger logger = null;
+            Logger logger = null;            
             try
             {
                 // create event logger
-                logger = Logger.Create(serviceName);
-                logger.CreateEventLogger();
-
+                logger = Logger.Create(serviceName, true);
+                
                 // load settings and initialize constructs                
                 ServiceDebugHost serviceHost = null;
                 try
                 {
                     ServiceSettings serviceSettings = ConfigProvider.LoadServiceSetting(serviceName);
+                    logger.CreateTraceLogger(serviceSettings.TraceLoggerSettings);
                     Service service = TypesProvider.CreateService(serviceSettings.TypeClass, serviceSettings.TypeAssembly);
-                    serviceHost = new ServiceDebugHost(service, serviceName, serviceSettings, logger);
-
-                    // TODO: vytvorit instance trace-loggeru, ktere jsou definovany v konfiguraci
-                    logger.CreateTraceLogger();
+                    serviceHost = new ServiceDebugHost(service, serviceName, serviceSettings, logger);                                                            
                 }
                 catch (Exception e)
                 {                   
-                    logger.Event.LogError(e.Message);
+                    logger.Event.LogError(String.Format("Pri inicializaci DaemonNT doslo k chybe. {0}", e.Message));
                     throw e;
                 }
 
@@ -51,52 +47,49 @@
                 }
                 catch (Exception e)
                 {                   
-                    logger.Event.LogError(e.Message);
+                    logger.Event.LogError("Pri behu DaemonNT doslo k neocekavane chybe.");
                     throw e;
                 }
             }
             catch (Exception e)
             {
+                // log to console
                 Console.WriteLine(String.Format("Error: {0}", e.Message));               
             }
             finally
             {
                 if (logger != null)
                 {
-                    logger.CloseTraceLogger();
-                    logger.CloseEventLogger();
+                    logger.Close(false);
                 }
             }
         }
 
         /// <summary>
-        ///  Spusti nainstalovanou sluzbu. Spousti to Service Control Manager (nikoliv primo uzivatel).
-        ///  TODO: Pozdeji lepe zdokumentovat dle GoogleDocu.
+        /// Spusti nainstalovanou sluzbu (spousti operacni system).        
         /// </summary>
         /// <param name="serviceName"></param>
         public static void CommandRun(string serviceName)
         {
             Logger logger = null;
+            bool shutdown = false;
             try
             {
                 // create logger
-                logger = Logger.Create(serviceName);
-                logger.CreateEventLogger();
-
+                logger = Logger.Create(serviceName, false);
+           
                 // load settings and initialize constructs 
                 ServiceRuntimeHost serviceHost = null;
                 try
                 {
                     ServiceSettings serviceSettings = ConfigProvider.LoadServiceSetting(serviceName);
+                    logger.CreateTraceLogger(serviceSettings.TraceLoggerSettings);
                     Service service = TypesProvider.CreateService(serviceSettings.TypeClass, serviceSettings.TypeAssembly);
-                    serviceHost = new ServiceRuntimeHost(service, serviceName, serviceSettings, logger);
-
-                    // TODO: vytvorit instance trace-loggeru, ktere jsou definovany v konfiguraci
-                    logger.CreateTraceLogger();                   
+                    serviceHost = new ServiceRuntimeHost(service, serviceName, serviceSettings, logger);                                   
                 }
                 catch (Exception e)
-                {
-                    logger.Event.LogError(e.Message);
+                {                    
+                    logger.Event.LogError(String.Format("Pri inicializaci DaemonNT doslo k chybe. {0}", e.Message));
                     throw e;
                 }
 
@@ -104,30 +97,30 @@
                 try
                 {
                     ServiceRuntimeHost.Run(serviceHost);
+                    shutdown = serviceHost.Shutdown;
                 }
                 catch (Exception e)
                 {
-                    logger.Event.LogError(e.Message);
+                    logger.Event.LogError("Pri behu DaemonNT doslo k neocekavane chybe.");                   
                     throw e;
                 }
             }
             catch (Exception e)
             {
+                // log to Windows EventLog
                 throw e;
             }
             finally
             {
                 if (logger != null)
                 {
-                    logger.CloseTraceLogger();
-                    logger.CloseEventLogger();
+                    logger.Close(shutdown);
                 }
             }
         }
 
         /// <summary>
-        /// Provede instalaci sluzby. 
-        /// TODO: Pozdeji lepe zdokumentovat dle GoogleDocu. 
+        /// Provede instalaci sluzby.        
         /// </summary>
         /// <param name="serviceName"></param>
         public static void CommandInstall(string serviceName)
@@ -156,8 +149,7 @@
         }
 
         /// <summary>
-        /// Provede odinstalovani sluzby. 
-        /// TODO: Pozdeji lepe zdokumentovat dle GoogleDocu. 
+        /// Provede odinstalovani sluzby.        
         /// </summary>
         /// <param name="serviceName"></param>
         public static void CommandUninstall(string serviceName)
@@ -172,11 +164,12 @@
                 Console.WriteLine("Error: ", string.Concat(e.Message, string.Format(" The log file is located at {0}.Installer.log.", serviceName)));
             }
         }
-
+        
         public static void Main(string[] args)
         {
             // TODO: Lepe poresit parametry prikazove radky (az bude definitivne jiste, 
-            // co vsechno bude v sobe DaemonNT obsahovat. 
+            // co vsechno bude v sobe DaemonNT obsahovat - pokud budeme napr. implementovat
+            // watchdog ci konfiguracni GUI)
 
             if (args.Length == 2)
             {
@@ -193,10 +186,9 @@
                         break;
                     case "uninstall":
                         CommandUninstall(args[1]);
-                        break;
-                    // TODO: default
-                }
-            }
+                        break;                  
+                }             
+            }            
         }
     }
 }

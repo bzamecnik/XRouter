@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="TestService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestTraceLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SchemaTron\SchemaTron\SchemaTron.csproj">

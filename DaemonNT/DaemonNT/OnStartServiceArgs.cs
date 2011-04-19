@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DaemonNT
 {
-    public sealed class OnStartArgs
+    public sealed class OnStartServiceArgs
     {
         /// <summary>
         /// Identifikator sluzby v konfiguracnim souboru, resp. operacnim systemu.  
@@ -22,7 +22,7 @@ namespace DaemonNT
         /// </summary>
         public DaemonNT.Configuration.Settings Settings { internal set; get; }
 
-        internal OnStartArgs()
+        internal OnStartServiceArgs()
         { }
     }
 }

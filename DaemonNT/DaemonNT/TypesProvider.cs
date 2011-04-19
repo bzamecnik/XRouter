@@ -2,6 +2,7 @@
 {
     using System;
     using System.Reflection;
+    using DaemonNT.Logging;
 
     /// <summary>
     /// Provides dynamic loading of types and creating of their instances.
@@ -34,6 +35,26 @@
             }
 
             return service;
+        }
+
+        /// <summary>
+        /// Creates an instance of given trace-logger-storage type from given assembly.
+        /// </summary>
+        /// <param name="typeClass"></param>
+        /// <param name="typeAssembly"></param>
+        /// <returns></returns>
+        public static TraceLoggerStorage CreateTraceLoggerStorage(string typeClass, string typeAssembly)
+        {
+            object instance = CreateTypeInstance(typeClass, typeAssembly);
+
+            TraceLoggerStorage storage = instance as TraceLoggerStorage;
+            if (storage == null)
+            {
+                throw new InvalidOperationException(
+                    string.Format("Type '{0}' is not a trace-logger-storage implementation.", typeClass));
+            }
+
+            return storage;
         }
 
         /// <summary>
