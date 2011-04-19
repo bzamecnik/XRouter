@@ -10,19 +10,9 @@ using System.Diagnostics;
 
 namespace Schematron.XsltValidator
 {
-    public class Validator : SchemaTron.IValidator
+    public class Validator
     {
         private XslCompiledTransform xslTranform = null;
-
-        private XmlNamespaceManager nsManager;
-
-        public Validator()
-        {
-            nsManager = new XmlNamespaceManager(new NameTable());
-            // Note: this should not be hard-coded but rather read from the
-            // SVRL report
-            nsManager.AddNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
-        }
 
         /// <summary>
         /// Creates a XSTL-based ISO Schematron validator.
@@ -96,32 +86,6 @@ namespace Schematron.XsltValidator
             Console.WriteLine();
 
             return validator;
-        }
-
-        /// <summary>
-        /// Validates an XML document using the prepared XSTL-based ISO
-        /// Schematron validator.
-        /// </summary>
-        /// <param name="xDocument">XML document to be validated</param>
-        /// <param name="fullValidation">This parameter is ignored. Documents
-        /// are always fully validated.</param>
-        /// <returns>validation results</returns>
-        public SchemaTron.ValidatorResults Validate(XDocument xDocument, bool fullValidation)
-        {
-            XDocument svrlReport = Validate(xDocument);
-            // TODO: Find out from the SVRL report if the document was valid
-            // and possibly the reasons of non-validity and fill them to the
-            // ValidatorResults.
-            // Extract svrl:failed-assert/svrl:text and svrl:successful-report/svrl:text.
-
-            IEnumerable<XElement> failedAsserts = svrlReport.XPathSelectElements("/svrl:schematron-output/svrl:failed-assert|/svrl:schematron-output/svrl:successful-report", nsManager);
-
-            SchemaTron.ValidatorResults results = new SchemaTron.ValidatorResults()
-            {
-                IsValid = failedAsserts.Count() == 0
-                // ViolatedAssertions = ... // TODO
-            };
-            return results;
         }
 
         /// <summary>

@@ -2,18 +2,20 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{C7349DCC-BC5B-49B1-A294-FB322D005500}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SchemaTron</RootNamespace>
-    <AssemblyName>SchemaTron</AssemblyName>
+    <RootNamespace>ObjectRemoter.BasicSystemTest.Client</RootNamespace>
+    <AssemblyName>ObjectRemoter.BasicSystemTest.Client</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -21,17 +23,15 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\SchemaTron.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -43,33 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssertionInfo.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Exceptions.cs" />
-    <Compile Include="FileInclusionResolver.cs" />
-    <Compile Include="IInclusionResolver.cs" />
-    <Compile Include="Preprocessing\AbstractRule.cs" />
-    <Compile Include="Preprocessing\Diagnostic.cs" />
-    <Compile Include="Preprocessing\Parameter.cs" />
-    <Compile Include="Preprocessing\Preprocessor.cs" />
-    <Compile Include="Preprocessing\Let.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Provider.cs" />
-    <Compile Include="SyntaxModel\Assert.cs" />
-    <Compile Include="SyntaxModel\Namespace.cs" />
-    <Compile Include="SyntaxModel\Pattern.cs" />
-    <Compile Include="SyntaxModel\Rule.cs" />
-    <Compile Include="SyntaxModel\Schema.cs" />
-    <Compile Include="SyntaxModel\SchemaDeserializer.cs" />
-    <Compile Include="ValidationEvaluator.cs" />
-    <Compile Include="Validator.cs" />
-    <Compile Include="ValidatorResults.cs" />
-    <Compile Include="ValidatorSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\schema_phaseA.xml" />
-    <EmbeddedResource Include="Resources\schema_phaseB.xml" />
-    <EmbeddedResource Include="Resources\schema_phaseC.xml" />
+    <ProjectReference Include="..\..\ObjectRemoter\ObjectRemoter.csproj">
+      <Project>{0C9BE6CE-CA69-4EDB-B021-496EEAA0319D}</Project>
+      <Name>ObjectRemoter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ObjectRemoter.BasicSystemTest.Server\ObjectRemoter.BasicSystemTest.Server.csproj">
+      <Project>{303FAC0A-7240-41FD-912F-A153BB35CF23}</Project>
+      <Name>ObjectRemoter.BasicSystemTest.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

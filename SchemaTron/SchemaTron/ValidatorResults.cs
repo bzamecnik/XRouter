@@ -13,16 +13,16 @@ namespace SchemaTron
         /// <summary>
         /// The list of assertions violated during the validation process.
         /// </summary>
-        public List<AssertionInfo> ViolatedAssertionsList { get; set; }
+        internal List<AssertionInfo> ViolatedAssertionsList { get; set; }
 
         /// <summary>
         /// Indicates whether a given XML document instance is valid with
         /// respect to the validator's schema. In case of any violated
         /// assertion the XML instance cannot be valid.
         /// </summary>
-        public bool IsValid { get; set; }
+        public bool IsValid { get; internal set; }
 
-        public ValidatorResults()
+        internal ValidatorResults()
         {
             this.IsValid = true;
             this.ViolatedAssertionsList = new List<AssertionInfo>();
@@ -55,7 +55,7 @@ namespace SchemaTron
         /// </summary>
         /// <returns>A list of error messages about the violated assertions
         /// </returns>
-        public IEnumerable<string> GetMessages()
+        internal IEnumerable<string> GetMessages()
         {
             List<string> messages = new List<string>();
             foreach (AssertionInfo info in this.ViolatedAssertionsList)

@@ -18,7 +18,7 @@ namespace SchemaTron
     /// <see cref="Create(XDocument)"/>
     /// <see cref="Create(XDocument, ValidatorSettings)"/>
     /// <see cref="Validate(XDocument, Boolean)"/>
-    public sealed class Validator : IValidator
+    public sealed class Validator
     {
         /// <summary>
         /// Schematron schema for validation - in internal format.

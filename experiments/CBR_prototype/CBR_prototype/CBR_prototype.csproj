@@ -44,9 +44,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CBR.cs" />
+    <Compile Include="Validator\IValidatorAdapter.cs" />
     <Compile Include="Predicate.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validator\NativeValidatorAdapter.cs" />
+    <Compile Include="Validator\ValidatorFactory.cs" />
+    <Compile Include="Validator\ValidatorImplementation.cs" />
+    <Compile Include="Validator\XsltValidatorAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CBR_prototype.xml" />
