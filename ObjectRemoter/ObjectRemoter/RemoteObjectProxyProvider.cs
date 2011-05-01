@@ -105,7 +105,12 @@ namespace ObjectRemoter
                     data.Add(marshaledArgument);
                 }
 
-                string marshaledResult = Client.Request(ObjectServer.CommandInvoke, data.ToArray());
+                string marshaledResult;
+                try {
+                    marshaledResult = Client.Request(ObjectServer.CommandInvoke, data.ToArray());
+                } catch (Exception ex) {
+                    throw new ObjectRemoterException("Cannot communicate with remote object. A remote object might be unaccessible.", ex);
+                }
                 object result = Marshalling.Unmarshal(marshaledResult, invocation.Method.ReturnType);
                 invocation.ReturnValue = result;
             }
