@@ -18,7 +18,7 @@ namespace ObjectRemoter.RemoteCommunication
         /// <summary>
         /// Url of server (contains host name/IP and port)
         /// </summary>
-        public string Url { get; private set; }
+        public Uri Url { get; private set; }
 
         /// <summary>
         /// Port on which server is listening
@@ -30,9 +30,22 @@ namespace ObjectRemoter.RemoteCommunication
         /// </summary>
         public IPAddress IPAddress { get; private set; }
 
+        internal bool IsLocal {
+            get {
+                return Url.IsLoopback && (Port == ObjectServer.ServerAddress.Port);
+            }
+        }
+
         private static Random rnd = new Random();
 
-        private ServerAddress(string url, IPAddress ipAddress, int port)
+        internal ServerAddress(Uri url)
+        {
+            Url = url;
+            Port = url.Port;
+            IPAddress = ChooseIPAddress(Dns.GetHostAddresses( url.Host));
+        }
+
+        private ServerAddress(Uri url, IPAddress ipAddress, int port)
         {
             Url = url;
             IPAddress = ipAddress;
@@ -51,7 +64,7 @@ namespace ObjectRemoter.RemoteCommunication
             string localHostName = Dns.GetHostName();
             ipAddress = ChooseIPAddress(Dns.GetHostAddresses(localHostName));
 
-            string url = string.Format("{0}:{1}", ipAddress, port);
+            Uri url = new Uri(string.Format("tcp://{0}:{1}", ipAddress, port));
             ServerAddress result = new ServerAddress(url, ipAddress, port);
             return result;
         }
@@ -70,14 +83,13 @@ namespace ObjectRemoter.RemoteCommunication
         /// <param name="serialized">Serialized address</param>
         /// <returns>Deserialized object</returns>
         public static ServerAddress Deserialize(string serialized)
-        { 
-            string url = serialized;
-            int colonPos = serialized.LastIndexOf(':');
-            int port = int.Parse(serialized.Substring(colonPos+1));
-            string host = url.Substring(0, colonPos);
+        {
+            Uri url = new Uri(serialized);
+            int port = url.Port;
+            string host = url.Host;
             IPAddress ipAddress = ChooseIPAddress(Dns.GetHostAddresses(host));
 
-            var result = new ServerAddress(serialized, ipAddress, port);
+            var result = new ServerAddress(url, ipAddress, port);
             return result;
         }
 
@@ -87,7 +99,7 @@ namespace ObjectRemoter.RemoteCommunication
         /// <returns>Serialized address</returns>
         public string Serialize()
         {
-            string result = Url;
+            string result = Url.ToString();
             return result;
         }
     }

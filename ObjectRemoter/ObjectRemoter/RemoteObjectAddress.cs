@@ -17,19 +17,13 @@ namespace ObjectRemoter
         internal ServerAddress ServerAddress { get; private set; }
 
         /// <summary>
-        /// GUID of target object server
-        /// </summary>
-        public string ServerGuid { get; private set; }        
-
-        /// <summary>
         /// Object identification
         /// </summary>
         public int ObjectID { get; private set; }
 
-        internal RemoteObjectAddress(ServerAddress serverAddress, string serverGuid, int objectID)
+        internal RemoteObjectAddress(ServerAddress serverAddress, int objectID)
         {
             ServerAddress = serverAddress;
-            ServerGuid = serverGuid;
             ObjectID = objectID;
         }
 
@@ -39,7 +33,7 @@ namespace ObjectRemoter
         /// <returns></returns>
         public string Serialize()
         {
-            string result = string.Format("{0}|{1}|{2}", ServerAddress.Serialize(), ServerGuid, ObjectID);
+            string result = string.Format("{0}|{1}", ServerAddress.Serialize(), ObjectID);
             return result;
         }
 
@@ -52,22 +46,21 @@ namespace ObjectRemoter
         {
             string[] parts = serialized.Split('|');
             ServerAddress serverAddress = ServerAddress.Deserialize(parts[0]);
-            string serverGuid = parts[1];
-            int objectID = int.Parse(parts[2]);
-            var result = new RemoteObjectAddress(serverAddress, serverGuid, objectID);
+            int objectID = int.Parse(parts[1]);
+            var result = new RemoteObjectAddress(serverAddress, objectID);
             return result;
         }
 
         public override int GetHashCode()
         {
-            return ServerGuid.GetHashCode() ^ ObjectID;
+            return ObjectID;
         }
 
         public override bool Equals(object obj)
         {
             if (obj is RemoteObjectAddress) {
                 var other = (RemoteObjectAddress)obj;
-                bool result = (other.ServerGuid == ServerGuid) && (other.ObjectID == ObjectID);
+                bool result = (other.ServerAddress.Url == ServerAddress.Url) && (other.ObjectID == ObjectID);
                 return result;
             }
             return false;
@@ -75,7 +68,7 @@ namespace ObjectRemoter
 
         public override string ToString()
         {
-            return string.Format("{0}|{1}|{2}", ServerAddress.Url, ServerGuid, ObjectID);
+            return string.Format("{0}|{1}", ServerAddress.Url, ObjectID);
         }
     }
 }

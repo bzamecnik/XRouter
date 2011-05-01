@@ -44,9 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleServer.cs" />
+    <Compile Include="ConsoleService.cs" />
     <Compile Include="IConsoleServer.cs" />
+    <Compile Include="IConsoleService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Token.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ObjectRemoter\ObjectRemoter.csproj">

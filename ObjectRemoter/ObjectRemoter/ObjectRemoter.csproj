@@ -58,7 +58,7 @@
     <Compile Include="RemoteObjectAddress.cs" />
     <Compile Include="RemoteObjectProxyProvider.cs" />
     <Compile Include="ObjectRemoterException.cs" />
-    <Compile Include="ServiceServer.cs" />
+    <Compile Include="ServiceRemoter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

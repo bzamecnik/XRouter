@@ -14,6 +14,15 @@ namespace ObjectRemoter.BasicSystemTest.Client
             Console.WriteLine("[This is CLIENT]");
             Console.WriteLine();
 
+            #region Using remote service
+            Uri serviceUri = new Uri(File.ReadAllText(@"..\..\..\service_address.txt"));
+            IConsoleService service = ServiceRemoter.GetServiceProxy<IConsoleService>(serviceUri);
+            service.WriteLine("This text was send from a client to a service.");
+            service.WriteLine(new Token("token1"));
+            #endregion
+
+
+            #region Using remote object
             // Read remote object address from file
             string serializedRemoteAddress = File.ReadAllText(@"..\..\..\object_address.txt");
             RemoteObjectAddress remoteAddress = RemoteObjectAddress.Deserialize(serializedRemoteAddress);
@@ -29,6 +38,7 @@ namespace ObjectRemoter.BasicSystemTest.Client
 
             // Keep application running so that we can continue receive events from remote object
             while (true) ;
+            #endregion
         }
 
         static void consoleServer_LineEntered(string line)

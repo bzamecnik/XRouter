@@ -6,6 +6,8 @@ using System.Runtime.Serialization;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Collections.Concurrent;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace ObjectRemoter
 {
@@ -61,6 +63,17 @@ namespace ObjectRemoter
 
             if ((type.FullName == "System.Void") || (obj == null)) {
                 return string.Empty;
+            }
+
+            if (type.GetCustomAttributes(typeof(SerializableAttribute), false).Length > 0) {
+                using (MemoryStream ms = new MemoryStream()) {
+                    BinaryFormatter binaryFormatter = new BinaryFormatter();
+                    binaryFormatter.Serialize(ms, obj);
+                    byte[] bytes = ms.GetBuffer();
+                    int length = (int)ms.Length;
+                    string result = length.ToString() + ":" + Convert.ToBase64String(bytes, 0, length);
+                    return result;
+                }
             }
 
             if (type.IsArray) {
@@ -128,6 +141,18 @@ namespace ObjectRemoter
 
             if ((type.FullName == "System.Void") || ((type == typeof(object)) && (marshaled.Length == 0))) {
                 return null;
+            }
+
+            if (type.GetCustomAttributes(typeof(SerializableAttribute), false).Length > 0) {
+                int colonPos = marshaled.IndexOf(':');
+                int length = int.Parse(marshaled.Substring(0, colonPos));
+                string base64 = marshaled.Substring(colonPos + 1);
+                byte[] bytes = Convert.FromBase64String(base64);
+                using (MemoryStream ms = new MemoryStream(bytes, 0, length)) {
+                    BinaryFormatter binaryFormatter = new BinaryFormatter();
+                    object result = binaryFormatter.Deserialize(ms);
+                    return result;
+                }
             }
 
             if (type.IsArray) {

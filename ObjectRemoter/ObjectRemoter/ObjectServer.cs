@@ -14,7 +14,7 @@ namespace ObjectRemoter
     {
         internal static readonly string CommandInvoke = "Invoke";
 
-        internal static readonly string ServerGuid = Guid.NewGuid().ToString();
+        internal static int ObjectIDForAnyObjectOfGivenType = -1;
 
         internal static readonly ServerAddress ServerAddress;
 
@@ -71,7 +71,7 @@ namespace ObjectRemoter
             RemoteObjectAddress address;
             lock (DataLock) {
                 int objectID = publishedObjectsByID.Count + 1;
-                address = new RemoteObjectAddress(ServerAddress, ServerGuid, objectID);
+                address = new RemoteObjectAddress(ServerAddress, objectID);
 
                 publishedObjectsByID.Add(objectID, obj);
                 publishedObjectAdresses.Add(obj, address);
@@ -91,32 +91,31 @@ namespace ObjectRemoter
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             if (command == CommandInvoke) {
-                int objectID = int.Parse(data[0]);
-                string methodName = data[1];
+                string targetInterfaceFullName = data[0];
+                int objectID = int.Parse(data[1]);
+                string methodName = data[2];
 
-                string[] parameterTypesNames = data[2].Split('|');
+                string[] parameterTypesNames = data[3].Split('|');
                 var parameterTypes = new List<Type>();
                 foreach (string parameterTypeName in parameterTypesNames) {
-                    string[] parts = parameterTypeName.Split('!');
-                    string assemblyFullName = parts[0];
-                    string typeFullName = parts[1];
-                    Assembly assembly = assemblies.FirstOrDefault(a => a.FullName == assemblyFullName);
-                    if (assembly == null) {
-                        assembly = Assembly.Load(new AssemblyName(assemblyFullName));
-                    }
-                    Type type = assembly.GetType(typeFullName, true);
+                    Type type = GetType(assemblies, parameterTypeName);
                     parameterTypes.Add(type);
                 }
 
+                Type targetInterface = GetType(assemblies, targetInterfaceFullName);
                 object obj;
                 lock (DataLock) {
-                    obj = publishedObjectsByID[objectID];
+                    if (objectID == ObjectIDForAnyObjectOfGivenType) {
+                        obj = publishedObjectsByID.Values.First(o => targetInterface.IsAssignableFrom(o.GetType()));
+                    } else {
+                        obj = publishedObjectsByID[objectID];
+                    }
                 }
                 MethodInfo method = obj.GetType().GetMethod(methodName, parameterTypes.ToArray());
 
                 object[] parameters = new object[parameterTypesNames.Length];
                 for (int i = 0; i < parameters.Length; i++) {
-                    parameters[i] = Marshalling.Unmarshal(data[3 + i], parameterTypes[i]);
+                    parameters[i] = Marshalling.Unmarshal(data[4 + i], parameterTypes[i]);
                 }
                 object resultObject = method.Invoke(obj, parameters);
                 string result = Marshalling.Marshal(resultObject, method.ReturnType);
@@ -124,6 +123,19 @@ namespace ObjectRemoter
             }
 
             return null;
+        }
+
+        private static Type GetType(IEnumerable<Assembly> assemblies, string typeAndAssemblyFullName)
+        {
+            string[] parts = typeAndAssemblyFullName.Split('!');
+            string assemblyFullName = parts[0];
+            string typeFullName = parts[1];
+            Assembly assembly = assemblies.FirstOrDefault(a => a.FullName == assemblyFullName);
+            if (assembly == null) {
+                assembly = Assembly.Load(new AssemblyName(assemblyFullName));
+            }
+            Type type = assembly.GetType(typeFullName, true);
+            return type;
         }
     }
 }

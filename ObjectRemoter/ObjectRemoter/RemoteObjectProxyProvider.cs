@@ -47,7 +47,7 @@ namespace ObjectRemoter
 
         private static object InternalGetProxy(RemoteObjectAddress address, Type requiredInterface)
         {
-            if (address.ServerGuid == ObjectServer.ServerGuid) {
+            if (address.ServerAddress.IsLocal) {
                 lock (ObjectServer.DataLock) {
                     object localObject = ObjectServer.PublishedObjects[address.ObjectID];
                     return localObject;
@@ -61,7 +61,7 @@ namespace ObjectRemoter
                 }
             }
 
-            var interceptor = new ProxyInterceptor(address);
+            var interceptor = new ProxyInterceptor(address, requiredInterface);
             object proxy;
             lock (dataLock) {
                 proxy = proxyGenerator.CreateInterfaceProxyWithoutTarget(requiredInterface, interceptor);
@@ -77,11 +77,14 @@ namespace ObjectRemoter
         {
             public RemoteObjectAddress TargetAddress { get; private set; }
 
+            public Type ProvidedInterface { get; private set; }
+
             private IClient Client { get; set; }
 
-            public ProxyInterceptor(RemoteObjectAddress targetAddress)
+            public ProxyInterceptor(RemoteObjectAddress targetAddress, Type providedInterface)
             {
                 TargetAddress = targetAddress;
+                ProvidedInterface = providedInterface;
                 Client = new TcpClient(targetAddress.ServerAddress);
             }
 
@@ -89,6 +92,7 @@ namespace ObjectRemoter
             {
                 var data = new List<string>();
 
+                data.Add(string.Format("{0}!{1}", ProvidedInterface.Assembly.FullName, ProvidedInterface.FullName));
                 data.Add(TargetAddress.ObjectID.ToString());
                 data.Add(invocation.Method.Name);
 
