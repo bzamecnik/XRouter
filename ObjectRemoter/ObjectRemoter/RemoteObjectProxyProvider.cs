@@ -15,18 +15,34 @@ namespace ObjectRemoter
         private static Castle.DynamicProxy.ProxyGenerator proxyGenerator = new Castle.DynamicProxy.ProxyGenerator();
 
         /// <summary>
-        /// Creates a proxy for given remote object.
+        /// Creates a proxy for a remote object specified by its address.
         /// </summary>
         /// <remarks>
-        /// If a target object is on the same process, a real object is returned instead of proxy.
+        /// <para>
+        /// If a target object is on the same process, the referred object is
+        /// returned directly instead of its proxy. In case of a remote object
+        /// the usage of the proxy may result in the ObjectRemoterException.
+        /// </para>
         /// </remarks>
-        /// <typeparam name="T">An interface which proxy will implement.</typeparam>
-        /// <param name="address">Address of a target remote object.</param>
-        /// <param name="requiredInterface">An interface which proxy will implement.</param>
-        /// <returns>Proxy to a remote object which implements given interface.</returns>
+        /// <typeparam name="T">Interface the proxy must implement.
+        /// </typeparam>
+        /// <param name="address">Address of the target remote object. Must not
+        /// be null.</param>
+        /// <param name="requiredInterface">A constraint on the interface which
+        /// the proxy must implement. Can be null, in which case the type
+        /// parameter T is used as a default value.</param>
+        /// <returns>Proxy to a remote object which implements given interface.
+        /// </returns>
+        /// <
+        /// <seealso cref="ObjectRemoterException"/>
         public static T GetProxy<T>(RemoteObjectAddress address, Type requiredInterface = null)
             where T : IRemotelyReferable
         {
+            if (address == null)
+            {
+                throw new ArgumentNullException("address");
+            }
+
             if (requiredInterface == null)
             {
                 requiredInterface = typeof(T);
@@ -34,13 +50,13 @@ namespace ObjectRemoter
 
             if ((!requiredInterface.IsInterface) || (!typeof(T).IsInterface))
             {
-                throw new InvalidOperationException("Parameter requiredInterface and type argument T must be interface.");
+                throw new InvalidOperationException("Parameter requiredInterface and type argument T must be an interface.");
             }
 
             object proxyObject = InternalGetProxy(address, requiredInterface);
             if (!requiredInterface.IsAssignableFrom(proxyObject.GetType()))
             {
-                throw new ArgumentException("Required interface does not match.", "requiredInterface");
+                throw new ArgumentException("Required interface does not match with type argument T.", "requiredInterface");
             }
 
             T proxy = (T)proxyObject;
@@ -128,7 +144,7 @@ namespace ObjectRemoter
                 }
                 catch (Exception ex)
                 {
-                    throw new ObjectRemoterException("Cannot communicate with remote object. A remote object might be unaccessible.", ex);
+                    throw new ObjectRemoterException("Cannot communicate with the remote object. It might be unaccessible.", ex);
                 }
                 object result = Marshalling.Unmarshal(marshaledResult, invocation.Method.ReturnType);
                 invocation.ReturnValue = result;

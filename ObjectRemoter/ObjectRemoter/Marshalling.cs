@@ -11,20 +11,42 @@ using System.Text;
 namespace ObjectRemoter
 {
     /// <summary>
-    /// Internal support for marshalling objects.
+    /// Internal support for marshalling objects (ie. serialization).
     /// </summary>
     internal class Marshalling
     {
         private static readonly string ArrayElementSeparator = "[5g#v&4k_x]";
 
         /// <summary>
-        /// Converts an object of a given formal type to a string representation which can be unmarshalled (converted back to object) on a target computer.
+        /// Converts an object of a given formal type to string
+        /// representation which can be unmarshalled (converted back to
+        /// object) on a target computer.
         /// </summary>
-        /// <param name="obj">An object to marshal</param>
-        /// <param name="type">Formal type of the object (only this type will be available on a target computer)</param>
-        /// <returns></returns>
+        /// <remarks>
+        /// It supports objects of following (informal) categories/types:
+        /// primitive, string, IRemotelyCloneable, IRemotelyReferable,
+        /// delegate, System.Void, Serializable and array. A null object also
+        /// can be marshalled.
+        /// </remarks>
+        /// <param name="obj">An object to be marshalled. Can be null.
+        /// </param>
+        /// <param name="type">Formal type of the object (only this type will
+        /// be available on a target computer). Must not be null.</param>
+        /// <returns>Marshalled string representation of given object.
+        /// </returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="ArgumentException">If the object type is not
+        /// supported for marshalling.</exception>
         internal static string Marshal(object obj, Type type)
         {
+            if (type == null)
+            {
+                throw new ArgumentNullException("type");
+            }
+
+            // TODO: should the parameter 'type' with null value be supported?
+            // If so it should represent the following automatic type
+            // determination.
             if (type == typeof(object))
             {
                 type = DetermineFormalTypeFromObject(obj);
@@ -244,7 +266,8 @@ namespace ObjectRemoter
 
             ILGenerator il = dynamicMethod.GetILGenerator();
 
-            // Push delegate body
+            // Push delegate body:
+            //   delegatesBodies.GetOrAdd(delegateTargetID, null)
             FieldInfo delegatesField = typeof(Marshalling).GetField("delegatesBodies", BindingFlags.NonPublic | BindingFlags.Static);
             il.Emit(OpCodes.Ldsfld, delegatesField);
             il.Emit(OpCodes.Ldc_I4, delegateTargetID);

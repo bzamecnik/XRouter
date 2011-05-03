@@ -13,6 +13,7 @@ namespace ObjectRemoter
     {
         internal static readonly string CommandInvoke = "Invoke";
 
+        // TODO: shouldn't this be readonly?
         internal static int ObjectIDForAnyObjectOfGivenType = -1;
 
         internal static readonly ServerAddress ServerAddress;
@@ -22,9 +23,9 @@ namespace ObjectRemoter
         private static bool isServerRunning = false;
 
         private static Dictionary<int, object> publishedObjects = new Dictionary<int, object>();
-        
+
         private static Dictionary<object, RemoteObjectAddress> publishedObjectAdresses = new Dictionary<object, RemoteObjectAddress>();
-        
+
         private static Dictionary<int, object> publishedObjectsByID = new Dictionary<int, object>();
 
         static ObjectServer()
@@ -44,10 +45,11 @@ namespace ObjectRemoter
         }
 
         /// <summary>
-        /// Publishes a local object and returns its address which can be used for remote access.
+        /// Publishes a local object and returns its address which can be
+        /// used for remote access.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <param name="obj">Object to be published.</param>
+        /// <returns>Address of the published remote object.</returns>
         public static RemoteObjectAddress PublishObject(IRemotelyReferable obj)
         {
             return InternalPublishObject(obj);
@@ -116,9 +118,12 @@ namespace ObjectRemoter
                 object obj;
                 lock (DataLock)
                 {
-                    if (objectID == ObjectIDForAnyObjectOfGivenType) {
+                    if (objectID == ObjectIDForAnyObjectOfGivenType)
+                    {
                         obj = publishedObjectsByID.Values.First(o => targetInterface.IsAssignableFrom(o.GetType()));
-                    } else {
+                    }
+                    else
+                    {
                         obj = publishedObjectsByID[objectID];
                     }
                 }
@@ -143,7 +148,8 @@ namespace ObjectRemoter
             string assemblyFullName = parts[0];
             string typeFullName = parts[1];
             Assembly assembly = assemblies.FirstOrDefault(a => a.FullName == assemblyFullName);
-            if (assembly == null) {
+            if (assembly == null)
+            {
                 assembly = Assembly.Load(new AssemblyName(assemblyFullName));
             }
             Type type = assembly.GetType(typeFullName, true);
