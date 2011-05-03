@@ -10,10 +10,26 @@ namespace ObjectRemoter.RemoteCommunication
     /// <summary>
     /// Contains information about communication server address.
     /// </summary>
-    class ServerAddress
+    internal class ServerAddress
     {
         private static readonly int PortRangeStart = 10000;
         private static readonly int PortRangeEnd = 30000;
+
+        private static Random rnd = new Random();
+
+        internal ServerAddress(Uri url)
+        {
+            Url = url;
+            Port = url.Port;
+            IPAddress = ChooseIPAddress(Dns.GetHostAddresses(url.Host));
+        }
+
+        private ServerAddress(Uri url, IPAddress ipAddress, int port)
+        {
+            Url = url;
+            IPAddress = ipAddress;
+            Port = port;
+        }
 
         /// <summary>
         /// Url of server (contains host name/IP and port)
@@ -30,26 +46,12 @@ namespace ObjectRemoter.RemoteCommunication
         /// </summary>
         public IPAddress IPAddress { get; private set; }
 
-        internal bool IsLocal {
-            get {
+        internal bool IsLocal
+        {
+            get
+            {
                 return Url.IsLoopback && (Port == ObjectServer.ServerAddress.Port);
             }
-        }
-
-        private static Random rnd = new Random();
-
-        internal ServerAddress(Uri url)
-        {
-            Url = url;
-            Port = url.Port;
-            IPAddress = ChooseIPAddress(Dns.GetHostAddresses( url.Host));
-        }
-
-        private ServerAddress(Uri url, IPAddress ipAddress, int port)
-        {
-            Url = url;
-            IPAddress = ipAddress;
-            Port = port;            
         }
 
         /// <summary>
@@ -66,14 +68,6 @@ namespace ObjectRemoter.RemoteCommunication
 
             Uri url = new Uri(string.Format("tcp://{0}:{1}", ipAddress, port));
             ServerAddress result = new ServerAddress(url, ipAddress, port);
-            return result;
-        }
-
-        private static IPAddress ChooseIPAddress(IEnumerable<IPAddress> addresses)
-        {
-            var result = addresses
-                            .Where(a => a.AddressFamily == AddressFamily.InterNetwork)
-                            .First(a => a.ToString().StartsWith("192.168."));   // currently restricted to LAN
             return result;
         }
 
@@ -100,6 +94,14 @@ namespace ObjectRemoter.RemoteCommunication
         public string Serialize()
         {
             string result = Url.ToString();
+            return result;
+        }
+
+        private static IPAddress ChooseIPAddress(IEnumerable<IPAddress> addresses)
+        {
+            var result = addresses
+                            .Where(a => a.AddressFamily == AddressFamily.InterNetwork)
+                            .First(a => a.ToString().StartsWith("192.168."));   // currently restricted to LAN
             return result;
         }
     }

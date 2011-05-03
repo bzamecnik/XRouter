@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using ObjectRemoter.RemoteCommunication;
 using System.Reflection;
+using ObjectRemoter.RemoteCommunication;
 
 namespace ObjectRemoter
 {
@@ -20,16 +19,13 @@ namespace ObjectRemoter
 
         private static IServer server;
 
-        private static Dictionary<int, object> publishedObjects = new Dictionary<int, object>();
-        internal static Dictionary<int, object> PublishedObjects {
-            get { return publishedObjects; }
-        }
-
-        internal static object DataLock { get; private set; }
-        private static Dictionary<object, RemoteObjectAddress> publishedObjectAdresses = new Dictionary<object, RemoteObjectAddress>();
-        private static Dictionary<int, object> publishedObjectsByID = new Dictionary<int, object>();
-
         private static bool isServerRunning = false;
+
+        private static Dictionary<int, object> publishedObjects = new Dictionary<int, object>();
+        
+        private static Dictionary<object, RemoteObjectAddress> publishedObjectAdresses = new Dictionary<object, RemoteObjectAddress>();
+        
+        private static Dictionary<int, object> publishedObjectsByID = new Dictionary<int, object>();
 
         static ObjectServer()
         {
@@ -38,6 +34,13 @@ namespace ObjectRemoter
             server = new TcpServer();
             ServerAddress = server.Address;
             server.RequestReceived += OnRequestReceived;
+        }
+
+        internal static object DataLock { get; private set; }
+
+        internal static Dictionary<int, object> PublishedObjects
+        {
+            get { return publishedObjects; }
         }
 
         /// <summary>
@@ -52,24 +55,29 @@ namespace ObjectRemoter
 
         internal static RemoteObjectAddress InternalPublishObject(object obj)
         {
-            if (obj is IRemoteObjectProxy) {
+            if (obj is IRemoteObjectProxy)
+            {
                 var proxy = (IRemoteObjectProxy)obj;
                 return proxy.RemoteObjectAddress;
             }
 
-            lock (DataLock) {
-                if (publishedObjectAdresses.ContainsKey(obj)) {
+            lock (DataLock)
+            {
+                if (publishedObjectAdresses.ContainsKey(obj))
+                {
                     var result = publishedObjectAdresses[obj];
                     return result;
                 }
             }
 
-            if (!isServerRunning) {
+            if (!isServerRunning)
+            {
                 StartServer();
             }
 
             RemoteObjectAddress address;
-            lock (DataLock) {
+            lock (DataLock)
+            {
                 int objectID = publishedObjectsByID.Count + 1;
                 address = new RemoteObjectAddress(ServerAddress, objectID);
 
@@ -83,28 +91,31 @@ namespace ObjectRemoter
         private static void StartServer()
         {
             server.Start();
-            isServerRunning = true;            
+            isServerRunning = true;
         }
 
         private static string OnRequestReceived(string command, string[] data)
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            if (command == CommandInvoke) {
+            if (command == CommandInvoke)
+            {
                 string targetInterfaceFullName = data[0];
                 int objectID = int.Parse(data[1]);
                 string methodName = data[2];
 
                 string[] parameterTypesNames = data[3].Split('|');
                 var parameterTypes = new List<Type>();
-                foreach (string parameterTypeName in parameterTypesNames) {
+                foreach (string parameterTypeName in parameterTypesNames)
+                {
                     Type type = GetType(assemblies, parameterTypeName);
                     parameterTypes.Add(type);
                 }
 
                 Type targetInterface = GetType(assemblies, targetInterfaceFullName);
                 object obj;
-                lock (DataLock) {
+                lock (DataLock)
+                {
                     if (objectID == ObjectIDForAnyObjectOfGivenType) {
                         obj = publishedObjectsByID.Values.First(o => targetInterface.IsAssignableFrom(o.GetType()));
                     } else {
@@ -114,7 +125,8 @@ namespace ObjectRemoter
                 MethodInfo method = obj.GetType().GetMethod(methodName, parameterTypes.ToArray());
 
                 object[] parameters = new object[parameterTypesNames.Length];
-                for (int i = 0; i < parameters.Length; i++) {
+                for (int i = 0; i < parameters.Length; i++)
+                {
                     parameters[i] = Marshalling.Unmarshal(data[4 + i], parameterTypes[i]);
                 }
                 object resultObject = method.Invoke(obj, parameters);

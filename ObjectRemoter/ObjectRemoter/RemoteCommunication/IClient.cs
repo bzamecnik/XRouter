@@ -8,7 +8,7 @@ namespace ObjectRemoter.RemoteCommunication
     /// <summary>
     /// A client for remote communication.
     /// </summary>
-    interface IClient
+    internal interface IClient
     {
         /// <summary>
         /// Send a request and receive response.

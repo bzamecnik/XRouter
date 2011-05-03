@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 
 namespace ObjectRemoter.RemoteCommunication
 {
     /// <summary>
     /// A remote communication client using TCP.
     /// </summary>
-    class TcpClient : IClient
+    internal class TcpClient : IClient
     {
         /// <summary>
         /// Address of server to connect to.
@@ -23,8 +19,11 @@ namespace ObjectRemoter.RemoteCommunication
 
         public string Request(string command, string[] data)
         {
+            // TODO: System.Net.Sockets.SocketException must be handled when
+            // it is not possible to connect to the server.
             var client = new System.Net.Sockets.TcpClient(ServerAddress.IPAddress.ToString(), ServerAddress.Port);
-            using (var clientStream = client.GetStream()) {
+            using (var clientStream = client.GetStream())
+            {
                 var sw = new StreamWriter(clientStream);
 
                 command = command
@@ -33,7 +32,8 @@ namespace ObjectRemoter.RemoteCommunication
                 sw.WriteLine(command);
 
                 sw.WriteLine(data.Length.ToString());
-                foreach (string item in data) {
+                foreach (string item in data)
+                {
                     string encodedItem = item
                         .Replace("\r", TcpServer.CarriageReturnReplacement)
                         .Replace("\n", TcpServer.LineFeedReplacement);
