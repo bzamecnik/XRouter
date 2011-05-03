@@ -6,7 +6,7 @@ using System.Text;
 namespace ObjectRemoter.BasicSystemTest.Server
 {
     /// <summary>
-    /// Internal implementation of console
+    /// A console which accepts text entered manually by a user.
     /// </summary>
     class ConsoleServer : IConsoleServer
     {
@@ -19,7 +19,8 @@ namespace ObjectRemoter.BasicSystemTest.Server
 
         public void Start()
         {
-            while (true) {
+            while (true)
+            {
                 string line = Console.ReadLine();
                 LineEntered(line);
             }

@@ -40,7 +40,7 @@ namespace ObjectRemoter.BasicSystemTest.Client
             // Keep application running so that we can continue receive events from remote object
             while (true)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(50);
             }
             #endregion
         }

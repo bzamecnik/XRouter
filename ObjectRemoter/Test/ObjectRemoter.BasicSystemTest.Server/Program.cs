@@ -23,6 +23,7 @@ namespace ObjectRemoter.BasicSystemTest.Server
             #region Providing an object
             // Create real local object
             ConsoleServer consoleServer = new ConsoleServer();
+            //RandomizedFloodServer consoleServer = new RandomizedFloodServer();
 
             // Publish object to be accessible remotely
             RemoteObjectAddress address = ObjectServer.PublishObject(consoleServer);
