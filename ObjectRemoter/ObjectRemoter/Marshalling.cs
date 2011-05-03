@@ -214,7 +214,7 @@ namespace ObjectRemoter
                 {
                     Type formalType = Type.GetType(marshaledElements[(i * 2) + 0]);
                     string marshaledElement = marshaledElements[(i * 2) + 1];
-                    result[i] = Unmarshal(marshaledElements[i + 1], formalType);
+                    result[i] = Unmarshal(marshaledElement, formalType);
                 }
 
                 return result;
