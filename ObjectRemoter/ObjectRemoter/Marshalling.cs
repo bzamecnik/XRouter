@@ -147,7 +147,9 @@ namespace ObjectRemoter
         {
             if (type.IsPrimitive)
             {
-                var parseMethod = type.GetMethod("Parse", BindingFlags.Public | BindingFlags.Static);
+                // TODO: will this overload Parse(string) work for all primitives?
+                // See ticket #29.
+                var parseMethod = type.GetMethod("Parse", new Type[] { typeof(string) });
                 var result = parseMethod.Invoke(null, new object[] { marshaled });
                 return result;
             }
