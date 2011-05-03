@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ObjectRemoter.RemoteCommunication;
+﻿using ObjectRemoter.RemoteCommunication;
 
 namespace ObjectRemoter
 {
@@ -15,17 +11,17 @@ namespace ObjectRemoter
         /// Address of a remote communication server
         /// </summary>
         internal ServerAddress ServerAddress { get; private set; }
-
-        /// <summary>
-        /// Object identification
-        /// </summary>
-        public int ObjectID { get; private set; }
-
+    
         internal RemoteObjectAddress(ServerAddress serverAddress, int objectID)
         {
             ServerAddress = serverAddress;
             ObjectID = objectID;
         }
+
+        /// <summary>
+        /// Object identification
+        /// </summary>
+        public int ObjectID { get; private set; }
 
         /// <summary>
         /// Serializes this address into string.
@@ -58,11 +54,13 @@ namespace ObjectRemoter
 
         public override bool Equals(object obj)
         {
-            if (obj is RemoteObjectAddress) {
+            if (obj is RemoteObjectAddress)
+            {
                 var other = (RemoteObjectAddress)obj;
                 bool result = (other.ServerAddress.Url == ServerAddress.Url) && (other.ObjectID == ObjectID);
                 return result;
             }
+
             return false;
         }
 

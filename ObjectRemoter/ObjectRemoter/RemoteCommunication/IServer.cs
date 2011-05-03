@@ -11,22 +11,22 @@ namespace ObjectRemoter.RemoteCommunication
     /// <param name="command">A command name to handle.</param>
     /// <param name="data">Additional request data.</param>
     /// <returns>Response</returns>
-    delegate string RequestHandler(string command, string[] data);
+    internal delegate string RequestHandler(string command, string[] data);
 
     /// <summary>
     /// A server of a remote communication.
     /// </summary>
-    interface IServer
+    internal interface IServer
     {
-        /// <summary>
-        /// Address of this server.
-        /// </summary>
-        ServerAddress Address { get; }
-
         /// <summary>
         /// Allows to add handler of received requests.
         /// </summary>
         event RequestHandler RequestReceived;
+
+        /// <summary>
+        /// Address of this server.
+        /// </summary>
+        ServerAddress Address { get; }
 
         /// <summary>
         /// Starts server.

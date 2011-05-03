@@ -8,7 +8,7 @@ namespace ObjectRemoter
     /// <summary>
     /// This is an internal (invisible) interface for proxies.
     /// </summary>
-    interface IRemoteObjectProxy
+    internal interface IRemoteObjectProxy
     {
         RemoteObjectAddress RemoteObjectAddress { get; }
     }

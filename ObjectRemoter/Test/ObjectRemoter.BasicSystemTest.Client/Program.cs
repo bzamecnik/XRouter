@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using ObjectRemoter.BasicSystemTest.Server;
+using System.Threading;
 
 namespace ObjectRemoter.BasicSystemTest.Client
 {
@@ -26,7 +27,7 @@ namespace ObjectRemoter.BasicSystemTest.Client
             // Read remote object address from file
             string serializedRemoteAddress = File.ReadAllText(@"..\..\..\object_address.txt");
             RemoteObjectAddress remoteAddress = RemoteObjectAddress.Deserialize(serializedRemoteAddress);
-            
+
             // Create proxy for remote object
             IConsoleServer consoleServer = RemoteObjectProxyProvider.GetProxy<IConsoleServer>(remoteAddress);
 
@@ -37,7 +38,10 @@ namespace ObjectRemoter.BasicSystemTest.Client
             consoleServer.LineEntered += consoleServer_LineEntered;
 
             // Keep application running so that we can continue receive events from remote object
-            while (true) ;
+            while (true)
+            {
+                Thread.Sleep(50);
+            }
             #endregion
         }
 

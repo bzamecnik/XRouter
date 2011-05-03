@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="ConsoleServer.cs" />
     <Compile Include="ConsoleService.cs" />
+    <Compile Include="RandomizedFloodServer.cs" />
     <Compile Include="IConsoleServer.cs" />
     <Compile Include="IConsoleService.cs" />
     <Compile Include="Program.cs" />

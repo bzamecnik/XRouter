@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using ObjectRemoter.RemoteCommunication;
 
 namespace ObjectRemoter
@@ -29,15 +27,19 @@ namespace ObjectRemoter
         public static T GetProxy<T>(RemoteObjectAddress address, Type requiredInterface = null)
             where T : IRemotelyReferable
         {
-            if (requiredInterface == null) {
+            if (requiredInterface == null)
+            {
                 requiredInterface = typeof(T);
             }
-            if ((!requiredInterface.IsInterface) || (!typeof(T).IsInterface)) {
+
+            if ((!requiredInterface.IsInterface) || (!typeof(T).IsInterface))
+            {
                 throw new InvalidOperationException("Parameter requiredInterface and type argument T must be interface.");
             }
 
             object proxyObject = InternalGetProxy(address, requiredInterface);
-            if (!requiredInterface.IsAssignableFrom(proxyObject.GetType())) {
+            if (!requiredInterface.IsAssignableFrom(proxyObject.GetType()))
+            {
                 throw new ArgumentException("Required interface does not match.", "requiredInterface");
             }
 
@@ -47,15 +49,19 @@ namespace ObjectRemoter
 
         private static object InternalGetProxy(RemoteObjectAddress address, Type requiredInterface)
         {
-            if (address.ServerAddress.IsLocal) {
-                lock (ObjectServer.DataLock) {
+            if (address.ServerAddress.IsLocal)
+            {
+                lock (ObjectServer.DataLock)
+                {
                     object localObject = ObjectServer.PublishedObjects[address.ObjectID];
                     return localObject;
                 }
             }
 
-            lock (dataLock) {
-                if (cache.ContainsKey(address)) {
+            lock (dataLock)
+            {
+                if (cache.ContainsKey(address))
+                {
                     object cachedProxy = cache[address];
                     return cachedProxy;
                 }
@@ -63,23 +69,22 @@ namespace ObjectRemoter
 
             var interceptor = new ProxyInterceptor(address, requiredInterface);
             object proxy;
-            lock (dataLock) {
+            lock (dataLock)
+            {
                 proxy = proxyGenerator.CreateInterfaceProxyWithoutTarget(requiredInterface, interceptor);
             }
 
-            lock (dataLock) {
+            lock (dataLock)
+            {
                 cache.Add(address, proxy);
             }
+
             return proxy;
         }
 
         private class ProxyInterceptor : Castle.DynamicProxy.IInterceptor
         {
-            public RemoteObjectAddress TargetAddress { get; private set; }
-
             public Type ProvidedInterface { get; private set; }
-
-            private IClient Client { get; set; }
 
             public ProxyInterceptor(RemoteObjectAddress targetAddress, Type providedInterface)
             {
@@ -87,6 +92,10 @@ namespace ObjectRemoter
                 ProvidedInterface = providedInterface;
                 Client = new TcpClient(targetAddress.ServerAddress);
             }
+
+            public RemoteObjectAddress TargetAddress { get; private set; }
+
+            private IClient Client { get; set; }
 
             public void Intercept(Castle.DynamicProxy.IInvocation invocation)
             {
@@ -98,21 +107,27 @@ namespace ObjectRemoter
 
                 var parametersInfo = invocation.Method.GetParameters();
                 var parameterTypes = new List<string>();
-                foreach (var parameter in parametersInfo) {
+                foreach (var parameter in parametersInfo)
+                {
                     string parameterType = string.Format("{0}!{1}", parameter.ParameterType.Assembly.FullName, parameter.ParameterType.FullName);
                     parameterTypes.Add(parameterType);
                 }
+
                 data.Add(string.Join("|", parameterTypes));
 
-                for (int i = 0; i < invocation.Arguments.Length; i++) {
+                for (int i = 0; i < invocation.Arguments.Length; i++)
+                {
                     string marshaledArgument = Marshalling.Marshal(invocation.Arguments[i], parametersInfo[i].ParameterType);
                     data.Add(marshaledArgument);
                 }
 
                 string marshaledResult;
-                try {
+                try
+                {
                     marshaledResult = Client.Request(ObjectServer.CommandInvoke, data.ToArray());
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     throw new ObjectRemoterException("Cannot communicate with remote object. A remote object might be unaccessible.", ex);
                 }
                 object result = Marshalling.Unmarshal(marshaledResult, invocation.Method.ReturnType);
