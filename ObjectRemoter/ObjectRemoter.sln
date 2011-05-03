@@ -1,4 +1,3 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectRemoter", "ObjectRemoter\ObjectRemoter.csproj", "{0C9BE6CE-CA69-4EDB-B021-496EEAA0319D}"
@@ -10,6 +9,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BasicSystemTest", "BasicSystemTest", "{7E4437D9-395F-44A2-BBBA-51C895FF0CFC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectRemoter.BasicSystemTest.Client", "Test\ObjectRemoter.BasicSystemTest.Client\ObjectRemoter.BasicSystemTest.Client.csproj", "{C7349DCC-BC5B-49B1-A294-FB322D005500}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectRemoter.Test", "ObjectRemoter\Test\ObjectRemoter.Test.csproj", "{E361A173-DC05-4C58-B0C5-3D85A817E0DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit", "Unit", "{B81104B7-4D94-4752-9755-C10383847E41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,13 +54,25 @@ Global
 		{C7349DCC-BC5B-49B1-A294-FB322D005500}.Release|Mixed Platforms.Build.0 = Release|x86
 		{C7349DCC-BC5B-49B1-A294-FB322D005500}.Release|x86.ActiveCfg = Release|x86
 		{C7349DCC-BC5B-49B1-A294-FB322D005500}.Release|x86.Build.0 = Release|x86
+		{E361A173-DC05-4C58-B0C5-3D85A817E0DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E361A173-DC05-4C58-B0C5-3D85A817E0DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E361A173-DC05-4C58-B0C5-3D85A817E0DE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E361A173-DC05-4C58-B0C5-3D85A817E0DE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E361A173-DC05-4C58-B0C5-3D85A817E0DE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E361A173-DC05-4C58-B0C5-3D85A817E0DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E361A173-DC05-4C58-B0C5-3D85A817E0DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E361A173-DC05-4C58-B0C5-3D85A817E0DE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E361A173-DC05-4C58-B0C5-3D85A817E0DE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E361A173-DC05-4C58-B0C5-3D85A817E0DE}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7E4437D9-395F-44A2-BBBA-51C895FF0CFC} = {2E58FC4B-DAA6-4351-B45C-70E71BDFF0BD}
+		{B81104B7-4D94-4752-9755-C10383847E41} = {2E58FC4B-DAA6-4351-B45C-70E71BDFF0BD}
 		{303FAC0A-7240-41FD-912F-A153BB35CF23} = {7E4437D9-395F-44A2-BBBA-51C895FF0CFC}
 		{C7349DCC-BC5B-49B1-A294-FB322D005500} = {7E4437D9-395F-44A2-BBBA-51C895FF0CFC}
+		{E361A173-DC05-4C58-B0C5-3D85A817E0DE} = {B81104B7-4D94-4752-9755-C10383847E41}
 	EndGlobalSection
 EndGlobal

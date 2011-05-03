@@ -25,7 +25,7 @@ namespace ObjectRemoter
         /// <remarks>
         /// It supports objects of following (informal) categories/types:
         /// primitive, string, IRemotelyCloneable, IRemotelyReferable,
-        /// delegate, System.Void, Serializable and array. A null object also
+        /// delegate, System.Void, [Serializable] and array. A null object also
         /// can be marshalled.
         /// </remarks>
         /// <param name="obj">An object to be marshalled. Can be null.
@@ -54,6 +54,7 @@ namespace ObjectRemoter
 
             if (type.IsPrimitive)
             {
+                // TODO: use neutral globalization, eg. for doubles
                 return obj.ToString();
             }
 
@@ -137,14 +138,38 @@ namespace ObjectRemoter
             throw new ArgumentException("Cannot marshal given type.");
         }
 
+        // TODO:
+        // - return value type of Unmarshal() could be specified in a type parameter:
+        //   static T Unmarshal<T>(string marshaled, Type type)
+
         /// <summary>
-        /// Creates an object of a given type from its marshalled string representation.
+        /// Creates an object of a specified type from its marshalled string
+        /// representation.
         /// </summary>
-        /// <param name="marshaled">Marshaled string</param>
-        /// <param name="type">Type of object to create</param>
-        /// <returns></returns>
+        /// <param name="marshaled">Marshaled object represented as a string.
+        /// Must not be null.
+        /// </param>
+        /// <param name="type">Type of the object to be unmarshalled. Must not
+        /// be null.</param>
+        /// <returns>The unmarshalled object.</returns>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="ArgumentException">If the object type is not
+        /// supported for unmarshalling. See the Marshall method for supported
+        /// object types and categories.
+        /// </exception>
+        /// <see cref="Marshalĺing.Marshal(object, Type)"/>
         internal static object Unmarshal(string marshaled, Type type)
         {
+            if (marshaled == null)
+            {
+                throw new ArgumentNullException("marshalled");
+            }
+
+            if (type == null)
+            {
+                throw new ArgumentNullException("type");
+            }
+
             if (type.IsPrimitive)
             {
                 // TODO: will this overload Parse(string) work for all primitives?

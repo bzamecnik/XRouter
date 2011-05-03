@@ -33,7 +33,6 @@ namespace ObjectRemoter
         /// parameter T is used as a default value.</param>
         /// <returns>Proxy to a remote object which implements given interface.
         /// </returns>
-        /// <
         /// <seealso cref="ObjectRemoterException"/>
         public static T GetProxy<T>(RemoteObjectAddress address, Type requiredInterface = null)
             where T : IRemotelyReferable
