@@ -62,9 +62,8 @@ namespace ObjectRemoter.RemoteCommunication
         {
             int port = PortRangeStart + rnd.Next(PortRangeEnd - PortRangeStart);
 
-            IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
             string localHostName = Dns.GetHostName();
-            ipAddress = ChooseIPAddress(Dns.GetHostAddresses(localHostName));
+            IPAddress ipAddress = ChooseIPAddress(Dns.GetHostAddresses(localHostName));
 
             Uri url = new Uri(string.Format("tcp://{0}:{1}", ipAddress, port));
             ServerAddress result = new ServerAddress(url, ipAddress, port);
@@ -99,11 +98,22 @@ namespace ObjectRemoter.RemoteCommunication
 
         private static IPAddress ChooseIPAddress(IEnumerable<IPAddress> addresses)
         {
-            // TODO: First() throws InvalidOperationException "Sequence contains no matching element"
-            // if there is no such and address
+            // TODO:
+            // - choosing IP addresses is currently restricted to private addresses
+            // - it should be more general and parametrized
             var result = addresses
                             .Where(a => a.AddressFamily == AddressFamily.InterNetwork)
-                            .First(a => a.ToString().StartsWith("192.168."));   // currently restricted to LAN
+                            .FirstOrDefault(a => a.ToString().StartsWith("192.168."));
+
+            // TODO:
+            // - First() throws InvalidOperationException "Sequence contains
+            //   no matching element"  if there is no such an address
+            // - this situation should be handled better than using the
+            //   loopback address
+            if (result == null)
+            {
+                result = IPAddress.Parse("127.0.0.1");
+            }
             return result;
         }
     }
