@@ -103,13 +103,9 @@ namespace ObjectRemoter
                 int objectID = int.Parse(data[1]);
                 string methodName = data[2];
 
-                string[] parameterTypesNames = data[3].Split('|');
-                var parameterTypes = new List<Type>();
-                foreach (string parameterTypeName in parameterTypesNames)
-                {
-                    Type type = TypeExtensions.GetType(assemblies, parameterTypeName);
-                    parameterTypes.Add(type);
-                }
+                var parameterTypesNames = data[3].Split('|').Where(typeName => !string.IsNullOrEmpty(typeName)).ToList();
+                var parameterTypes = parameterTypesNames.Select(
+                    typeName => TypeExtensions.GetType(assemblies, typeName)).ToList();
 
                 Type targetInterface = TypeExtensions.GetType(assemblies, targetInterfaceFullName);
                 object obj;
@@ -126,7 +122,7 @@ namespace ObjectRemoter
                 }
                 MethodInfo method = obj.GetType().GetMethod(methodName, parameterTypes.ToArray());
 
-                object[] parameters = new object[parameterTypesNames.Length];
+                object[] parameters = new object[parameterTypesNames.Count];
                 for (int i = 0; i < parameters.Length; i++)
                 {
                     parameters[i] = Marshalling.Unmarshal(data[4 + i], parameterTypes[i]);
