@@ -51,16 +51,20 @@ namespace ObjectRemoter
                 type = DetermineFormalTypeFromObject(obj);
             }
 
-            Func<Type, string, string> composeResultFromFormalTypeAndData = delegate(Type formalType, string data) {
+            Func<Type, string, string> composeResultFromFormalTypeAndData = delegate(Type formalType, string data)
+            {
                 return formalType.Assembly.FullName + "!" + formalType.FullName + ":" + data;
             };
 
             if (type.IsPrimitive)
             {
                 string result;
-                if (obj is IFormattable) {
+                if (obj is IFormattable)
+                {
                     result = ((IFormattable)obj).ToString(null, CultureInfo.InvariantCulture);
-                } else {
+                }
+                else
+                {
                     result = obj.ToString();
                 }
                 return composeResultFromFormalTypeAndData(type, result);
@@ -182,16 +186,20 @@ namespace ObjectRemoter
             #region Extract typeAndAssemblyFullName from parameter marshaled
             int formalTypeEndPos = marshaled.IndexOf(':');
             string typeAndAssemblyFullName = marshaled.Substring(0, formalTypeEndPos);
-            if (formalTypeEndPos + 1 < marshaled.Length) {
+            if (formalTypeEndPos + 1 < marshaled.Length)
+            {
                 marshaled = marshaled.Substring(formalTypeEndPos + 1);
-            } else {
+            }
+            else
+            {
                 marshaled = string.Empty;
             }
             #endregion
 
-            if (type is object) {
+            if (type is object)
+            {
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-                type = ObjectServer.GetType(assemblies, typeAndAssemblyFullName);
+                type = TypeExtensions.GetType(assemblies, typeAndAssemblyFullName);
             }
 
             if (type.IsPrimitive)
@@ -199,10 +207,13 @@ namespace ObjectRemoter
                 // TODO: will this overload Parse(string) work for all primitives?
                 // See ticket #29.
                 object result;
-                if (type == typeof(bool)) {
+                if (type == typeof(bool))
+                {
                     MethodInfo parseMethod = type.GetMethod("Parse", new Type[] { typeof(string) });
                     result = parseMethod.Invoke(null, new object[] { marshaled });
-                } else {
+                }
+                else
+                {
                     MethodInfo parseMethod = type.GetMethod("Parse", new Type[] { typeof(string), typeof(CultureInfo) });
                     result = parseMethod.Invoke(null, new object[] { marshaled, CultureInfo.InvariantCulture });
                 }
