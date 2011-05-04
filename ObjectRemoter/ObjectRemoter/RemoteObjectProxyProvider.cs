@@ -140,8 +140,8 @@ namespace ObjectRemoter
                 try
                 {
                     marshaledResult = Client.Request(ObjectServer.CommandInvoke, data.ToArray());
-                }
-                catch (Exception ex)
+                } 
+                catch (System.Net.Sockets.SocketException ex)
                 {
                     throw new ObjectRemoterException("Cannot communicate with the remote object. It might be unaccessible.", ex);
                 }

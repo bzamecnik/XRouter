@@ -21,6 +21,7 @@ namespace ObjectRemoter.RemoteCommunication
         {
             // TODO: System.Net.Sockets.SocketException must be handled when
             // it is not possible to connect to the server.
+            // This TODO should be removed since it is resolved on higher level in RemoteObjectProxyProvider.ProxyInterceptor.Intercept()
             var client = new System.Net.Sockets.TcpClient(ServerAddress.IPAddress.ToString(), ServerAddress.Port);
             using (var clientStream = client.GetStream())
             {
