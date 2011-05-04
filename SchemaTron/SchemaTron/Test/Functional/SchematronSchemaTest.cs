@@ -1,4 +1,4 @@
-﻿namespace SchemaTron.Test.Functional
+namespace SchemaTron.Test.Functional
 {
     using System;
     using System.Linq;
@@ -38,7 +38,7 @@
             };
         }
 
-        #region Bay-day test methods
+        #region Bad-day test methods
 
         [Fact]
         public void BadRootElement()

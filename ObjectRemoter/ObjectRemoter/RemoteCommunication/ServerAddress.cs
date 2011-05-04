@@ -99,6 +99,8 @@ namespace ObjectRemoter.RemoteCommunication
 
         private static IPAddress ChooseIPAddress(IEnumerable<IPAddress> addresses)
         {
+            // TODO: First() throws InvalidOperationException "Sequence contains no matching element"
+            // if there is no such and address
             var result = addresses
                             .Where(a => a.AddressFamily == AddressFamily.InterNetwork)
                             .First(a => a.ToString().StartsWith("192.168."));   // currently restricted to LAN

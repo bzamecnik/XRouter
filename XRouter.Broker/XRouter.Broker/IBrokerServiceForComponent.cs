@@ -7,6 +7,7 @@ using XRouter.Common;
 
 namespace XRouter.Broker
 {
+    // methods to be called by any component
     public interface IBrokerServiceForComponent : IRemotelyReferable
     {
         void UpdateComponentControllerAddress(string componentName, Uri controllerAddress);
