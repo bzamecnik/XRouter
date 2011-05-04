@@ -13,8 +13,7 @@ namespace ObjectRemoter
     {
         internal static readonly string CommandInvoke = "Invoke";
 
-        // TODO: shouldn't this be readonly?
-        internal static int ObjectIDForAnyObjectOfGivenType = -1;
+        internal static readonly int ObjectIDForAnyObjectOfGivenType = -1;
 
         internal static readonly ServerAddress ServerAddress;
 

@@ -9,9 +9,6 @@ namespace ObjectRemoter
 {
     public static class ServiceRemoter
     {
-        // TODO: this looks like an unused variable
-        private static object stateLock = new object();
-
         public static Uri PublishService<T>(T service)
             where T : IRemotelyReferable
         {

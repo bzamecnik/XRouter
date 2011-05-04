@@ -7,6 +7,7 @@ using System.Reflection.Emit;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Globalization;
 
 namespace ObjectRemoter
 {
@@ -37,16 +38,14 @@ namespace ObjectRemoter
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="ArgumentException">If the object type is not
         /// supported for marshalling.</exception>
-        internal static string Marshal(object obj, Type type)
+        public static string Marshal(object obj, Type type)
         {
+            // Parameter 'type' must not be null by contract.
             if (type == null)
             {
                 throw new ArgumentNullException("type");
             }
 
-            // TODO: should the parameter 'type' with null value be supported?
-            // If so it should represent the following automatic type
-            // determination.
             if (type == typeof(object))
             {
                 type = DetermineFormalTypeFromObject(obj);
@@ -54,7 +53,9 @@ namespace ObjectRemoter
 
             if (type.IsPrimitive)
             {
-                // TODO: use neutral globalization, eg. for doubles
+                if (obj is IFormattable) {
+                    return ((IFormattable)obj).ToString(null, CultureInfo.InvariantCulture);
+                }
                 return obj.ToString();
             }
 
@@ -141,6 +142,7 @@ namespace ObjectRemoter
         // TODO:
         // - return value type of Unmarshal() could be specified in a type parameter:
         //   static T Unmarshal<T>(string marshaled, Type type)
+        // - This TODO should be removed because caller does not know type T at compile type and so it would be still always just Object
 
         /// <summary>
         /// Creates an object of a specified type from its marshalled string
@@ -158,7 +160,7 @@ namespace ObjectRemoter
         /// object types and categories.
         /// </exception>
         /// <see cref="Marshalĺing.Marshal(object, Type)"/>
-        internal static object Unmarshal(string marshaled, Type type)
+        public static object Unmarshal(string marshaled, Type type)
         {
             if (marshaled == null)
             {
@@ -174,8 +176,14 @@ namespace ObjectRemoter
             {
                 // TODO: will this overload Parse(string) work for all primitives?
                 // See ticket #29.
-                var parseMethod = type.GetMethod("Parse", new Type[] { typeof(string) });
-                var result = parseMethod.Invoke(null, new object[] { marshaled });
+                object result;
+                if (type == typeof(bool)) {
+                    MethodInfo parseMethod = type.GetMethod("Parse", new Type[] { typeof(string) });
+                    result = parseMethod.Invoke(null, new object[] { marshaled });
+                } else {
+                    MethodInfo parseMethod = type.GetMethod("Parse", new Type[] { typeof(string), typeof(CultureInfo) });
+                    result = parseMethod.Invoke(null, new object[] { marshaled, CultureInfo.InvariantCulture });
+                }
                 return result;
             }
 
