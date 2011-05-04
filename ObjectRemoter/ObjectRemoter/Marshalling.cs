@@ -70,6 +70,11 @@ namespace ObjectRemoter
                 return composeResultFromFormalTypeAndData(type, result);
             }
 
+            if ((type.FullName == "System.Void") || (obj == null))
+            {
+                return composeResultFromFormalTypeAndData(Type.GetType("System.Void"), string.Empty);
+            }
+
             if (type == typeof(string))
             {
                 return composeResultFromFormalTypeAndData(typeof(string), (string)obj);
@@ -102,11 +107,6 @@ namespace ObjectRemoter
                 var address = ObjectServer.PublishObject(invocable);
                 string result = address.Serialize();
                 return composeResultFromFormalTypeAndData(type, result);
-            }
-
-            if ((type.FullName == "System.Void") || (obj == null))
-            {
-                return composeResultFromFormalTypeAndData(Type.GetType("System.Void"), string.Empty);
             }
 
             if (type.GetCustomAttributes(typeof(SerializableAttribute), false).Length > 0)
@@ -220,6 +220,11 @@ namespace ObjectRemoter
                 return result;
             }
 
+            if ((type.FullName == "System.Void") || ((type == typeof(object)) && (marshaled.Length == 0)))
+            {
+                return null;
+            }
+
             if (type == typeof(string))
             {
                 return marshaled;
@@ -251,11 +256,6 @@ namespace ObjectRemoter
                         return res;
                     });
                 return result;
-            }
-
-            if ((type.FullName == "System.Void") || ((type == typeof(object)) && (marshaled.Length == 0)))
-            {
-                return null;
             }
 
             if (type.GetCustomAttributes(typeof(SerializableAttribute), false).Length > 0)
