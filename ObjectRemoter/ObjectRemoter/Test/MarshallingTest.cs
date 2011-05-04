@@ -157,11 +157,14 @@ namespace ObjectRemoter.Test
         // - object types:
         //   - structs, class instances
         //   - IRemotelyCloneable
-        //   - delegates, System.Void
         //   - arrays of various types
         //   - more primitives
         // - type:
         //   - object
+        //     - to determine: IRemotelyCloneable, IRemotelyReferable, Delegate
+        // - IRemotelyReferable with non-interface type
+        // - delegate with parameters
+        // - delegate with void return type
 
         #endregion
 

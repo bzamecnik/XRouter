@@ -91,7 +91,7 @@ namespace ObjectRemoter
             {
                 if (!type.IsInterface)
                 {
-                    throw new ArgumentException("Formal type of remotely referable object must be interface.");
+                    throw new ArgumentException("The formal type of the remotely referable object must be an interface.");
                 }
 
                 var remotelyReferable = (IRemotelyReferable)obj;
@@ -170,7 +170,7 @@ namespace ObjectRemoter
         /// supported for unmarshalling. See the Marshall method for supported
         /// object types and categories.
         /// </exception>
-        /// <see cref="Marshalĺing.Marshal(object, Type)"/>
+        /// <see cref="Marshal(object,Type)"/>
         public static object Unmarshal(string marshaled, Type type)
         {
             if (marshaled == null)

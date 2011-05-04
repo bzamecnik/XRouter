@@ -17,11 +17,21 @@ namespace ObjectRemoter.RemoteCommunication
             ServerAddress = serverAddress;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// SocketException is resolved at higher level in the
+        /// RemoteObjectProxyProvider.ProxyInterceptor.Intercept() method.
+        /// </remarks>
+        /// <param name="command"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        /// <exception cref="System.Net.Sockets.SocketException">
+        /// When it is not possible to connect to the server.
+        /// </exception>
         public string Request(string command, string[] data)
         {
-            // TODO: System.Net.Sockets.SocketException must be handled when
-            // it is not possible to connect to the server.
-            // This TODO should be removed since it is resolved on higher level in RemoteObjectProxyProvider.ProxyInterceptor.Intercept()
             var client = new System.Net.Sockets.TcpClient(ServerAddress.IPAddress.ToString(), ServerAddress.Port);
             using (var clientStream = client.GetStream())
             {

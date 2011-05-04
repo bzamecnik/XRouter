@@ -21,6 +21,12 @@ namespace ObjectRemoter.Test
             );
         }
 
+        // TODO:
+        // - requiredInterface is not an interface -> InvalidOperationException
+        // - type parameter type is not an interface -> InvalidOperationException
+        // - requiredInterface is not assignable from proxyObject type -> ArgumentException
+        // - ProxyInterceptor - System.Net.Sockets.SocketException
+
         #endregion
     }
 }

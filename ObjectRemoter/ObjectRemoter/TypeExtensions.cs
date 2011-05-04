@@ -10,7 +10,15 @@ namespace ObjectRemoter
     {
         internal static Type GetType(IEnumerable<Assembly> assemblies, string typeAndAssemblyFullName)
         {
+            if (typeAndAssemblyFullName == null)
+            {
+                throw new ArgumentNullException("typeAndAssemblyFullName");
+            }
             string[] parts = typeAndAssemblyFullName.Split('!');
+            if (parts.Length != 2)
+            {
+                throw new ArgumentException("typeAndAssemblyFullName");
+            }
             string assemblyFullName = parts[0];
             string typeFullName = parts[1];
             Assembly assembly = assemblies.FirstOrDefault(a => a.FullName == assemblyFullName);
