@@ -21,8 +21,6 @@ namespace ObjectRemoter
 
         private static bool isServerRunning = false;
 
-        private static Dictionary<int, object> publishedObjects = new Dictionary<int, object>();
-
         private static Dictionary<object, RemoteObjectAddress> publishedObjectAdresses = new Dictionary<object, RemoteObjectAddress>();
 
         private static Dictionary<int, object> publishedObjectsByID = new Dictionary<int, object>();
@@ -40,7 +38,7 @@ namespace ObjectRemoter
 
         internal static Dictionary<int, object> PublishedObjects
         {
-            get { return publishedObjects; }
+            get { return publishedObjectsByID; }
         }
 
         /// <summary>
