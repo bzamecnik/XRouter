@@ -141,7 +141,7 @@ namespace ObjectRemoter
             return null;
         }
 
-        private static Type GetType(IEnumerable<Assembly> assemblies, string typeAndAssemblyFullName)
+        internal static Type GetType(IEnumerable<Assembly> assemblies, string typeAndAssemblyFullName)
         {
             string[] parts = typeAndAssemblyFullName.Split('!');
             string assemblyFullName = parts[0];

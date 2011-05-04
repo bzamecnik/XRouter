@@ -51,24 +51,31 @@ namespace ObjectRemoter
                 type = DetermineFormalTypeFromObject(obj);
             }
 
+            Func<Type, string, string> composeResultFromFormalTypeAndData = delegate(Type formalType, string data) {
+                return formalType.Assembly.FullName + "!" + formalType.FullName + ":" + data;
+            };
+
             if (type.IsPrimitive)
             {
+                string result;
                 if (obj is IFormattable) {
-                    return ((IFormattable)obj).ToString(null, CultureInfo.InvariantCulture);
+                    result = ((IFormattable)obj).ToString(null, CultureInfo.InvariantCulture);
+                } else {
+                    result = obj.ToString();
                 }
-                return obj.ToString();
+                return composeResultFromFormalTypeAndData(type, result);
             }
 
             if (type == typeof(string))
             {
-                return (string)obj;
+                return composeResultFromFormalTypeAndData(typeof(string), (string)obj);
             }
 
             if (typeof(IRemotelyCloneable).IsAssignableFrom(type))
             {
                 var clonable = (IRemotelyCloneable)obj;
                 string result = clonable.SerializeClone();
-                return result;
+                return composeResultFromFormalTypeAndData(type, result);
             }
 
             if (typeof(IRemotelyReferable).IsAssignableFrom(type))
@@ -81,7 +88,7 @@ namespace ObjectRemoter
                 var remotelyReferable = (IRemotelyReferable)obj;
                 var address = ObjectServer.PublishObject(remotelyReferable);
                 string result = address.Serialize();
-                return result;
+                return composeResultFromFormalTypeAndData(type, result);
             }
 
             if (typeof(Delegate).IsAssignableFrom(type))
@@ -90,12 +97,12 @@ namespace ObjectRemoter
                 var invocable = new Invocable(target);
                 var address = ObjectServer.PublishObject(invocable);
                 string result = address.Serialize();
-                return result;
+                return composeResultFromFormalTypeAndData(type, result);
             }
 
             if ((type.FullName == "System.Void") || (obj == null))
             {
-                return string.Empty;
+                return composeResultFromFormalTypeAndData(Type.GetType("System.Void"), string.Empty);
             }
 
             if (type.GetCustomAttributes(typeof(SerializableAttribute), false).Length > 0)
@@ -107,7 +114,7 @@ namespace ObjectRemoter
                     byte[] bytes = ms.GetBuffer();
                     int length = (int)ms.Length;
                     string result = length.ToString() + ":" + Convert.ToBase64String(bytes, 0, length);
-                    return result;
+                    return composeResultFromFormalTypeAndData(type, result);
                 }
             }
 
@@ -132,7 +139,7 @@ namespace ObjectRemoter
                         }
                     }
 
-                    return result.ToString();
+                    return composeResultFromFormalTypeAndData(type, result.ToString());
                 }
             }
 
@@ -170,6 +177,21 @@ namespace ObjectRemoter
             if (type == null)
             {
                 throw new ArgumentNullException("type");
+            }
+
+            #region Extract typeAndAssemblyFullName from parameter marshaled
+            int formalTypeEndPos = marshaled.IndexOf(':');
+            string typeAndAssemblyFullName = marshaled.Substring(0, formalTypeEndPos);
+            if (formalTypeEndPos + 1 < marshaled.Length) {
+                marshaled = marshaled.Substring(formalTypeEndPos + 1);
+            } else {
+                marshaled = string.Empty;
+            }
+            #endregion
+
+            if (type is object) {
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                type = ObjectServer.GetType(assemblies, typeAndAssemblyFullName);
             }
 
             if (type.IsPrimitive)
