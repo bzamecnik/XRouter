@@ -236,9 +236,14 @@ namespace ObjectRemoter
 
             if (typeof(IRemotelyCloneable).IsAssignableFrom(type))
             {
-                // TODO: A check should be made whether an instance of 'type'
-                // can be created (type is neither an abstract class, nor an
-                // interface.
+                // TODO:
+                // - A check should be made whether an instance of 'type'
+                //   can be created (type is neither an abstract class, nor an
+                //   interface.
+                // - The behavior should be analyzed better.
+                //   - It is not straighforward if an exception should be
+                //     thrown or the type should be automatically corrected
+                //     (ie. taken from the saved real type in unmarshalling)
                 var result = (IRemotelyCloneable)FormatterServices.GetUninitializedObject(type);
                 result.DeserializeClone(marshalled);
                 return result;

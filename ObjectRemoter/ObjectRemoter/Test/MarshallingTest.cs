@@ -167,11 +167,29 @@ namespace ObjectRemoter.Test
         }
 
         [Fact]
+        public void MarshalAndUnmarshallRemotelyCloneable()
+        {
+            var original = new SampleRemotelyCloneable("foo", 1,
+                new SampleRemotelyCloneable("bar", 2, null));
+            MarshalAndUnmarshall<SampleRemotelyCloneable>(original);
+        }
+
+        [Fact]
         public void MarshalDetermineTypeRemotelyReferable()
         {
             var original = new SampleRemotelyReferable("foo",
                 new SampleRemotelyReferable("bar", null));
             string marshalled = Marshalling.Marshal(original, typeof(IRemotelyReferable));
+            string marshalledWithExplicitType = Marshalling.Marshal(original, typeof(object));
+            Assert.Equal(marshalled, marshalledWithExplicitType);
+        }
+
+        [Fact]
+        public void MarshalDetermineTypeRemotelyCloneable()
+        {
+            var original = new SampleRemotelyCloneable("foo", 1,
+                new SampleRemotelyCloneable("bar", 2, null));
+            string marshalled = Marshalling.Marshal(original, typeof(SampleRemotelyCloneable));
             string marshalledWithExplicitType = Marshalling.Marshal(original, typeof(object));
             Assert.Equal(marshalled, marshalledWithExplicitType);
         }
@@ -189,12 +207,8 @@ namespace ObjectRemoter.Test
 
         // TODO:
         // - object types:
-        //   - IRemotelyCloneable
         //   - arrays of various types
         //   - more primitives
-        // - type:
-        //   - object
-        //     - to determine: IRemotelyCloneable
 
         #endregion
 
@@ -312,6 +326,15 @@ namespace ObjectRemoter.Test
             Assert.Throws<ArgumentException>(() => Marshalling.Unmarshal(marshalled, type));
         }
 
+
+        [Fact]
+        public void MarshalAndUnmarshallRemotelyCloneableWithNonConcreteType()
+        {
+            var original = new SampleRemotelyCloneable("foo", 1,
+                new SampleRemotelyCloneable("bar", 2, null));
+            Assert.Throws<ArgumentException>(() => MarshalAndUnmarshall<IRemotelyCloneable>(original));
+        }
+
         #endregion
 
         #region Helper methods
@@ -418,10 +441,140 @@ namespace ObjectRemoter.Test
             }
         }
 
+        internal class SampleRemotelyCloneable : IRemotelyCloneable
+        {
+            public string text;
+            public int number;
+            public SampleRemotelyCloneable obj;
 
-        //internal class SampleRemotelyCloneable : IRemotelyCloneable
-        //{
-        //}
+            public SampleRemotelyCloneable(string text, int number, SampleRemotelyCloneable obj)
+            {
+                this.text = text;
+                this.number = number;
+                this.obj = obj;
+            }
+
+            public string SerializeClone()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryFormatter binaryFormatter = new BinaryFormatter();
+                    binaryFormatter.Serialize(ms, text);
+                    byte[] bytes = ms.GetBuffer();
+                    int length = (int)ms.Length;
+                    string result = length.ToString() + ":" + Convert.ToBase64String(bytes, 0, length);
+
+                    ms.Seek(0, SeekOrigin.Begin);
+
+                    binaryFormatter.Serialize(ms, number);
+                    bytes = ms.GetBuffer();
+                    length = (int)ms.Length;
+                    result += "|" + length.ToString() + ":" + Convert.ToBase64String(bytes, 0, length);
+
+                    ms.Seek(0, SeekOrigin.Begin);
+
+                    if (obj != null)
+                    {
+                        string objSerialized = obj.SerializeClone();
+                        result += "|" + objSerialized;
+                    }
+                    return result;
+                }
+            }
+
+            public void DeserializeClone(string serialized)
+            {
+                int partCount = 3;
+                string[] elements = serialized.Split(new[] { '|' }, partCount);
+                if (elements.Length < 2)
+                {
+                    throw new ArgumentException("Bad number of parts.");
+                }
+                this.text = (string)DeserializeElement(elements[0]);
+                this.number = (int)DeserializeElement(elements[1]);
+                if (elements.Length > 2)
+                {
+                    this.obj = (SampleRemotelyCloneable)FormatterServices.GetUninitializedObject(typeof(SampleRemotelyCloneable));
+                    this.obj.DeserializeClone(elements[2]);
+                }
+            }
+
+            private static object DeserializeElement(string serialized)
+            {
+                int colonPos = serialized.IndexOf(':');
+                if (colonPos < 0)
+                {
+                    throw new ArgumentException("Missing object contents length.", "serialized");
+                }
+                int length = int.Parse(serialized.Substring(0, colonPos));
+                string base64 = serialized.Substring(colonPos + 1);
+                if (string.IsNullOrEmpty(base64))
+                {
+                    throw new ArgumentException("Missing object contents.", "serialized");
+                }
+                byte[] bytes;
+                try
+                {
+                    bytes = Convert.FromBase64String(base64);
+                }
+                catch (FormatException ex)
+                {
+                    throw new ArgumentException("Bad object contents.", "serialized", ex);
+                }
+                if (length != bytes.Length)
+                {
+                    throw new ArgumentException("Bad object contents length.", "serialized");
+                }
+                try
+                {
+                    using (MemoryStream ms = new MemoryStream(bytes, 0, length))
+                    {
+                        BinaryFormatter binaryFormatter = new BinaryFormatter();
+                        object result = binaryFormatter.Deserialize(ms);
+                        return result;
+                    }
+                }
+                catch (SerializationException ex)
+                {
+                    throw new ArgumentException("Bad object contents.", "serialized", ex);
+                }
+            }
+
+            // override object.Equals
+            public override bool Equals(object obj)
+            {
+                //       
+                // See the full list of guidelines at
+                //   http://go.microsoft.com/fwlink/?LinkID=85237  
+                // and also the guidance for operator== at
+                //   http://go.microsoft.com/fwlink/?LinkId=85238
+                //
+
+                if (obj == null || GetType() != obj.GetType())
+                {
+                    return false;
+                }
+
+                SampleRemotelyCloneable other = (SampleRemotelyCloneable)obj;
+                return object.Equals(this.text, other.text) &&
+                    (this.number == other.number) && object.Equals(this.obj, other.obj);
+            }
+
+            // override object.GetHashCode
+            public override int GetHashCode()
+            {
+                int hashCode = 13 * number;
+                if (text != null)
+                {
+                    hashCode ^= 7 * text.GetHashCode();
+                }
+                if (obj != null)
+                {
+                    hashCode ^= 17 * obj.GetHashCode();
+                }
+                return hashCode;
+            }
+        }
 
         [Serializable]
         private class SampleSerializable
