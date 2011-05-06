@@ -152,14 +152,14 @@ namespace ObjectRemoter
 
         // TODO:
         // - return value type of Unmarshal() could be specified in a type parameter:
-        //   static T Unmarshal<T>(string marshaled, Type type)
+        //   static T Unmarshal<T>(string marshalled, Type type)
         // - This TODO should be removed because caller does not know type T at compile type and so it would be still always just Object
 
         /// <summary>
         /// Creates an object of a specified type from its marshalled string
         /// representation.
         /// </summary>
-        /// <param name="marshaled">Marshaled object represented as a string.
+        /// <param name="marshalled">Marshalled object represented as a string.
         /// Must not be null.
         /// </param>
         /// <param name="type">Type of the object to be unmarshalled. Must not
@@ -171,9 +171,9 @@ namespace ObjectRemoter
         /// object types and categories.
         /// </exception>
         /// <see cref="Marshal(object,Type)"/>
-        public static object Unmarshal(string marshaled, Type type)
+        public static object Unmarshal(string marshalled, Type type)
         {
-            if (marshaled == null)
+            if (marshalled == null)
             {
                 throw new ArgumentNullException("marshalled");
             }
@@ -183,20 +183,20 @@ namespace ObjectRemoter
                 throw new ArgumentNullException("type");
             }
 
-            #region Extract typeAndAssemblyFullName from parameter marshaled
-            int formalTypeEndPos = marshaled.IndexOf(':');
+            #region Extract typeAndAssemblyFullName from parameter marshalled
+            int formalTypeEndPos = marshalled.IndexOf(':');
             if (formalTypeEndPos < 0)
             {
                 throw new ArgumentException("Cannot find formal type specification.", "marshalled");
             }
-            string typeAndAssemblyFullName = marshaled.Substring(0, formalTypeEndPos);
-            if (formalTypeEndPos + 1 < marshaled.Length)
+            string typeAndAssemblyFullName = marshalled.Substring(0, formalTypeEndPos);
+            if (formalTypeEndPos + 1 < marshalled.Length)
             {
-                marshaled = marshaled.Substring(formalTypeEndPos + 1);
+                marshalled = marshalled.Substring(formalTypeEndPos + 1);
             }
             else
             {
-                marshaled = string.Empty;
+                marshalled = string.Empty;
             }
             #endregion
 
@@ -214,43 +214,46 @@ namespace ObjectRemoter
                 if (type == typeof(bool))
                 {
                     MethodInfo parseMethod = type.GetMethod("Parse", new Type[] { typeof(string) });
-                    result = parseMethod.Invoke(null, new object[] { marshaled });
+                    result = parseMethod.Invoke(null, new object[] { marshalled });
                 }
                 else
                 {
                     MethodInfo parseMethod = type.GetMethod("Parse", new Type[] { typeof(string), typeof(CultureInfo) });
-                    result = parseMethod.Invoke(null, new object[] { marshaled, CultureInfo.InvariantCulture });
+                    result = parseMethod.Invoke(null, new object[] { marshalled, CultureInfo.InvariantCulture });
                 }
                 return result;
             }
 
-            if ((type.FullName == "System.Void") || ((type == typeof(object)) && (marshaled.Length == 0)))
+            if ((type.FullName == "System.Void") || ((type == typeof(object)) && (marshalled.Length == 0)))
             {
                 return null;
             }
 
             if (type == typeof(string))
             {
-                return marshaled;
+                return marshalled;
             }
 
             if (typeof(IRemotelyCloneable).IsAssignableFrom(type))
             {
+                // TODO: A check should be made whether an instance of 'type'
+                // can be created (type is neither an abstract class, nor an
+                // interface.
                 var result = (IRemotelyCloneable)FormatterServices.GetUninitializedObject(type);
-                result.DeserializeClone(marshaled);
+                result.DeserializeClone(marshalled);
                 return result;
             }
 
             if (typeof(IRemotelyReferable).IsAssignableFrom(type))
             {
-                var address = RemoteObjectAddress.Deserialize(marshaled);
+                var address = RemoteObjectAddress.Deserialize(marshalled);
                 var result = RemoteObjectProxyProvider.GetProxy<IRemotelyReferable>(address, type);
                 return result;
             }
 
             if (typeof(Delegate).IsAssignableFrom(type))
             {
-                var address = RemoteObjectAddress.Deserialize(marshaled);
+                var address = RemoteObjectAddress.Deserialize(marshalled);
                 IInvocable invocable = RemoteObjectProxyProvider.GetProxy<IInvocable>(address);
 
                 Delegate result = CreateDynamicDelegate(type,
@@ -264,13 +267,13 @@ namespace ObjectRemoter
 
             if (type.GetCustomAttributes(typeof(SerializableAttribute), false).Length > 0)
             {
-                int colonPos = marshaled.IndexOf(':');
+                int colonPos = marshalled.IndexOf(':');
                 if (colonPos < 0)
                 {
                     throw new ArgumentException("Missing object contents length.", "marshalled");
                 }
-                int length = int.Parse(marshaled.Substring(0, colonPos));
-                string base64 = marshaled.Substring(colonPos + 1);
+                int length = int.Parse(marshalled.Substring(0, colonPos));
+                string base64 = marshalled.Substring(colonPos + 1);
                 if (string.IsNullOrEmpty(base64))
                 {
                     throw new ArgumentException("Missing object contents.", "marshalled");
@@ -309,13 +312,13 @@ namespace ObjectRemoter
 
             if (type.IsArray)
             {
-                string[] marshaledElements = marshaled.Split(new[] { ArrayElementSeparator }, StringSplitOptions.None);
-                object[] result = new object[marshaledElements.Length / 2];
+                string[] marshalledElements = marshalled.Split(new[] { ArrayElementSeparator }, StringSplitOptions.None);
+                object[] result = new object[marshalledElements.Length / 2];
                 for (int i = 0; i < result.Length; i++)
                 {
-                    Type formalType = Type.GetType(marshaledElements[(i * 2) + 0]);
-                    string marshaledElement = marshaledElements[(i * 2) + 1];
-                    result[i] = Unmarshal(marshaledElement, formalType);
+                    Type formalType = Type.GetType(marshalledElements[(i * 2) + 0]);
+                    string marshalledElement = marshalledElements[(i * 2) + 1];
+                    result[i] = Unmarshal(marshalledElement, formalType);
                 }
 
                 return result;

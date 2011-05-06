@@ -132,20 +132,20 @@ namespace ObjectRemoter
 
                 for (int i = 0; i < invocation.Arguments.Length; i++)
                 {
-                    string marshaledArgument = Marshalling.Marshal(invocation.Arguments[i], parametersInfo[i].ParameterType);
-                    data.Add(marshaledArgument);
+                    string marshalledArgument = Marshalling.Marshal(invocation.Arguments[i], parametersInfo[i].ParameterType);
+                    data.Add(marshalledArgument);
                 }
 
-                string marshaledResult;
+                string marshalledResult;
                 try
                 {
-                    marshaledResult = Client.Request(ObjectServer.CommandInvoke, data.ToArray());
+                    marshalledResult = Client.Request(ObjectServer.CommandInvoke, data.ToArray());
                 }
                 catch (System.Net.Sockets.SocketException ex)
                 {
                     throw new ObjectRemoterException("Cannot communicate with the remote object. It might be unaccessible.", ex);
                 }
-                object result = Marshalling.Unmarshal(marshaledResult, invocation.Method.ReturnType);
+                object result = Marshalling.Unmarshal(marshalledResult, invocation.Method.ReturnType);
                 invocation.ReturnValue = result;
             }
         }
