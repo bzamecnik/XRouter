@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using Xunit;
 using ObjectRemoter;
+using Xunit;
 
 namespace ObjectRemoter.Test
 {
@@ -92,6 +95,16 @@ namespace ObjectRemoter.Test
         }
 
         [Fact]
+        public void MarshalAndUnmarshallAction()
+        {
+            System.Action<string> originalDelegate = (string value) => value = "foo";
+            Type type = typeof(System.Action<string>);
+            string marshalled = Marshalling.Marshal(originalDelegate, type);
+            var unmarshalledDelegate = (System.Action<string>)Marshalling.Unmarshal(marshalled, type);
+            Assert.DoesNotThrow(() => unmarshalledDelegate("bar"));
+        }
+
+        [Fact]
         public void MarshalAndUnmarshallObject()
         {
             Type type = typeof(object);
@@ -153,18 +166,35 @@ namespace ObjectRemoter.Test
             MarshalAndUnmarshall<ISampleRemotelyReferable>(original, comparer);
         }
 
+        [Fact]
+        public void MarshalDetermineTypeRemotelyReferable()
+        {
+            var original = new SampleRemotelyReferable("foo",
+                new SampleRemotelyReferable("bar", null));
+            string marshalled = Marshalling.Marshal(original, typeof(IRemotelyReferable));
+            string marshalledWithExplicitType = Marshalling.Marshal(original, typeof(object));
+            Assert.Equal(marshalled, marshalledWithExplicitType);
+        }
+
+        [Fact]
+        public void MarshalDetermineTypeDelegate()
+        {
+            System.Func<string> originalDelegate = () => string.Format("PI is {0}", 3.14);
+            string marshalled = Marshalling.Marshal(originalDelegate, typeof(object));
+            var unmarshalledDelegate = (System.Func<string>)Marshalling.Unmarshal(marshalled, typeof(object));
+            string resultFromOriginal = originalDelegate();
+            string resultFromUnmarshalled = unmarshalledDelegate();
+            Assert.Equal(resultFromOriginal, resultFromUnmarshalled);
+        }
+
         // TODO:
         // - object types:
-        //   - structs, class instances
         //   - IRemotelyCloneable
         //   - arrays of various types
         //   - more primitives
         // - type:
         //   - object
-        //     - to determine: IRemotelyCloneable, IRemotelyReferable, Delegate
-        // - IRemotelyReferable with non-interface type
-        // - delegate with parameters
-        // - delegate with void return type
+        //     - to determine: IRemotelyCloneable
 
         #endregion
 
@@ -194,10 +224,93 @@ namespace ObjectRemoter.Test
             );
         }
 
-        // TODO:
-        // - marshal
-        // - unmarshal
-        //   - invalid strings, unsupported types
+        [Fact]
+        public void MarshallRemotelyReferableWithNonInterfaceType()
+        {
+            var original = new SampleRemotelyReferable("foo", null);
+            Type type = typeof(SampleRemotelyReferable);
+            Assert.Throws<ArgumentException>(() => Marshalling.Marshal(original, type));
+        }
+
+        [Fact]
+        public void MarshalUnsupportedClass()
+        {
+            var original = new SampleClass("foo", 42);
+            Type type = typeof(SampleClass);
+            Assert.Throws<ArgumentException>(() => Marshalling.Marshal(original, type));
+        }
+
+        [Fact]
+        public void MarshalUnsupportedStruct()
+        {
+            var original = new SampleStruct("foo", 42);
+            Type type = typeof(SampleStruct);
+            Assert.Throws<ArgumentException>(() => Marshalling.Marshal(original, type));
+        }
+
+        [Fact]
+        public void UnmarshalCompletelyFakeString()
+        {
+            Type type = typeof(SampleStruct);
+            string marshalled = "foobar+%%@$^@%^fagfg5468f84f5g4fg";
+            Assert.Throws<ArgumentException>(() => Marshalling.Unmarshal(marshalled, type));
+        }
+
+        [Fact]
+        public void UnmarshalFakeStringWithCorrectTypeAndEmptyRest()
+        {
+            Type type = typeof(SampleSerializable);
+            string marshalled = "ObjectRemoter.Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null!ObjectRemoter.Test.MarshallingTest+SampleSerializable:";
+            Assert.Throws<ArgumentException>(() => Marshalling.Unmarshal(marshalled, type));
+        }
+
+        [Fact]
+        public void UnmarshalFakeStringWithCorrectTypeLengthAndEmptyRest()
+        {
+            Type type = typeof(SampleSerializable);
+            string marshalled = "ObjectRemoter.Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null!ObjectRemoter.Test.MarshallingTest+SampleSerializable:0:";
+            Assert.Throws<ArgumentException>(() => Marshalling.Unmarshal(marshalled, type));
+        }
+
+        [Fact]
+        public void UnmarshalFakeStringWithBadContentsBase64()
+        {
+            Type type = typeof(SampleSerializable);
+            string marshalled = "ObjectRemoter.Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null!ObjectRemoter.Test.MarshallingTest+SampleSerializable:6:foobar";
+            Assert.Throws<ArgumentException>(() => Marshalling.Unmarshal(marshalled, type));
+        }
+
+        [Fact]
+        public void UnmarshalFakeStringWithBadContentsLength()
+        {
+            Type type = typeof(SampleSerializable);
+            string marshalled = "ObjectRemoter.Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null!ObjectRemoter.Test.MarshallingTest+SampleSerializable:8:Zm9vYmFy";
+            Assert.Throws<ArgumentException>(() => Marshalling.Unmarshal(marshalled, type));
+        }
+
+        [Fact]
+        public void UnmarshalFakeStringWithBadContents()
+        {
+            Type type = typeof(SampleSerializable);
+            string marshalled = "ObjectRemoter.Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null!ObjectRemoter.Test.MarshallingTest+SampleSerializable:6:Zm9vYmFy";
+            Assert.Throws<ArgumentException>(() => Marshalling.Unmarshal(marshalled, type));
+        }
+
+        [Fact]
+        public void UnmarshalFakeStringUnsupportedClass()
+        {
+            Type type = typeof(SampleClass);
+            string marshalled = "ObjectRemoter.Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null!ObjectRemoter.Test.MarshallingTest+SampleClass:6:Zm9vYmFy";
+            Assert.Throws<ArgumentException>(() => Marshalling.Unmarshal(marshalled, type));
+        }
+
+        [Fact]
+        public void UnmarshalFakeStringUnsupportedStruct()
+        {
+            Type type = typeof(SampleStruct);
+            string marshalled = "ObjectRemoter.Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null!ObjectRemoter.Test.MarshallingTest+SampleStruct:6:Zm9vYmFy";
+            Assert.Throws<ArgumentException>(() => Marshalling.Unmarshal(marshalled, type));
+        }
 
         #endregion
 
@@ -230,6 +343,8 @@ namespace ObjectRemoter.Test
         }
 
         #endregion
+
+        #region Testing classes and interfaces
 
         public interface ISampleRemotelyReferable : IRemotelyReferable
         {
@@ -357,5 +472,31 @@ namespace ObjectRemoter.Test
                 return hashCode;
             }
         }
+
+        private class SampleClass
+        {
+            public string text;
+            public int number;
+
+            public SampleClass(string text, int number)
+            {
+                this.text = text;
+                this.number = number;
+            }
+        }
+
+        private struct SampleStruct
+        {
+            public string text;
+            public int number;
+
+            public SampleStruct(string text, int number)
+            {
+                this.text = text;
+                this.number = number;
+            }
+        }
+
+        #endregion
     }
 }
