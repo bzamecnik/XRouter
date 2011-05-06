@@ -185,6 +185,10 @@ namespace ObjectRemoter
 
             #region Extract typeAndAssemblyFullName from parameter marshaled
             int formalTypeEndPos = marshaled.IndexOf(':');
+            if (formalTypeEndPos < 0)
+            {
+                throw new ArgumentException("Cannot find formal type specification.", "marshalled");
+            }
             string typeAndAssemblyFullName = marshaled.Substring(0, formalTypeEndPos);
             if (formalTypeEndPos + 1 < marshaled.Length)
             {
@@ -261,14 +265,45 @@ namespace ObjectRemoter
             if (type.GetCustomAttributes(typeof(SerializableAttribute), false).Length > 0)
             {
                 int colonPos = marshaled.IndexOf(':');
+                if (colonPos < 0)
+                {
+                    throw new ArgumentException("Missing object contents length.", "marshalled");
+                }
                 int length = int.Parse(marshaled.Substring(0, colonPos));
                 string base64 = marshaled.Substring(colonPos + 1);
-                byte[] bytes = Convert.FromBase64String(base64);
-                using (MemoryStream ms = new MemoryStream(bytes, 0, length))
+                if (string.IsNullOrEmpty(base64))
                 {
-                    BinaryFormatter binaryFormatter = new BinaryFormatter();
-                    object result = binaryFormatter.Deserialize(ms);
-                    return result;
+                    throw new ArgumentException("Missing object contents.", "marshalled");
+                }
+                byte[] bytes;
+                try
+                {
+                    bytes = Convert.FromBase64String(base64);
+                }
+                catch (FormatException ex)
+                {
+                    throw new ArgumentException("Bad object contents.", "marshalled", ex);
+                }
+                if (length != bytes.Length)
+                {
+                    throw new ArgumentException("Bad object contents length.", "marshalled");
+                }
+                try
+                {
+                    using (MemoryStream ms = new MemoryStream(bytes, 0, length))
+                    {
+                        BinaryFormatter binaryFormatter = new BinaryFormatter();
+                        object result = binaryFormatter.Deserialize(ms);
+                        return result;
+                    }
+                }
+                catch (SerializationException ex)
+                {
+                    throw new ArgumentException("Bad object contents.", "marshalled", ex);
+                }
+                catch (System.Security.SecurityException ex)
+                {
+                    throw new ArgumentException("Bad object contents.", "marshalled", ex);
                 }
             }
 
