@@ -49,11 +49,15 @@ namespace ObjectRemoter
 
             if ((!requiredInterface.IsInterface) || (!typeof(T).IsInterface))
             {
+                // TODO: Isn't ArgumentException more appropriate here?
+                // If so fix the unit tests as well.
                 throw new InvalidOperationException("Parameter requiredInterface and type argument T must be an interface.");
             }
 
+            // TODO: should we in fact compare typeof(T) and
+            // proxyObject.GetType() or requiredInterface?
             object proxyObject = InternalGetProxy(address, requiredInterface);
-            if (!requiredInterface.IsAssignableFrom(proxyObject.GetType()))
+            if (!typeof(T).IsAssignableFrom(proxyObject.GetType()))
             {
                 throw new ArgumentException("Required interface does not match with type argument T.", "requiredInterface");
             }
