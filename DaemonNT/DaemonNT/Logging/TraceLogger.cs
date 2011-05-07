@@ -7,7 +7,9 @@
     using DaemonNT.Configuration;
 
     /// <summary>
-    /// Poskytuje efektivni, vice-vlaknove logovani potencialne low-level informaci.
+    /// Provides a facility for efficient, thread-safe logging of
+    /// potentially low-level information designated for developers or
+    /// specialists in the problem domain.
     /// </summary>
     public sealed class TraceLogger
     {        
@@ -19,16 +21,23 @@
         { }
 
         /// <summary>
-        /// Vytvoří a inicializuje logger. Po zavolání metody je možno začít logovat. 
+        /// Creates and initializes an instance of the trace logger.
         /// </summary>
+        /// <remarks>
+        /// After calling this method it is possible to start logging.
+        /// </remarks>
         /// <param name="serviceName"></param>
         /// <param name="bufferSize"></param>
         /// <param name="isDebugMode"></param>
         /// <param name="settings"></param>
         /// <param name="eventLogger"></param>
-        /// <returns></returns>
-        internal static TraceLogger Create(string serviceName, int bufferSize, bool isDebugMode, 
-            TraceLoggerSettings settings, EventLogger eventLogger)
+        /// <returns>Initialized trace logger instance.</returns>
+        internal static TraceLogger Create(
+            string serviceName,
+            int bufferSize,
+            bool isDebugMode,
+            TraceLoggerSettings settings,
+            EventLogger eventLogger)
         {
             TraceLogger instance = new TraceLogger();
 
@@ -58,18 +67,18 @@
         }
        
         /// <summary>
-        /// Ukončí práci loggeru (zastaví příjem logů, vyprázdní buffer apod.)
+        /// Stops the trace logger.
         /// </summary>
-        /// <param name="shutdown">
-        /// Určuje, jestli došlo k vypnutí loggeru manuálně nebo při vypnutí instance
-        /// operačního systému. 
-        /// </param>
+        /// <remarks>
+        /// It stops receiving logs, clears the buffer etc.</remarks>
+        /// <param name="shutdown">Indicates whether the logger was stopped
+        /// manually or during an operating system shutdown.</param>
         internal void Close(bool shutdown)
         {
-            // ukončí příjem logů a počká na vyprázdnění bufferu
+            // stops receiving logs and waits for the buffer to be cleared
             this.loggerImpl.Stop();
 
-            // notifikuje nakonfigurované trace-logger-storages a zastavení
+            // notifies the configured trace logger storages to stop
             foreach (ILoggerStorage loggerStorage in this.storages)
             {
                 TraceLoggerStorageAdapter adapter = loggerStorage as TraceLoggerStorageAdapter;
@@ -82,16 +91,14 @@
         }
 
         /// <summary>
-        /// Vytváří a vkládá trace-log do vnitřního bufferu, ze kterého je následně přesunut do 
-        /// persistentního úložiště.
+        /// Creates a trace log record of given type and saves it into an
+        /// internal buffer. The records are later moved to a persistent
+        /// storage.
         /// </summary>
-        /// <param name="logType">
-        /// Specifikace typu logu. 
-        /// </param>
-        /// <param name="xmlContent">
-        /// Libovolný XML content, pomocí které je možno dosáhnout přizpůsobení problémové 
-        /// doméně a zaznamenávat strukturované informace.
-        /// </param>
+        /// <param name="logType">Type of the trace log record.</param>
+        /// <param name="xmlContent">Any XML content which can be customized
+        /// for the target problem domain in order to store stucured
+        /// information.</param>
         public void Log(LogType logType, string xmlContent)
         {
             TraceLog log = TraceLog.Create(logType, xmlContent);
@@ -99,80 +106,83 @@
         }
 
         /// <summary>
-        /// Vytváří a vkládá info trace-log do vnitřního bufferu, ze kterého je následně přesunut do 
-        /// persistentního úložiště.
+        /// Creates an information type trace log record and saves it into an
+        /// internal buffer. The records are later moved to a persistent
+        /// storage.
         /// </summary>
-        /// <param name="content">
-        /// Libovolný XML content, pomocí které je možno dosáhnout přizpůsobení problémové 
-        /// doméně a zaznamenávat strukturované informace.
-        /// </param>
         /// <remarks>
-        /// Metoda je thread-safe. 
+        /// The method is thread-safe.
         /// </remarks>
+        /// <param name="xmlContent">Any XML content which can be customized
+        /// for the target problem domain in order to store stucured
+        /// information.</param>
         public void LogInfo(string xmlContent)
         {
             this.Log(LogType.Info, xmlContent);          
         }
 
         /// <summary>
-        /// Vytváří a vkládá warning trace-log do vnitřního bufferu, ze kterého je následně přesunut do 
-        /// persistentního úložiště.
+        /// Creates a warning type trace log record and saves it into an
+        /// internal buffer. The records are later moved to a persistent
+        /// storage.
         /// </summary>
-        /// <param name="xmlContent">
-        /// Libovolný XML content, pomocí které je možno dosáhnout přizpůsobení problémové 
-        /// doméně a zaznamenávat strukturované informace.
-        /// </param>
+        /// <param name="xmlContent">Any XML content which can be customized
+        /// for the target problem domain in order to store stucured
+        /// information.</param>
         public void LogWarning(string xmlContent)
         {
             this.Log(LogType.Warning, xmlContent);
         }
 
         /// <summary>
-        /// Vytváří a vkládá error trace-log do vnitřního bufferu, ze kterého je následně přesunut do 
-        /// persistentního úložiště.
+        /// Creates an error type trace log record and saves it into an
+        /// internal buffer. The records are later moved to a persistent
+        /// storage.
         /// </summary>
-        /// <param name="xmlContent">
-        /// Libovolný XML content, pomocí které je možno dosáhnout přizpůsobení problémové 
-        /// doméně a zaznamenávat strukturované informace.
-        /// </param>
+        /// <param name="xmlContent">Any XML content which can be customized
+        /// for the target problem domain in order to store stucured
+        /// information.</param>
         public void LogError(string xmlContent)
         {
             this.Log(LogType.Error, xmlContent);
         }
 
         /// <summary>
-        /// Vytváří a vkládá error trace-log obsahující serializovanou Exception do vnitřního bufferu, ze 
-        /// kterého je následně přesunut do persistentního úložiště.
+        /// Creates an error type trace log record containing a serialized
+        /// exception and saves it into an internal buffer. The records are
+        /// later moved to a persistent storage.
         /// </summary>
-        /// <param name="e">Exception, která se má serializovat.</param>
-        public void LogException(Exception e)
-        {                     
-            this.Log(LogType.Error, SerializeException(e));
+        /// <param name="exception">Exception to be serialized and logged.
+        /// </param>
+        public void LogException(Exception exception)
+        {
+            this.Log(LogType.Error, SerializeException(exception));
         }
 
         /// <summary>
-        /// Serializuje danou výjimku a všechny vnitřní výjimky do XML contentu.  
+        /// Serializes the exception and all its inner exceptions into a single
+        /// XML content.
         /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        private String SerializeException(Exception e)
-        {                                          
+        /// <param name="exception">Exception to be serialized.</param>
+        /// <returns>Exception serialized into XML.</returns>
+        private String SerializeException(Exception exception)
+        {
             StringBuilder sb = new StringBuilder();
             
             // type
-            sb.Append(String.Format("<exception type=\"{0}\">", e.GetType().ToString()));
+            sb.Append(String.Format("<exception type=\"{0}\">", exception.GetType().ToString()));
 
             // message
-            if (e.Message != null)
+            if (exception.Message != null)
             {
-                sb.Append(String.Format("<message>{0}</message>", e.Message));
+                sb.Append(String.Format("<message>{0}</message>", exception.Message));
             }
            
             // data
-            if (e.Data.Count > 0)
+            if (exception.Data.Count > 0)
             {
                 sb.Append("<data>");
-                foreach (System.Collections.DictionaryEntry entry in e.Data)
+                foreach (System.Collections.DictionaryEntry entry in exception.Data)
                 {
                     String key = entry.Key.ToString();
                     String value = entry.Value.ToString();
@@ -182,12 +192,12 @@
             }
 
             // stack-trace
-            sb.Append(String.Format("<stack-trace>{0}</stack-trace>", e.StackTrace));
+            sb.Append(String.Format("<stack-trace>{0}</stack-trace>", exception.StackTrace));
 
             // inner exception
-            if (e.InnerException != null)
+            if (exception.InnerException != null)
             {
-                sb.Append(String.Format("{0}", SerializeException(e.InnerException)));               
+                sb.Append(String.Format("{0}", SerializeException(exception.InnerException)));
             }
 
             sb.Append(String.Format("</exception>"));

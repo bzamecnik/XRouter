@@ -4,7 +4,7 @@
     using System.Text;
   
     /// <summary>
-    ///  Reprezentuje jeden trace log záznam vytvořený TraceLoggerem.
+    /// Represents a single trace log record (created by the TraceLogger).
     /// </summary>
     public class TraceLog : Log
     {

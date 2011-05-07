@@ -74,7 +74,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Logging\TraceLoggerStorage.cs" />
-    <Compile Include="Logging\TraceLoggeStorageAdapter.cs" />
+    <Compile Include="Logging\TraceLoggerStorageAdapter.cs" />
     <Compile Include="OnStartServiceArgs.cs" />
     <Compile Include="OnStopServiceArgs.cs" />
     <Compile Include="Resources\Provider.cs" />

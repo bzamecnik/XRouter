@@ -7,7 +7,7 @@ using DaemonNT.Logging;
 namespace DaemonNT.Test
 {
     /// <summary>
-    /// An example trivial trace-logger-storage implementation. 
+    /// An example trivial trace logger storage implementation.
     /// It shows how to save traces into debug mode console.
     /// </summary>
     public class TestTraceLogger : TraceLoggerStorage
@@ -23,7 +23,8 @@ namespace DaemonNT.Test
 
             if (this.isDebugMode)
             {
-                Console.WriteLine(String.Format("Initialize trace-logger-storage Name={0}.", this.storageName));
+                Console.WriteLine(String.Format("Initialized trace-logger-storage Name={0}.",
+                    this.storageName));
                 Console.WriteLine(args.Settings.Parameter["x"]);
             }
         }
@@ -31,8 +32,9 @@ namespace DaemonNT.Test
         protected override void OnSaveLog(TraceLog log)
         {
             if (this.isDebugMode)
-            {                
-                Console.WriteLine(String.Format("{0}: {1}", log.DateTime.ToString("HH-mm-ss"), log.Content));
+            {
+                Console.WriteLine(String.Format("{0}: {1}",
+                    log.DateTime.ToString("HH-mm-ss"), log.Content));
             }
         }
 
@@ -40,7 +42,8 @@ namespace DaemonNT.Test
         {
             if (this.isDebugMode)
             {
-                Console.WriteLine(String.Format("Destroy trace-logger-storage Name={0}.", this.storageName));
+                Console.WriteLine(String.Format("Destroyed trace-logger-storage Name={0}.",
+                    this.storageName));
             }
         }
     }

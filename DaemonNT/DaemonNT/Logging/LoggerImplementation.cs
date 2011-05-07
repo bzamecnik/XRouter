@@ -8,7 +8,7 @@ using System.Threading;
 namespace DaemonNT.Logging
 {      
     /// <summary>
-    /// Implementace více-vláknového producents/consument logování.
+    /// Implementation of a multi-channel producer-consumer logger.
     /// </summary>
     internal sealed class LoggerImplementation           
     {       
@@ -50,7 +50,8 @@ namespace DaemonNT.Logging
                 }
             }
 
-            // notifikuje vlákno, které hostuje metodu Stop, že může pokračovat v běhu
+            // notifies the thread hosting the Stop() method that it can
+            // continue running
             this.mreStopPending.Set();
         }
 
@@ -58,7 +59,7 @@ namespace DaemonNT.Logging
         {
             this.buffer.CompleteAdding();
 
-            // čeká na dokončení práce konzumenta
+            // waits for the consumer to finish its work
             this.mreStopPending.WaitOne();
         }
     }

@@ -2,6 +2,8 @@
 {
     using System.Collections.Generic;
 
+    // TODO: should be renamed to Parameter
+
     public sealed class Param
     {
         private Dictionary<string, string> parameters = new Dictionary<string, string>();

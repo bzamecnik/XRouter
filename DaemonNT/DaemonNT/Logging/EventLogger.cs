@@ -4,8 +4,8 @@
     using System.Collections.Generic;
           
     /// <summary>
-    /// Poskytuje efektivni, vice-vlaknove logovani vyznamnych udalosti, 
-    /// ktere jsou citelne pro spravce systemu. 
+    /// Provides a facility for efficient, thread-safe logging of
+    /// important events designated for service administrators.
     /// </summary>
     public class EventLogger
     {

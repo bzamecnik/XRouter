@@ -9,11 +9,12 @@ namespace DaemonNT
     public abstract class Service
     {
         /// <summary>
-        /// Vraci DaemoNT logger, ktery umoznuje zaznamenavat udalosti a trasovani
-        /// sluzby. 
+        /// A logger providing a facility to record events and to trace
+        /// services.
         /// </summary>
         /// <remarks>
-        /// Instanci je mozno zacit pouzivat v metode OnStart().
+        /// A logger instance can be used after the OnStart() method was
+        /// called.
         /// </remarks>
         public DaemonNT.Logging.Logger Logger { internal set; get; }           
   
@@ -21,27 +22,43 @@ namespace DaemonNT
         /// Starts the service.
         /// </summary>
         /// <remarks>
-        /// OnStart() hook methods are called upon starting the service.
-        /// </remarks>    
-        internal void Start(string serviceName, bool isDebugMode, 
-            DaemonNT.Logging.Logger logger, DaemonNT.Configuration.Settings settings)
+        /// OnStart() hook methods (from this and/or derived classes) are
+        /// called upon starting the service.
+        /// </remarks>
+        /// <param name="serviceName">Service name. Must not be null.</param>
+        /// <param name="isDebugMode">Indicates whether the service should run
+        /// in debug mode (true) or as a true NT service (false).</param>
+        /// <param name="logger">Instance of logger. Must not be null.</param>
+        /// <param name="settings">Service settings. Must not be null.</param>
+        internal void Start(
+            string serviceName,
+            bool isDebugMode,
+            DaemonNT.Logging.Logger logger,
+            DaemonNT.Configuration.Settings settings)
         {
             // prepare start args
-            OnStartServiceArgs args = new OnStartServiceArgs();
-            args.ServiceName = serviceName;
-            args.IsDebugMode = isDebugMode;                      
-            args.Settings = settings;
+            OnStartServiceArgs args = new OnStartServiceArgs()
+            {
+                ServiceName = serviceName,
+                IsDebugMode = isDebugMode,
+                Settings = settings
+            };
 
             // start service
-            this.Logger.Event.LogInfo("Sluzba se spousti...");
+            this.Logger.Event.LogInfo(string.Format(
+                "The '{0}' service is being started...", args.ServiceName));
             try
             {
                 this.OnStart(args);
-                this.Logger.Event.LogInfo("Sluzba byla uspesne spustena!");    
+                this.Logger.Event.LogInfo(string.Format(
+                    "The '{0}' service has beed started successfully!",
+                    args.ServiceName));
             }
             catch (Exception e)
             {
-                this.Logger.Event.LogError("Pri startu sluzby doslo k neocekavane chybe.");
+                this.Logger.Event.LogError(string.Format(
+                    "An unexpected error occurred while starting the service: {0}",
+                    e.Message));
                 throw e;
             }                   
         }
@@ -50,25 +67,31 @@ namespace DaemonNT
         /// Stops the service.
         /// </summary>
         /// <remarks>
-        /// OnStop() hook methods are called upon stopping the service.
+        /// OnStop() hook methods (from this and/or derived classes) are
+        /// called upon stopping the service.
         /// </remarks>
-        /// <param name="shutdown">Indicates that the system is shutting down</param>
+        /// <param name="shutdown">Indicates that the system is being shut down.
+        /// </param>
         internal void Stop(bool shutdown)
         {
             // create stop args
-            OnStopServiceArgs args = new OnStopServiceArgs();
-            args.Shutdown = shutdown;
+            OnStopServiceArgs args = new OnStopServiceArgs()
+            {
+                Shutdown = shutdown
+            };
 
             // stop service
-            this.Logger.Event.LogInfo("Sluzba se zastavuje...");
+            this.Logger.Event.LogInfo("The service is being stopped...");
             try
             {
                 this.OnStop(args);
-                this.Logger.Event.LogInfo("Sluzba byla uspesne zastavena!");
+                this.Logger.Event.LogInfo("The service has been stopped successfully!");
             }
             catch (Exception e)
             {
-                this.Logger.Event.LogError("Pri zastaveni sluzby doslo k neocekavane chybe.");
+                this.Logger.Event.LogError(string.Format(
+                    "An unexpected error occurred while stopping the service: {0}",
+                    e.Message));
                 throw e;
             }
         }
@@ -76,8 +99,8 @@ namespace DaemonNT
         /// <summary>
         /// A hook method which is called just when the Service has been
         /// started. It is intended to be implemented in a derived class.
-        /// </summary>        
-        /// V odvozene tride neni nutne volat base.OnStart().
+        /// </summary>
+        /// In derived classes it is not necessary to call base.OnStart().
         /// </remarks>
         protected virtual void OnStart(OnStartServiceArgs args)
         {
@@ -89,7 +112,7 @@ namespace DaemonNT
         /// implemented in a derived class.
         /// </summary>      
         /// <remarks>
-        /// V odvozene tride neni nutne volat base.OnSop().
+        /// In derived classes it is not necessary to call base.OnSop().
         /// </remarks>
         protected virtual void OnStop(OnStopServiceArgs args)
         {

@@ -6,7 +6,7 @@ using System.Text;
 namespace DaemonNT.Logging
 {
     /// <summary>
-    /// Reprezentuje jeden event log záznam vytvořený EventLoggerem. 
+    /// Represents a single event log record (created by the EventLogger).
     /// </summary>
     internal sealed class EventLog : Log
     {    

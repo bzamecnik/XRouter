@@ -73,11 +73,15 @@
         }
 
         /// <summary>
-        /// Metoda musi byt zavolana pred vytvorenim logger teto tridy. Pro proces instalace je 
-        /// nutne dodat parametr installerSettings.
+        /// Initializes the installer.
         /// </summary>
-        /// <param name="serviceName"></param>
-        /// <param name="installerSettings">Parametr muze byt null.</param>      
+        /// <remarks>
+        /// This method must be called before creating logger for this class.
+        /// </remarks>
+        /// <param name="serviceName">Service name.</param>
+        /// <param name="installerSettings">Installer settings, can be null
+        /// in case of uninstallation but it is necessary for the installation
+        /// process</param>
         internal static void Initialize(string serviceName, InstallerSettings installerSettings)
         {
             servicename = serviceName;

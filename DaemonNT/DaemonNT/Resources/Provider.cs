@@ -5,7 +5,7 @@
     using System.Xml.Linq;
 
     /// <summary>
-    /// Poskytuje pristup k embedded resources.
+    /// Provides access to embedded resources.
     /// </summary>
     internal static class Provider
     {

@@ -3,7 +3,7 @@
     using DaemonNT.Configuration;
 
     /// <summary>
-    /// Provides a logging facility.
+    /// Provides a logging facility for services.
     /// </summary>
     /// <remarks>
     /// Two loggers are available: event logger and trace logger.   
@@ -11,30 +11,32 @@
     public sealed class Logger
     {
         /// <summary>
-        /// Obsahuje nazev sluzby, ktera loguje.
+        /// Name of service which logs into this logger.
         /// </summary>
         private string serviceName;
 
         /// <summary>
-        /// Obsahuje informaci o tom, jestli je logger pouzivan v DaemonNT
-        /// ladicim modu. 
+        /// Indicates whether the logger is used in debug mode.
         /// </summary>
         private bool isDebugMode;
 
+        // TODO: this should be configurable, not hard-coded
+
         /// <summary>
-        /// Urcuje velikost bufferu event loggeru. 
+        /// Buffer size (number of records) of the event log.
         /// </summary>
         private static readonly int EVENT_BUFFER_SIZE = 1000;
 
         /// <summary>
-        /// Poskytuje efektivní, tread-safe logování významných událostí, které jsou čitelné 
-        /// pro správce služby.
+        /// Provides a facility for efficient, thread-safe logging of
+        /// important events designated for service administrators.
         /// </summary>
         public EventLogger Event { get; private set; }
 
         /// <summary>
-        /// Poskytuje efektivní, thread-safe logování potenciálně low-level informací, které jsou 
-        /// čitelné vývojáři, odborníky dané problémové domény či adekvátním softwarem. 
+        /// Provides a facility for efficient, thread-safe logging of
+        /// potentially low-level information designated for developers or
+        /// specialists in the problem domain.
         /// </summary>
         public TraceLogger Trace { get; private set; }
 
@@ -47,6 +49,9 @@
 
             return logger;
         }
+
+        // TODO: Is it necessary to initialize trace logger separately from
+        // the Create() method?
         
         internal void CreateTraceLogger(TraceLoggerSettings settings)
         {

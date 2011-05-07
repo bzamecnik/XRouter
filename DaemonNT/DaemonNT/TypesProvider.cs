@@ -4,8 +4,10 @@
     using System.Reflection;
     using DaemonNT.Logging;
 
+    // TODO: could be renamed to TypeProvider
+
     /// <summary>
-    /// Provides dynamic loading of types and creating of their instances.
+    /// Provides dynamic loading of types and creating their instances.
     /// </summary>
     internal static class TypesProvider
     {
@@ -16,11 +18,11 @@
         /// The type must be DaemonNT.Service or a type derived from it.
         /// </remarks>
         /// <param name="typeClass">Name of the type to be instantiated</param>
-        /// <param name="typeAssembly">Path to an assembly where the type
-        /// should be located</param>
-        /// <returns>The created instance of the type.</returns>
+        /// <param name="typeAssembly">Path to the assembly where the type
+        /// should be located.</param>
+        /// <returns>Created instance of the service.</returns>
         /// <exception cref="InvalidOperationException">
-        /// If the type cannot be created.
+        /// If the instance cannot be created.
         /// </exception>
         /// <see cref="DaemonNT.Service"/>
         public static Service CreateService(string typeClass, string typeAssembly)
@@ -30,28 +32,42 @@
             Service service = instance as Service;
             if (service == null)
             {
-                throw new InvalidOperationException(
-                    string.Format("Type '{0}' is not a service implementation.", typeClass));
+                throw new InvalidOperationException(string.Format(
+                    "Type '{0}' is not a service implementation.", typeClass));
             }
 
             return service;
         }
 
         /// <summary>
-        /// Creates an instance of given trace-logger-storage type from given assembly.
+        /// Creates an instance of given trace logger storage type from given
+        /// assembly.
         /// </summary>
-        /// <param name="typeClass"></param>
-        /// <param name="typeAssembly"></param>
-        /// <returns></returns>
-        public static TraceLoggerStorage CreateTraceLoggerStorage(string typeClass, string typeAssembly)
+        /// <remarks>
+        /// The type must be DaemonNT.TraceLoggerStorage or a type derived
+        /// from it.
+        /// </remarks>
+        /// <param name="typeClass">Type of trace logger storage
+        /// implementation.</param>
+        /// <param name="typeAssembly">Path to the assembly where the type
+        /// should be located.</param>
+        /// <returns>Created instance of the trace logger storage.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// If the instance cannot be created.
+        /// </exception>
+        /// <see cref="TraceLoggerStorage"/>
+        public static TraceLoggerStorage CreateTraceLoggerStorage(
+            string typeClass,
+            string typeAssembly)
         {
             object instance = CreateTypeInstance(typeClass, typeAssembly);
 
             TraceLoggerStorage storage = instance as TraceLoggerStorage;
             if (storage == null)
             {
-                throw new InvalidOperationException(
-                    string.Format("Type '{0}' is not a trace-logger-storage implementation.", typeClass));
+                throw new InvalidOperationException(string.Format(
+                    "Type '{0}' is not a trace logger storage implementation.",
+                    typeClass));
             }
 
             return storage;
@@ -60,9 +76,10 @@
         /// <summary>
         /// Creates an instance of given type from given assembly.
         /// </summary>
-        /// <param name="typeClass">Name of the type to be instantiated</param>
-        /// <param name="typeAssembly">Path to an assembly where the type
-        /// should be located</param>
+        /// <param name="typeClass">Name of the type to be instantiated.
+        /// </param>
+        /// <param name="typeAssembly">Path to the assembly where the type
+        /// should be located.</param>
         /// <returns>The created instance of the type.</returns>
         /// <exception cref="InvalidOperationException">
         /// If the type cannot be created.

@@ -9,17 +9,21 @@
     using SchemaTron;
 
     /// <summary>
-    /// Poskytuje pristup ke konfiguraci.    
+    /// Provides service configuration.
     /// </summary>
     internal static class ConfigProvider
     {
+        // TODO: do not hard-code it, make it configurable
         private static readonly string DEFAULT_CONFIG_FILE_NAME = "DaemonNT.xml";
 
         /// <summary>
-        /// Ze vstupniho XML souboru a dane service-name vraci jeji nastaveni jako objekt. 
+        /// Loads the configuration for the specified service from an XML file
+        /// and provides it in an object-model form.
         /// </summary>
-        /// <param name="serviceName"></param>
-        /// <returns></returns>
+        /// <param name="serviceName">Service name</param>
+        /// <returns>Service configuration converted to an object model.
+        /// </returns>
+        /// <exception cref="InvalidOperationException" />
         public static ServiceSettings LoadServiceSetting(string serviceName)
         {
             string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DEFAULT_CONFIG_FILE_NAME);
@@ -40,9 +44,14 @@
         }
 
         /// <summary>
-        /// Provede validaci vstupniho XML souboru.        
+        /// Validates the input XML service configuration file.
         /// </summary>
-        /// <param name="xConfig"></param>
+        /// <remarks>
+        /// If the file is invalid it throws an InvalidOperationException,
+        /// otherwise return nothing.
+        /// </remarks>
+        /// <param name="xConfig">XML service configuration file</param>
+        /// <exception cref="InvalidOperationException"
         private static void Validation(XDocument xConfig)
         {
             XDocument xSchema = Resources.Provider.LoadConfigSchema();

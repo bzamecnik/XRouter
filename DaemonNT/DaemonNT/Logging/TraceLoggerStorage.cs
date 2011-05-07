@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 
 namespace DaemonNT.Logging
-{   
+{
     /// <summary>
-    /// Provides an abstract class for a DaemonNT trace-logger-storage that will exist as
-    /// part of a service logger.
+    /// Provides an abstract class for a DaemonNT trace logger storage that
+    /// will exist as part of a service logger.
     /// </summary>
     public abstract class TraceLoggerStorage
     {
         /// <summary>
-        /// Poskytuje efektivní, tread-safe logování významných událostí, které jsou 
-        /// čitelné pro správce služby.
+        /// Provides a facility for efficient, thread-safe logging of
+        /// important events designated for service administrators.
         /// </summary>
         public EventLogger Event { internal set; get; }
 

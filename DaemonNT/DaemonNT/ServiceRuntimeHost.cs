@@ -16,12 +16,16 @@
 
         private ServiceSettings serviceSettings;
 
+        // TODO: rename to something more meaningful
+        // (like StoppedAtSystemShutdown or so)
+
         /// <summary>
-        /// Urcuje, jestli byla sluzba zastavena manualne nebo pri vypnuti instance operacniho 
-        /// systemu. 
+        /// Indicates whether the service was stopped manually or during an
+        /// operating system shutdown.
         /// </summary>
         /// <remarks>
-        /// Vlastnost nabyva spravne hodnoty az po provedeni operace OnStop nebo OnShutdown. 
+        /// The value of this property is ready after one of the OnStop() or
+        /// OnShutdown() methods finished.
         /// </remarks>
         internal bool Shutdown { private set; get; }
 

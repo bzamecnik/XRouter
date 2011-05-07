@@ -66,10 +66,11 @@
         }
 
         /// <summary>
-        /// Vraci aktualni nazev log souboru. 
+        /// Produces the current log file name.
         /// </summary>
-        /// <param name="logDateTime">DateTime kdy bylo skutecne zalogovano.</param>
-        /// <returns></returns>
+        /// <param name="logDateTime">Date and time when the record was logged.
+        /// </param>
+        /// <returns>Log file name.</returns>
         private string GetFileName(DateTime logDateTime)
         {
             string fileName = this.lastLoggedFileName;
