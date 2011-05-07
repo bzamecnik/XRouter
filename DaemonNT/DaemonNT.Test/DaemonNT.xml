@@ -8,12 +8,12 @@
       <account value="LocalSystem"></account>         
     </installer>
     
-    <setting>   
+    <settings>   
      <!-- specifikace nastaveni timeru, interval je cele cislo v milisekundach -->
      <section name="timer">
        <param name="interval">1000</param> 
      </section>                    
-   </setting>
+   </settings>
 
   </service>
 
