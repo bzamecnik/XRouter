@@ -50,7 +50,8 @@
                 try
                 {
                     serviceHost.Start();
-                    Console.WriteLine(string.Format("Press enter to stop service {0}...", serviceName));
+                    Console.WriteLine("Press ENTER or CRTL+C to stop the '{0}' service ...", serviceName);
+                    Console.CancelKeyPress += (sender, e) => serviceHost.Stop();
                     Console.ReadLine();
                     serviceHost.Stop();
                 }
