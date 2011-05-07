@@ -63,10 +63,11 @@
 
         public override void Install(IDictionary stateSaver)
         {
-            // prida parametry prikazove radky za assemblypath tak, aby se pomoci DaemonNT.exe spustila sprava sluzba
-            // TODO: use string.Format()
-            string assemblyPath = Context.Parameters["assemblypath"];
-            assemblyPath = string.Concat("\"", assemblyPath, "\"", " run ", this.serviceInstaller.ServiceName);
+            // add command line parameters to run the desired service:
+            //   DaemonNT.exe run SERVICE_NAME
+            string assemblyPath = string.Format("\"{0}\" run {1}",
+                Context.Parameters["assemblypath"],
+                this.serviceInstaller.ServiceName);
             Context.Parameters["assemblypath"] = assemblyPath;
 
             base.Install(stateSaver);
