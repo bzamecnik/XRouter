@@ -1,3 +1,4 @@
+
 #ignore thumbnails created by windows
 Thumbs.db
 
@@ -30,3 +31,5 @@ _ReSharper*/
 *.vs10x
 
 StyleCop.Cache
+*.orig
+*.vsp
