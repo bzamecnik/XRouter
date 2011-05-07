@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("SchemaTron")]
 [assembly: AssemblyDescription("The native ISO Schematron validator over XPath 1.0 query language binding.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MFF UK")]
+[assembly: AssemblyCompany("The XRouter Team")]
 [assembly: AssemblyProduct("SchemaTron")]
 [assembly: AssemblyCopyright("Copyright © Sobeslav Benda 2011")]
 [assembly: AssemblyTrademark("")]

@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SchXsltValidator")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A XSLT-based Schematron validator.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SchXsltValidator")]
-[assembly: AssemblyCopyright("Copyright ©  2011")]
+[assembly: AssemblyCompany("The XRouter Team")]
+[assembly: AssemblyProduct("Schematron.XsltValidator")]
+[assembly: AssemblyCopyright("Copyright © The XRouter Team 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

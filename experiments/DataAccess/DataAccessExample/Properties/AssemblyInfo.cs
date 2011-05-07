@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DBAccessConsole")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("JBS")]
+[assembly: AssemblyCompany("The XRouter Team")]
 [assembly: AssemblyProduct("DBAccessConsole")]
-[assembly: AssemblyCopyright("Copyright © JBS 2011")]
+[assembly: AssemblyCopyright("Copyright © The XRouter Team 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
