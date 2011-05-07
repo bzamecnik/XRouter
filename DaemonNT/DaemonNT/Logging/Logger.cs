@@ -6,7 +6,7 @@
     /// Provides a logging facility for services.
     /// </summary>
     /// <remarks>
-    /// Two loggers are available: event logger and trace logger.   
+    /// Two loggers are available: event logger and trace logger.
     /// </remarks>
     public sealed class Logger
     {
@@ -45,28 +45,28 @@
             Logger logger = new Logger();
             logger.serviceName = serviceName;
             logger.isDebugMode = isDebugMode;
-            logger.Event = EventLogger.Create(serviceName, EVENT_BUFFER_SIZE);            
+            logger.Event = EventLogger.Create(serviceName, EVENT_BUFFER_SIZE);
 
             return logger;
         }
 
         // TODO: Is it necessary to initialize trace logger separately from
         // the Create() method?
-        
+
         internal void CreateTraceLogger(TraceLoggerSettings settings)
         {
-            this.Trace = TraceLogger.Create(serviceName, settings.BufferSize, 
+            this.Trace = TraceLogger.Create(serviceName, settings.BufferSize,
                 this.isDebugMode, settings, this.Event);
         }
 
         internal void Close(bool shutdown)
-        {           
+        {
             if (this.Trace != null)
             {
                 this.Trace.Close(shutdown);
             }
 
             this.Event.Close();
-        }       
+        }
     }
 }

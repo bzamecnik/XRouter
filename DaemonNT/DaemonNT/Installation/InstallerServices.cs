@@ -5,7 +5,7 @@
     using System.Reflection;
 
     /// <summary>
-    /// Poskytuje implementaci operaci pro instalaci/uninstalaci služeb. 
+    /// Poskytuje implementaci operaci pro instalaci/uninstalaci služeb.
     /// </summary>
     internal static class InstallerServices
     {
@@ -13,10 +13,10 @@
         {
             // specifikuje command line arguments pro InstallUtil
             List<string> args = new List<string>();
-            args.Add("/LogToConsole=false");       
-            args.Add(string.Format("/LogFile={0}.Installer.log", serviceName));            
-            args.Add(Assembly.GetExecutingAssembly().Location); 
-          
+            args.Add("/LogToConsole=false");
+            args.Add(string.Format("/LogFile={0}.Installer.log", serviceName));
+            args.Add(Assembly.GetExecutingAssembly().Location);
+
             // provede proces instalaci, vygeneruje log file
             System.Configuration.Install.ManagedInstallerClass.InstallHelper(args.ToArray());
 
@@ -35,10 +35,10 @@
             args.Add("/u");
             args.Add("/LogToConsole=false");
             args.Add(string.Format("/LogFile={0}.Installer.log", serviceName));
-            args.Add(Assembly.GetExecutingAssembly().Location);        
-    
+            args.Add(Assembly.GetExecutingAssembly().Location);
+
             // provede proces uninstalace, vygeneruje log file
             System.Configuration.Install.ManagedInstallerClass.InstallHelper(args.ToArray());
-        }       
+        }
     }
 }

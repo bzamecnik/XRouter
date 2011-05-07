@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <schema xmlns="http://purl.oclc.org/dsdl/schematron">
   <title>Specification of the DaemonNT configuration file (DaemonNT.xml) schema.</title>
-  
+
   <pattern id="root">
     <rule context="/">
       <assert test="config">Only 'config' can be used as the root element.</assert>
     </rule>
   </pattern>
 
-  <pattern id="config">   
+  <pattern id="config">
     <let name="context" value="/config"/>
     <rule context="$context">
       <assert test="count(service)>0">
@@ -52,7 +52,7 @@
     <rule context="$context/@name">
       <assert test="string-length(normalize-space(.))>0">
         The '<name/>' attribute must contain a non-empty string.
-      </assert>  
+      </assert>
       <assert test="not(normalize-space(.)=normalize-space(../preceding-sibling::service/@name))">
         The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
       </assert>
@@ -88,7 +88,7 @@
       </assert>
     </rule>
     <rule context="$context/storage">
-      <assert test="true()"/>      
+      <assert test="true()"/>
     </rule>
     <rule context="$context/*">
       <assert test="false()">
@@ -113,7 +113,7 @@
     <rule context="$context/@type">
       <assert test="string-length(normalize-space(.))>0">
         The '<name/>' attribute must contain a non-empty string.
-      </assert>    
+      </assert>
     </rule>
     <rule context="$context/@name">
       <assert test="string-length(normalize-space(.))>0">
@@ -132,7 +132,7 @@
       </assert>
     </rule>
   </pattern>
-  
+
   <pattern id="installer">
     <let name="context" value="/config/service/installer"/>
     <rule context="$context">

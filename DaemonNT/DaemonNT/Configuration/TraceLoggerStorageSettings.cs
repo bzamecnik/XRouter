@@ -9,7 +9,7 @@ namespace DaemonNT.Configuration
     {
         public TraceLoggerStorageSettings()
         { }
-        
+
         public String Name { set; get; }
 
         public string TypeClass { get; set; }

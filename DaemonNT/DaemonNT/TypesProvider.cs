@@ -85,7 +85,7 @@
         /// If the type cannot be created.
         /// </exception>
         private static object CreateTypeInstance(string typeClass, string typeAssembly)
-        {        
+        {
             Assembly assembly = Assembly.LoadFrom(typeAssembly);
 
             object instance = assembly.CreateInstance(typeClass);

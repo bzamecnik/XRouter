@@ -25,20 +25,20 @@
         /// <param name="serviceName">Service name</param>
         public static void CommandDebug(string serviceName)
         {
-            Logger logger = null;            
+            Logger logger = null;
             try
             {
                 // create event logger
                 logger = Logger.Create(serviceName, true);
-                
-                // load settings and initialize constructs                
+
+                // load settings and initialize constructs
                 ServiceDebugHost serviceHost = null;
                 try
                 {
                     ServiceSettings serviceSettings = ConfigProvider.LoadServiceSetting(serviceName);
                     logger.CreateTraceLogger(serviceSettings.TraceLoggerSettings);
                     Service service = TypesProvider.CreateService(serviceSettings.TypeClass, serviceSettings.TypeAssembly);
-                    serviceHost = new ServiceDebugHost(service, serviceName, serviceSettings, logger);                                                            
+                    serviceHost = new ServiceDebugHost(service, serviceName, serviceSettings, logger);
                 }
                 catch (Exception e)
                 {
@@ -89,8 +89,8 @@
             {
                 // create logger
                 logger = Logger.Create(serviceName, false);
-           
-                // load settings and initialize constructs 
+
+                // load settings and initialize constructs
                 ServiceRuntimeHost serviceHost = null;
                 try
                 {
@@ -176,7 +176,7 @@
                 Console.WriteLine("Error: {0} The log file is located at {1}.Installer.log.", e.Message, serviceName);
             }
         }
-        
+
         public static void Main(string[] args)
         {
             // TODO: Lepe poresit parametry prikazove radky (az bude definitivne jiste,

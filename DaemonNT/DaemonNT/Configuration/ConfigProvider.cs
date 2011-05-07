@@ -93,11 +93,11 @@
             // service.setting
             XElement xSettings = xService.XPathSelectElement("./settings");
             result.Settings = DeserializeSettings(xSettings);
-            
+
             // service.installer
             XElement xInstaller = xService.XPathSelectElement("./installer");
             result.InstallerSettings = DeserializeInstallerSettings(xInstaller);
-            
+
             // service.trace-logger
             XElement xTraceLogger = xService.XPathSelectElement("./trace-logger");
             result.TraceLoggerSettings = DeserializeTraceLoggerSettings(xTraceLogger);
@@ -169,7 +169,7 @@
 
             return result;
         }
-       
+
         private static TraceLoggerSettings DeserializeTraceLoggerSettings(XElement xTraceLogger)
         {
             TraceLoggerSettings result = new TraceLoggerSettings();
@@ -193,14 +193,14 @@
 
                 // @name
                 traceLogger.Name = xStorage.Attribute(XName.Get("name")).Value;
-                
+
                 // @type
                 string className;
                 string assemblyName;
                 DeserializeType(xStorage, out className, out assemblyName);
                 traceLogger.TypeClass = className;
                 traceLogger.TypeAssembly = assemblyName;
-                
+
                 // settings
                 XElement xSettings = xStorage.XPathSelectElement("./settings");
                 traceLogger.Settings = DeserializeSettings(xSettings);

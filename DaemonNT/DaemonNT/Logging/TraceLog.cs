@@ -2,7 +2,7 @@
 {
     using System;
     using System.Text;
-  
+
     /// <summary>
     /// Represents a single trace log record (created by the TraceLogger).
     /// </summary>
@@ -38,7 +38,7 @@
         private string SerializeToStr()
         {
             StringBuilder sb = new StringBuilder();
-            
+
             String logTypeStr = null;
             switch (this.LogType)
             {
@@ -50,12 +50,12 @@
                     break;
                 case LogType.Error:
                     logTypeStr = "E";
-                    break;         
+                    break;
                 default:
                     throw new ArgumentException(String.Format("Unsupported log type: {0}", logTypeStr));
             }
 
-            sb.Append("<log");           
+            sb.Append("<log");
             sb.Append(string.Format(" date-time=\"{0}\"", this.DateTime.ToString("yyyy-MM-ddTHH:mm:ss.ff")));
             sb.Append(string.Format(" type=\"{0}\"", logTypeStr));
             sb.Append(string.Format(" thread-id=\"{0}\"", this.ThreadId));

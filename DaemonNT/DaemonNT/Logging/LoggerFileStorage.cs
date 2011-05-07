@@ -86,6 +86,6 @@
         public void SaveLog(Log log)
         {
             this.Save(log.DateTime, log.ToString());
-        }        
+        }
     }
 }

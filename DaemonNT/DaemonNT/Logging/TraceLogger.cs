@@ -12,7 +12,7 @@
     /// specialists in the problem domain.
     /// </summary>
     public sealed class TraceLogger
-    {        
+    {
         private LoggerImplementation loggerImpl = null;
 
         private ILoggerStorage[] storages = null;
@@ -42,17 +42,18 @@
             TraceLogger instance = new TraceLogger();
 
             List<ILoggerStorage> storages = new List<ILoggerStorage>();
-            
+
             // add standard storage
             storages.Add(new LoggerFileStorage(string.Format("{0}.Trace", serviceName)));
-            
+
             // add configured storages
             foreach (TraceLoggerStorageSettings traceLoggerSettings in settings.Storages)
             {
                 // create and initialize storage
-                TraceLoggerStorage storage = TypesProvider.CreateTraceLoggerStorage(traceLoggerSettings.TypeClass, traceLoggerSettings.TypeAssembly);
-                storage.Event = eventLogger; 
-               
+                TraceLoggerStorage storage = TypesProvider.CreateTraceLoggerStorage(
+                    traceLoggerSettings.TypeClass, traceLoggerSettings.TypeAssembly);
+                storage.Event = eventLogger;
+
                 // create adapter and start storage
                 TraceLoggerStorageAdapter storageWrapper = new TraceLoggerStorageAdapter(storage);
                 storageWrapper.Start(traceLoggerSettings.Name, isDebugMode, traceLoggerSettings.Settings);
@@ -65,7 +66,7 @@
 
             return instance;
         }
-       
+
         /// <summary>
         /// Stops the trace logger.
         /// </summary>
@@ -84,7 +85,7 @@
                 TraceLoggerStorageAdapter adapter = loggerStorage as TraceLoggerStorageAdapter;
 
                 if (adapter != null)
-                {                    
+                {
                     adapter.Stop(shutdown);
                 }
             }
@@ -102,7 +103,7 @@
         public void Log(LogType logType, string xmlContent)
         {
             TraceLog log = TraceLog.Create(logType, xmlContent);
-            this.loggerImpl.PushLog(log);  
+            this.loggerImpl.PushLog(log);
         }
 
         /// <summary>
@@ -118,7 +119,7 @@
         /// information.</param>
         public void LogInfo(string xmlContent)
         {
-            this.Log(LogType.Info, xmlContent);          
+            this.Log(LogType.Info, xmlContent);
         }
 
         /// <summary>
@@ -168,7 +169,7 @@
         private String SerializeException(Exception exception)
         {
             StringBuilder sb = new StringBuilder();
-            
+
             // type
             sb.Append(String.Format("<exception type=\"{0}\">", exception.GetType().ToString()));
 
@@ -177,7 +178,7 @@
             {
                 sb.Append(String.Format("<message>{0}</message>", exception.Message));
             }
-           
+
             // data
             if (exception.Data.Count > 0)
             {
@@ -201,7 +202,7 @@
             }
 
             sb.Append(String.Format("</exception>"));
-            
+
             return sb.ToString();
         }
     }

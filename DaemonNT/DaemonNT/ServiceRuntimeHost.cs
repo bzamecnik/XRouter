@@ -29,14 +29,14 @@
         /// </remarks>
         internal bool Shutdown { private set; get; }
 
-        public ServiceRuntimeHost(Service service, string serviceName, 
+        public ServiceRuntimeHost(Service service, string serviceName,
             ServiceSettings serviceSettings, Logger logger)
         {
             this.service = service;
             this.service.Logger = logger;
             this.logger = logger;
             this.serviceSettings = serviceSettings;
-                                      
+
             // set Microsoft service base properties
             this.ServiceName = serviceName;
             this.AutoLog = true;
@@ -48,8 +48,9 @@
         }
 
         protected override void OnStart(string[] args)
-        {            
-            this.service.Start(this.ServiceName, false, this.logger, this.serviceSettings.Settings);
+        {
+            this.service.Start(this.ServiceName, false, this.logger,
+                this.serviceSettings.Settings);
         }
 
         protected override void OnStop()

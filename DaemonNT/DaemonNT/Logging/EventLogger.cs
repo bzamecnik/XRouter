@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-          
+
     /// <summary>
     /// Provides a facility for efficient, thread-safe logging of
     /// important events designated for service administrators.
@@ -10,14 +10,14 @@
     public class EventLogger
     {
         private LoggerImplementation loggerImpl = null;
-       
+
         private EventLogger()
         { }
 
         internal static EventLogger Create(String serviceName, Int32 bufferSize)
         {
-            EventLogger instance = new EventLogger(); 
-                      
+            EventLogger instance = new EventLogger();
+
             // create storages
             List<ILoggerStorage> storages = new List<ILoggerStorage>();
             storages.Add(new LoggerFileStorage(serviceName));
@@ -27,16 +27,16 @@
 
             return instance;
         }
-      
+
         internal void Close()
         {
             this.loggerImpl.Stop();
         }
- 
+
         public void Log(LogType logType, string message)
         {
             EventLog log = EventLog.Create(logType, message);
-            this.loggerImpl.PushLog(log);            
+            this.loggerImpl.PushLog(log);
         }
 
         public void LogInfo(string message)
@@ -52,6 +52,6 @@
         public void LogError(string message)
         {
             this.Log(LogType.Error, message);
-        }        
+        }
     }
 }

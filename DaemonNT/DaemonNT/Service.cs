@@ -16,8 +16,8 @@ namespace DaemonNT
         /// A logger instance can be used after the OnStart() method was
         /// called.
         /// </remarks>
-        public DaemonNT.Logging.Logger Logger { internal set; get; }           
-  
+        public DaemonNT.Logging.Logger Logger { internal set; get; }
+
         /// <summary>
         /// Starts the service.
         /// </summary>
@@ -60,7 +60,7 @@ namespace DaemonNT
                     "An unexpected error occurred while starting the service: {0}",
                     e.Message));
                 throw e;
-            }                   
+            }
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace DaemonNT
         /// A hook method which is called before the service is stopped
         /// (manually or due to a system shutdown). It is intended to be
         /// implemented in a derived class.
-        /// </summary>      
+        /// </summary>
         /// <remarks>
         /// In derived classes it is not necessary to call base.OnSop().
         /// </remarks>
