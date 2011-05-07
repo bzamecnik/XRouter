@@ -38,6 +38,13 @@ namespace XRouter.Broker
             }
         }
 
+        public ApplicationConfiguration GetConfiguration(XmlReduction reduction)
+        {
+            ApplicationConfiguration config = GetConfiguration();
+            ApplicationConfiguration result = config.GetReducedConfiguration(reduction);
+            return result;
+        }
+
         public ApplicationConfiguration GetConfiguration()
         {
             XDocument configXml = storage.GetConfigXml();
@@ -78,14 +85,18 @@ namespace XRouter.Broker
             });
         }
 
-        public void FinishToken(Guid tokenGuid)
+        public void FinishToken(Guid tokenGuid, SerializableXDocument resultMessage)
         {
-            storage.UpdateToken(tokenGuid, delegate(Token token) {
-                token.State = TokenState.Finished;
+            Token token = storage.GetToken(tokenGuid);
+            GatewayAccessor sourceGateway = componentsAccessors.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == token.GatewayName);
+            sourceGateway.ReceiveReturn(tokenGuid, resultMessage);
+
+            storage.UpdateToken(tokenGuid, delegate(Token t) {
+                t.State = TokenState.Finished;
             });
         }
 
-        public SerializableXDocument SendMessageToOutputEndPoint(EndPointAddress address, SerializableXDocument message)
+        public SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message)
         {
             ComponentAccessor component;
             if (componentsAccessors.TryGetValue(address.GatewayName, out component)) {

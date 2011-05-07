@@ -80,7 +80,7 @@ namespace XRouter.Common
             return result;
         }
 
-        private XElement GetComponentConfiguration(string componentName)
+        public XElement GetComponentConfiguration(string componentName)
         {
             XElement result = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format("/configuration/components/gateway[@name='{0}']", componentName));
             if (result != null) { return result; }

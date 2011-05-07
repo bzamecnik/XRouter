@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--Cely XML soubor bude soucasti Content v Tokenu-->
+<token gatewayName="" timeout="" state="InProcessor">
+  <metaData resultMessageName="abc">
+    <!--Cas prijeti
+		Adresa prijeti
+		Kam odeslat odpoved
+		ID zpravy ktera je vystupni-->
+    <inputEndpointAddress gateway="" adapter="" endpoint=""/>
+    <inputAdapterVariables>
+      <variable name="" value="" />
+    </inputAdapterVariables>
+  </metaData>
+  
+  <workFlowState version="1" assignedProcessor="proc1" lastResponseFromProcessor="1.1.2000">
+    <currentNodes>
+      <!-- Uzly, v ktorych sa nachadza spracovanie wf -->
+      <node id="123" />
+    </currentNodes>
+    <processorData>
+    </processorData>
+    <!--nejaka data z workflow-->
+    <varibles>
+      <variable name="" value="" />
+    </varibles>
+  </workFlowState>
+  
+  <messages>
+    <Message name="guid">prvni zprava</Message>
+    <Message name="abc">dalsi zprava</Message>
+  </messages>
+</token>

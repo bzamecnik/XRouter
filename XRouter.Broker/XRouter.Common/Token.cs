@@ -4,29 +4,106 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using System.Globalization;
 
 namespace XRouter.Common
 {
+    //! Token je vytvařen na adapteru, ktery zada prvni msg a inputEndpoit, doplni specificke metadata (pres property)
+    // GW doplni ostatni obecna metadata
+
+    // V metadatech pridat adresu input endpoint, tri casti -> serializovat do stringu ( nastavi GW )
+
     [Serializable]
     public class Token
     {
         public Guid Guid { get; private set; }
 
-        public SerializableXDocument Content { get; set; }
+        public SerializableXDocument Content { get; private set; }
 
-        public WorkflowState WorkflowState { get; set; }
+        public WorkflowState WorkFlowState
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public string GatewayName
+        {
+            get
+            {
+                return GetTokenAttribute("gatewayName");
+            }
+            set
+            {
+                SetTokenAttribute("gatewayName", value);
+            }
+        }
+
+        public string ResultMessageName
+        {
+            get
+            {
+                return GetMetedataAttribute("resultMessageName");
+            }
+            set
+            {
+                SetMetedataAttribute("resultMessageName", value);
+            }
+        }
 
         public TokenState State
         {
             get
             {
                 TokenState result;
-                Enum.TryParse<TokenState>(GetCommonMetadata("state"), out result);
+                Enum.TryParse<TokenState>(GetTokenAttribute("state"), out result);
                 return result;
             }
             set
             {
-                SetCommonMetadata("state", value.ToString());
+                SetTokenAttribute("state", value.ToString());
+            }
+        }
+
+        public WorkflowState WorkflowState
+        {
+            get
+            {
+                throw new NotImplementedException(); // Vytahnout z XML content
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+
+        public DateTime Timeout
+        {
+            get
+            {
+                return DateTime.Parse(GetTokenAttribute("timeout"), CultureInfo.InvariantCulture);
+            }
+            set
+            {
+                SetTokenAttribute("timeout", value.ToString(CultureInfo.InvariantCulture));
+            }
+        }
+
+        public EndpointAddress SourceAddress
+        {
+            get
+            {
+                throw new NotImplementedException(); // Vytahnout z XML content
+            }
+            set
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -35,19 +112,20 @@ namespace XRouter.Common
             Guid = Guid.NewGuid();
             Content = new SerializableXDocument(XDocument.Parse(@"
 <token>
-    <metadata>
-        <common>
-        </common>
-    </metdata>
-    <messages>
-    </messages>
+  <metaData>
+  </metaData>
+  <workFlowState>
+    <currentNodes>
+    </currentNodes>
+    <processorData>
+    </processorData>
+    <varibles>
+    </varibles>
+  </workFlowState>
+  <messages>
+  </messages>
 </token>
-"));
-            WorkflowState = new WorkflowState();
-        }
-
-        public void AddMessage(XDocument message)
-        {
+                "));
         }
 
         public Token Clone()
@@ -55,29 +133,74 @@ namespace XRouter.Common
             Token result = new Token();
             result.Guid = Guid;
             result.Content = Content;
-
             return result;
         }
 
-        private string GetCommonMetadata(string name)
+        public void SetInputAdapterVariable(string name, string value)
         {
-            XElement element = ((XDocument)Content).XPathSelectElement(string.Format("/token/metadata/common/value[@name='{0}']", name));
-            if (element != null) {
-                return element.Value;
+            throw new NotImplementedException();
+        }
+
+        public string GetInputAdapterVariable(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddMessage(XDocument message)
+        {
+            AddMessage(message, Guid.NewGuid().ToString());
+        }
+
+        public void AddMessage(XDocument message, string name)
+        {
+            var messagesElement = Content.XDocument.XPathSelectElement("token/messages");
+            XElement messageElement = new XElement(XName.Get("message"), message);
+            messageElement.SetAttributeValue(XName.Get("name"), name);
+        }
+
+        public void SetResaultMessageName(string resultMessageName)
+        {
+            SetMetedataAttribute("resultMessageName", resultMessageName);
+        }
+
+        public string GetResultMessage()
+        {
+            string resultMessageName = ResultMessageName;
+            if (resultMessageName != null) {
+                var messageElement = GetMessage(resultMessageName).Elements().FirstOrDefault();
+                if (messageElement != null) {
+                    return messageElement.ToString();
+                } else {
+                    return null;
+                }
             } else {
-                return string.Empty;
+                return null;
             }
         }
 
-        private void SetCommonMetadata(string name, string value)
+        public XElement GetMessage(string name)
         {
-            XElement commonMetadata = ((XDocument)Content).XPathSelectElement(string.Format("/token/metadata/common", name));
-            XElement element = commonMetadata.XPathSelectElement(string.Format("value[@name='{0}']", name));
-            if (element == null) {
-                element = new XElement(XName.Get("value"));
-                commonMetadata.Add(element);
-            }
-            element.SetAttributeValue(XName.Get(name), value);
+            throw new NotImplementedException();
+        }
+
+        private string GetMetedataAttribute(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SetMetedataAttribute(string name, string value)
+        {
+            throw new NotImplementedException();
+        }
+
+        private string GetTokenAttribute(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SetTokenAttribute(string name, string value)
+        {
+            throw new NotImplementedException();
         }
     }
 }

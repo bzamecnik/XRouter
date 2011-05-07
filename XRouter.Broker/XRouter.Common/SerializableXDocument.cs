@@ -33,5 +33,10 @@ namespace XRouter.Common
             string xml = XDocument.ToString();
             info.AddValue("xml", xml);
         }
+
+        public override string ToString()
+        {
+            return XDocument.ToString();
+        }
     }
 }

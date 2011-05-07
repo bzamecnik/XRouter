@@ -5,15 +5,20 @@ using System.Text;
 
 namespace XRouter.Common
 {
-    public class EndPointAddress
+    public class EndpointAddress
     {
-        public string GatewayName { get; private set; }
+        public string GatewayName { get; set; }
 
         public string AdapterName { get; private set; }
 
         public string EndPointName { get; private set; }
 
-        public EndPointAddress(string gatewayName, string adapterName, string endpointName)
+        public EndpointAddress(string adapterName, string endpointName)
+            : this(null, adapterName, endpointName)
+        {
+        }
+
+        public EndpointAddress(string gatewayName, string adapterName, string endpointName)
         {
             GatewayName = gatewayName;
             AdapterName = adapterName;
@@ -27,7 +32,7 @@ namespace XRouter.Common
 
         public override bool Equals(object obj)
         {
-            if (obj is EndPointAddress) {
+            if (obj is EndpointAddress) {
                 return obj.ToString() == ToString();
             }
             return false;

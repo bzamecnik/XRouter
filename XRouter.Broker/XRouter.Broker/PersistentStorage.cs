@@ -21,6 +21,10 @@ namespace XRouter.Broker
 <configuration>
     <components>
         <gateway name='gateway1'>
+            <adapters>
+                <adapter name='' type=''>
+                </adapter>
+            </adapeters>
         </gateway>
         <processor name='processor1'>
         </processor>
@@ -68,6 +72,12 @@ namespace XRouter.Broker
                 Token token = InternalTokens.First(t => t.Guid == tokenGuid);
                 updater(token);
             }
+        }
+
+        public Token GetToken(Guid tokenGuid)
+        {
+            Token token = InternalTokens.First(t => t.Guid == tokenGuid);
+            return token;
         }
 
         public Token[] GetReceivedTokens()

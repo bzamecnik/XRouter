@@ -13,11 +13,17 @@ namespace XRouter.Broker
         {
         }
 
-        public SerializableXDocument SendMessageToOutputEndPoint(EndPointAddress address, SerializableXDocument message)
+        public SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message)
         {
             IGatewayService gateway = GetComponent<IGatewayService>();
             SerializableXDocument result = gateway.SendMessageToOutputEndPoint(address, message);
             return result;
+        }
+
+        public void ReceiveReturn(Guid tokenGuid, SerializableXDocument resultMessage)
+        {
+            IGatewayService gateway = GetComponent<IGatewayService>();
+            gateway.ReceiveReturn(tokenGuid, resultMessage);
         }
     }
 }

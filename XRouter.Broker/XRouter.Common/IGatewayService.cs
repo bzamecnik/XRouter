@@ -7,6 +7,8 @@ namespace XRouter.Common
 {
     public interface IGatewayService : IComponentService
     {
-        SerializableXDocument SendMessageToOutputEndPoint(EndPointAddress address, SerializableXDocument message);
+        void ReceiveReturn(Guid tokenGuid, SerializableXDocument resultMessage);
+
+        SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message);
     }
 }

@@ -17,9 +17,9 @@ namespace XRouter.Broker
         void AddMessageToToken(Guid tokenGuid, SerializableXDocument message);
 
         /// change token state, not workflow state
-        void FinishToken(Guid tokenGuid);
+        void FinishToken(Guid tokenGuid, SerializableXDocument resultMessage);
 
         // NOTE: synchronous
-        SerializableXDocument SendMessageToOutputEndPoint(EndPointAddress address, SerializableXDocument message);
+        SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message);
     }
 }

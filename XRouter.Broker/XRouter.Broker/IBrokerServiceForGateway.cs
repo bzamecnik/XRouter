@@ -8,7 +8,7 @@ using XRouter.Common;
 namespace XRouter.Broker
 {
     // methods to be called by a gateway
-    public interface IBrokerServiceForGateway : IRemotelyReferable
+    public interface IBrokerServiceForGateway : IBrokerServiceForComponent
     {
         // - pass token from gateway to broker
         // - notify dispatcher
