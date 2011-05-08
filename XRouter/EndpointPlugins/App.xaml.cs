@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 
-namespace XRouter.EndpointsPlugins
+namespace XRouter.EndpointPlugins
 {
     /// <summary>
     /// Interaction logic for App.xaml

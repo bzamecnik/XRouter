@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Console.XRM", "XRou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Data", "XRouter\Data\XRouter.Data.csproj", "{873A6405-E524-4D55-B0F0-B125DE17655B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.EndpointsPlugins", "XRouter\EndpointsPlugins\XRouter.EndpointsPlugins.csproj", "{A4518F6C-4860-4D4C-9DF6-15C4318F9C74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.EndpointPlugins", "XRouter\EndpointPlugins\XRouter.EndpointPlugins.csproj", "{A4518F6C-4860-4D4C-9DF6-15C4318F9C74}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Gateway", "XRouter\Gateway\XRouter.Gateway.csproj", "{67A83368-80F1-467D-950A-64DD5F1EAD6C}"
 EndProject
@@ -38,7 +38,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Test.Integration", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Broker.Test", "XRouter\Broker\Test\XRouter.Broker.Test.csproj", "{3A9D1023-3868-4C2A-AACD-9D749FD04C79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.EndpointsPlugins.Test", "XRouter\EndpointsPlugins\Test\XRouter.EndpointsPlugins.Test.csproj", "{6F3C917B-E777-4BE9-9C2B-3DA9C81419A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.EndpointPlugins.Test", "XRouter\EndpointPlugins\Test\XRouter.EndpointPlugins.Test.csproj", "{6F3C917B-E777-4BE9-9C2B-3DA9C81419A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Gateway.Test", "XRouter\Gateway\Test\XRouter.Gateway.Test.csproj", "{9615DBE6-10D2-4679-AE37-F982E90430C9}"
 EndProject

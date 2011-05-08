@@ -8,8 +8,8 @@
     <ProjectGuid>{6F3C917B-E777-4BE9-9C2B-3DA9C81419A3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XRouter.EndpointsPlugins.Test</RootNamespace>
-    <AssemblyName>XRouter.EndpointsPlugins.Test</AssemblyName>
+    <RootNamespace>XRouter.EndpointPlugins.Test</RootNamespace>
+    <AssemblyName>XRouter.EndpointPlugins.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,9 +43,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XRouter.EndpointsPlugins.csproj">
+    <ProjectReference Include="..\XRouter.EndpointPlugins.csproj">
       <Project>{A4518F6C-4860-4D4C-9DF6-15C4318F9C74}</Project>
-      <Name>XRouter.EndpointsPlugins</Name>
+      <Name>XRouter.EndpointPlugins</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
