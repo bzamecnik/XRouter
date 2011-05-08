@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
-using System.IO;
+using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace XRouter.Data
 {
@@ -32,39 +34,38 @@ namespace XRouter.Data
                 IPAddress, instance, DBName, login, password);
         }
 
-        #region Public methods - interface IDataProvider
+        #region Public methods - interface IDataAccess
 
-        public List<XmlDocument> GetAllMessages()
+        public List<XDocument> GetAllMessages()
         {
-            List<XmlDocument> messages = new List<XmlDocument>();
+            List<XDocument> messages = new List<XDocument>();
 
-            SqlDataReader sqlDataReader = ExecuteProcedure("GetAllMessages", new SQLParameter[] { });
-            while (sqlDataReader.Read())
+            Response response = ExecuteProcedure("GetAllMessages", new SqlParameter[] { });
+            while (response.sqlDataReader.Read())
             {
-                XmlDocument xml = new XmlDocument();
-                xml.LoadXml(sqlDataReader[0].ToString());
+                XDocument xml = XDocument.Parse(response.sqlDataReader[0].ToString());
 
                 messages.Add(xml);
             }
-            sqlDataReader.Close();
+            response.Close();
 
             return messages;
         }
 
-        public XmlDocument GetMessage(int messageId)
+        public XDocument GetMessage(int messageID)
         {
-            XmlDocument message = new XmlDocument();
+            XDocument message = new XDocument();
 
-            SqlDataReader sqlDataReader = ExecuteProcedure("GetMessage",
-                new SQLParameter[]
+            Response response = ExecuteProcedure("GetMessage",
+                new SqlParameter[]
                 {
-                    new SQLParameter("MessageID", messageId)
+                    new SqlParameter("MessageID", messageID)
                 });
-            if (sqlDataReader.Read())
+            if (response.sqlDataReader.Read())
             {
-                message.LoadXml(sqlDataReader[0].ToString());
+                message = XDocument.Parse(response.sqlDataReader[0].ToString());
             }
-            sqlDataReader.Close();
+            response.Close();
 
             return message;
         }
@@ -81,12 +82,12 @@ namespace XRouter.Data
             }
 
             ExecuteProcedure("UpdateComponentConfigInterests",
-                new SQLParameter[]
+                new SqlParameter[]
                 {
-                    new SQLParameter("ComponentName", componentName),
-                    new SQLParameter("Interests", interestsString),
-                    new SQLParameter("Separator", separator)
-                });
+                    new SqlParameter("ComponentName", componentName),
+                    new SqlParameter("Interests", interestsString),
+                    new SqlParameter("Separator", separator)
+                }).Close();
         }
 
         public IEnumerable<string> GetComponentConfigInterests(string componentName)
@@ -98,41 +99,41 @@ namespace XRouter.Data
                     " @ComponentName='{0}'",
                     componentName
                 );
-            SqlDataReader sqlDataReader = ExecuteProcedure("GetComponentConfigInterests",
-                new SQLParameter[]
+            Response response = ExecuteProcedure("GetComponentConfigInterests",
+                new SqlParameter[]
                 {
-                    new SQLParameter("ComponentName", componentName)
+                    new SqlParameter("ComponentName", componentName)
                 });
-            while (sqlDataReader.Read())
+            while (response.sqlDataReader.Read())
             {
-                string interest = sqlDataReader[0].ToString();
+                string interest = response.sqlDataReader[0].ToString();
 
                 interests.Add(interest);
             }
-            sqlDataReader.Close();
+            response.Close();
 
             return interests;
         }
 
-        public void SaveConfig(XmlDocument config)
+        public void SaveConfig(XDocument config)
         {
             ExecuteProcedure("SaveConfig",
-                new SQLParameter[]
+                new SqlParameter[]
                 {
-                    new SQLParameter("Config", GetXMLString(config))
-                });
+                    new SqlParameter("Config", GetXMLString(config))
+                }).Close();
         }
 
-        public XmlDocument GetConfig()
+        public XDocument GetConfig()
         {
-            XmlDocument config = new XmlDocument();
+            XDocument config = new XDocument();
 
-            SqlDataReader sqlDataReader = ExecuteProcedure("GetConfig", new SQLParameter[] { });
-            if (sqlDataReader.Read())
+            Response response = ExecuteProcedure("GetConfig", new SqlParameter[] { });
+            if (response.sqlDataReader.Read())
             {
-                config.LoadXml(sqlDataReader[0].ToString());
+                config = XDocument.Parse(response.sqlDataReader[0].ToString());
             }
-            sqlDataReader.Close();
+            response.Close();
 
             return config;
         }
@@ -149,116 +150,101 @@ namespace XRouter.Data
             }
 
             ExecuteProcedure("RegisterComponent",
-                new SQLParameter[]
+                new SqlParameter[]
                 {
-                    new SQLParameter("ComponentName", name),
-                    new SQLParameter("Interests", interestsString),
-                    new SQLParameter("Separator", separator),
-                    new SQLParameter("Address", address)
-                });
+                    new SqlParameter("ComponentName", name),
+                    new SqlParameter("Interests", interestsString),
+                    new SqlParameter("Separator", separator),
+                    new SqlParameter("Address", address)
+                }).Close();
         }
 
         public void UnregisterComponent(string name)
         {
             ExecuteProcedure("UnregisterComponent",
-                new SQLParameter[]
+                new SqlParameter[]
                 {
-                    new SQLParameter("ComponentName", name)
-                });
+                    new SqlParameter("ComponentName", name)
+                }).Close();
         }
 
-        public int SaveMessage(DateTime created, XmlDocument content, string source)
+        public int SaveMessage(DateTime created, XDocument content, string source)
         {
             int messageID = -1;
 
-            SqlDataReader sqlDataReader = ExecuteProcedure("SaveMessage",
-                new SQLParameter[]
+            Response response = ExecuteProcedure("SaveMessage",
+                new SqlParameter[]
                 {
-                    new SQLParameter("Created", created),
-                    new SQLParameter("Content", GetXMLString(content)),
-                    new SQLParameter("EndpointName", source)
+                    new SqlParameter("Created", created),
+                    new SqlParameter("Content", GetXMLString(content)),
+                    new SqlParameter("EndpointName", source)
                 });
-            if (sqlDataReader.Read())
+            if (response.sqlDataReader.Read())
             {
-                messageID = Int32.Parse(sqlDataReader[0].ToString());
+                messageID = Int32.Parse(response.sqlDataReader[0].ToString());
             }
-            sqlDataReader.Close();
+            response.Close();
 
             return messageID;
         }
 
-        public void SaveToken(int id, string componentName, DateTime created, XmlDocument content, TokenState state)
+        public void SaveToken(int id, string componentName, DateTime created, XDocument content, TokenState state)
         {
             ExecuteProcedure("SaveToken",
-                new SQLParameter[]
+                new SqlParameter[]
                 {
-                    new SQLParameter("MessagesID", id),
-                    new SQLParameter("ComponentName", componentName),
-                    new SQLParameter("Created", created),
-                    new SQLParameter("Token", GetXMLString(content)),
-                    new SQLParameter("TokenStatesID", (int)state)
-                });
+                    new SqlParameter("MessagesID", id),
+                    new SqlParameter("ComponentName", componentName),
+                    new SqlParameter("Created", created),
+                    new SqlParameter("Token", GetXMLString(content)),
+                    new SqlParameter("TokenStatesID", (int)state)
+                }).Close();
         }
+
 
         public void SaveLog(string componentName, DateTime created, int category, string message)
         {
             ExecuteProcedure("SaveLog",
-                new SQLParameter[]
+                new SqlParameter[]
                 {
-                    new SQLParameter("ComponentName", componentName),
-                    new SQLParameter("Created", created),
-                    new SQLParameter("LogType", category),
-                    new SQLParameter("LogMessage", message)
-                });
+                    new SqlParameter("ComponentName", componentName),
+                    new SqlParameter("Created", created),
+                    new SqlParameter("LogType", category),
+                    new SqlParameter("LogMessage", message)
+                }).Close();
         }
 
-        public void SaveErrorAndLog(string componentName, DateTime created, XmlDocument errorContent, string logMessage)
+        public void SaveErrorAndLog(string componentName, DateTime created, XDocument errorContent, string logMessage)
         {
             ExecuteProcedure("SaveErrorAndLog",
-                new SQLParameter[]
+                new SqlParameter[]
                 {
-                    new SQLParameter("ComponentName", componentName),
-                    new SQLParameter("Created", created),
-                    new SQLParameter("ErrorContent", GetXMLString(errorContent)),
-                    new SQLParameter("LogMessage", logMessage)
-                });
+                    new SqlParameter("ComponentName", componentName),
+                    new SqlParameter("Created", created),
+                    new SqlParameter("ErrorContent", GetXMLString(errorContent)),
+                    new SqlParameter("LogMessage", logMessage)
+                }).Close();
         }
 
         #endregion
 
-        private SqlConnection GetConnection()
+        private Response ExecuteProcedure(string procedure, SqlParameter[] parameters)
         {
-            //Will use SQL Server Connection Pooling -> effective for repeated use
-            SqlConnection DB = new SqlConnection();
-            DB.ConnectionString = ConnectionString;
-            DB.Open();
-
-            return DB;
-        }
-
-        private SqlDataReader ExecuteProcedure(string procedure, SQLParameter[] parameters)
-        {
-            string parameterstring = "";
-            bool isFirst = true;
-            foreach (SQLParameter parameter in parameters)
+            SqlDataReader sqlDataReader;
+            SqlConnection sqlConnection = new SqlConnection();
+            sqlConnection.ConnectionString = ConnectionString;
+            sqlConnection.Open();
+            SqlCommand sqlCommand = sqlConnection.CreateCommand();
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+            sqlCommand.CommandText = "executable." + procedure;
+            foreach (SqlParameter parameter in parameters)
             {
-                if (!isFirst)
-                {
-                    parameterstring += ", ";
-                }
-                isFirst = false;
-                parameterstring += "@" + parameter.name + "=";
-                parameterstring += "'" + parameter.value + "'";
+                sqlCommand.Parameters.Add(parameter);
             }
 
-            SqlDataReader sqlDataReader;
             try
             {
-                SqlConnection DB = GetConnection();
-                SqlCommand sqlCommand = DB.CreateCommand();
-                sqlCommand.CommandText = String.Format("EXECUTE executable.{0} {1}", procedure, parameterstring);
                 sqlDataReader = sqlCommand.ExecuteReader();
-
             }
             catch (Exception)
             {
@@ -266,27 +252,36 @@ namespace XRouter.Data
                 sqlDataReader = null;
             }
 
-            return sqlDataReader;
+            return new Response(sqlConnection, sqlDataReader);
         }
 
-        private string GetXMLString(XmlDocument xml)
+        private string GetXMLString(XDocument xml)
         {
-            StringWriter stringWriter = new StringWriter();
-            xml.WriteTo(new XmlTextWriter(stringWriter));
-
-            return stringWriter.ToString();
-        }
-
-        private class SQLParameter
-        {
-            public SQLParameter(string name, object value)
+            StringBuilder sb = new StringBuilder();
+            using (XmlWriter xw = XmlWriter.Create(sb))
             {
-                this.name = name;
-                this.value = value.ToString().Replace("'", "''");
+                xml.WriteTo(xw);
             }
 
-            public string name { get; private set; }
-            public string value { get; private set; }
+            return sb.ToString();
+        }
+
+        private class Response
+        {
+            public Response(SqlConnection sqlConnection, SqlDataReader sqlDataReader)
+            {
+                this.sqlConnection = sqlConnection;
+                this.sqlDataReader = sqlDataReader;
+            }
+
+            public void Close()
+            {
+                sqlDataReader.Close();
+                sqlConnection.Close();
+            }
+
+            private SqlConnection sqlConnection;
+            public SqlDataReader sqlDataReader { get; private set; }
         }
     }
 }

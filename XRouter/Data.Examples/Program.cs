@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using XRouter.Data;
 
 namespace DataAccessExample
@@ -10,12 +11,12 @@ namespace DataAccessExample
     {
         static void Main(string[] args)
         {
-            MsSqlDataAccess dataAccess = new MsSqlDataAccess();
+            IDataAccess dataAccess = new MsSqlDataAccess();
 
             /* all messages retrieval test */
             Console.WriteLine("Stored messages:");
-            List<XmlDocument> messages = dataAccess.GetAllMessages();
-            foreach (XmlDocument xml in messages)
+            List<XDocument> messages = dataAccess.GetAllMessages();
+            foreach (XDocument xml in messages)
             {
                 WriteXML(xml);
             }
@@ -24,7 +25,7 @@ namespace DataAccessExample
             /* message retrieval test */
             int messageId = 5;
             Console.WriteLine("Message with ID {0}:", messageId);
-            XmlDocument message = dataAccess.GetMessage(messageId);
+            XDocument message = dataAccess.GetMessage(messageId);
             WriteXML(message);
             Console.WriteLine();
 
@@ -42,25 +43,21 @@ namespace DataAccessExample
             }
             Console.WriteLine();
 
-            /* Save config */
-            XmlDocument config = new XmlDocument();
-            config.LoadXml("<conf><a>test</a><b>nic'</b></conf>");
+            /* Safe config test */
+            XDocument config = XDocument.Parse("<conf><a>test</a><b>nic'</b></conf>");
             dataAccess.SaveConfig(config);
             WriteXML(dataAccess.GetConfig());
 
             /* Save message and tokens */
-            XmlDocument msg = new XmlDocument();
-            msg.LoadXml("<msg><a>t''est</a>zprava<b>nic'</b></msg>");
+            XDocument msg = XDocument.Parse("<msg><a>t''est</a>zprava<b>nic'</b></msg>");
             int msgID = dataAccess.SaveMessage(DateTime.Now, msg, "TestPoint");
             Console.WriteLine("New message ID: {0}", msgID);
-            XmlDocument token = new XmlDocument();
-            token.LoadXml("<token>nejaka data<msg><a>t''est</a>zprava<b>nic'</b></msg></token>");
+            XDocument token = XDocument.Parse("<token>nejaka data<msg><a>t''est</a>zprava<b>nic'</b></msg></token>");
             dataAccess.SaveToken(msgID, componentName, DateTime.Now, token, TokenState.Received);
 
             /* Save logs / errors */
             dataAccess.SaveLog(componentName, DateTime.Now, 2, "pokusny log");
-            XmlDocument error = new XmlDocument();
-            error.LoadXml("<error>nejaka chyba</error>");
+            XDocument error = XDocument.Parse("<error>nejaka chyba</error>");
             dataAccess.SaveErrorAndLog(componentName, DateTime.Now, error, "pokusny error");
 
             //press any key..
@@ -69,11 +66,19 @@ namespace DataAccessExample
             Console.ReadLine();
         }
 
-        static void WriteXML(XmlDocument xml)
+        static void WriteXML(XDocument xml)
         {
-            StringWriter stringWriter = new StringWriter();
-            xml.WriteTo(new XmlTextWriter(stringWriter));
-            Console.WriteLine(stringWriter.ToString());
+            StringBuilder sb = new StringBuilder();
+            XmlWriterSettings xws = new XmlWriterSettings();
+            xws.OmitXmlDeclaration = true;
+            xws.Indent = true;
+
+            using (XmlWriter xw = XmlWriter.Create(sb, xws))
+            {
+                xml.WriteTo(xw);
+            }
+
+            Console.WriteLine(sb.ToString());
         }
     }
 }
