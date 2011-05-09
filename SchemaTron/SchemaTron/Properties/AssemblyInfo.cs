@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("The XRouter Team")]
 [assembly: AssemblyProduct("SchemaTron")]
-[assembly: AssemblyCopyright("Copyright © Sobeslav Benda 2011")]
+[assembly: AssemblyCopyright("Copyright © The XRouter Team 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
