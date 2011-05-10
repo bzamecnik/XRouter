@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ServiceProcess;
 
     /// <summary>
     /// Provides a console program to run various DaemonNT commands.
@@ -63,6 +64,19 @@
                     case "uninstall":
                         commands.Uninstall(serviceName);
                         break;
+                    case "status":
+                        Console.WriteLine("Service status: {0}",
+                            commands.GetStatus(serviceName));
+                        break;
+                    case "start":
+                        commands.Start(serviceName);
+                        break;
+                    case "stop":
+                        commands.Stop(serviceName);
+                        break;
+                    case "restart":
+                        commands.Restart(serviceName);
+                        break;
                     default:
                         PrintUsage();
                         return;
@@ -78,7 +92,8 @@
         private static void PrintUsage()
         {
             Console.WriteLine("Usage: DaemonNT.exe [options] COMMAND SERVICE_NAME");
-            Console.WriteLine("Available commands are: run, debug, install, uninstall.");
+            Console.WriteLine("Available commands: debug, run, install, uninstall, start, stop, restart, status.");
+            Console.WriteLine("The 'run' command is indended only for the OS's service runner.");
             Console.WriteLine("Options:");
             Console.WriteLine("  --config-file=CONFIG_FILE - path to configuration file");
         }

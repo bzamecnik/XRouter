@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceProcess;
 using System.Text;
 using DaemonNT.Configuration;
 using DaemonNT.Installation;
@@ -83,6 +84,8 @@ namespace DaemonNT
         /// </summary>
         /// <remarks>
         /// It calls the operating system to start the service.
+        /// This method is intended to be called by the operating system's
+        /// service runner, not by user!
         /// </remarks>
         /// <param name="serviceName">Service name</param>
         public void Run(string serviceName)
@@ -179,6 +182,103 @@ namespace DaemonNT
             {
                 Console.WriteLine("Error: {0} The log file is located at {1}.Installer.log.", e.Message, serviceName);
             }
+        }
+
+        /// <summary>
+        /// Starts an installed service.
+        /// </summary>
+        /// <remarks>
+        /// This method is intended to be called by a user process (unlike the
+        /// Run() method.
+        /// </remarks>
+        /// <param name="serviceName">Service name</param>
+        public void Start(string serviceName)
+        {
+            WorkWithServiceController(serviceName,
+                (sc) =>
+                {
+                    sc.Start();
+                    return null;
+                },
+                "Cannot start service {0}: {1}");
+        }
+
+        /// <summary>
+        /// Restarts an installed service.
+        /// </summary>
+        /// <remarks>
+        /// This method is intended to be called by a user process (unlike the
+        /// Run() method.
+        /// </remarks>
+        /// <param name="serviceName">Service name</param>
+        public void Restart(string serviceName)
+        {
+            WorkWithServiceController(serviceName,
+                (sc) =>
+                {
+                    sc.Stop();
+                    sc.Start();
+                    return null;
+                },
+                "Cannot restart service {0}: {1}");
+        }
+
+        /// <summary>
+        /// Stops an installed service.
+        /// </summary>
+        /// <remarks>
+        /// This method is intended to be called by a user process (unlike the
+        /// Run() method.
+        /// </remarks>
+        /// <param name="serviceName">Service name</param>
+        public void Stop(string serviceName)
+        {
+            WorkWithServiceController(serviceName,
+                (sc) =>
+                {
+                    sc.Stop();
+                    return null;
+                },
+                "Cannot stop service {0}: {1}");
+        }
+
+        /// <summary>
+        /// Queries for the service status (running, stopped, etc.).
+        /// </summary>
+        /// <param name="serviceName">Service name</param>
+        public string GetStatus(string serviceName)
+        {
+            string status = (string)WorkWithServiceController(serviceName,
+                (sc) =>
+                {
+                    return sc.Status.ToString();
+                },
+                "Cannot determine status of service {0}: {1}");
+            if (status == null)
+            {
+                status = string.Empty;
+            }
+            return status;
+        }
+
+        private object WorkWithServiceController(string serviceName, Func<ServiceController, object> action, string errorMessage)
+        {
+            try
+            {
+                using (ServiceController sc = new ServiceController(serviceName))
+                {
+                    return action(sc);
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.Error.WriteLine(errorMessage, serviceName, ex.Message);
+            }
+            catch (System.ComponentModel.Win32Exception ex)
+            {
+                Console.Error.WriteLine(errorMessage, serviceName, ex.Message);
+            }
+            return null;
         }
     }
 }
