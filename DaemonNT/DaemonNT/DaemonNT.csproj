@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ServiceCommands.cs" />
     <Compile Include="Configuration\ConfigProvider.cs" />
     <Compile Include="Configuration\InstallerSettings.cs" />
     <Compile Include="Configuration\TraceLoggerSettings.cs" />

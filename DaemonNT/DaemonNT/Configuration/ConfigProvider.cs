@@ -13,29 +13,51 @@
     /// </summary>
     internal static class ConfigProvider
     {
-        // TODO: do not hard-code it, make it configurable
-        private static readonly string DEFAULT_CONFIG_FILE_NAME = "DaemonNT.xml";
+        // NOTE: this constant can be public, eg. so that it can be displayed
+        // within a help message
+        public static readonly string DEFAULT_CONFIG_FILE_NAME = "DaemonNT.xml";
 
         /// <summary>
-        /// Loads the configuration for the specified service from an XML file
-        /// and provides it in an object-model form.
+        /// Loads the configuration for the specified service from a default
+        /// XML configuration file and provides it in an object-model form.
         /// </summary>
+        /// <remarks>
+        /// The default file is searched in the current working directory.
+        /// </remarks>
         /// <param name="serviceName">Service name</param>
         /// <returns>Service configuration converted to an object model.
         /// </returns>
         /// <exception cref="InvalidOperationException" />
-        public static ServiceSettings LoadServiceSetting(string serviceName)
+        public static ServiceSettings LoadServiceSettings(string serviceName)
         {
-            string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DEFAULT_CONFIG_FILE_NAME);
-            XDocument xConfig = XDocument.Load(configPath, LoadOptions.SetLineInfo);
+            return LoadServiceSettings(serviceName, null);
+        }
 
-            Validation(xConfig);
+        /// <summary>
+        /// Loads the configuration for the specified service from a specified
+        /// XML configuration file and provides it in an object-model form.
+        /// </summary>
+        /// <param name="serviceName">Service name.</param>
+        /// <param name="configFile">Configuration file path (relative or
+        /// absolute).</param>
+        /// <returns>Service configuration converted to an object model.
+        /// </returns>
+        /// <exception cref="InvalidOperationException" />
+        public static ServiceSettings LoadServiceSettings(string serviceName, string configFile)
+        {
+            if (string.IsNullOrEmpty(configFile))
+            {
+                configFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DEFAULT_CONFIG_FILE_NAME);
+            }
+            XDocument xConfig = XDocument.Load(configFile, LoadOptions.SetLineInfo);
+
+            Validation(xConfig, configFile);
 
             // service
             XElement xService = xConfig.XPathSelectElement(string.Format("/config/service[@name='{0}']", serviceName));
             if (xService == null)
             {
-                throw new InvalidOperationException(string.Format("The supplied service.name='{0}' is not specified in {1}.", serviceName, DEFAULT_CONFIG_FILE_NAME));
+                throw new InvalidOperationException(string.Format("The supplied service.name='{0}' is not specified in {1}.", serviceName, configFile));
             }
 
             ServiceSettings serviceSetting = DeserializeServiceSettings(xService);
@@ -52,7 +74,7 @@
         /// </remarks>
         /// <param name="xConfig">XML service configuration file</param>
         /// <exception cref="InvalidOperationException"
-        private static void Validation(XDocument xConfig)
+        private static void Validation(XDocument xConfig, string configFile)
         {
             XDocument xSchema = Resources.Provider.LoadConfigSchema();
 
@@ -64,7 +86,7 @@
             {
                 // create report
                 StringBuilder sb = new StringBuilder();
-                sb.Append(string.Format("{0} is invalid. ", DEFAULT_CONFIG_FILE_NAME));
+                sb.Append(string.Format("{0} is invalid. ", configFile));
                 int i = 1;
                 foreach (AssertionInfo info in results.ViolatedAssertions)
                 {
@@ -217,6 +239,15 @@
             assemblyName = null;
 
             string type = xElement.Attribute(XName.Get("type")).Value;
+
+            // TODO:
+            // - class name and assembly name shouldn't be squashed into a
+            //   single XML attribute: <service type="FooType, FooAssembly.dll" />
+            //   - instead an element inside <service> with two attributes
+            //     could be used:
+            // <service>
+            //   <type class="FooType" assembly="FooAssembly.dll" />
+            // </service
 
             // resolve type value
             string[] tokens = type.Split(',');
