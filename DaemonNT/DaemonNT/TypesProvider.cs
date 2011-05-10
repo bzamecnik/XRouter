@@ -1,6 +1,7 @@
 ﻿namespace DaemonNT
 {
     using System;
+    using System.IO;
     using System.Reflection;
     using DaemonNT.Logging;
 
@@ -86,10 +87,18 @@
         /// </exception>
         private static object CreateTypeInstance(string typeClass, string typeAssembly)
         {
-            // TODO:
-            // These methods can throw a lot of exceptions. Should they be
-            // wrapped into InvalidOperationException?
-            Assembly assembly = Assembly.LoadFrom(typeAssembly);
+            string assemblyPath = typeAssembly;
+            // If the path is not absolute, add current working directory,
+            // otherwise the assembly might be searched for in a bad place
+            // (such as C:\windows\system32).
+            if (!Path.IsPathRooted(assemblyPath))
+            {
+                assemblyPath = Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    assemblyPath);
+            }
+
+            Assembly assembly = Assembly.LoadFrom(assemblyPath);
 
             object instance = assembly.CreateInstance(typeClass);
             if (instance == null)
