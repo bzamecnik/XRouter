@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    // TODO: should be renamed to Parameter
+    // TODO: should be renamed to Parameters
 
     public sealed class Param
     {

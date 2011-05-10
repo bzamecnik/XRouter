@@ -86,6 +86,9 @@
         /// </exception>
         private static object CreateTypeInstance(string typeClass, string typeAssembly)
         {
+            // TODO:
+            // These methods can throw a lot of exceptions. Should they be
+            // wrapped into InvalidOperationException?
             Assembly assembly = Assembly.LoadFrom(typeAssembly);
 
             object instance = assembly.CreateInstance(typeClass);

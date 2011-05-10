@@ -8,6 +8,9 @@
 
         private Param parameter = new Param();
 
+        // TODO: Rename to Parameters as it contains a dictionary of parameters
+        // not a single one. This is very confusing!
+
         public Param Parameter
         {
             get { return this.parameter; }
