@@ -33,13 +33,19 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\Lib\ThirdParty\xUnit-1.8\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigProviderTest.cs" />
+    <Compile Include="ServiceHostingTest.cs" />
     <Compile Include="TestService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestTraceLogger.cs" />
@@ -55,8 +61,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DaemonNT.xml" />
+    <Content Include="ConfigProviderFiles\ConfigWithASingleEmptyService.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ConfigProviderFiles\GoodFullConfigSingleService.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DaemonNT.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

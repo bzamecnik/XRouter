@@ -1,0 +1,42 @@
+<config>
+
+  <service name="FooService"
+    type="DaemonNT.FooService, ..\..\..\DaemonNT.Test\bin\Debug\DaemonNT.FooService.dll">
+
+    <settings>
+      <section name="Section1">
+        <section name="InnerSection">
+          <param name="InnerSectionParam">Service.3</param>
+        </section>
+        <param name="Section1Param">Service.2</param>
+      </section>
+      <param name="SettingsParam">Service.1</param>
+    </settings>
+
+    <installer>
+      <description>Service description</description>
+      <start-type value="Automatic"/>
+      <account value="User">
+        <username>User name</username>
+        <password>Password</password>
+      </account>
+      <depended-on>Service1,Service2,Service3</depended-on>
+    </installer>
+
+    <trace-logger buffer-size="1024">
+      <storage name="TraceLoggerStorage" type="DaemonNT.FooStorage, FooStorage.dll">
+        <settings>
+          <section name="Section1">
+            <section name="InnerSection">
+              <param name="InnerSectionParam">TraceLoggerStorage.3</param>
+            </section>
+            <param name="Section1Param">TraceLoggerStorage.2</param>
+          </section>
+          <param name="SettingsParam">TraceLoggerStorage.1</param>
+        </settings>
+      </storage>
+    </trace-logger>
+
+  </service>
+
+</config>
