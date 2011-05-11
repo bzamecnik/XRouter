@@ -261,14 +261,53 @@ namespace DaemonNT
             return status;
         }
 
-        private object WorkWithServiceController(string serviceName, Func<ServiceController, object> action, string errorMessage)
+        /// <summary>
+        /// Perform an action with a new service controller, taking care
+        /// of the exceptions.
+        /// </summary>
+        /// <param name="serviceName">Service name</param>
+        /// <param name="action">Action to be performed</param>
+        /// <param name="errorMessage">Error message template (formattable by
+        /// strinf.Format(). {0} is replaced by serviceName, {1} by the error
+        /// message.</param>
+        /// <returns>The result of the action, can be null for void action.
+        /// </returns>
+        private object WorkWithServiceController(
+            string serviceName,
+            Func<ServiceController, object> action,
+            string errorMessage)
+        {
+            using (ServiceController sc = new ServiceController(serviceName))
+            {
+                return WorkWithServiceController(sc, serviceName, action, errorMessage);
+            }
+        }
+
+        /// <summary>
+        /// Perform an action with an existing service controller, taking care
+        /// of the exceptions.
+        /// </summary>
+        /// <remarks>
+        /// Disposing of the provided service controller is the responsibility
+        /// of the called of this method.
+        /// </remarks>
+        /// <param name="sc">Existing ServiceController instance</param>
+        /// <param name="serviceName">Service name</param>
+        /// <param name="action">Action to be performed</param>
+        /// <param name="errorMessage">Error message template (formattable by
+        /// strinf.Format(). {0} is replaced by serviceName, {1} by the error
+        /// message.</param>
+        /// <returns>The result of the action, can be null for void action.
+        /// </returns>
+        private object WorkWithServiceController(
+            ServiceController sc,
+            string serviceName,
+            Func<ServiceController, object> action,
+            string errorMessage)
         {
             try
             {
-                using (ServiceController sc = new ServiceController(serviceName))
-                {
-                    return action(sc);
-                }
+                return action(sc);
             }
             catch (InvalidOperationException ex)
             {
