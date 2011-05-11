@@ -2,17 +2,15 @@
 {
     using System.Collections.Generic;
 
-    // TODO: should be renamed to Parameters
-
     /// <summary>
     /// Represents a set of key-value parameters within a single section of
     /// settings.
     /// </summary>
-    public sealed class Param
+    public sealed class Parameters
     {
         private Dictionary<string, string> parameters = new Dictionary<string, string>();
 
-        internal Param()
+        internal Parameters()
         {
         }
 

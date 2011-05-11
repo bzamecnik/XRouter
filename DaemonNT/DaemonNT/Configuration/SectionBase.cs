@@ -4,23 +4,18 @@
 
     public abstract class SectionBase
     {
-        private Dictionary<string, Section> sections = new Dictionary<string, Section>();
+        private Dictionary<string, Sections> sections = new Dictionary<string, Sections>();
 
-        private Param parameter = new Param();
-
-        // TODO: Rename to Parameters as it contains a dictionary of parameters
-        // not a single one. This is very confusing!
+        private Parameters parameters = new Parameters();
 
         /// <summary>
         /// A set of key-value-pair parameters in the current section.
         /// </summary>
         /// <remarks>It is never null.</remarks>
-        public Param Parameter
+        public Parameters Parameters
         {
-            get { return this.parameter; }
+            get { return this.parameters; }
         }
-
-        // TODO: rename to Sections for less confusion
 
         /// <summary>
         /// Gets or sets a section specified by its name (key).
@@ -33,11 +28,11 @@
         /// <param name="name">Name of the section.</param>
         /// <returns>Section with the specified name or null if such a section
         /// is not present.</returns>
-        public Section this[string name]
+        public Sections this[string name]
         {
             get
             {
-                Section result = null;
+                Sections result = null;
                 this.sections.TryGetValue(name, out result);
                 return result;
             }

@@ -25,7 +25,7 @@ namespace DaemonNT.Test
             {
                 Console.WriteLine(String.Format("Initialized trace-logger-storage Name={0}.",
                     this.storageName));
-                Console.WriteLine(args.Settings.Parameter["x"]);
+                Console.WriteLine(args.Settings.Parameters["x"]);
             }
         }
 

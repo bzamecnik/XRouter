@@ -259,6 +259,7 @@
             else if (tokens.Length == 1)
             {
                 className = tokens[0].Trim();
+                // NOTE: assemblyName is null!
             }
             else
             {
@@ -280,33 +281,33 @@
                 XElement xElement = (XElement)node;
                 if (xElement.Name == "section")
                 {
-                    Section section = new Section();
+                    Sections section = new Sections();
                     settings[xElement.Attribute(XName.Get("name")).Value] = section;
                     DeserializeSection(section, xElement);
                 }
                 else
                 {
-                    settings.Parameter[xElement.Attribute(XName.Get("name")).Value] = xElement.Value;
+                    settings.Parameters[xElement.Attribute(XName.Get("name")).Value] = xElement.Value;
                 }
             }
 
             return settings;
         }
 
-        private static void DeserializeSection(Section section, XElement xElement)
+        private static void DeserializeSection(Sections section, XElement xElement)
         {
             foreach (var node in xElement.XPathSelectElements("child::*"))
             {
                 XElement nextEle = (XElement)node;
                 if (nextEle.Name == "section")
                 {
-                    Section newSection = new Section();
+                    Sections newSection = new Sections();
                     section[nextEle.Attribute(XName.Get("name")).Value] = newSection;
                     DeserializeSection(newSection, nextEle);
                 }
                 else
                 {
-                    section.Parameter[nextEle.Attribute(XName.Get("name")).Value] = nextEle.Value;
+                    section.Parameters[nextEle.Attribute(XName.Get("name")).Value] = nextEle.Value;
                 }
             }
         }

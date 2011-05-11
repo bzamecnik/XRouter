@@ -36,13 +36,13 @@ namespace DaemonNT.Test
             var serviceSettings = settings.Settings;
 
             Assert.NotNull(serviceSettings);
-            Assert.Equal("Service.1", serviceSettings.Parameter["SettingsParam"]);
+            Assert.Equal("Service.1", serviceSettings.Parameters["SettingsParam"]);
             Assert.NotNull(serviceSettings["Section1"]);
             Assert.Equal("Service.2", serviceSettings["Section1"]
-                .Parameter["Section1Param"]);
+                .Parameters["Section1Param"]);
             Assert.NotNull(serviceSettings["Section1"]["InnerSection"]);
             Assert.Equal("Service.3", serviceSettings["Section1"]
-                ["InnerSection"].Parameter["InnerSectionParam"]);
+                ["InnerSection"].Parameters["InnerSectionParam"]);
 
             #endregion
 
@@ -77,13 +77,13 @@ namespace DaemonNT.Test
             var storageSettings = settings.TraceLoggerSettings.Storages[0].Settings;
 
             Assert.NotNull(storageSettings);
-            Assert.Equal("TraceLoggerStorage.1", storageSettings.Parameter["SettingsParam"]);
+            Assert.Equal("TraceLoggerStorage.1", storageSettings.Parameters["SettingsParam"]);
             Assert.NotNull(storageSettings["Section1"]);
             Assert.Equal("TraceLoggerStorage.2", storageSettings["Section1"]
-                .Parameter["Section1Param"]);
+                .Parameters["Section1Param"]);
             Assert.NotNull(storageSettings["Section1"]["InnerSection"]);
             Assert.Equal("TraceLoggerStorage.3", storageSettings["Section1"]
-                ["InnerSection"].Parameter["InnerSectionParam"]);
+                ["InnerSection"].Parameters["InnerSectionParam"]);
 
             #endregion
         }

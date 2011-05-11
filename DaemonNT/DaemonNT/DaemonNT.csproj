@@ -54,7 +54,7 @@
     <Compile Include="Configuration\InstallerSettings.cs" />
     <Compile Include="Configuration\TraceLoggerSettings.cs" />
     <Compile Include="Configuration\ServiceSettings.cs" />
-    <Compile Include="Configuration\Param.cs" />
+    <Compile Include="Configuration\Parameters.cs" />
     <Compile Include="Configuration\Section.cs" />
     <Compile Include="Configuration\SectionBase.cs" />
     <Compile Include="Configuration\Settings.cs" />

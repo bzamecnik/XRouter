@@ -28,7 +28,7 @@
             int interval = 0;
             try
             {
-                interval = Convert.ToInt32(args.Settings["timer"].Parameter["interval"]);
+                interval = Convert.ToInt32(args.Settings["timer"].Parameters["interval"]);
             }
             catch (Exception e)
             {
