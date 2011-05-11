@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigProviderTest.cs" />
+    <Compile Include="HeavilyLoggingService.cs" />
     <Compile Include="ServiceHostingTest.cs" />
     <Compile Include="TestService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

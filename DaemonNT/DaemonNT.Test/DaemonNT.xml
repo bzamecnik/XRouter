@@ -2,18 +2,34 @@
 
   <service type="DaemonNT.Test.TestService, ..\..\..\DaemonNT.Test\bin\Debug\DaemonNT.Test.dll" name="MyServer">
 
-   <installer>    
+    <installer>
       <description>Tady je nejaky popisek tehle sluzby...</description>
       <start-type value="Automatic"/>
-      <account value="LocalSystem"></account>         
+      <account value="LocalSystem"></account>
     </installer>
-    
-    <settings>   
-     <!-- specifikace nastaveni timeru, interval je cele cislo v milisekundach -->
-     <section name="timer">
-       <param name="interval">1000</param> 
-     </section>                    
-   </settings>
+
+    <settings>
+      <!-- specifikace nastaveni timeru, interval je cele cislo v milisekundach -->
+      <section name="timer">
+        <param name="interval">1000</param>
+      </section>
+    </settings>
+
+  </service>
+
+  <service type="DaemonNT.Test.HeavilyLoggingService, DaemonNT.Test.dll" name="HeavilyLoggingService">
+
+    <installer>
+      <description>Log a given number of trace log record as fast as possible
+      and measure the performance.</description>
+      <start-type value="Automatic"/>
+      <account value="LocalSystem"></account>
+    </installer>
+
+    <settings>
+      <param name="messageCount">100000</param>
+      <param name="messageLength">128</param>
+    </settings>
 
   </service>
 
