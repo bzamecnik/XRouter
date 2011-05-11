@@ -5,22 +5,29 @@
     using System.Reflection;
 
     /// <summary>
-    /// Poskytuje implementaci operaci pro instalaci/uninstalaci služeb.
+    /// Provides an implementation of installing and uninstalling NT services.
     /// </summary>
     internal static class InstallerServices
     {
+        /// <summary>
+        /// Installs an NT service.
+        /// </summary>
+        /// <remarks>
+        /// The service must not be installed yet.
+        /// </remarks>
+        /// <param name="serviceName">Service name.</param>
         public static void Install(string serviceName)
         {
-            // specifikuje command line arguments pro InstallUtil
+            // specify command-line arguments for InstallUtil
             List<string> args = new List<string>();
             args.Add("/LogToConsole=false");
             args.Add(string.Format("/LogFile={0}.Installer.log", serviceName));
             args.Add(Assembly.GetExecutingAssembly().Location);
 
-            // provede proces instalaci, vygeneruje log file
+            // perform the installation process generating a log file
             System.Configuration.Install.ManagedInstallerClass.InstallHelper(args.ToArray());
 
-            // odstrani soubor InstallState, ktery generuje InstallUtil
+            // remove the InstalState file produced by InstallUtil
             string filename = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DaemonNT.InstallState");
             if (System.IO.File.Exists(filename))
             {
@@ -28,16 +35,23 @@
             }
         }
 
+        /// <summary>
+        /// Uninstalls an NT service.
+        /// </summary>
+        /// <remarks>
+        /// The service must be installed.
+        /// </remarks>
+        /// <param name="serviceName">Service name.</param>
         public static void Uninstall(string serviceName)
         {
-            // specifikuje command line arguments pro InstallUtil
+            // specify command-line arguments for InstallUtil
             List<string> args = new List<string>();
             args.Add("/u");
             args.Add("/LogToConsole=false");
             args.Add(string.Format("/LogFile={0}.Installer.log", serviceName));
             args.Add(Assembly.GetExecutingAssembly().Location);
 
-            // provede proces uninstalace, vygeneruje log file
+            // perform the uninstallation process generating a log file
             System.Configuration.Install.ManagedInstallerClass.InstallHelper(args.ToArray());
         }
     }

@@ -61,6 +61,10 @@
                 });
         }
 
+        /// <summary>
+        /// Perform the installation of the NT service.
+        /// </summary>
+        /// <param name="stateSaver"></param>
         public override void Install(IDictionary stateSaver)
         {
             // add command line parameters to run the desired service:

@@ -247,7 +247,7 @@
             //     could be used:
             // <service>
             //   <type class="FooType" assembly="FooAssembly.dll" />
-            // </service
+            // </service>
 
             // resolve type value
             string[] tokens = type.Split(',');

@@ -24,13 +24,22 @@
         /// Creates and initializes an instance of the trace logger.
         /// </summary>
         /// <remarks>
+        /// <para>
         /// After calling this method it is possible to start logging.
+        /// </para>
+        /// <para>
+        /// Several storages can be used. In addition to a standard storage
+        /// LoggerFileStorage other storages can be configured in settings.
+        /// </para>
         /// </remarks>
-        /// <param name="serviceName"></param>
-        /// <param name="bufferSize"></param>
-        /// <param name="isDebugMode"></param>
-        /// <param name="settings"></param>
-        /// <param name="eventLogger"></param>
+        /// <param name="serviceName">Service name</param>
+        /// <param name="bufferSize">Size of the buffer of log records (number
+        /// of records).</param>
+        /// <param name="isDebugMode">Indicates whether the services is ran in
+        /// debug mode or as an NT service.</param>
+        /// <param name="settings">Trace logger settings</param>
+        /// <param name="eventLogger">Event logger for usage within storages.
+        /// </param>
         /// <returns>Initialized trace logger instance.</returns>
         internal static TraceLogger Create(
             string serviceName,
@@ -71,7 +80,8 @@
         /// Stops the trace logger.
         /// </summary>
         /// <remarks>
-        /// It stops receiving logs, clears the buffer etc.</remarks>
+        /// It stops receiving logs, stops the storages, clears the buffers
+        /// etc.</remarks>
         /// <param name="shutdown">Indicates whether the logger was stopped
         /// manually or during an operating system shutdown.</param>
         internal void Close(bool shutdown)
