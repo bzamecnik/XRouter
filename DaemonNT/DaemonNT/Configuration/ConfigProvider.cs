@@ -47,6 +47,8 @@
         {
             if (string.IsNullOrEmpty(configFile))
             {
+                // TODO: should we use AppDomain.CurrentDomain.BaseDirectory or
+                // Directory.GetCurrentDirectory()
                 configFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DEFAULT_CONFIG_FILE_NAME);
             }
             XDocument xConfig = XDocument.Load(configFile, LoadOptions.SetLineInfo);

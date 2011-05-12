@@ -28,6 +28,8 @@
             System.Configuration.Install.ManagedInstallerClass.InstallHelper(args.ToArray());
 
             // remove the InstalState file produced by InstallUtil
+            // TODO: should we use AppDomain.CurrentDomain.BaseDirectory or
+            // Directory.GetCurrentDirectory()
             string filename = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DaemonNT.InstallState");
             if (System.IO.File.Exists(filename))
             {

@@ -88,11 +88,13 @@
         private static object CreateTypeInstance(string typeClass, string typeAssembly)
         {
             string assemblyPath = typeAssembly;
-            // If the path is not absolute, add current working directory,
+            // If the path is not absolute, add current appdomain base directory,
             // otherwise the assembly might be searched for in a bad place
             // (such as C:\windows\system32).
             if (!Path.IsPathRooted(assemblyPath))
             {
+                // TODO: should we use AppDomain.CurrentDomain.BaseDirectory or
+                // Directory.GetCurrentDirectory()
                 assemblyPath = Path.Combine(
                     AppDomain.CurrentDomain.BaseDirectory,
                     assemblyPath);

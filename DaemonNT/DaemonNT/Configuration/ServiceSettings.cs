@@ -30,7 +30,7 @@
         /// </summary>
         /// <remarks>
         /// Can be both relative or absolute. Relative path is based on the
-        /// current appdomain working directory.
+        /// current appdomain base directory.
         /// </remarks>
         public string TypeAssembly { get; set; }
 

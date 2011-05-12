@@ -35,6 +35,8 @@
         public LoggerFileStorage(string source)
         {
             this.source = source;
+            // TODO: should we use AppDomain.CurrentDomain.BaseDirectory or
+            // Directory.GetCurrentDirectory()
             this.directory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, LOG_RELATIVE_DIRECTORY);
         }
 
