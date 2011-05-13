@@ -100,8 +100,17 @@ namespace DaemonNT
         /// A hook method which is called just when the Service has been
         /// started. It is intended to be implemented in a derived class.
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Typically, in this method a new thread with a service loop should
+        /// be started. This method should not run indefinitely long, it is
+        /// meant just for initialization.
+        /// </para>
+        /// <para>
         /// In derived classes it is not necessary to call base.OnStart().
+        /// </para>
         /// </remarks>
+        /// <param name="args">Arguments for starting the service.</param>
         protected virtual void OnStart(OnStartServiceArgs args)
         {
         }
@@ -114,6 +123,7 @@ namespace DaemonNT
         /// <remarks>
         /// In derived classes it is not necessary to call base.OnSop().
         /// </remarks>
+        /// <param name="args">Arguments for stopping the service.</param>
         protected virtual void OnStop(OnStopServiceArgs args)
         {
         }
