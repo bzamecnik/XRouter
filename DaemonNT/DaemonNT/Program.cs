@@ -65,8 +65,7 @@
                         commands.Uninstall(serviceName);
                         break;
                     case "status":
-                        Console.WriteLine("Service status: {0}",
-                            commands.GetStatus(serviceName));
+                        CheckStatus(commands, serviceName);
                         break;
                     case "start":
                         commands.Start(serviceName);
@@ -86,6 +85,20 @@
             {
                 Console.Error.WriteLine("Error: {0}", ex);
                 Environment.Exit(-1);
+            }
+        }
+
+        private static void CheckStatus(ServiceCommands commands, string serviceName)
+        {
+            bool isInstalled = commands.IsInstalled(serviceName);
+            if (isInstalled)
+            {
+                string status = commands.GetStatus(serviceName);
+                Console.WriteLine("Status of service {0}: {1}.", serviceName, status);
+            }
+            else
+            {
+                Console.WriteLine("Service {0} is not installed.", serviceName);
             }
         }
 

@@ -262,6 +262,47 @@ namespace DaemonNT
         }
 
         /// <summary>
+        /// Checks if the service is installed.
+        /// </summary>
+        /// <param name="serviceName">Service name</param>
+        public bool IsInstalled(string serviceName)
+        {
+            bool isInstalled = false;
+            string errorMessage = "Cannot determine wheter service {0} is installed: {1}";
+
+            try
+            {
+                using (ServiceController sc = new ServiceController(serviceName))
+                {
+                    ServiceControllerStatus status = sc.Status;
+                    if (!string.IsNullOrEmpty(status.ToString()))
+                    {
+                        isInstalled = true;
+                    }
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                // check if the exception was really due to the service is not
+                // instaled or there is another cause
+                if (!ex.Message.Contains("was not found on computer") &&
+                    !ex.InnerException.Message.Contains(
+                    "The specified service does not exist as an installed service"))
+                {
+                    Console.Error.WriteLine(errorMessage, serviceName, ex.Message);
+                    throw ex;
+                }
+
+            }
+            catch (System.ComponentModel.Win32Exception ex)
+            {
+                Console.Error.WriteLine(errorMessage, serviceName, ex.Message);
+            }
+
+            return isInstalled;
+        }
+
+        /// <summary>
         /// Perform an action with a new service controller, taking care
         /// of the exceptions.
         /// </summary>
