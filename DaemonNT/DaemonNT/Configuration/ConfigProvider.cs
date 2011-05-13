@@ -45,6 +45,32 @@
         /// <exception cref="InvalidOperationException" />
         public static ServiceSettings LoadServiceSettings(string serviceName, string configFile)
         {
+            XDocument xConfig = LoadConfiguration(configFile);
+
+            // service
+            XElement xService = xConfig.XPathSelectElement(string.Format("/config/service[@name='{0}']", serviceName));
+            if (xService == null)
+            {
+                throw new InvalidOperationException(string.Format("The supplied service.name='{0}' is not specified in the configuration file.", serviceName));
+            }
+
+            ServiceSettings serviceSetting = DeserializeServiceSettings(xService);
+
+            return serviceSetting;
+        }
+
+        /// <summary>
+        /// Loads the configuration from a specified XML configuration file
+        /// and provides it in an object-model form.
+        /// </summary>
+        /// <param name="configFile">Configuration file path (relative or
+        /// absolute).</param>
+        /// <returns>Configuration of all services converted to the object
+        /// model.
+        /// </returns>
+        /// <exception cref="InvalidOperationException" />
+        public static XDocument LoadConfiguration(string configFile)
+        {
             if (string.IsNullOrEmpty(configFile))
             {
                 // TODO: should we use AppDomain.CurrentDomain.BaseDirectory or
@@ -53,18 +79,8 @@
             }
             XDocument xConfig = XDocument.Load(configFile, LoadOptions.SetLineInfo);
 
-            Validation(xConfig, configFile);
-
-            // service
-            XElement xService = xConfig.XPathSelectElement(string.Format("/config/service[@name='{0}']", serviceName));
-            if (xService == null)
-            {
-                throw new InvalidOperationException(string.Format("The supplied service.name='{0}' is not specified in {1}.", serviceName, configFile));
-            }
-
-            ServiceSettings serviceSetting = DeserializeServiceSettings(xService);
-
-            return serviceSetting;
+            ValidateConfiguration(xConfig, configFile);
+            return xConfig;
         }
 
         /// <summary>
@@ -76,7 +92,7 @@
         /// </remarks>
         /// <param name="xConfig">XML service configuration file</param>
         /// <exception cref="InvalidOperationException"
-        private static void Validation(XDocument xConfig, string configFile)
+        private static void ValidateConfiguration(XDocument xConfig, string configFile)
         {
             XDocument xSchema = Resources.Provider.LoadConfigSchema();
 

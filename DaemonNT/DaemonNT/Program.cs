@@ -19,18 +19,18 @@
             // co vsechno bude v sobe DaemonNT obsahovat - pokud budeme napr. implementovat
             // watchdog ci konfiguracni GUI)
 
-            if (args.Length < 2)
-            {
-                PrintUsage();
-                return;
-            }
-
             List<string> arguments = new List<string>();
             arguments.AddRange(args);
 
             if ((arguments.Count > 0) && (arguments[0] == "DaemonNT"))
             {
                 arguments.RemoveAt(0);
+            }
+
+            if ((arguments.Count < 1))
+            {
+                PrintUsage();
+                return;
             }
 
             ServiceCommands commands = new ServiceCommands();
@@ -46,7 +46,19 @@
             }
 
             string command = arguments[0];
-            string serviceName = arguments[1];
+            string serviceName = string.Empty;
+            if (command != "list")
+            {
+                if (arguments.Count == 2)
+                {
+                    serviceName = arguments[1];
+                }
+                else
+                {
+                    PrintUsage();
+                    return;
+                }
+            }
 
             try
             {
@@ -64,9 +76,6 @@
                     case "uninstall":
                         commands.Uninstall(serviceName);
                         break;
-                    case "status":
-                        CheckStatus(commands, serviceName);
-                        break;
                     case "start":
                         commands.Start(serviceName);
                         break;
@@ -75,6 +84,12 @@
                         break;
                     case "restart":
                         commands.Restart(serviceName);
+                        break;
+                    case "status":
+                        CheckStatus(commands, serviceName);
+                        break;
+                    case "list":
+                        ListServices(commands);
                         break;
                     default:
                         PrintUsage();
@@ -102,11 +117,19 @@
             }
         }
 
+        private static void ListServices(ServiceCommands commands)
+        {
+            var services = commands.ListServices();
+            Console.WriteLine("Configured services: {0}",
+                string.Join(", ", services));
+        }
+
         private static void PrintUsage()
         {
-            Console.WriteLine("Usage: DaemonNT.exe [options] COMMAND SERVICE_NAME");
-            Console.WriteLine("Available commands: debug, run, install, uninstall, start, stop, restart, status.");
+            Console.WriteLine("Usage: DaemonNT.exe [options] COMMAND [SERVICE_NAME]");
+            Console.WriteLine("Available commands: debug, run, install, uninstall, start, stop, restart, status, list.");
             Console.WriteLine("The 'run' command is indended only for the OS's service runner.");
+            Console.WriteLine("SERVICE_NAME is needed for all commands except 'list'.");
             Console.WriteLine("Options:");
             Console.WriteLine("  --config-file=CONFIG_FILE - path to configuration file");
         }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using DaemonNT.Configuration;
 using DaemonNT.Installation;
 using DaemonNT.Logging;
@@ -261,6 +261,22 @@ namespace DaemonNT
                 status = string.Empty;
             }
             return status;
+        }
+
+        /// <summary>
+        /// Gets the list of names of all configured services.
+        /// </summary>
+        /// <returns>List of service names.</returns>
+        public IEnumerable<string> ListServices()
+        {
+            XDocument config = ConfigProvider.LoadConfiguration(ConfigFile);
+            var services = config.XPathSelectElements("/config/service");
+            List<string> serviceNames = new List<string>();
+            foreach (var service in services)
+            {
+                serviceNames.Add(service.Attribute(XName.Get("name")).Value);
+            }
+            return serviceNames;
         }
 
         /// <summary>
