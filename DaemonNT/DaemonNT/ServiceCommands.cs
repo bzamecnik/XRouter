@@ -54,10 +54,12 @@ namespace DaemonNT
                 try
                 {
                     serviceHost.Start();
-                    Console.WriteLine("Press ENTER or CRTL+C to stop the '{0}' service ...", serviceName);
+                    Console.WriteLine("Press CTRL+C to stop the '{0}' service ...", serviceName);
                     Console.CancelKeyPress += (sender, e) => serviceHost.Stop();
-                    Console.ReadLine();
-                    serviceHost.Stop();
+                    while (true)
+                    {
+                        System.Threading.Thread.Sleep(100);
+                    }
                 }
                 catch (Exception e)
                 {
