@@ -1,7 +1,7 @@
 <config>
 
-  <service name="FooService"
-    type="DaemonNT.FooService, ..\..\..\DaemonNT.Test\bin\Debug\DaemonNT.FooService.dll">
+  <service name="TickingService"
+    type="DaemonNT.Test.TickingService, DaemonNT.Test.dll">
 
     <settings>
       <section name="Section1">
@@ -24,7 +24,8 @@
     </installer>
 
     <trace-logger buffer-size="1024">
-      <storage name="TraceLoggerStorage" type="DaemonNT.FooStorage, FooStorage.dll">
+      <storage name="TraceLoggerStorage"
+        type="DaemonNT.Test.ConsoleTraceLoggerStorage, DaemonNT.Test.dll">
         <settings>
           <section name="Section1">
             <section name="InnerSection">

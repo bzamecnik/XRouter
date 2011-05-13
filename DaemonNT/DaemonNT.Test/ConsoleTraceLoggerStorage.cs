@@ -10,7 +10,7 @@ namespace DaemonNT.Test
     /// An example trivial trace logger storage implementation.
     /// It shows how to save traces into debug mode console.
     /// </summary>
-    public class TestTraceLogger : TraceLoggerStorage
+    public class ConsoleTraceLoggerStorage : TraceLoggerStorage
     {
         private Boolean isDebugMode;
 

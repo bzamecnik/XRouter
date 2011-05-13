@@ -12,7 +12,7 @@
     /// <remarks>
     /// It writes trace-log events periodically until it is stopped.
     /// </remarks>
-    public class TestService : Service
+    public class TickingService : Service
     {
         private Thread timer;
 
@@ -37,12 +37,12 @@
             }
 
             // initialize and start timer
-            this.timer = new Thread(new ParameterizedThreadStart(this.Tick));
+            this.timer = new Thread(new ParameterizedThreadStart(this.ServiceLoop));
             this.mreStopPending = new ManualResetEvent(false);
             this.timer.Start(interval);
         }
 
-        private void Tick(Object data)
+        private void ServiceLoop(Object data)
         {
             try
             {
