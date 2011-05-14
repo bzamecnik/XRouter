@@ -1,4 +1,3 @@
-
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaemonNT", "DaemonNT\DaemonNT.csproj", "{3CF25136-3BF3-4213-9FDC-1E80F2C75171}"
@@ -10,6 +9,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemaTron", "..\SchemaTron\SchemaTron\SchemaTron.csproj", "{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{B2B1671D-3672-4E8C-B99E-1050E14B635B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaemonNT.GUI.ConfigEditor", "DaemonNT.GUI.ConfigEditor\DaemonNT.GUI.ConfigEditor.csproj", "{B0425145-7158-49A0-BCAB-A5D89FDB70D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,12 +52,22 @@ Global
 		{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}.Release|x86.ActiveCfg = Release|Any CPU
+		{B0425145-7158-49A0-BCAB-A5D89FDB70D4}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{B0425145-7158-49A0-BCAB-A5D89FDB70D4}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{B0425145-7158-49A0-BCAB-A5D89FDB70D4}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{B0425145-7158-49A0-BCAB-A5D89FDB70D4}.Debug|x86.ActiveCfg = Debug|x86
+		{B0425145-7158-49A0-BCAB-A5D89FDB70D4}.Debug|x86.Build.0 = Debug|x86
+		{B0425145-7158-49A0-BCAB-A5D89FDB70D4}.Release|Any CPU.ActiveCfg = Release|x86
+		{B0425145-7158-49A0-BCAB-A5D89FDB70D4}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{B0425145-7158-49A0-BCAB-A5D89FDB70D4}.Release|Mixed Platforms.Build.0 = Release|x86
+		{B0425145-7158-49A0-BCAB-A5D89FDB70D4}.Release|x86.ActiveCfg = Release|x86
+		{B0425145-7158-49A0-BCAB-A5D89FDB70D4}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8} = {C5707764-601F-4CD9-8855-E8816BF3F976}
 		{5564724D-61A8-432C-B8B0-B14BC44EBB40} = {B2B1671D-3672-4E8C-B99E-1050E14B635B}
+		{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8} = {C5707764-601F-4CD9-8855-E8816BF3F976}
 	EndGlobalSection
 EndGlobal

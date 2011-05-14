@@ -39,5 +39,13 @@
                 this.parameters[name] = value;
             }
         }
+
+        public ICollection<string> Keys
+        {
+            get
+            {
+                return parameters.Keys;
+            }
+        }
     }
 }

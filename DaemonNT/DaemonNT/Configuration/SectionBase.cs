@@ -42,5 +42,13 @@
                 this.sections[name] = value;
             }
         }
+
+        public ICollection<string> Keys
+        {
+            get
+            {
+                return sections.Keys;
+            }
+        }
     }
 }

@@ -17,6 +17,12 @@
         }
 
         /// <summary>
+        /// Identifier of the service.
+        /// </summary>
+        /// <remarks>Must not be null.</remarks>
+        public string Name { get; set; }
+
+        /// <summary>
         /// Identifier of the class defining the service type.
         /// </summary>
         /// <remarks>Must not be null.</remarks>

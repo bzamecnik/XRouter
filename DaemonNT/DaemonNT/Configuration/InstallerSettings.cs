@@ -23,6 +23,16 @@
             this.RequiredServices = new List<string>();
         }
 
+        internal static readonly IEnumerable<string> VALID_START_MODE_VALUES =
+            new[] { "Automatic", "Manual", "Disabled" };
+
+        internal static readonly string DEFAULT_START_MODE_VALUE = "Manual";
+
+        internal static readonly IEnumerable<string> VALID_ACCOUNT_VALUES =
+            new[] { "LocalSystem", "LocalService", "NetworkService", "User" };
+
+        internal static readonly string DEFAULT_ACCOUNT_VALUE = "LocalSystem";
+
         /// <summary>
         /// Human-friendly description of a service.
         /// </summary>

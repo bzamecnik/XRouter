@@ -45,7 +45,7 @@
         /// <exception cref="InvalidOperationException" />
         public static ServiceSettings LoadServiceSettings(string serviceName, string configFile)
         {
-            XDocument xConfig = LoadConfiguration(configFile);
+            XDocument xConfig = LoadRawConfiguration(configFile);
 
             // service
             XElement xService = xConfig.XPathSelectElement(string.Format("/config/service[@name='{0}']", serviceName));
@@ -54,9 +54,9 @@
                 throw new InvalidOperationException(string.Format("The supplied service.name='{0}' is not specified in the configuration file.", serviceName));
             }
 
-            ServiceSettings serviceSetting = DeserializeServiceSettings(xService);
+            ServiceSettings serviceSettings = DeserializeServiceSettings(xService);
 
-            return serviceSetting;
+            return serviceSettings;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@
         /// model.
         /// </returns>
         /// <exception cref="InvalidOperationException" />
-        public static XDocument LoadConfiguration(string configFile)
+        public static XDocument LoadRawConfiguration(string configFile)
         {
             if (string.IsNullOrEmpty(configFile))
             {
@@ -81,6 +81,32 @@
 
             ValidateConfiguration(xConfig, configFile);
             return xConfig;
+        }
+
+        public static Configuration LoadConfiguration(string configFile)
+        {
+            XDocument xmlConfig = LoadRawConfiguration(configFile);
+            return ConfigurationFromXML(xmlConfig);
+        }
+
+        public static XDocument ConfigurationToXML(Configuration config)
+        {
+            // TODO:
+            // for each service:
+            // - serialize service settings to XML
+            throw new NotImplementedException();
+        }
+
+        public static Configuration ConfigurationFromXML(XDocument xmlConfig)
+        {
+            var xmlServices = xmlConfig.XPathSelectElements("/config/service");
+            List<ServiceSettings> services = new List<ServiceSettings>();
+            foreach (var xmlService in xmlServices)
+            {
+                services.Add(DeserializeServiceSettings(xmlService));
+            }
+            Configuration config = new Configuration() { Services = services };
+            return config;
         }
 
         /// <summary>
@@ -119,9 +145,13 @@
             }
         }
 
+        #region Deserialization
+
         private static ServiceSettings DeserializeServiceSettings(XElement xService)
         {
             ServiceSettings result = new ServiceSettings();
+            // service.@name
+            result.Name = xService.Attribute(XName.Get("name")).Value;
 
             // service.@type
             string typeClass;
@@ -329,5 +359,11 @@
                 }
             }
         }
+
+        #endregion
+
+        #region Serialization
+
+        #endregion
     }
 }

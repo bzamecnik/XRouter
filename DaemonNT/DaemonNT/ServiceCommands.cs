@@ -269,7 +269,7 @@ namespace DaemonNT
         /// <returns>List of service names.</returns>
         public IEnumerable<string> ListServices()
         {
-            XDocument config = ConfigProvider.LoadConfiguration(ConfigFile);
+            XDocument config = ConfigProvider.LoadRawConfiguration(ConfigFile);
             var services = config.XPathSelectElements("/config/service");
             List<string> serviceNames = new List<string>();
             foreach (var service in services)
