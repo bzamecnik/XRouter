@@ -31,10 +31,10 @@ namespace XRouter.Broker
     </components>
     <dispatcher nonRunningProcessorResponseTimeout='60'>
     </dispatcher>
-    <workflows>
-        <workflow version='1'>
-        </workflow>
-    <workflows>
+    <messageFlows current='...guid...'>
+        <messageFlow guid='' name='abc' version='1'>
+        </messageFlow>
+    <messageFlows>
 </configuration>
 ");
             InternalTokens = new List<Token>();
@@ -83,7 +83,7 @@ namespace XRouter.Broker
         public Token[] GetUndispatchedTokens()
         {
             lock (storageLock) {
-                Token[] result = InternalTokens.Where(t => t.WorkflowState.AssignedProcessor == null).ToArray();
+                Token[] result = InternalTokens.Where(t => t.MessageFlowState.AssignedProcessor == null).ToArray();
                 return result;
             }
         }
@@ -91,7 +91,7 @@ namespace XRouter.Broker
         public Token[] GetActiveTokensAssignedToProcessor(string processorName)
         {
             lock (storageLock) {
-                Token[] result = InternalTokens.Where(t => (t.WorkflowState.AssignedProcessor == processorName) && (t.State == TokenState.InProcessor)).ToArray();
+                Token[] result = InternalTokens.Where(t => (t.MessageFlowState.AssignedProcessor == processorName) && (t.State == TokenState.InProcessor)).ToArray();
                 return result;
             }
         }

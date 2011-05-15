@@ -43,9 +43,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XRouter.Workflow.csproj">
+    <ProjectReference Include="..\XRouter.WorkFlow.csproj">
       <Project>{92BBAB07-15D6-46B4-8AB4-E50F598BCFFD}</Project>
-      <Name>XRouter.Workflow</Name>
+      <Name>XRouter.WorkFlow</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

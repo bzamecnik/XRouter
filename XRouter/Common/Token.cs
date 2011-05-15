@@ -20,18 +20,6 @@ namespace XRouter.Common
 
         public SerializableXDocument Content { get; private set; }
 
-        public WorkflowState WorkFlowState
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         public string GatewayName
         {
             get
@@ -70,7 +58,7 @@ namespace XRouter.Common
             }
         }
 
-        public WorkflowState WorkflowState
+        public MessageFlowState MessageFlowState
         {
             get
             {
@@ -114,14 +102,14 @@ namespace XRouter.Common
 <token>
   <metaData>
   </metaData>
-  <workFlowState>
+  <messageFlowState>
     <currentNodes>
     </currentNodes>
     <processorData>
     </processorData>
     <varibles>
     </varibles>
-  </workFlowState>
+  </messageFlowState>
   <messages>
   </messages>
 </token>

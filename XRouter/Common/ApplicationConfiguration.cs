@@ -34,18 +34,6 @@ namespace XRouter.Common
             return allComponentsNames.ToArray();
         }
 
-        public int GetLastWorkflowVersion()
-        {
-            var workflows = System.Xml.XPath.Extensions.XPathSelectElements(Content, "/configuration/workflows/workflow");
-            var versions = from wf in workflows
-                           select int.Parse(wf.Attribute(XName.Get("version")).Value);
-            if (versions.Any()) {
-                return versions.Max();
-            } else {
-                return 0;
-            }
-        }
-
         public TimeSpan GetNonRunningProcessorResponseTimeout()
         {
             string value = System.Xml.XPath.Extensions.XPathSelectElement(Content, "/configuration/dispatcher").Attribute(XName.Get("nonRunningProcessorResponseTimeout")).Value;
@@ -89,6 +77,16 @@ namespace XRouter.Common
             if (result != null) { return result; }
 
             throw new ArgumentException("Cannot find component with give name.");
+        }
+
+        public Guid GetCurrentMessageFlowGuid()
+        {
+            throw new NotImplementedException();
+        }
+
+        public MessageFlow GetMessageFlow(Guid guid)
+        {
+            throw new NotImplementedException();
         }
     }
 }

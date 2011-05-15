@@ -16,6 +16,7 @@ namespace XRouter.Broker
         IEnumerable<Token> GetUndispatchedTokens();
 
         void UpdateTokenAssignedProcessor(Guid tokenGuid, string assignedProcessor);
+        void UpdateTokenMessageFlow(Guid tokenGuid, Guid messageFlowGuid);
         void UpdateTokenLastResponseFromProcessor(Guid tokenGuid, DateTime lastResponse);
         Token GetToken(Guid tokenGuid);
     }

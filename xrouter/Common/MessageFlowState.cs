@@ -6,9 +6,9 @@ using System.Text;
 namespace XRouter.Common
 {
     [Serializable]
-    public class WorkflowState
+    public class MessageFlowState
     {
-        public int WorkflowVersion { get; set; }
+        public Guid MessageFlowGuid { get; set; }
 
         public List<int> CurrentNodes { get; private set; }
 
@@ -16,7 +16,7 @@ namespace XRouter.Common
 
         public DateTime LastResponseFromProcessor { get; set; }
 
-        public WorkflowState()
+        public MessageFlowState()
         {
             CurrentNodes = new List<int>();
         }

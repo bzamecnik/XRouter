@@ -86,14 +86,21 @@ namespace XRouter.Broker
         public void UpdateTokenAssignedProcessor(Guid tokenGuid, string assignedProcessor)
         {
             storage.UpdateToken(tokenGuid, delegate(Token token) {
-                token.WorkflowState.AssignedProcessor = assignedProcessor;
+                token.MessageFlowState.AssignedProcessor = assignedProcessor;
+            });
+        }
+
+        public void UpdateTokenMessageFlow(Guid tokenGuid, Guid messageFlowGuid)
+        {
+            storage.UpdateToken(tokenGuid, delegate(Token token) {
+                token.MessageFlowState.MessageFlowGuid = messageFlowGuid;
             });
         }
 
         public void UpdateTokenLastResponseFromProcessor(Guid tokenGuid, DateTime lastResponse)
         {
             storage.UpdateToken(tokenGuid, delegate(Token token) {
-                token.WorkflowState.LastResponseFromProcessor = lastResponse;
+                token.MessageFlowState.LastResponseFromProcessor = lastResponse;
             });
         }
 
@@ -110,12 +117,12 @@ namespace XRouter.Broker
             dispatcher.NotifyAboutNewToken(token);
         }
 
-        public void UpdateTokenWorkflowState(string updatingProcessorName, Guid tokenGuid, WorkflowState workflowState)
+        public void UpdateTokenMessageFlowState(string updatingProcessorName, Guid tokenGuid, MessageFlowState messageFlowState)
         {
             storage.UpdateToken(tokenGuid, delegate(Token token) {
-                if (token.WorkflowState.AssignedProcessor == updatingProcessorName) {
-                    token.WorkflowState.LastResponseFromProcessor = DateTime.Now;
-                    token.WorkflowState = workflowState;
+                if (token.MessageFlowState.AssignedProcessor == updatingProcessorName) {
+                    token.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
+                    token.MessageFlowState = messageFlowState;
                 }
             });
         }
@@ -123,8 +130,8 @@ namespace XRouter.Broker
         public void AddMessageToToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument message)
         {
             storage.UpdateToken(tokenGuid, delegate(Token token) {
-                if (token.WorkflowState.AssignedProcessor == updatingProcessorName) {
-                    token.WorkflowState.LastResponseFromProcessor = DateTime.Now;
+                if (token.MessageFlowState.AssignedProcessor == updatingProcessorName) {
+                    token.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
                     token.AddMessage(message);
                 }
             });
@@ -133,9 +140,9 @@ namespace XRouter.Broker
         public void FinishToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument resultMessage)
         {
             Token token = storage.GetToken(tokenGuid);
-            if (token.WorkflowState.AssignedProcessor == updatingProcessorName) {
+            if (token.MessageFlowState.AssignedProcessor == updatingProcessorName) {
                 storage.UpdateToken(tokenGuid, delegate(Token t) {
-                    t.WorkflowState.LastResponseFromProcessor = DateTime.Now;
+                    t.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
                 });
 
                 GatewayAccessor sourceGateway = componentsAccessors.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == token.GatewayName);
