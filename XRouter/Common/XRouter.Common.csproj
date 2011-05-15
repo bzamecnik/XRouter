@@ -48,6 +48,7 @@
     <Compile Include="IGatewayService.cs" />
     <Compile Include="IHostableComponent.cs" />
     <Compile Include="IProcessorService.cs" />
+    <Compile Include="LimitedConcurrencyLevelTaskScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializableXDocument.cs" />
     <Compile Include="Token.cs" />

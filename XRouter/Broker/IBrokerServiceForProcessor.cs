@@ -10,14 +10,14 @@ namespace XRouter.Broker
     // methods to be called by a processor
     public interface IBrokerServiceForProcessor : IBrokerServiceForComponent
     {
-        void UpdateTokenWorkflowState(Guid tokenGuid, WorkflowState workflowState);
+        void UpdateTokenWorkflowState(string updatingProcessorName, Guid tokenGuid, WorkflowState workflowState);
 
         // NOTE: messages will not be removed from tokens
 
-        void AddMessageToToken(Guid tokenGuid, SerializableXDocument message);
+        void AddMessageToToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument message);
 
         /// change token state, not workflow state
-        void FinishToken(Guid tokenGuid, SerializableXDocument resultMessage);
+        void FinishToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument resultMessage);
 
         // NOTE: synchronous
         SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message);

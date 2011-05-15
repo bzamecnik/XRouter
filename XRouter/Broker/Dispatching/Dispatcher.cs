@@ -3,106 +3,110 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using XRouter.Common;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace XRouter.Broker.Dispatching
 {
-    class Dispatcher
+    internal class Dispatcher
     {
+        private static readonly int MaxTokenDispatchingConcurrencyLevel = 10;
+        private static readonly TimeSpan BackgroundCheckingInterval = TimeSpan.FromSeconds(60);
 
-        public void Dispatch(Token token)
+        private IBrokerServiceForDispatcher brokerService;
+
+        private TaskFactory tokenDispatchingTaskFactory;
+        private object tokenDispatchingLock = new object();
+
+        private Task backgroundCheckings;
+
+        internal Dispatcher(IBrokerServiceForDispatcher brokerService)
         {
+            this.brokerService = brokerService;
+
+            tokenDispatchingTaskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(MaxTokenDispatchingConcurrencyLevel));
+            backgroundCheckings = Task.Factory.StartNew(StartBackgroundCheckings, TaskCreationOptions.LongRunning);
         }
 
-        //private bool IsRunnig { get; set; }
+        public void NotifyAboutNewToken(Token token)
+        {
+            DispatchAsync(token.Guid);
+        }
 
-        //private Func<ApplicationConfiguration> GetConfiguration { get; set; }
-        //private Func<string, Token[]> GetTokensAssignedToProcessor { get; set; }
+        private void DispatchAsync(Guid tokenGuid, Func<ProcessorAccessor, bool> filter = null)
+        {
+            tokenDispatchingTaskFactory.StartNew(delegate {
+                Dispatch(tokenGuid, filter);
+            });
+        }
 
-        //private object stateLock = new object();
-        //private List<ComponentInfo> processorsInfo = new List<ComponentInfo>();
-        //private Task unresponsibleProcessorsChecking;
+        private void Dispatch(Guid tokenGuid, Func<ProcessorAccessor, bool> filter = null)
+        {
+            #region Determine processorsByUtilization
+            var processorsByUtilization = brokerService.GetProcessors().OrderBy(delegate(ProcessorAccessor p) {
+                double utilization = double.MaxValue;
+                try {
+                    utilization = p.GetUtilization();
+                } catch { // Keep max utilization for inaccessible processor
+                }
+                return utilization;
+            });
+            #endregion
 
-        //public Dispatcher(Func<ApplicationConfiguration> getConfiguration, Func<string, Token[]> getTokensAssignedToProcessor)
-        //{
-        //    GetConfiguration = getConfiguration;
-        //    GetTokensAssignedToProcessor = getTokensAssignedToProcessor;
+            foreach (var processor in processorsByUtilization) {
+                if ((filter == null) || (filter(processor))) {
+                    lock (tokenDispatchingLock) {
+                        Token token = brokerService.GetToken(tokenGuid);
+                        if (token.WorkflowState.AssignedProcessor != null) {
+                            return; // Token is already dispatched
+                        }
 
-        //    unresponsibleProcessorsChecking = Task.Factory.StartNew(CheckUnresponsibleProcessors, TaskCreationOptions.LongRunning);
-        //}
+                        try {
+                            processor.AddWork(token);
+                        } catch {
+                            continue; // if adding token to processor fails, try next one
+                        }
+                        brokerService.UpdateTokenLastResponseFromProcessor(tokenGuid, DateTime.Now);
+                        brokerService.UpdateTokenAssignedProcessor(tokenGuid, processor.ComponentName);
+                        return;
+                    }
+                }
+            }
+        }
 
-        //public void Start()
-        //{
-        //    IsRunnig = true;
-        //}
+        private void StartBackgroundCheckings()
+        {
+            while (true) {
+                Thread.Sleep(BackgroundCheckingInterval);
 
-        //public void Stop()
-        //{
-        //    IsRunnig = false;
-        //}
+                #region Check unresponsible processors
+                try {
+                    var config = brokerService.GetConfiguration();
+                    foreach (var processor in brokerService.GetProcessors()) {
+                        var tokens = brokerService.GetActiveTokensAssignedToProcessor(processor.ComponentName);
+                        DateTime lastResponseThreshold = DateTime.Now - config.GetNonRunningProcessorResponseTimeout();
+                        var tokensToRedispatch = tokens.Where(t => t.WorkflowState.LastResponseFromProcessor < lastResponseThreshold);
+                        Func<ProcessorAccessor, bool> currentProcessorFilter = p => p.ComponentName != processor.ComponentName;
 
-        //private void CheckUnresponsibleProcessors()
-        //{
-        //    while (true) {
-        //        Thread.Sleep(TimeSpan.FromSeconds(60));
-        //        if (IsRunnig) {
-        //            ComponentInfo[] availableProcessorsInfo;
-        //            lock (stateLock) {
-        //                availableProcessorsInfo = processorsInfo.ToArray();
-        //            }
+                        foreach (var tokenToRedispatch in tokensToRedispatch) {
+                            tokenToRedispatch.WorkflowState.AssignedProcessor = null;
+                            brokerService.UpdateTokenAssignedProcessor(tokenToRedispatch.Guid, null);
+                            DispatchAsync(tokenToRedispatch.Guid, currentProcessorFilter);
+                        }
+                    }
+                } catch (Exception ex) { // Prevent termination of checking thread
+                }
+                #endregion
 
-        //            var config = GetConfiguration();
-        //            foreach (var processorInfo in availableProcessorsInfo) {
-        //                processorInfo.UpdateState();
-        //                if (processorInfo.State.Status != ComponentStatus.Running) {
-        //                    var tokens = GetTokensAssignedToProcessor(processorInfo.Name);
-        //                    DateTime lastResponseThreshold = DateTime.Now - config.GetNonRunningProcessorResponseTimeout();
-        //                    var tokensToRedispatch = tokens.Where(t => t.WorkflowState.LastResponseFromProcessor < lastResponseThreshold);
-        //                    foreach (var tokenToRedispatch in tokensToRedispatch) {
-        //                        Dispatch(tokenToRedispatch);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
-        //public void UpdateProcessorsInfo(IEnumerable<ComponentInfo> processorsInfo)
-        //{
-        //    lock (stateLock) {
-        //        this.processorsInfo.Clear();
-        //        this.processorsInfo.AddRange(processorsInfo);
-        //    }
-        //}
-
-        //public void Dispatch(Token token)
-        //{
-        //    var config = GetConfiguration();
-        //    ComponentInfo[] availableProcessorsInfo;
-        //    lock (stateLock) {
-        //        availableProcessorsInfo = processorsInfo.Where(p => p.State.Status == ComponentStatus.Running).ToArray();
-        //    }
-
-        //    IProcessor chosenProcessor = null;
-        //    ComponentInfo choosenProcessorInfo = null;
-        //    double minUtilization = double.MaxValue;
-        //    foreach (var processorInfo in availableProcessorsInfo) {
-        //        IProcessor processor = processorInfo.GetProcessorProxy();
-        //        double utilization = processor.GetUtilization();
-        //        if (utilization < minUtilization) {
-        //            minUtilization = utilization;
-        //            chosenProcessor = processor;
-        //            choosenProcessorInfo = processorInfo;
-        //        }
-        //    }
-        //    if (choosenProcessorInfo == null) {
-        //        return;
-        //    }
-
-        //    if (token.WorkflowState.WorkflowVersion == 0) {
-        //        token.WorkflowState.WorkflowVersion = config.GetLastWorkflowVersion();
-        //    }
-        //    token.WorkflowState.AssignedProcessor = choosenProcessorInfo.Name; // It is important to change AssignedProcessor property before sending token to processor
-        //    chosenProcessor.AddWork(token);
-        //}
+                #region Dispatch undispatched tokens
+                try {
+                    foreach (Token token in brokerService.GetUndispatchedTokens()) {
+                        DispatchAsync(token.Guid);
+                    }
+                } catch (Exception ex) { // Prevent termination of checking thread
+                }
+                #endregion
+            }
+        }
     }
 }

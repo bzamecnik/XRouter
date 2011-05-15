@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace XRouter.Broker
 {
-    class BrokerService : IBrokerService
+    class BrokerService : IBrokerService, IBrokerServiceForDispatcher
     {
         private PersistentStorage storage;
         private ConcurrentDictionary<string, ComponentAccessor> componentsAccessors = new ConcurrentDictionary<string, ComponentAccessor>();
@@ -19,7 +19,7 @@ namespace XRouter.Broker
             storage = new PersistentStorage();
             UpdateComponentsAccessorsAccordingToConfig();
 
-            dispatcher = new Dispatching.Dispatcher();
+            dispatcher = new Dispatching.Dispatcher(this);
         }
 
         public void StartComponents()
@@ -64,36 +64,87 @@ namespace XRouter.Broker
             }
         }
 
+        public IEnumerable<ProcessorAccessor> GetProcessors()
+        {
+            ComponentAccessor[] components = componentsAccessors.Values.ToArray();
+            var result = components.OfType<ProcessorAccessor>();
+            return result;
+        }
+
+        public IEnumerable<Token> GetActiveTokensAssignedToProcessor(string processorName)
+        {
+            var result = storage.GetActiveTokensAssignedToProcessor(processorName);
+            return result;
+        }
+
+        public IEnumerable<Token> GetUndispatchedTokens()
+        {
+            var result = storage.GetUndispatchedTokens();
+            return result;
+        }
+
+        public void UpdateTokenAssignedProcessor(Guid tokenGuid, string assignedProcessor)
+        {
+            storage.UpdateToken(tokenGuid, delegate(Token token) {
+                token.WorkflowState.AssignedProcessor = assignedProcessor;
+            });
+        }
+
+        public void UpdateTokenLastResponseFromProcessor(Guid tokenGuid, DateTime lastResponse)
+        {
+            storage.UpdateToken(tokenGuid, delegate(Token token) {
+                token.WorkflowState.LastResponseFromProcessor = lastResponse;
+            });
+        }
+
+        public Token GetToken(Guid tokenGuid)
+        {
+            Token token = storage.GetToken(tokenGuid);
+            return token;
+        }
+
         public void ReceiveToken(Token token)
         {
             token.State = TokenState.Received;
             storage.SaveToken(token);
-            dispatcher.Dispatch(token);
+            dispatcher.NotifyAboutNewToken(token);
         }
 
-        public void UpdateTokenWorkflowState(Guid tokenGuid, WorkflowState workflowState)
-        {
-            storage.UpdateToken(tokenGuid, delegate(Token token) { 
-                token.WorkflowState = workflowState; 
-            });
-        }
-
-        public void AddMessageToToken(Guid tokenGuid, SerializableXDocument message)
+        public void UpdateTokenWorkflowState(string updatingProcessorName, Guid tokenGuid, WorkflowState workflowState)
         {
             storage.UpdateToken(tokenGuid, delegate(Token token) {
-                token.AddMessage(message);
+                if (token.WorkflowState.AssignedProcessor == updatingProcessorName) {
+                    token.WorkflowState.LastResponseFromProcessor = DateTime.Now;
+                    token.WorkflowState = workflowState;
+                }
             });
         }
 
-        public void FinishToken(Guid tokenGuid, SerializableXDocument resultMessage)
+        public void AddMessageToToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument message)
+        {
+            storage.UpdateToken(tokenGuid, delegate(Token token) {
+                if (token.WorkflowState.AssignedProcessor == updatingProcessorName) {
+                    token.WorkflowState.LastResponseFromProcessor = DateTime.Now;
+                    token.AddMessage(message);
+                }
+            });
+        }
+
+        public void FinishToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument resultMessage)
         {
             Token token = storage.GetToken(tokenGuid);
-            GatewayAccessor sourceGateway = componentsAccessors.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == token.GatewayName);
-            sourceGateway.ReceiveReturn(tokenGuid, resultMessage);
+            if (token.WorkflowState.AssignedProcessor == updatingProcessorName) {
+                storage.UpdateToken(tokenGuid, delegate(Token t) {
+                    t.WorkflowState.LastResponseFromProcessor = DateTime.Now;
+                });
 
-            storage.UpdateToken(tokenGuid, delegate(Token t) {
-                t.State = TokenState.Finished;
-            });
+                GatewayAccessor sourceGateway = componentsAccessors.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == token.GatewayName);
+                sourceGateway.ReceiveReturn(tokenGuid, resultMessage);
+
+                storage.UpdateToken(tokenGuid, delegate(Token t) {
+                    t.State = TokenState.Finished;
+                });
+            }
         }
 
         public SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message)

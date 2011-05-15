@@ -80,18 +80,18 @@ namespace XRouter.Broker
             return token;
         }
 
-        public Token[] GetReceivedTokens()
+        public Token[] GetUndispatchedTokens()
         {
             lock (storageLock) {
-                Token[] result = InternalTokens.Where(t => t.State == TokenState.Received).ToArray();
+                Token[] result = InternalTokens.Where(t => t.WorkflowState.AssignedProcessor == null).ToArray();
                 return result;
             }
         }
 
-        public Token[] GetTokensAssignedToProcessor(string processorName)
+        public Token[] GetActiveTokensAssignedToProcessor(string processorName)
         {
             lock (storageLock) {
-                Token[] result = InternalTokens.Where(t => t.WorkflowState.AssignedProcessor == processorName).ToArray();
+                Token[] result = InternalTokens.Where(t => (t.WorkflowState.AssignedProcessor == processorName) && (t.State == TokenState.InProcessor)).ToArray();
                 return result;
             }
         }

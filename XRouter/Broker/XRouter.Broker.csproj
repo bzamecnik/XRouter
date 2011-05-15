@@ -46,6 +46,7 @@
     <Compile Include="GatewayAccessor.cs" />
     <Compile Include="IBrokerService.cs" />
     <Compile Include="IBrokerServiceForComponent.cs" />
+    <Compile Include="IBrokerServiceForDispatcher.cs" />
     <Compile Include="IBrokerServiceForGateway.cs" />
     <Compile Include="IBrokerServiceForManagement.cs" />
     <Compile Include="IBrokerServiceForProcessor.cs" />
