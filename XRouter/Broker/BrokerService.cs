@@ -12,13 +12,16 @@ namespace XRouter.Broker
     {
         private PersistentStorage storage;
         private ConcurrentDictionary<string, ComponentAccessor> componentsAccessors = new ConcurrentDictionary<string, ComponentAccessor>();
+
         private Dispatching.Dispatcher dispatcher;
+        private XmlResourceManager xmlResourceManager;
 
         public BrokerService()
         {
             storage = new PersistentStorage();
             UpdateComponentsAccessorsAccordingToConfig();
 
+            xmlResourceManager = new XmlResourceManager(storage, GetConfiguration);
             dispatcher = new Dispatching.Dispatcher(this);
         }
 
@@ -165,6 +168,25 @@ namespace XRouter.Broker
                 }
             }
             throw new ArgumentException("Cannot find target gateway.");
+        }
+
+        public MessageFlow[] GetActiveMessageFlows()
+        {
+            var config = GetConfiguration();
+            var activeMessageFlowGuids = storage.GetActiveMessageFlowsGuids();
+
+            List<MessageFlow> result = new List<MessageFlow>();
+            foreach (var guid in activeMessageFlowGuids) {
+                MessageFlow messageFlow = config.GetMessageFlow(guid);
+                result.Add(messageFlow);
+            }
+            return result.ToArray();
+        }
+
+        public SerializableXDocument GetXmlResource(Uri resourceUri)
+        {
+            XDocument xmlResource = xmlResourceManager.GetXmlResource(resourceUri);
+            return new SerializableXDocument(xmlResource);
         }
 
         public void UpdateComponentControllerAddress(string componentName, Uri controllerAddress)

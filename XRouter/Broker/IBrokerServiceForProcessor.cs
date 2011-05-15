@@ -21,5 +21,9 @@ namespace XRouter.Broker
 
         // NOTE: synchronous
         SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message);
+
+        MessageFlow[] GetActiveMessageFlows();
+
+        SerializableXDocument GetXmlResource(Uri resourceUri);
     }
 }

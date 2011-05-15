@@ -80,7 +80,7 @@ namespace XRouter.Broker
             return token;
         }
 
-        public Token[] GetUndispatchedTokens()
+        public IEnumerable<Token> GetUndispatchedTokens()
         {
             lock (storageLock) {
                 Token[] result = InternalTokens.Where(t => t.MessageFlowState.AssignedProcessor == null).ToArray();
@@ -88,10 +88,18 @@ namespace XRouter.Broker
             }
         }
 
-        public Token[] GetActiveTokensAssignedToProcessor(string processorName)
+        public IEnumerable<Token> GetActiveTokensAssignedToProcessor(string processorName)
         {
             lock (storageLock) {
                 Token[] result = InternalTokens.Where(t => (t.MessageFlowState.AssignedProcessor == processorName) && (t.State == TokenState.InProcessor)).ToArray();
+                return result;
+            }
+        }
+
+        public IEnumerable<Guid> GetActiveMessageFlowsGuids()
+        {
+            lock (storageLock) {
+                Guid[] result = InternalTokens.Where(t => t.State != TokenState.Finished).Select(t => t.MessageFlowState.MessageFlowGuid).Distinct().ToArray();
                 return result;
             }
         }
