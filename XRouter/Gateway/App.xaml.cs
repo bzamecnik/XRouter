@@ -18,15 +18,15 @@ namespace XRouter.Gateway
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            Uri brokerUri = new Uri(System.Configuration.ConfigurationManager.AppSettings["brokerUrl"]);
-            var broker = ServiceRemoter.GetServiceProxy<IBrokerServiceForGateway>(brokerUri);
+            //Uri brokerUri = new Uri(System.Configuration.ConfigurationManager.AppSettings["brokerUrl"]);
+            //var broker = ServiceRemoter.GetServiceProxy<IBrokerServiceForGateway>(brokerUri);
 
-            string gatewayName = System.Configuration.ConfigurationManager.AppSettings["gatewayName"];
-            var gatewayService = new Implementation.Gateway(broker, gatewayName);
-            gatewayService.Start();
+            //string gatewayName = System.Configuration.ConfigurationManager.AppSettings["gatewayName"];
+            //var gatewayService = new Implementation.Gateway(broker, gatewayName);
+            //gatewayService.Start();
 
-            Uri gatewayAddress = ObjectRemoter.ServiceRemoter.PublishService<IGatewayService>(gatewayService);
-            broker.UpdateComponentInfo(gatewayService.Name, gatewayAddress, gatewayService.ConfigurationReduction);
+            //Uri gatewayAddress = ObjectRemoter.ServiceRemoter.PublishService<IGatewayService>(gatewayService);
+            //broker.UpdateComponentInfo(gatewayService.Name, gatewayAddress, gatewayService.ConfigurationReduction);
         }
     }
 }

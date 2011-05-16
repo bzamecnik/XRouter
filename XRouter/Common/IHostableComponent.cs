@@ -7,9 +7,16 @@ namespace XRouter.Common
 {
     public interface IHostableComponent
     {
-        XmlReduction ConfigurationReduction { get; }
+        event Action<string> LogEventInfo;
+        event Action<string> LogEventWarning;
+        event Action<string> LogEventError;
 
-        void Start();
+        event Action<string> LogTraceInfo;
+        event Action<string> LogTraceWarning;
+        event Action<string> LogTraceError;
+        event Action<Exception> LogTraceException;
+
+        void Start(string componentName, IDictionary<string, string> settings);
         void Stop();
     }
 }

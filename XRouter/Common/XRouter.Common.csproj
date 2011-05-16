@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationConfiguration.cs" />
+    <Compile Include="ComponentHost.cs" />
     <Compile Include="ComponentType.cs" />
     <Compile Include="EndpointAddress.cs" />
     <Compile Include="IComponentController.cs" />
@@ -58,6 +59,10 @@
     <Compile Include="XmlReduction.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DaemonNT\DaemonNT\DaemonNT.csproj">
+      <Project>{3CF25136-3BF3-4213-9FDC-1E80F2C75171}</Project>
+      <Name>DaemonNT</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ObjectRemoter\ObjectRemoter\ObjectRemoter.csproj">
       <Project>{0C9BE6CE-CA69-4EDB-B021-496EEAA0319D}</Project>
       <Name>ObjectRemoter</Name>

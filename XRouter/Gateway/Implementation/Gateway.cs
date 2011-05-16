@@ -16,6 +16,15 @@ namespace XRouter.Gateway.Implementation
     {
         private static readonly string BinPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
+        public event Action<string> LogEventInfo;
+        public event Action<string> LogEventWarning;
+        public event Action<string> LogEventError;
+
+        public event Action<string> LogTraceInfo;
+        public event Action<string> LogTraceWarning;
+        public event Action<string> LogTraceError;
+        public event Action<Exception> LogTraceException;
+
         public string Name { get; private set; }
 
         public XmlReduction ConfigurationReduction { get; private set; }
@@ -28,10 +37,8 @@ namespace XRouter.Gateway.Implementation
 
         private List<Task> adapterTasks = new List<Task>();
 
-        public Gateway(IBrokerServiceForGateway broker, string name)
+        public Gateway()
         {
-            this.broker = broker;
-            Name = name;
             ConfigurationReduction = new XmlReduction();
         }
 
@@ -39,14 +46,29 @@ namespace XRouter.Gateway.Implementation
         {
         }
 
-        public void Start()
+        public void Start(string componentName, IDictionary<string, string> settings)
+        {
+            #region Initialize Name and broker
+            Name = componentName;
+            Uri brokerUri = new Uri(settings["brokerUrl"]);
+            broker = ObjectRemoter.ServiceRemoter.GetServiceProxy<IBrokerServiceForGateway>(brokerUri);
+            #endregion
+
+            StartCore();
+
+            #region Publish this service
+            Uri thisAddress = ObjectRemoter.ServiceRemoter.PublishService<IGatewayService>(this);
+            broker.UpdateComponentInfo(Name, thisAddress, ConfigurationReduction);
+            #endregion
+        }
+
+        private void StartCore()
         {
             var configuration = broker.GetConfiguration(ConfigurationReduction);
 
             AdapterServices = new Dictionary<string, AdapterService>();
             var adaptersConfig = configuration.GetComponentConfiguration(Name).Element("adapters").Elements("adapter");
-            foreach (var adapterConfig in adaptersConfig)
-            {
+            foreach (var adapterConfig in adaptersConfig) {
                 string adapterName = adapterConfig.Attribute(XName.Get("name")).Value;
                 string typeAddress = adapterConfig.Attribute(XName.Get("type")).Value;
                 AdapterService pluginService = GetEndpointsPluginInstance(typeAddress, adapterConfig, adapterName);
