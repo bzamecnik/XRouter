@@ -10,7 +10,7 @@ namespace XRouter.Common
     {
         public Guid MessageFlowGuid { get; set; }
 
-        public List<int> CurrentNodes { get; private set; }
+        public int NextNodeId { get; set; }
 
         public string AssignedProcessor { get; set; }
 
@@ -18,7 +18,6 @@ namespace XRouter.Common
 
         public MessageFlowState()
         {
-            CurrentNodes = new List<int>();
         }
     }
 }
