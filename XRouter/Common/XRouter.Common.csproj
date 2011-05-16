@@ -43,6 +43,7 @@
     <Compile Include="ApplicationConfiguration.cs" />
     <Compile Include="ComponentHost.cs" />
     <Compile Include="ComponentType.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="EndpointAddress.cs" />
     <Compile Include="IComponentController.cs" />
     <Compile Include="IComponentService.cs" />
