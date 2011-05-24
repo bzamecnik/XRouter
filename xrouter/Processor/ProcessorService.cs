@@ -14,15 +14,7 @@ namespace XRouter.Processor
     {
         public string Name { get; private set; }
 
-        public ApplicationConfiguration Configuration { get; private set; }
-
-        public event Action<string> LogEventInfo;
-        public event Action<string> LogEventWarning;
-        public event Action<string> LogEventError;
-        public event Action<string> LogTraceInfo;
-        public event Action<string> LogTraceWarning;
-        public event Action<string> LogTraceError;
-        public event Action<Exception> LogTraceException;
+        internal ApplicationConfiguration Configuration { get; private set; }
 
         private XmlReduction ConfigReduction { get; set; }
 

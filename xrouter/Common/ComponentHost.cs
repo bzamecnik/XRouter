@@ -18,6 +18,9 @@ namespace XRouter.Common
 
         protected override void OnStart(OnStartServiceArgs args)
         {
+            TraceLog.Initialize(Logger);
+            EventLog.Initialize(Logger);
+
             #region Prepare Component
             string componentClassAndAssembly = args.Settings.Parameters[SettingsKey_ComponentType];
             object componentObject = CreateTypeInstance(componentClassAndAssembly);
@@ -44,17 +47,6 @@ namespace XRouter.Common
             if (componentName == null) {
                 throw new InvalidOperationException(string.Format("Missing component parameter '{0}'.", SettingsKey_ComponentName));
             }
-
-            #region Attach to logging events
-            Component.LogEventInfo += delegate(string message) { Logger.Event.LogInfo(message); };
-            Component.LogEventWarning += delegate(string message) { Logger.Event.LogWarning(message); };
-            Component.LogEventError += delegate(string message) { Logger.Event.LogError(message); };
-            
-            Component.LogTraceInfo += delegate(string xmlContent) { Logger.Trace.LogInfo(xmlContent); };
-            Component.LogTraceWarning += delegate(string xmlContent) { Logger.Trace.LogWarning(xmlContent); };
-            Component.LogTraceError += delegate(string xmlContent) { Logger.Trace.LogError(xmlContent); };
-            Component.LogTraceException += delegate(Exception exception) { Logger.Trace.LogException(exception); };
-            #endregion
 
             Component.Start(componentName, componentSettings);
         }

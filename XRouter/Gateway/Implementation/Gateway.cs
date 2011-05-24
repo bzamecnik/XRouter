@@ -16,15 +16,6 @@ namespace XRouter.Gateway.Implementation
     {
         private static readonly string BinPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-        public event Action<string> LogEventInfo;
-        public event Action<string> LogEventWarning;
-        public event Action<string> LogEventError;
-
-        public event Action<string> LogTraceInfo;
-        public event Action<string> LogTraceWarning;
-        public event Action<string> LogTraceError;
-        public event Action<Exception> LogTraceException;
-
         public string Name { get; private set; }
 
         public XmlReduction ConfigurationReduction { get; private set; }

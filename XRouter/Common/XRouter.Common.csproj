@@ -45,10 +45,12 @@
     <Compile Include="ComponentType.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="EndpointAddress.cs" />
+    <Compile Include="EventLog.cs" />
     <Compile Include="IComponentController.cs" />
     <Compile Include="IComponentService.cs" />
     <Compile Include="IGatewayService.cs" />
     <Compile Include="IHostableComponent.cs" />
+    <Compile Include="TraceLog.cs" />
     <Compile Include="IProcessorService.cs" />
     <Compile Include="LimitedConcurrencyLevelTaskScheduler.cs" />
     <Compile Include="MessageFlow\ActionConfiguration.cs" />
