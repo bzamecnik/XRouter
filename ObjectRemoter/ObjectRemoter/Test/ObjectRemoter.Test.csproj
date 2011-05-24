@@ -41,6 +41,9 @@
     <Reference Include="xunit">
       <HintPath>..\..\..\Lib\ThirdParty\xUnit-1.8\xunit.dll</HintPath>
     </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\..\..\Lib\ThirdParty\xUnit-1.8\xunit.extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MarshallingTest.cs" />

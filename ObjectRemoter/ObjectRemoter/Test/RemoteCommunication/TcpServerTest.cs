@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ObjectRemoter.Test.RemoteCommunication
+﻿namespace ObjectRemoter.Test.RemoteCommunication
 {
-    class TcpServerTest
+    using System;
+    using ObjectRemoter.RemoteCommunication;
+    using Xunit;
+
+    public class TcpServerTest
     {
     }
 }

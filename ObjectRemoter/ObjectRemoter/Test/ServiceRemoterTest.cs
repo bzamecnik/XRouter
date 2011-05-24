@@ -57,6 +57,15 @@
                 ServiceRemoter.PublishService<ITextFilterService>(null));
         }
 
+        [Fact]
+        public void GetProxyFromNonexistentServer()
+        {
+            Uri nonexistentUri = new Uri("tcp://127.254.254.254:10000/");
+            ITextFilterService serviceProxy =
+                ServiceRemoter.GetServiceProxy<ITextFilterService>(nonexistentUri);
+            Assert.Throws<ObjectRemoterException>(() => serviceProxy.Filter("foo"));
+        }
+
         #endregion
 
         #region Helper methods
