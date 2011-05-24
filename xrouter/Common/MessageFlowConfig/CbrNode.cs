@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using XRouter.Common.Xrm;
 
-namespace XRouter.Common.MessageFlow
+namespace XRouter.Common.MessageFlowConfig
 {
     [Serializable]
     public class CbrNodeConfiguration : NodeConfiguration

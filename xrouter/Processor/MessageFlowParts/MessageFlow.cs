@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using XRouter.Common.MessageFlow;
+using XRouter.Common.MessageFlowConfig;
 using XRouter.Common;
 
 namespace XRouter.Processor.MessageFlowParts

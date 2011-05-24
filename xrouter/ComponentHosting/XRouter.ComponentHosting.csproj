@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{92BBAB07-15D6-46B4-8AB4-E50F598BCFFD}</ProjectGuid>
+    <ProjectGuid>{75DA200B-E8F1-4698-ADA1-77611103174F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XRouter.Workflow</RootNamespace>
-    <AssemblyName>XRouter.Workflow</AssemblyName>
+    <RootNamespace>XRouter.ComponentHosting</RootNamespace>
+    <AssemblyName>XRouter.ComponentHosting</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -21,7 +21,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\XRouter.Workflow.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +29,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\XRouter.Workflow.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -42,7 +40,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllInOneXRouterHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DaemonNT\DaemonNT\DaemonNT.csproj">
+      <Project>{3CF25136-3BF3-4213-9FDC-1E80F2C75171}</Project>
+      <Name>DaemonNT</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ObjectRemoter\ObjectRemoter\ObjectRemoter.csproj">
+      <Project>{0C9BE6CE-CA69-4EDB-B021-496EEAA0319D}</Project>
+      <Name>ObjectRemoter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Broker\XRouter.Broker.csproj">
+      <Project>{AF28F3BF-7340-408E-B9AC-C9CE0F17A599}</Project>
+      <Name>XRouter.Broker</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\XRouter.Common.csproj">
+      <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
+      <Name>XRouter.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gateway\XRouter.Gateway.csproj">
+      <Project>{67A83368-80F1-467D-950A-64DD5F1EAD6C}</Project>
+      <Name>XRouter.Gateway</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Processor\XRouter.Processor.csproj">
+      <Project>{69C0BC8F-EEF4-4DA8-B220-2B35AA20F273}</Project>
+      <Name>XRouter.Processor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

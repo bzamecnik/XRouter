@@ -55,6 +55,10 @@
     <Compile Include="SingleThreadProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ObjectRemoter\ObjectRemoter\ObjectRemoter.csproj">
+      <Project>{0C9BE6CE-CA69-4EDB-B021-496EEAA0319D}</Project>
+      <Name>ObjectRemoter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SchemaTron\SchemaTron\SchemaTron.csproj">
       <Project>{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}</Project>
       <Name>SchemaTron</Name>

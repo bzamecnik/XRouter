@@ -12,7 +12,7 @@ using XRouter.Broker;
 
 namespace XRouter.Gateway.Implementation
 {
-    class Gateway : IGatewayService, IHostableComponent
+    public class Gateway : IGatewayService
     {
         private static readonly string BinPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -37,20 +37,11 @@ namespace XRouter.Gateway.Implementation
         {
         }
 
-        public void Start(string componentName, IDictionary<string, string> settings)
+        public void Start(string componentName, IBrokerServiceForGateway broker)
         {
-            #region Initialize Name and broker
-            Name = componentName;
-            Uri brokerUri = new Uri(settings["brokerUrl"]);
-            broker = ObjectRemoter.ServiceRemoter.GetServiceProxy<IBrokerServiceForGateway>(brokerUri);
-            #endregion
+            this.broker = broker;
 
             StartCore();
-
-            #region Publish this service
-            Uri thisAddress = ObjectRemoter.ServiceRemoter.PublishService<IGatewayService>(this);
-            broker.UpdateComponentInfo(Name, thisAddress, ConfigurationReduction);
-            #endregion
         }
 
         private void StartCore()

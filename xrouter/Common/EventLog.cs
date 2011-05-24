@@ -9,7 +9,7 @@ namespace XRouter.Common
     {
         private static DaemonNT.Logging.Logger daemonNTLogger;
 
-        internal static void Initialize(DaemonNT.Logging.Logger daemonNTLogger)
+        public static void Initialize(DaemonNT.Logging.Logger daemonNTLogger)
         {
             EventLog.daemonNTLogger = daemonNTLogger;
         }

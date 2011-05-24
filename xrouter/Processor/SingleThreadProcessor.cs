@@ -6,7 +6,7 @@ using XRouter.Common;
 using System.Collections.Concurrent;
 using XRouter.Broker;
 using XRouter.Processor.MessageFlowParts;
-using XRouter.Common.MessageFlow;
+using XRouter.Common.MessageFlowConfig;
 
 namespace XRouter.Processor
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using XRouter.Common.MessageFlow;
+using XRouter.Common.MessageFlowConfig;
 using System.Xml.Serialization;
 
 namespace XRouter.Common

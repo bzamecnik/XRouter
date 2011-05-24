@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Workflow")]
+[assembly: AssemblyTitle("XRouter.ComponentHosting")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("The XRouter Team")]
-[assembly: AssemblyProduct("Workflow")]
-[assembly: AssemblyCopyright("Copyright © The XRouter Team 2011")]
+[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyProduct("XRouter.ComponentHosting")]
+[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5e948e3d-8c1e-4d76-8dae-5eb012bf203d")]
+[assembly: Guid("1ecf6756-c623-487a-b29a-0bfc19d98f24")]
 
 // Version information for an assembly consists of the following four values:
 //

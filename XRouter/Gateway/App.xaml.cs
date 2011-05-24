@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows;
 using System.Xml.Linq;
 using XRouter.Common;
-using ObjectRemoter;
 using XRouter.Broker;
 
 namespace XRouter.Gateway

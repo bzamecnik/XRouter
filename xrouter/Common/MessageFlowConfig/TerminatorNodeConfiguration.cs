@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace XRouter.Common.MessageFlow
+namespace XRouter.Common.MessageFlowConfig
 {
     [Serializable]
     public class TerminatorNodeConfiguration : NodeConfiguration

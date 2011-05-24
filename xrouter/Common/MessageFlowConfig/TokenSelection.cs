@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
-namespace XRouter.Common.MessageFlow
+namespace XRouter.Common.MessageFlowConfig
 {
     public class TokenSelection
     {

@@ -5,12 +5,12 @@ using System.Text;
 using XRouter.Common;
 using System.Collections.Concurrent;
 using System.Xml.Linq;
-using XRouter.Common.MessageFlow;
+using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
 
 namespace XRouter.Broker
 {
-    class BrokerService : IBrokerService, IBrokerServiceForDispatcher
+    public class BrokerService : IBrokerService, IBrokerServiceForDispatcher
     {
         private PersistentStorage storage;
         private ConcurrentDictionary<string, ComponentAccessor> componentsAccessors = new ConcurrentDictionary<string, ComponentAccessor>();
@@ -25,6 +25,14 @@ namespace XRouter.Broker
 
             xmlResourceManager = new XmlResourceManager(storage, GetConfiguration);
             dispatcher = new Dispatching.Dispatcher(this);
+        }
+
+        public void Start()
+        {
+        }
+
+        public void Stop()
+        {
         }
 
         public void StartComponents()
@@ -69,47 +77,47 @@ namespace XRouter.Broker
             }
         }
 
-        public IEnumerable<ProcessorAccessor> GetProcessors()
+        IEnumerable<ProcessorAccessor> IBrokerServiceForDispatcher.GetProcessors()
         {
             ComponentAccessor[] components = componentsAccessors.Values.ToArray();
             var result = components.OfType<ProcessorAccessor>();
             return result;
         }
 
-        public IEnumerable<Token> GetActiveTokensAssignedToProcessor(string processorName)
+        IEnumerable<Token> IBrokerServiceForDispatcher.GetActiveTokensAssignedToProcessor(string processorName)
         {
             var result = storage.GetActiveTokensAssignedToProcessor(processorName);
             return result;
         }
 
-        public IEnumerable<Token> GetUndispatchedTokens()
+        IEnumerable<Token> IBrokerServiceForDispatcher.GetUndispatchedTokens()
         {
             var result = storage.GetUndispatchedTokens();
             return result;
         }
 
-        public void UpdateTokenAssignedProcessor(Guid tokenGuid, string assignedProcessor)
+        void IBrokerServiceForDispatcher.UpdateTokenAssignedProcessor(Guid tokenGuid, string assignedProcessor)
         {
             storage.UpdateToken(tokenGuid, delegate(Token token) {
                 token.MessageFlowState.AssignedProcessor = assignedProcessor;
             });
         }
 
-        public void UpdateTokenMessageFlow(Guid tokenGuid, Guid messageFlowGuid)
+        void IBrokerServiceForDispatcher.UpdateTokenMessageFlow(Guid tokenGuid, Guid messageFlowGuid)
         {
             storage.UpdateToken(tokenGuid, delegate(Token token) {
                 token.MessageFlowState.MessageFlowGuid = messageFlowGuid;
             });
         }
 
-        public void UpdateTokenLastResponseFromProcessor(Guid tokenGuid, DateTime lastResponse)
+        void IBrokerServiceForDispatcher.UpdateTokenLastResponseFromProcessor(Guid tokenGuid, DateTime lastResponse)
         {
             storage.UpdateToken(tokenGuid, delegate(Token token) {
                 token.MessageFlowState.LastResponseFromProcessor = lastResponse;
             });
         }
 
-        public Token GetToken(Guid tokenGuid)
+        Token IBrokerServiceForDispatcher.GetToken(Guid tokenGuid)
         {
             Token token = storage.GetToken(tokenGuid);
             return token;

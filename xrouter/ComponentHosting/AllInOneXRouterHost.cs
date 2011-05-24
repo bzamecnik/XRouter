@@ -3,57 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DaemonNT;
-using System.IO;
+using XRouter.Common;
+using XRouter.Broker;
 using System.Reflection;
+using System.IO;
 
-namespace XRouter.Common
+namespace XRouter.ComponentHosting
 {
-    public class ComponentHost : Service
+    class AllInOneXRouterHost : Service
     {
-        private static readonly string SettingsKey_ComponentType = "ComponentType";
+        private static readonly string SectionKey_Broker = "Broker";
+        private static readonly string SectionKey_Gateway = "Gateway";
+        private static readonly string SectionKey_Processor = "Processor";
         private static readonly string SettingsKey_ComponentName = "ComponentName";
-        private static readonly string SettingsKey_ComponentSettingsSection = "ComponentSettings";
 
-        private IHostableComponent Component { get; set; }
+        private IBrokerService broker;
+        private IGatewayService gateway;
+        private IProcessorService processor;
 
         protected override void OnStart(OnStartServiceArgs args)
         {
             TraceLog.Initialize(Logger);
             EventLog.Initialize(Logger);
 
-            #region Prepare Component
-            string componentClassAndAssembly = args.Settings.Parameters[SettingsKey_ComponentType];
-            object componentObject = CreateTypeInstance(componentClassAndAssembly);
-            Component = componentObject as IHostableComponent;
-            if (Component == null) {
-                throw new InvalidOperationException(string.Format("Type '{0}' does not implement '{1}'.", 
-                    componentClassAndAssembly, typeof(IHostableComponent).FullName));
-            }
-            #endregion
+            broker = new XRouter.Broker.BrokerService();
+            broker.Start();
 
-            #region Prepare componentSettings
-            var componentSettingsSection = args.Settings[SettingsKey_ComponentSettingsSection];
-            if (componentSettingsSection == null) {
-                throw new InvalidOperationException( string.Format("Missing settings section '{0}'", SettingsKey_ComponentSettingsSection));
-            }
-            var componentSettings = new Dictionary<string, string>();
-            foreach (string key in componentSettingsSection.Parameters.Keys) {
-                string value = componentSettingsSection.Parameters[key];
-                componentSettings.Add(key, value);
-            }
-            #endregion
+            processor = new XRouter.Processor.ProcessorService();
+            string processorName = args.Settings[SectionKey_Processor].Parameters[SettingsKey_ComponentName];
+            processor.Start(processorName, broker);
 
-            string componentName = args.Settings.Parameters[SettingsKey_ComponentName];
-            if (componentName == null) {
-                throw new InvalidOperationException(string.Format("Missing component parameter '{0}'.", SettingsKey_ComponentName));
-            }
-
-            Component.Start(componentName, componentSettings);
+            gateway = new XRouter.Gateway.Implementation.Gateway();
+            string gatewayName = args.Settings[SectionKey_Gateway].Parameters[SettingsKey_ComponentName];
+            gateway.Start(gatewayName, broker);
         }
 
         protected override void OnStop(OnStopServiceArgs args)
         {
-            Component.Stop();
+            gateway.Stop();
+            processor.Stop();
+            broker.Stop();
         }
 
         private static object CreateTypeInstance(string typeAndAssembly)
@@ -105,5 +94,6 @@ namespace XRouter.Common
 
             return instance;
         }
+
     }
 }

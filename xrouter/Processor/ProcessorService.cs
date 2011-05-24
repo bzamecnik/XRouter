@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace XRouter.Processor
 {
-    class ProcessorService : IProcessorService, IHostableComponent
+    public class ProcessorService : IProcessorService
     {
         public string Name { get; private set; }
 
@@ -25,10 +25,10 @@ namespace XRouter.Processor
         private BlockingCollection<Token> tokensToProcess;
         private ConcurrentBag<SingleThreadProcessor> concurrentProcessors;
 
-        public void Start(string componentName, IDictionary<string, string> settings)
+        public void Start(string componentName, IBrokerServiceForProcessor brokerService)
         {
             Name = componentName;
-            BrokerService = null;
+            BrokerService = brokerService;
 
             ConfigReduction = new XmlReduction();
 

@@ -41,25 +41,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationConfiguration.cs" />
-    <Compile Include="ComponentHost.cs" />
     <Compile Include="ComponentType.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="EndpointAddress.cs" />
     <Compile Include="EventLog.cs" />
     <Compile Include="IComponentController.cs" />
     <Compile Include="IComponentService.cs" />
-    <Compile Include="IGatewayService.cs" />
-    <Compile Include="IHostableComponent.cs" />
     <Compile Include="TraceLog.cs" />
-    <Compile Include="IProcessorService.cs" />
     <Compile Include="LimitedConcurrencyLevelTaskScheduler.cs" />
-    <Compile Include="MessageFlow\ActionConfiguration.cs" />
-    <Compile Include="MessageFlow\ActionNodeConfiguration.cs" />
-    <Compile Include="MessageFlow\CbrNode.cs" />
-    <Compile Include="MessageFlow\MessageFlowConfiguration.cs" />
-    <Compile Include="MessageFlow\NodeConfiguration.cs" />
-    <Compile Include="MessageFlow\TerminatorNodeConfiguration.cs" />
-    <Compile Include="MessageFlow\TokenSelection.cs" />
+    <Compile Include="MessageFlowConfig\ActionConfiguration.cs" />
+    <Compile Include="MessageFlowConfig\ActionNodeConfiguration.cs" />
+    <Compile Include="MessageFlowConfig\CbrNode.cs" />
+    <Compile Include="MessageFlowConfig\MessageFlowConfiguration.cs" />
+    <Compile Include="MessageFlowConfig\NodeConfiguration.cs" />
+    <Compile Include="MessageFlowConfig\TerminatorNodeConfiguration.cs" />
+    <Compile Include="MessageFlowConfig\TokenSelection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializableXDocument.cs" />
     <Compile Include="Token.cs" />
