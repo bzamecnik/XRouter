@@ -189,9 +189,23 @@ namespace ObjectRemoter.Test
         {
             var original = new SampleRemotelyCloneable("foo", 1,
                 new SampleRemotelyCloneable("bar", 2, null));
-            string marshalled = Marshalling.Marshal(original, typeof(SampleRemotelyCloneable));
+            string marshalled = Marshalling.Marshal(original, typeof(IRemotelyCloneable));
+            // TODO: find out what is the corrent behavior:
+            // - should Marshal determine IRemotelyCloneable or the real type?
             string marshalledWithExplicitType = Marshalling.Marshal(original, typeof(object));
             Assert.Equal(marshalled, marshalledWithExplicitType);
+        }
+
+        [Fact]
+        public void MarshalRemotelyCloneableWithConcreteTypeAndUnmarshalWithAbstractType()
+        {
+            var original = new SampleRemotelyCloneable("foo", 1,
+                new SampleRemotelyCloneable("bar", 2, null));
+            // marshal with concrete type
+            string marshalled = Marshalling.Marshal(original, typeof(SampleRemotelyCloneable));
+            // unmarshal with abstract type
+            object result = Marshalling.Unmarshal(marshalled, typeof(IRemotelyCloneable));
+            Assert.Equal(original, result);
         }
 
         [Fact]
@@ -328,11 +342,25 @@ namespace ObjectRemoter.Test
 
 
         [Fact]
-        public void MarshalAndUnmarshallRemotelyCloneableWithNonConcreteType()
+        public void MarshalAndUnmarshallRemotelyCloneableWithAbstractType()
         {
             var original = new SampleRemotelyCloneable("foo", 1,
                 new SampleRemotelyCloneable("bar", 2, null));
             Assert.Throws<ArgumentException>(() => MarshalAndUnmarshall<IRemotelyCloneable>(original));
+        }
+
+
+        [Fact]
+        public void MarshalRemotelyCloneableWithAbstractTypeAndUnmarshalWithConcreteType()
+        {
+            var original = new SampleRemotelyCloneable("foo", 1,
+                new SampleRemotelyCloneable("bar", 2, null));
+            // marshal with concrete type
+            string marshalled = Marshalling.Marshal(original, typeof(IRemotelyCloneable));
+            // unmarshal with abstract type
+            // TODO: clear the specification - this might not throw exception
+            Assert.Throws<ArgumentException>(() =>
+                Marshalling.Unmarshal(marshalled, typeof(SampleRemotelyCloneable)));
         }
 
         #endregion
@@ -346,6 +374,7 @@ namespace ObjectRemoter.Test
             object result = Marshalling.Unmarshal(marshalled, type);
             Assert.Equal(original, result);
         }
+
         private static void MarshalAndUnmarshall<T>(T original, IEqualityComparer<T> comparer)
         {
             Type type = typeof(T);

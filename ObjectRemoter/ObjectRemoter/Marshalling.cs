@@ -162,26 +162,30 @@ namespace ObjectRemoter
         /// <param name="marshalled">Marshalled object represented as a string.
         /// Must not be null.
         /// </param>
-        /// <param name="type">Type of the object to be unmarshalled. Must not
-        /// be null.</param>
+        /// <param name="requestedType">Type of the object to be unmarshalled.
+        /// Must not be null.</param>
         /// <returns>The unmarshalled object.</returns>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="ArgumentException">If the object type is not
-        /// supported for unmarshalling. See the Marshall method for supported
+        /// supported for unmarshalling. See the Marshal method for supported
         /// object types and categories.
         /// </exception>
         /// <see cref="Marshal(object,Type)"/>
-        public static object Unmarshal(string marshalled, Type type)
+        public static object Unmarshal(string marshalled, Type requestedType)
         {
             if (marshalled == null)
             {
                 throw new ArgumentNullException("marshalled");
             }
 
-            if (type == null)
+            if (requestedType == null)
             {
-                throw new ArgumentNullException("type");
+                throw new ArgumentNullException("requestedType");
             }
+
+            // working type - can be either set the requested type or to the
+            // type stored in the marshalled representation
+            Type type = requestedType;
 
             #region Extract typeAndAssemblyFullName from parameter marshalled
             int formalTypeEndPos = marshalled.IndexOf(':');
@@ -200,10 +204,13 @@ namespace ObjectRemoter
             }
             #endregion
 
+            // type stored in the marshalled representation
+            Type storedType = null;
             if (type is object)
             {
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-                type = TypeExtensions.GetType(assemblies, typeAndAssemblyFullName);
+                storedType = TypeExtensions.GetType(assemblies, typeAndAssemblyFullName);
+                type = storedType;
             }
 
             if (type.IsPrimitive)
@@ -237,13 +244,18 @@ namespace ObjectRemoter
             if (typeof(IRemotelyCloneable).IsAssignableFrom(type))
             {
                 // TODO:
-                // - A check should be made whether an instance of 'type'
-                //   can be created (type is neither an abstract class, nor an
-                //   interface.
-                // - The behavior should be analyzed better.
-                //   - It is not straighforward if an exception should be
-                //     thrown or the type should be automatically corrected
-                //     (ie. taken from the saved real type in unmarshalling)
+                // If one of the types (stored or requested) is not abstract
+                // and the other is, the non-abstract type could be
+                // instantiated instead of throwing an exception.
+                // The behavior should be analyzed better.
+                // It is not straighforward if an exception should be
+                // thrown or the type should be automatically corrected
+                // (ie. taken from the saved real type in unmarshalling).
+                if (type.IsAbstract)
+                {
+                    throw new ArgumentException(
+                        string.Format("Cannot instantiate an abstract type: {0}", type));
+                }
                 var result = (IRemotelyCloneable)FormatterServices.GetUninitializedObject(type);
                 result.DeserializeClone(marshalled);
                 return result;
@@ -311,6 +323,7 @@ namespace ObjectRemoter
                 }
                 catch (System.Security.SecurityException ex)
                 {
+                    // TODO: no test coverage
                     throw new ArgumentException("Bad object contents.", "marshalled", ex);
                 }
             }
@@ -368,6 +381,7 @@ namespace ObjectRemoter
             int delegateTargetID = delegatesBodies.Count + 1;
             while (!delegatesBodies.TryAdd(delegateTargetID, body))
             {
+                // TODO: no test coverage
                 delegateTargetID++;
             }
 
@@ -395,6 +409,7 @@ namespace ObjectRemoter
                 il.Emit(OpCodes.Ldarg, i);
                 if (parameterTypes[i].IsValueType)
                 {
+                    // TODO: no test coverage
                     il.Emit(OpCodes.Box, parameterTypes[i]);
                 }
                 il.Emit(OpCodes.Stelem_Ref);
