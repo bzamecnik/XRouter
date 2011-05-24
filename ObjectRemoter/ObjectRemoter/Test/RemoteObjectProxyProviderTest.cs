@@ -144,6 +144,55 @@
         // TODO:
         // - ProxyInterceptor - System.Net.Sockets.SocketException
 
+        #region Using the remoted objects
+
+        [Fact]
+        public void GetProperty()
+        {
+            FullService service = new FullService() { Property = 42 };
+            RemoteObjectAddress address = ObjectServer.PublishObject(service);
+            IFullService proxy = RemoteObjectProxyProvider.GetProxy<IFullService>(address);
+
+            Assert.Equal(42, proxy.Property);
+        }
+
+        [Fact]
+        public void SetProperty()
+        {
+            FullService service = new FullService() { Property = 1 };
+            RemoteObjectAddress address = ObjectServer.PublishObject(service);
+            IFullService proxy = RemoteObjectProxyProvider.GetProxy<IFullService>(address);
+            proxy.Property = 2;
+            int value = proxy.Property;
+
+            Assert.Equal(2, value);
+        }
+
+        [Fact]
+        public void CallMethod()
+        {
+            FullService service = new FullService();
+            RemoteObjectAddress address = ObjectServer.PublishObject(service);
+            IFullService proxy = RemoteObjectProxyProvider.GetProxy<IFullService>(address);
+            string result = proxy.Method("foo");
+
+            Assert.Equal("FOO", result);
+        }
+
+        //[Fact]
+        //public void CallEvent()
+        //{
+        //    FullService service = new FullService();
+        //    service.Event += (value) => { Property = value; };
+        //    RemoteObjectAddress address = ObjectServer.PublishObject(service);
+        //    IFullService proxy = RemoteObjectProxyProvider.GetProxy<IFullService>(address);
+        //    string result = proxy.Method("foo");
+
+        //    Assert.Equal("FOO", result);
+        //}
+
+        #endregion
+
         #endregion
 
         #region Helper classes and interfaces
@@ -171,6 +220,32 @@
             public string Filter(string text)
             {
                 return text.ToUpper();
+            }
+        }
+
+        // service with all supported member categories
+        // (methods, properties, events)
+        public interface IFullService : IRemotelyReferable
+        {
+            int Property { get; set; }
+            event EventHandler Event;
+            string Method(string input);
+        }
+
+        public class FullService : IFullService
+        {
+            private int property;
+            public int Property
+            {
+                get { return property; }
+                set { property = value; }
+            }
+
+            public event EventHandler Event = delegate { };
+
+            public string Method(string input)
+            {
+                return input.ToUpper();
             }
         }
 
