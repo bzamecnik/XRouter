@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using ObjectRemoter;
-using Xunit;
-
-namespace ObjectRemoter.Test
+﻿namespace ObjectRemoter.Test
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Formatters.Binary;
+    using Xunit;
+
     public class MarshallingTest
     {
         #region Happy-day test methods

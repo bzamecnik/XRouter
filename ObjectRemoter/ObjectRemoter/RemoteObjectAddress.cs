@@ -11,7 +11,7 @@ namespace ObjectRemoter
         /// Address of a remote communication server
         /// </summary>
         internal ServerAddress ServerAddress { get; private set; }
-    
+
         internal RemoteObjectAddress(ServerAddress serverAddress, int objectID)
         {
             ServerAddress = serverAddress;
@@ -66,6 +66,7 @@ namespace ObjectRemoter
 
         public override string ToString()
         {
+            // TODO: no test coverage
             return string.Format("{0}|{1}", ServerAddress.Url, ObjectID);
         }
     }

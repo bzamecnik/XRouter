@@ -6,7 +6,7 @@ using System.Text;
 namespace ObjectRemoter
 {
     /// <summary>
-    /// A wrapper for delegate which can be invoked remotely.
+    /// A wrapper for a delegate which can be invoked remotely.
     /// </summary>
     public interface IInvocable : IRemotelyReferable
     {

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Xunit;
-
-namespace ObjectRemoter.Test
+﻿namespace ObjectRemoter.Test
 {
-    class RemoteObjectProxyProviderTest
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Xunit;
+
+    public class RemoteObjectProxyProviderTest
     {
         #region Happy-day test methods
 
@@ -17,7 +17,26 @@ namespace ObjectRemoter.Test
             RemoteObjectAddress address = ObjectServer.PublishObject(sampleInvocable);
             IInvocable proxy = RemoteObjectProxyProvider.GetProxy<IInvocable>(
                 address, typeof(IInvocable));
+
             Assert.NotNull(proxy);
+            InvokeSampleInvokable(proxy);
+        }
+
+        [Fact, Trait("Category", "Network")]
+        public void GetProxyTwice()
+        {
+            SampleInvocable sampleInvocable = new SampleInvocable();
+            RemoteObjectAddress address = ObjectServer.PublishObject(sampleInvocable);
+            IInvocable proxy1 = RemoteObjectProxyProvider.GetProxy<IInvocable>(
+                address, typeof(IInvocable));
+            IInvocable proxy2 = RemoteObjectProxyProvider.GetProxy<IInvocable>(
+                address, typeof(IInvocable));
+
+            Assert.NotNull(proxy1);
+            Assert.NotNull(proxy2);
+            Assert.Equal(proxy1, proxy2);
+            InvokeSampleInvokable(proxy1);
+            InvokeSampleInvokable(proxy2);
         }
 
         // required interface type is descendant of type parameter
@@ -28,6 +47,7 @@ namespace ObjectRemoter.Test
             RemoteObjectAddress address = ObjectServer.PublishObject(sampleInvocable);
             IRemotelyReferable proxy = RemoteObjectProxyProvider.GetProxy<IRemotelyReferable>(
                     address, typeof(IInvocable));
+
             Assert.NotNull(proxy);
         }
 
@@ -37,11 +57,25 @@ namespace ObjectRemoter.Test
             SampleInvocable sampleInvocable = new SampleInvocable();
             RemoteObjectAddress address = ObjectServer.PublishObject(sampleInvocable);
             IInvocable proxy = RemoteObjectProxyProvider.GetProxy<IInvocable>(address, null);
+
             Assert.NotNull(proxy);
+            InvokeSampleInvokable(proxy);
+        }
+
+        // published object and proxy implement a custom interface
+        [Fact, Trait("Category", "Network")]
+        public void GetProxyWithCustomInterface()
+        {
+            ToUpperTextFilter obj = new ToUpperTextFilter();
+            RemoteObjectAddress address = ObjectServer.PublishObject(obj);
+            ITextFilter proxy = RemoteObjectProxyProvider.GetProxy<ITextFilter>(
+                    address, typeof(ITextFilter));
+
+            Assert.NotNull(proxy);
+            Assert.Equal("FOO", proxy.Filter("Foo"));
         }
 
         // TODO:
-        // - try a class with custom interface
         // - local address
 
         #endregion
@@ -118,8 +152,40 @@ namespace ObjectRemoter.Test
         {
             public object Invoke(object[] arguments)
             {
+                if ((arguments.Length > 0) && (arguments[0] is string))
+                {
+                    return ((string)arguments[0]).ToUpper();
+                }
                 return null;
             }
+        }
+
+        public interface ITextFilter : IRemotelyReferable
+        {
+            string Filter(string text);
+        }
+
+        // a class with custom interface derived from IRemotelyReferable
+        private class ToUpperTextFilter : ITextFilter
+        {
+            public string Filter(string text)
+            {
+                return text.ToUpper();
+            }
+        }
+
+        #endregion
+
+        #region Helper methods
+
+        /// <summary>
+        /// Test if invoking the SampleInvocable instance works.
+        /// </summary>
+        /// <param name="sampleInvocable">Can be real local instance or remote
+        /// proxy.</param>
+        private static void InvokeSampleInvokable(IInvocable sampleInvocable)
+        {
+            Assert.Equal("FOO", sampleInvocable.Invoke(new[] { "Foo" }));
         }
 
         #endregion

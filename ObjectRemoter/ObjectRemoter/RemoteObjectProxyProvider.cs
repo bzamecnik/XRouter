@@ -7,6 +7,8 @@ namespace ObjectRemoter
     /// <summary>
     /// A provider of proxies for remote objects.
     /// </summary>
+    /// <see cref="ObjectRemoter"/>
+    /// <see cref="ServiceRemoter"/>
     public static class RemoteObjectProxyProvider
     {
         private static object dataLock = new object();
@@ -51,6 +53,7 @@ namespace ObjectRemoter
             {
                 // TODO: Isn't ArgumentException more appropriate here?
                 // If so fix the unit tests as well.
+                // TODO: no test coverage
                 throw new InvalidOperationException("Parameter requiredInterface and type argument T must be an interface.");
             }
 
@@ -70,6 +73,7 @@ namespace ObjectRemoter
         {
             if (address.ServerAddress.IsLocal)
             {
+                // TODO: no test coverage
                 lock (ObjectServer.DataLock)
                 {
                     object localObject = ObjectServer.PublishedObjects[address.ObjectID];
@@ -147,6 +151,7 @@ namespace ObjectRemoter
                 }
                 catch (System.Net.Sockets.SocketException ex)
                 {
+                    // TODO: no test coverage
                     throw new ObjectRemoterException("Cannot communicate with the remote object. It might be unaccessible.", ex);
                 }
                 object result = Marshalling.Unmarshal(marshalledResult, invocation.Method.ReturnType);

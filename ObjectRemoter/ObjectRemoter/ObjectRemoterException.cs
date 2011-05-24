@@ -5,6 +5,8 @@ using System.Text;
 
 namespace ObjectRemoter
 {
+    // TODO: no test coverage
+
     [Serializable]
     public class ObjectRemoterException : Exception
     {

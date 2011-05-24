@@ -29,6 +29,7 @@ namespace ObjectRemoter.RemoteCommunication
         {
             if (isStarted)
             {
+                // TODO: no test coverage
                 return;
             }
             isStarted = true;
@@ -55,12 +56,14 @@ namespace ObjectRemoter.RemoteCommunication
                 string command = sr.ReadLine();
                 if (command == null)
                 {
+                    // TODO: no test coverage
                     return;
                 }
 
                 string dataCountStr = sr.ReadLine();
                 if (dataCountStr == null)
                 {
+                    // TODO: no test coverage
                     return;
                 }
 
@@ -71,6 +74,7 @@ namespace ObjectRemoter.RemoteCommunication
                     data[i] = sr.ReadLine();
                     if (data[i] == null)
                     {
+                        // TODO: no test coverage
                         return;
                     }
                     data[i] = data[i]

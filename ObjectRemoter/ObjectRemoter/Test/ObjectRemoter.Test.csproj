@@ -44,10 +44,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MarshallingTest.cs" />
+    <Compile Include="ObjectServerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoteCommunication\ServerAddressTest.cs" />
+    <Compile Include="RemoteCommunication\TcpServerTest.cs" />
     <Compile Include="RemoteObjectAddressTest.cs" />
     <Compile Include="RemoteObjectProxyProviderTest.cs" />
     <Compile Include="ServiceRemoterTest.cs" />
+    <Compile Include="TypeExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ObjectRemoter.csproj">

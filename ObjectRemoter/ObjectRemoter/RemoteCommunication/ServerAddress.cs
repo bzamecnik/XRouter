@@ -19,6 +19,7 @@ namespace ObjectRemoter.RemoteCommunication
 
         internal ServerAddress(Uri url)
         {
+            // TODO: no test coverage
             Url = url;
             Port = url.Port;
             IPAddress = ChooseIPAddress(Dns.GetHostAddresses(url.Host));
@@ -50,6 +51,7 @@ namespace ObjectRemoter.RemoteCommunication
         {
             get
             {
+                // TODO: no test coverage
                 return Url.IsLoopback && (Port == ObjectServer.ServerAddress.Port);
             }
         }
@@ -112,6 +114,7 @@ namespace ObjectRemoter.RemoteCommunication
             //   loopback address
             if (result == null)
             {
+                // TODO: no test coverage
                 result = IPAddress.Parse("127.0.0.1");
             }
             return result;
