@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ObjectRemoter.RemoteCommunication
 {
@@ -12,17 +13,23 @@ namespace ObjectRemoter.RemoteCommunication
     /// </summary>
     internal class ServerAddress
     {
-        private static readonly int PortRangeStart = 10000;
-        private static readonly int PortRangeEnd = 30000;
+        private static readonly int PORT_RANGE_START = 10000;
+        private static readonly int PORT_RANGE_END = 30000;
 
         private static Random rnd = new Random();
 
         internal ServerAddress(Uri url)
         {
+            if (url == null)
+            {
+                throw new ArgumentNullException("url");
+            }
             // TODO: no test coverage
             Url = url;
             Port = url.Port;
-            IPAddress = ChooseIPAddress(Dns.GetHostAddresses(url.Host));
+            // TODO: the chosen IP address might not match with the one
+            // provided in the URI
+            IPAddress = ChooseIPAddress(url.Host);
         }
 
         private ServerAddress(Uri url, IPAddress ipAddress, int port)
@@ -32,6 +39,7 @@ namespace ObjectRemoter.RemoteCommunication
             Port = port;
         }
 
+        // TODO: rename to Uri or URI
         /// <summary>
         /// Url of server (contains host name/IP and port)
         /// </summary>
@@ -47,6 +55,10 @@ namespace ObjectRemoter.RemoteCommunication
         /// </summary>
         public IPAddress IPAddress { get; private set; }
 
+        /// <summary>
+        /// Indicates whether the server address corresponds with the locally
+        /// available ObjectServer instance.
+        /// </summary>
         internal bool IsLocal
         {
             get
@@ -62,10 +74,10 @@ namespace ObjectRemoter.RemoteCommunication
         /// <returns>Local server address</returns>
         public static ServerAddress GetLocalServerAddress()
         {
-            int port = PortRangeStart + rnd.Next(PortRangeEnd - PortRangeStart);
+            int port = rnd.Next(PORT_RANGE_START, PORT_RANGE_END);
 
             string localHostName = Dns.GetHostName();
-            IPAddress ipAddress = ChooseIPAddress(Dns.GetHostAddresses(localHostName));
+            IPAddress ipAddress = ChooseIPAddress(localHostName);
 
             Uri url = new Uri(string.Format("tcp://{0}:{1}", ipAddress, port));
             ServerAddress result = new ServerAddress(url, ipAddress, port);
@@ -75,14 +87,20 @@ namespace ObjectRemoter.RemoteCommunication
         /// <summary>
         /// Deserialize address object from string.
         /// </summary>
-        /// <param name="serialized">Serialized address</param>
+        /// <param name="serialized">Serialized address. Must not be null.</param>
         /// <returns>Deserialized object</returns>
         public static ServerAddress Deserialize(string serialized)
         {
+            if (serialized == null)
+            {
+                throw new ArgumentNullException("serialized");
+            }
             Uri url = new Uri(serialized);
             int port = url.Port;
             string host = url.Host;
-            IPAddress ipAddress = ChooseIPAddress(Dns.GetHostAddresses(host));
+            // TODO: the chosen IP address might not match with the one
+            // provided in the URI
+            IPAddress ipAddress = ChooseIPAddress(host);
 
             var result = new ServerAddress(url, ipAddress, port);
             return result;
@@ -96,6 +114,19 @@ namespace ObjectRemoter.RemoteCommunication
         {
             string result = Url.ToString();
             return result;
+        }
+
+        private static IPAddress ChooseIPAddress(string host)
+        {
+            if (Regex.Match(host, @"^(\d{1,3}\.){3}\d{1,3}$").Success)
+            {
+                // do not translate a host already containing an IP address
+                return IPAddress.Parse(host);
+            }
+            else
+            {
+                return ChooseIPAddress(Dns.GetHostAddresses(host));
+            }
         }
 
         private static IPAddress ChooseIPAddress(IEnumerable<IPAddress> addresses)

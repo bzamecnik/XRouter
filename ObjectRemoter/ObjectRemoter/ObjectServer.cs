@@ -60,6 +60,9 @@ namespace ObjectRemoter
         {
             DataLock = new object();
 
+            // TODO: Now it is not possible to start the server at a
+            // configured address like 127.0.0.1. For testing purposes it
+            // could be configurable.
             server = new TcpServer();
             ServerAddress = server.Address;
             server.RequestReceived += OnRequestReceived;
