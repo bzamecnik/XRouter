@@ -89,7 +89,7 @@ namespace XRouter.Adapters.TestingPlugins
 
             XDocument xDoc = XDocument.Load(request.InputStream);
             Token token = new Token();
-            token.AddMessage(xDoc);
+            token.AddMessage(xDoc, new Guid().ToString());
             token.SourceAddress = new EndpointAddress(Name, listenerInfo.EndpointName);
             Service.ReceiveMessageAsync(token);
         }

@@ -42,12 +42,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IActionPlugin.cs" />
+    <Compile Include="IProcessorServiceForAction.cs" />
+    <Compile Include="MessageFlowParts\ActionNode.cs" />
+    <Compile Include="MessageFlowParts\CbrNode.cs" />
+    <Compile Include="MessageFlowParts\MessageFlow.cs" />
+    <Compile Include="MessageFlowParts\Node.cs" />
+    <Compile Include="MessageFlowParts\TerminatorNode.cs" />
+    <Compile Include="ProcessorService.cs" />
+    <Compile Include="ProcessorServiceForNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingleThreadProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SchemaTron\SchemaTron\SchemaTron.csproj">
       <Project>{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}</Project>
       <Name>SchemaTron</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Broker\XRouter.Broker.csproj">
+      <Project>{AF28F3BF-7340-408E-B9AC-C9CE0F17A599}</Project>
+      <Name>XRouter.Broker</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\XRouter.Common.csproj">
+      <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
+      <Name>XRouter.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

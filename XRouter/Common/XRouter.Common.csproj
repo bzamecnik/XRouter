@@ -51,13 +51,20 @@
     <Compile Include="IHostableComponent.cs" />
     <Compile Include="IProcessorService.cs" />
     <Compile Include="LimitedConcurrencyLevelTaskScheduler.cs" />
-    <Compile Include="MessageFlow.cs" />
+    <Compile Include="MessageFlow\ActionConfiguration.cs" />
+    <Compile Include="MessageFlow\ActionNodeConfiguration.cs" />
+    <Compile Include="MessageFlow\CbrNode.cs" />
+    <Compile Include="MessageFlow\MessageFlowConfiguration.cs" />
+    <Compile Include="MessageFlow\NodeConfiguration.cs" />
+    <Compile Include="MessageFlow\TerminatorNodeConfiguration.cs" />
+    <Compile Include="MessageFlow\TokenSelection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializableXDocument.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="TokenState.cs" />
     <Compile Include="MessageFlowState.cs" />
     <Compile Include="XmlReduction.cs" />
+    <Compile Include="Xrm\XrmTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DaemonNT\DaemonNT\DaemonNT.csproj">

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using XRouter.Common.MessageFlow;
+using System.Xml.Serialization;
 
 namespace XRouter.Common
 {
@@ -36,7 +38,7 @@ namespace XRouter.Common
 
         public TimeSpan GetNonRunningProcessorResponseTimeout()
         {
-            string value = System.Xml.XPath.Extensions.XPathSelectElement(Content, "/configuration/dispatcher").Attribute(XName.Get("nonRunningProcessorResponseTimeout")).Value;
+            string value = System.Xml.XPath.Extensions.XPathSelectElement(Content, "/configuration/dispatcher").Attribute(XName.Get("nonrunning-processor-response-timeout")).Value;
             TimeSpan result = TimeSpan.FromSeconds(int.Parse(value));
             return result;
         }
@@ -79,14 +81,34 @@ namespace XRouter.Common
             throw new ArgumentException("Cannot find component with give name.");
         }
 
-        public Guid GetCurrentMessageFlowGuid()
+        public int GetConcurrentThreadsCountForProcessor(string componentName)
         {
-            throw new NotImplementedException();
+            XElement processor = GetComponentConfiguration(componentName);
+            int result = int.Parse((string)Content.XDocument.XPathEvaluate(".@concurrentThreads"));
+            return result;
         }
 
-        public MessageFlow GetMessageFlow(Guid guid)
+        public Guid GetCurrentMessageFlowGuid()
         {
-            throw new NotImplementedException();
+            Guid result = Guid.Parse((string)Content.XDocument.XPathEvaluate("/configuration/messageflows@current-guid"));
+            return result;
+        }
+
+        public MessageFlowConfiguration GetMessageFlow(Guid guid)
+        {
+            XElement messageFlowElement = Content.XDocument.XPathSelectElement(string.Format("/configuration/messageflows/messageflow[@guid='{0}']", guid));
+            XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowConfiguration));
+            var result = (MessageFlowConfiguration)serializer.Deserialize(messageFlowElement.CreateReader());
+            return result;
+        }
+
+        public void AddMessageFlow(MessageFlowConfiguration messageFlow)
+        {
+            XElement messageFlowElement = new XElement(XName.Get("messageflow"));
+            messageFlowElement.SetAttributeValue(XName.Get("guid"), messageFlow.Guid);
+            XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowConfiguration));
+            serializer.Serialize(messageFlowElement.CreateWriter(), messageFlow);
+            Content.XDocument.XPathSelectElement("/configuration/messageflows").Add(messageFlowElement);
         }
     }
 }

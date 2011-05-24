@@ -61,7 +61,7 @@ namespace XRouter.Adapters.TestingAdapters
 		private void ReceiveMessage(XDocument xDoc, EndpointAddress sourceAddress)
 		{
             Token token = new Token();
-            token.AddMessage(xDoc);
+            token.AddMessage(xDoc, new Guid().ToString());
             token.SourceAddress = sourceAddress;
             Service.ReceiveMessageAsync(token);
 		}

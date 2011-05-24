@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using ObjectRemoter;
 using XRouter.Common;
+using XRouter.Common.MessageFlow;
+using XRouter.Common.Xrm;
 
 namespace XRouter.Broker
 {
@@ -14,16 +16,16 @@ namespace XRouter.Broker
 
         // NOTE: messages will not be removed from tokens
 
-        void AddMessageToToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument message);
+        void AddMessageToToken(string updatingProcessorName, Guid targetTokenGuid, string messageName, SerializableXDocument message);
 
         /// change token state, not messageFlow state
         void FinishToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument resultMessage);
 
         // NOTE: synchronous
-        SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message);
+        SerializableXDocument SendMessage(EndpointAddress address, SerializableXDocument message);
 
-        MessageFlow[] GetActiveMessageFlows();
+        MessageFlowConfiguration[] GetActiveMessageFlows();
 
-        SerializableXDocument GetXmlResource(Uri resourceUri);
+        SerializableXDocument GetXmlResource(XrmTarget target);
     }
 }

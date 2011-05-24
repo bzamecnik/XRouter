@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using XRouter.Common;
 using System.Xml.Linq;
+using XRouter.Common.Xrm;
 
 namespace XRouter.Broker
 {
@@ -19,7 +20,7 @@ namespace XRouter.Broker
             GetConfiguration = getConfiguration;
         }
 
-        public XDocument GetXmlResource(Uri resourceUri)
+        public XDocument GetXmlResource(XrmTarget resourceUri)
         {
             throw new NotImplementedException();
         }

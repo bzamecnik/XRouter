@@ -5,6 +5,8 @@ using System.Text;
 using XRouter.Common;
 using System.Collections.Concurrent;
 using System.Xml.Linq;
+using XRouter.Common.MessageFlow;
+using XRouter.Common.Xrm;
 
 namespace XRouter.Broker
 {
@@ -125,17 +127,17 @@ namespace XRouter.Broker
             storage.UpdateToken(tokenGuid, delegate(Token token) {
                 if (token.MessageFlowState.AssignedProcessor == updatingProcessorName) {
                     token.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
-                    token.MessageFlowState = messageFlowState;
+                    token.SaveMessageFlowState(messageFlowState);
                 }
             });
         }
 
-        public void AddMessageToToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument message)
+        public void AddMessageToToken(string updatingProcessorName, Guid targetTokenGuid, string messageName, SerializableXDocument message)
         {
-            storage.UpdateToken(tokenGuid, delegate(Token token) {
+            storage.UpdateToken(targetTokenGuid, delegate(Token token) {
                 if (token.MessageFlowState.AssignedProcessor == updatingProcessorName) {
                     token.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
-                    token.AddMessage(message);
+                    token.AddMessage(message, messageName);
                 }
             });
         }
@@ -146,9 +148,10 @@ namespace XRouter.Broker
             if (token.MessageFlowState.AssignedProcessor == updatingProcessorName) {
                 storage.UpdateToken(tokenGuid, delegate(Token t) {
                     t.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
+                    t.SaveMessageFlowState();
                 });
 
-                GatewayAccessor sourceGateway = componentsAccessors.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == token.GatewayName);
+                GatewayAccessor sourceGateway = componentsAccessors.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == token.SourceGatewayName);
                 sourceGateway.ReceiveReturn(tokenGuid, resultMessage);
 
                 storage.UpdateToken(tokenGuid, delegate(Token t) {
@@ -157,7 +160,7 @@ namespace XRouter.Broker
             }
         }
 
-        public SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message)
+        public SerializableXDocument SendMessage(EndpointAddress address, SerializableXDocument message)
         {
             ComponentAccessor component;
             if (componentsAccessors.TryGetValue(address.GatewayName, out component)) {
@@ -170,22 +173,22 @@ namespace XRouter.Broker
             throw new ArgumentException("Cannot find target gateway.");
         }
 
-        public MessageFlow[] GetActiveMessageFlows()
+        public MessageFlowConfiguration[] GetActiveMessageFlows()
         {
             var config = GetConfiguration();
             var activeMessageFlowGuids = storage.GetActiveMessageFlowsGuids();
 
-            List<MessageFlow> result = new List<MessageFlow>();
+            List<MessageFlowConfiguration> result = new List<MessageFlowConfiguration>();
             foreach (var guid in activeMessageFlowGuids) {
-                MessageFlow messageFlow = config.GetMessageFlow(guid);
+                MessageFlowConfiguration messageFlow = config.GetMessageFlow(guid);
                 result.Add(messageFlow);
             }
             return result.ToArray();
         }
 
-        public SerializableXDocument GetXmlResource(Uri resourceUri)
+        public SerializableXDocument GetXmlResource(XrmTarget target)
         {
-            XDocument xmlResource = xmlResourceManager.GetXmlResource(resourceUri);
+            XDocument xmlResource = xmlResourceManager.GetXmlResource(target);
             return new SerializableXDocument(xmlResource);
         }
 

@@ -10,7 +10,7 @@ namespace XRouter.Common
     {
         public Guid MessageFlowGuid { get; set; }
 
-        public int NextNodeId { get; set; }
+        public string NextNodeName { get; set; }
 
         public string AssignedProcessor { get; set; }
 
