@@ -24,6 +24,7 @@ namespace ObjectRemoter
             Assembly assembly = assemblies.FirstOrDefault(a => a.FullName == assemblyFullName);
             if (assembly == null)
             {
+                // TODO: no test coverage
                 assembly = Assembly.Load(new AssemblyName(assemblyFullName));
             }
             Type type = assembly.GetType(typeFullName, true);
