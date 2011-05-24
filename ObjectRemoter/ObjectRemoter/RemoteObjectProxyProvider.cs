@@ -57,12 +57,19 @@ namespace ObjectRemoter
                 throw new InvalidOperationException("Parameter requiredInterface and type argument T must be an interface.");
             }
 
-            // TODO: should we in fact compare typeof(T) and
-            // proxyObject.GetType() or requiredInterface?
+            if (!typeof(T).IsAssignableFrom(requiredInterface))
+            {
+                // NOTE: Without this explicit check the created the proxy
+                // type would also not match, but in case of using a local
+                // cache the original object would be retrieved without
+                // any type check against the required interface.
+                throw new ArgumentException("Required interface does not match with type argument T.", "requiredInterface");
+            }
+
             object proxyObject = InternalGetProxy(address, requiredInterface);
             if (!typeof(T).IsAssignableFrom(proxyObject.GetType()))
             {
-                throw new ArgumentException("Required interface does not match with type argument T.", "requiredInterface");
+                throw new ArgumentException("Proxy type given by the required interface does not match with type argument T.", "requiredInterface");
             }
 
             T proxy = (T)proxyObject;
@@ -76,6 +83,9 @@ namespace ObjectRemoter
                 // TODO: no test coverage
                 lock (ObjectServer.DataLock)
                 {
+                    // TODO: This doesn't work for ServiceRemoter which passes
+                    // a generic objectId -1 (ObjectServer.ObjectIDForAnyObjectOfGivenType).
+                    // See the ObjectServer.OnRequestReceived() method.
                     object localObject = ObjectServer.PublishedObjects[address.ObjectID];
                     return localObject;
                 }
