@@ -147,7 +147,7 @@ namespace ObjectRemoter
                 string marshalledResult;
                 try
                 {
-                    marshalledResult = Client.Request(ObjectServer.CommandInvoke, data.ToArray());
+                    marshalledResult = Client.Request(ObjectServer.COMMAND_INVOKE, data.ToArray());
                 }
                 catch (System.Net.Sockets.SocketException ex)
                 {

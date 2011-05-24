@@ -35,7 +35,7 @@ namespace ObjectRemoter
     /// <see cref="ServiceRemoter"/>
     public static class ObjectServer
     {
-        internal static readonly string CommandInvoke = "Invoke";
+        internal static readonly string COMMAND_INVOKE = "Invoke";
 
         internal static readonly int ObjectIDForAnyObjectOfGivenType = -1;
 
@@ -82,11 +82,20 @@ namespace ObjectRemoter
         /// <exception cref="ArgumentNullException"/>
         public static RemoteObjectAddress PublishObject(IRemotelyReferable obj)
         {
+            if (obj == null)
+            {
+                throw new ArgumentNullException("obj");
+            }
             return InternalPublishObject(obj);
         }
 
         internal static RemoteObjectAddress InternalPublishObject(object obj)
         {
+            if (obj == null)
+            {
+                throw new ArgumentNullException("obj");
+            }
+
             if (obj is IRemoteObjectProxy)
             {
                 var proxy = (IRemoteObjectProxy)obj;
@@ -134,7 +143,9 @@ namespace ObjectRemoter
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            if (command == CommandInvoke)
+            // invoke a method on the remote object and return the result in
+            // a marshalled form
+            if (command == COMMAND_INVOKE)
             {
                 string targetInterfaceFullName = data[0];
                 int objectID = int.Parse(data[1]);

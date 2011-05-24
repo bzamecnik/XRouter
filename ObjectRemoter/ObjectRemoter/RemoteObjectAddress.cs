@@ -52,16 +52,24 @@ namespace ObjectRemoter
             return ObjectID;
         }
 
+        // override object.Equals
         public override bool Equals(object obj)
         {
-            if (obj is RemoteObjectAddress)
+            //       
+            // See the full list of guidelines at
+            //   http://go.microsoft.com/fwlink/?LinkID=85237  
+            // and also the guidance for operator== at
+            //   http://go.microsoft.com/fwlink/?LinkId=85238
+            //
+
+            if (obj == null || GetType() != obj.GetType())
             {
-                var other = (RemoteObjectAddress)obj;
-                bool result = (other.ServerAddress.Url == ServerAddress.Url) && (other.ObjectID == ObjectID);
-                return result;
+                return false;
             }
 
-            return false;
+            var other = (RemoteObjectAddress)obj;
+            return object.Equals(ServerAddress, other.ServerAddress) &&
+                (ObjectID == other.ObjectID);
         }
 
         public override string ToString()
