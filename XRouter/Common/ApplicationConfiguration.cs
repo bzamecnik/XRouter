@@ -54,22 +54,6 @@ namespace XRouter.Common
             throw new ArgumentException("Cannot find component with give name.");
         }
 
-        public Uri GetComponentAddress(string componentName)
-        {
-            XElement config = GetComponentConfiguration(componentName);
-            string address = config.Attribute(XName.Get("address")).Value;
-            Uri result = new Uri(address);
-            return result;
-        }
-
-        public Uri GetComponentControllerAddress(string componentName)
-        {
-            XElement config = GetComponentConfiguration(componentName);
-            string address = config.Attribute(XName.Get("controller-address")).Value;
-            Uri result = new Uri(address);
-            return result;
-        }
-
         public XElement GetComponentConfiguration(string componentName)
         {
             XElement result = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format("/configuration/components/gateway[@name='{0}']", componentName));
@@ -84,7 +68,7 @@ namespace XRouter.Common
         public int GetConcurrentThreadsCountForProcessor(string componentName)
         {
             XElement processor = GetComponentConfiguration(componentName);
-            int result = int.Parse((string)Content.XDocument.XPathEvaluate(".@concurrentThreads"));
+            int result = int.Parse(processor.Attribute(XName.Get("concurrent-threads")).Value);
             return result;
         }
 

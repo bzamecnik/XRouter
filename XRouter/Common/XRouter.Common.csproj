@@ -41,12 +41,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationConfiguration.cs" />
+    <Compile Include="ComponentInterfaces\IBrokerService.cs" />
+    <Compile Include="ComponentInterfaces\IBrokerServiceForComponent.cs" />
+    <Compile Include="ComponentInterfaces\IBrokerServiceForGateway.cs" />
+    <Compile Include="ComponentInterfaces\IBrokerServiceForHost.cs" />
+    <Compile Include="ComponentInterfaces\IBrokerServiceForManagement.cs" />
+    <Compile Include="ComponentInterfaces\IBrokerServiceForProcessor.cs" />
+    <Compile Include="ComponentInterfaces\IGatewayService.cs" />
     <Compile Include="ComponentType.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="EndpointAddress.cs" />
     <Compile Include="EventLog.cs" />
+    <Compile Include="GatewayProvider.cs" />
     <Compile Include="IComponentController.cs" />
-    <Compile Include="IComponentService.cs" />
+    <Compile Include="ComponentInterfaces\IComponentService.cs" />
+    <Compile Include="ComponentInterfaces\IProcessorService.cs" />
+    <Compile Include="ProcessorProvider.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="LimitedConcurrencyLevelTaskScheduler.cs" />
     <Compile Include="MessageFlowConfig\ActionConfiguration.cs" />

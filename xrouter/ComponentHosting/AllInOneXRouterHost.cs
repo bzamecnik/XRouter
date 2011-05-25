@@ -7,15 +7,16 @@ using XRouter.Common;
 using XRouter.Broker;
 using System.Reflection;
 using System.IO;
+using XRouter.Common.ComponentInterfaces;
 
 namespace XRouter.ComponentHosting
 {
     class AllInOneXRouterHost : Service
     {
-        private static readonly string SectionKey_Broker = "Broker";
-        private static readonly string SectionKey_Gateway = "Gateway";
-        private static readonly string SectionKey_Processor = "Processor";
-        private static readonly string SettingsKey_ComponentName = "ComponentName";
+        private static readonly string SectionKey_Broker = "broker";
+        private static readonly string SectionKey_Gateway = "gateway";
+        private static readonly string SectionKey_Processor = "processor";
+        private static readonly string SettingsKey_ComponentName = "component-name";
 
         private IBrokerService broker;
         private IGatewayService gateway;
@@ -27,14 +28,17 @@ namespace XRouter.ComponentHosting
             EventLog.Initialize(Logger);
 
             broker = new XRouter.Broker.BrokerService();
-            broker.Start();
-
             processor = new XRouter.Processor.ProcessorService();
-            string processorName = args.Settings[SectionKey_Processor].Parameters[SettingsKey_ComponentName];
-            processor.Start(processorName, broker);
-
             gateway = new XRouter.Gateway.Gateway();
+
+            string processorName = args.Settings[SectionKey_Processor].Parameters[SettingsKey_ComponentName];
             string gatewayName = args.Settings[SectionKey_Gateway].Parameters[SettingsKey_ComponentName];
+
+            broker.Start(
+                new[] { new GatewayProvider(gatewayName, gateway) },
+                new[] { new ProcessorProvider(processorName, processor) }
+            );
+            processor.Start(processorName, broker);
             gateway.Start(gatewayName, broker);
         }
 

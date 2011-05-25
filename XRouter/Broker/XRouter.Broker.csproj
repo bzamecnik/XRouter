@@ -44,15 +44,7 @@
     <Compile Include="ComponentAccessor.cs" />
     <Compile Include="Dispatching\Dispatcher.cs" />
     <Compile Include="GatewayAccessor.cs" />
-    <Compile Include="IBrokerService.cs" />
-    <Compile Include="IBrokerServiceForComponent.cs" />
     <Compile Include="IBrokerServiceForDispatcher.cs" />
-    <Compile Include="IBrokerServiceForGateway.cs" />
-    <Compile Include="IBrokerServiceForHost.cs" />
-    <Compile Include="IBrokerServiceForManagement.cs" />
-    <Compile Include="IBrokerServiceForProcessor.cs" />
-    <Compile Include="IGatewayService.cs" />
-    <Compile Include="IProcessorService.cs" />
     <Compile Include="PersistentStorage.cs" />
     <Compile Include="ProcessorAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

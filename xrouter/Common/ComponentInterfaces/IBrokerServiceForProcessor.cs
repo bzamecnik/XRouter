@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
-using XRouter.Common;
 
-namespace XRouter.Broker
+namespace XRouter.Common.ComponentInterfaces
 {
     // methods to be called by a processor
     public interface IBrokerServiceForProcessor : IBrokerServiceForComponent

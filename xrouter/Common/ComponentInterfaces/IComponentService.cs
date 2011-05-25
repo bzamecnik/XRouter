@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ObjectRemoter;
 
-namespace XRouter.Common
+namespace XRouter.Common.ComponentInterfaces
 {
     public interface IComponentService : IRemotelyReferable
     {

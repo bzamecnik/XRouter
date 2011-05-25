@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace XRouter.Broker
+namespace XRouter.Common.ComponentInterfaces
 {
     public interface IBrokerServiceForHost
     {
-        void Start();
+        void Start(IEnumerable<GatewayProvider> gatewayProviders, IEnumerable<ProcessorProvider> processorProviders);
         void Stop();
     }
 }

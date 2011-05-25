@@ -11,6 +11,7 @@ using XRouter.Common;
 using XRouter.Broker;
 using XRouter.Common.Utils;
 using System.Collections.Concurrent;
+using XRouter.Common.ComponentInterfaces;
 
 namespace XRouter.Gateway
 {

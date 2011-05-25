@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
 using System.Threading.Tasks;
+using XRouter.Common.ComponentInterfaces;
 
 namespace XRouter.Broker
 {
@@ -21,35 +22,30 @@ namespace XRouter.Broker
 
         public BrokerService()
         {
+        }
+
+        public void Start(IEnumerable<GatewayProvider> gatewayProviders, IEnumerable<ProcessorProvider> processorProviders)
+        {
             storage = new PersistentStorage();
-            UpdateComponentsAccessorsAccordingToConfig();
+            ApplicationConfiguration config = GetConfiguration();
+
+            #region Prepare componentsAccessors
+            foreach (GatewayProvider gatewayProvider in gatewayProviders) {
+                GatewayAccessor accessor = new GatewayAccessor(gatewayProvider.Name, gatewayProvider.Gateway, config);
+                componentsAccessors.AddOrUpdate(accessor.ComponentName, accessor, (key, oldValue) => accessor);
+            }
+            foreach (ProcessorProvider processorProvider in processorProviders) {
+                ProcessorAccessor accessor = new ProcessorAccessor(processorProvider.Name, processorProvider.Processor, config);
+                componentsAccessors.AddOrUpdate(accessor.ComponentName, accessor, (key, oldValue) => accessor);
+            }
+            #endregion
 
             xmlResourceManager = new XmlResourceManager(storage, GetConfiguration);
             dispatcher = new Dispatching.Dispatcher(this);
         }
 
-        public void Start()
-        {
-        }
-
         public void Stop()
         {
-        }
-
-        public void StartComponents()
-        {
-            ComponentAccessor[] components = componentsAccessors.Values.ToArray();
-            foreach (ComponentAccessor component in components) {
-                component.Start();
-            }
-        }
-
-        public void StopComponents()
-        {
-            ComponentAccessor[] components = componentsAccessors.Values.ToArray();
-            foreach (ComponentAccessor component in components) {
-                component.Stop();
-            }
         }
 
         public ApplicationConfiguration GetConfiguration(XmlReduction reduction)
@@ -70,7 +66,6 @@ namespace XRouter.Broker
         {
             storage.SaveConfigXml(config.Content);
 
-            UpdateComponentsAccessorsAccordingToConfig();
             ComponentAccessor[] components = componentsAccessors.Values.ToArray();
             foreach (var component in components) {
                 var reducedConfig = config.GetReducedConfiguration(component.ConfigurationReduction);
@@ -200,48 +195,6 @@ namespace XRouter.Broker
         {
             XDocument xmlResource = xmlResourceManager.GetXmlResource(target);
             return new SerializableXDocument(xmlResource);
-        }
-
-        public void UpdateComponentControllerAddress(string componentName, Uri controllerAddress)
-        {
-            ComponentAccessor component;
-            if (componentsAccessors.TryGetValue(componentName, out component)) {
-                component.ControllerAddress = controllerAddress;
-            } else {
-                throw new ArgumentException("Cannot find component with given name.");
-            }
-        }
-
-        public void UpdateComponentInfo(string componentName, Uri componentAddress, XmlReduction configReduction)
-        {
-            ComponentAccessor component;
-            if (componentsAccessors.TryGetValue(componentName, out component)) {
-                component.ComponentAddress = componentAddress;
-                component.ConfigurationReduction = configReduction;
-            } else {
-                throw new ArgumentException("Cannot find component with given name.");
-            }
-        }
-
-        private void UpdateComponentsAccessorsAccordingToConfig()
-        {
-            ApplicationConfiguration config = GetConfiguration();
-
-            ComponentAccessor[] oldComponents = componentsAccessors.Values.ToArray();
-            List<ComponentAccessor> newComponents = new List<ComponentAccessor>();
-            var componentsNames = config.GetComponentNames();
-            foreach (string componentName in componentsNames) {
-                ComponentAccessor component = oldComponents.FirstOrDefault(c => c.ComponentName == componentName);
-                if (component == null) {
-                    component = ComponentAccessor.Create(componentName, config);
-                }
-                newComponents.Add(component);
-            }
-
-            componentsAccessors.Clear();
-            foreach (var componentInfo in newComponents) {
-                componentsAccessors.AddOrUpdate(componentInfo.ComponentName, componentInfo, (key, oldValue) => componentInfo);
-            }
         }
     }
 }

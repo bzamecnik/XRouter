@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using XRouter.Common;
 using XRouter.Broker;
 using XRouter.Common.Xrm;
+using XRouter.Common.ComponentInterfaces;
 
 namespace XRouter.Processor
 {

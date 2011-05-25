@@ -7,6 +7,7 @@ using XRouter.Broker;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Threading;
+using XRouter.Common.ComponentInterfaces;
 
 namespace XRouter.Processor
 {

@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using XRouter.Common;
 
-namespace XRouter.Broker
+namespace XRouter.Common.ComponentInterfaces
 {
     public interface IGatewayService : IComponentService
     {

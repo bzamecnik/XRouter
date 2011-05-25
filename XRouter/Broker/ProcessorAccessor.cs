@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using XRouter.Common;
+using XRouter.Common.ComponentInterfaces;
 
 namespace XRouter.Broker
 {
@@ -11,6 +12,8 @@ namespace XRouter.Broker
         private double? utilizationCache;
         private DateTime lastUtilizationCacheUpdate;
 
+        private IProcessorService processor;
+
         private TimeSpan UtilizationCacheTimeout {
             get {
                 // TODO: consider using configuration
@@ -18,9 +21,10 @@ namespace XRouter.Broker
             }
         }
 
-        public ProcessorAccessor(string componentName, ApplicationConfiguration configuration)
-            : base(componentName, configuration)
+        public ProcessorAccessor(string componentName, IProcessorService processor, ApplicationConfiguration configuration)
+            : base(componentName, processor, configuration)
         {
+            this.processor = processor;
         }
 
         public double GetUtilization()
@@ -32,7 +36,6 @@ namespace XRouter.Broker
                 }
             }
 
-            IProcessorService processor = GetComponent<IProcessorService>();
             double utilization = processor.GetUtilization();
             utilizationCache = utilization;
             lastUtilizationCacheUpdate = DateTime.Now;
@@ -41,7 +44,6 @@ namespace XRouter.Broker
 
         public void AddWork(Token token)
         {
-            IProcessorService processor = GetComponent<IProcessorService>();
             processor.AddWork(token);
         }
     }

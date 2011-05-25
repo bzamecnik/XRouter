@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using XRouter.Common;
-using ObjectRemoter;
+using XRouter.Common.ComponentInterfaces;
 
 namespace XRouter.Broker
 {
@@ -15,68 +15,20 @@ namespace XRouter.Broker
 
         public XmlReduction ConfigurationReduction { get; set; }
 
-        public Uri ComponentAddress { get; set; }
+        private IComponentService component;
 
-        public Uri ControllerAddress { get; set; }
-
-        protected ComponentAccessor(string componentName, ApplicationConfiguration configuration)
+        protected ComponentAccessor(string componentName, IComponentService component, ApplicationConfiguration configuration)
         {
             ComponentName = componentName;
             ComponentType = configuration.GetComponentType(componentName);
+            this.component = component;
+
             ConfigurationReduction = new XmlReduction();
-            ComponentAddress = configuration.GetComponentAddress(componentName);
-            ControllerAddress = configuration.GetComponentControllerAddress(componentName);
-        }
-
-        public static ComponentAccessor Create(string componentName, ApplicationConfiguration configuration)
-        {
-            ComponentType componentType = configuration.GetComponentType(componentName);
-            switch (componentType) {
-                case ComponentType.Gateway:
-                    return new GatewayAccessor(componentName, configuration);
-                case ComponentType.Processor:
-                    return new ProcessorAccessor(componentName, configuration);
-                default:
-                    throw new InvalidOperationException("Unknown component type.");
-            }
-        }
-
-        public void Start()
-        {
-            IComponentController controller = GetController();
-            controller.StartComponent();
-        }
-
-        public void Stop()
-        {
-            IComponentController controller = GetController();
-            controller.StopComponent();
-        }
-
-        public bool IsRunning()
-        {
-            IComponentController controller = GetController();
-            bool isRunning = controller.IsComponentRunning();
-            return isRunning;
         }
 
         public void UpdateConfig(ApplicationConfiguration config)
         {
-            IComponentService component = GetComponent<IComponentService>();
             component.UpdateConfig(config);
-        }
-
-        private IComponentController GetController()
-        {
-            IComponentController controller = ServiceRemoter.GetServiceProxy<IComponentController>(ControllerAddress);
-            return controller;
-        }
-
-        protected T GetComponent<T>()
-            where T : IComponentService
-        {
-            T component = ServiceRemoter.GetServiceProxy<T>(ComponentAddress);
-            return component;
         }
     }
 }

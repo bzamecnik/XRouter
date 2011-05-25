@@ -22,19 +22,19 @@ namespace XRouter.Broker
     <components>
         <gateway name='gateway1'>
             <adapters>
-                <adapter name='' type=''>
+                <adapter name='directoryAdapter' type='XRouter.Adapters.DirectoryAdapter,..\..\..\..\xrouter\Adapters\bin\debug\XRouter.Adapters.dll'>
                 </adapter>
-            </adapeters>
+            </adapters>
         </gateway>
-        <processor name='processor1'>
+        <processor name='processor1' concurrent-threads='4'>
         </processor>
     </components>
-    <dispatcher nonRunningProcessorResponseTimeout='60'>
+    <dispatcher nonrunning-processor-response-timeout='60'>
     </dispatcher>
-    <messageFlows current='...guid...'>
-        <messageFlow guid='' name='abc' version='1'>
+    <messageFlows current='messageflow-guid-1'>
+        <messageFlow guid='messageflow-guid-1' name='abc' version='1'>
         </messageFlow>
-    <messageFlows>
+    </messageFlows>
 </configuration>
 ");
             InternalTokens = new List<Token>();
