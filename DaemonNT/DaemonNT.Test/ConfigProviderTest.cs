@@ -11,11 +11,10 @@ namespace DaemonNT.Test
     {
         // TODO:
         // - good day:
-        //   - default config file
         // - bad day:
         //   - make bad schemas according to asserts in config_schema.xml
         //     (about 65 asserts :) )
-        //   - non-existent config file
+        //     - on the other hand we can trust SchemaTron
 
         #region Happy-day tests
 
@@ -23,13 +22,12 @@ namespace DaemonNT.Test
         public void LoadGoodFullConfigSingleService()
         {
             ServiceSettings settings = ConfigProvider.LoadServiceSettings(
-                "FooService",
+                "TickingService",
                 @"ConfigProviderFiles\GoodFullConfigSingleService.xml");
 
             Assert.NotNull(settings);
-            Assert.Equal("DaemonNT.FooService", settings.TypeClass);
-            Assert.Equal(@"..\..\..\DaemonNT.Test\bin\Debug\DaemonNT.FooService.dll",
-                settings.TypeAssembly);
+            Assert.Equal("DaemonNT.Test.TickingService", settings.TypeClass);
+            Assert.Equal(@"DaemonNT.Test.dll", settings.TypeAssembly);
 
             #region Service settings
 
@@ -87,6 +85,17 @@ namespace DaemonNT.Test
 
             #endregion
         }
+
+        [Fact]
+        public void LoadGoodFullConfigFromDefaultFile()
+        {
+            // load from DaemonNT.xml
+            // assumed to be in the base directory of the current appdomain
+            ServiceSettings settings = ConfigProvider.LoadServiceSettings("MyServer");
+
+            Assert.NotNull(settings);
+        }
+
 
         #endregion
 

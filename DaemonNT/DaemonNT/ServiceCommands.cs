@@ -54,7 +54,8 @@ namespace DaemonNT
                 try
                 {
                     serviceHost.Start();
-                    Console.WriteLine("Press CTRL+C to stop the '{0}' service ...", serviceName);
+                    Console.WriteLine("The service '{0}' is running in debug mode.", serviceName);
+                    Console.WriteLine("Press CTRL+C to stop the service ...", serviceName);
                     Console.CancelKeyPress += (sender, e) => serviceHost.Stop();
                     while (true)
                     {
@@ -144,8 +145,15 @@ namespace DaemonNT
         /// Installs the service as an NT service.
         /// </summary>
         /// <param name="serviceName">Service name</param>
-        public void Install(string serviceName)
+        /// <returns>True if the service was successfully installed.</returns>
+        public bool Install(string serviceName)
         {
+            if (InstallerServices.IsInstalled(serviceName))
+            {
+                Console.WriteLine("Error: Service '{0}' is already installed.", serviceName);
+                return false;
+            }
+
             // load installer settings
             ServiceSettings serviceSettings = null;
             try
@@ -155,6 +163,7 @@ namespace DaemonNT
             catch (Exception e)
             {
                 Console.WriteLine("Error: ", e.Message);
+                return false;
             }
 
             // install
@@ -166,16 +175,25 @@ namespace DaemonNT
             catch (Exception e)
             {
                 Console.WriteLine("Error: {0} The log file is located at {1}.Installer.log.", e.Message, serviceName);
+                return false;
             }
-            Console.WriteLine("Service {0} has been successfully installed.", serviceName);
+            Console.WriteLine("Service '{0}' has been successfully installed.", serviceName);
+            return true;
         }
 
         /// <summary>
         /// Uninstalls the service which is installed as an NT service.
         /// </summary>
         /// <param name="serviceName">Service name</param>
-        public void Uninstall(string serviceName)
+        /// <returns>True if the service was successfully uninstalled.</returns>
+        public bool Uninstall(string serviceName)
         {
+            if (!InstallerServices.IsInstalled(serviceName))
+            {
+                Console.WriteLine("Error: Service '{0}' is not installed.", serviceName);
+                return false;
+            }
+
             try
             {
                 ProjectInstaller.Initialize(serviceName, null);
@@ -184,8 +202,10 @@ namespace DaemonNT
             catch (Exception e)
             {
                 Console.WriteLine("Error: {0} The log file is located at {1}.Installer.log.", e.Message, serviceName);
+                return false;
             }
-            Console.WriteLine("Service {0} has been successfully uninstalled.", serviceName);
+            Console.WriteLine("Service '{0}' has been successfully uninstalled.", serviceName);
+            return true;
         }
 
         /// <summary>
@@ -196,15 +216,18 @@ namespace DaemonNT
         /// Run() method.
         /// </remarks>
         /// <param name="serviceName">Service name</param>
-        public void Start(string serviceName)
+        /// <returns>True if the service was successfully started.</returns>
+        public bool Start(string serviceName)
         {
-            WorkWithServiceController(serviceName,
+            bool? started = (bool?)WorkWithServiceController(serviceName,
                 (sc) =>
                 {
                     sc.Start();
-                    return null;
+                    Console.WriteLine("Service '{0}' has been started.", serviceName);
+                    return true;
                 },
                 "Cannot start service {0}: {1}");
+            return started.HasValue && started.Value;
         }
 
         /// <summary>
@@ -215,16 +238,22 @@ namespace DaemonNT
         /// Run() method.
         /// </remarks>
         /// <param name="serviceName">Service name</param>
-        public void Restart(string serviceName)
+        /// <returns>True if the service was successfully restarted.</returns>
+        public bool Restart(string serviceName)
         {
-            WorkWithServiceController(serviceName,
+            bool? restarted = (bool?)WorkWithServiceController(serviceName,
                 (sc) =>
                 {
                     sc.Stop();
+                    // TODO: wait for the Stopped status
                     sc.Start();
-                    return null;
+                    // TODO: wait for the Running status
+                    // - the whole method should accept a timeout parameter
+                    Console.WriteLine("Service '{0}' has been restarted.", serviceName);
+                    return true;
                 },
-                "Cannot restart service {0}: {1}");
+                "Cannot restart service '{0}': {1}");
+            return restarted.HasValue && restarted.Value;
         }
 
         /// <summary>
@@ -235,15 +264,18 @@ namespace DaemonNT
         /// Run() method.
         /// </remarks>
         /// <param name="serviceName">Service name</param>
-        public void Stop(string serviceName)
+        /// <returns>True if the service was successfully stopped.</returns>
+        public bool Stop(string serviceName)
         {
-            WorkWithServiceController(serviceName,
+            bool? stopped = (bool?)WorkWithServiceController(serviceName,
                 (sc) =>
                 {
                     sc.Stop();
-                    return null;
+                    Console.WriteLine("Service '{0}' has been stopped.", serviceName);
+                    return true;
                 },
                 "Cannot stop service {0}: {1}");
+            return stopped.HasValue && stopped.Value;
         }
 
         /// <summary>
@@ -252,15 +284,19 @@ namespace DaemonNT
         /// <param name="serviceName">Service name</param>
         public string GetStatus(string serviceName)
         {
+            if (!InstallerServices.IsInstalled(serviceName))
+            {
+                return string.Empty;
+            }
             string status = (string)WorkWithServiceController(serviceName,
                 (sc) =>
                 {
                     return sc.Status.ToString();
                 },
-                "Cannot determine status of service {0}: {1}");
+                "Cannot determine status of service '{0}': {1}");
             if (status == null)
             {
-                status = string.Empty;
+                return string.Empty;
             }
             return status;
         }

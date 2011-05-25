@@ -111,11 +111,11 @@
             if (isInstalled)
             {
                 string status = commands.GetStatus(serviceName);
-                Console.WriteLine("Status of service {0}: {1}.", serviceName, status);
+                Console.WriteLine("Status of service '{0}': {1}.", serviceName, status);
             }
             else
             {
-                Console.WriteLine("Service {0} is not installed.", serviceName);
+                Console.WriteLine("Service '{0}' is not installed.", serviceName);
             }
         }
 

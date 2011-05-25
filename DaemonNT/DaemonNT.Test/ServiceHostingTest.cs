@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceProcess;
-using System.Text;
-using DaemonNT;
-using Xunit;
-
-namespace DaemonNT.Test
+﻿namespace DaemonNT.Test
 {
+    using System;
+    using System.ServiceProcess;
+    using DaemonNT;
+    using DaemonNT.Installation;
+    using Xunit;
+
     public class ServiceHostingTest
     {
         // TODO:
@@ -24,21 +22,30 @@ namespace DaemonNT.Test
         //   - running a service in debug mode
 
         /// <summary>
-        /// Installs a service.
+        /// Installs a service and verifies it has been installed.
         /// </summary>
         /// <remarks>
         /// It assumes that the service is not installed yet.
+        /// WARNING: as the service is installed the command to run the service
+        /// is created based on the currect appdomain base directory which
+        /// depends on from where the test is ran.
         /// </remarks>
         [Fact, Trait("Category", "RunAsAdmin")]
         public void InstallNotAlreadyInstalledService()
         {
             string serviceName = "MyServer";
-            ServiceController sc = new ServiceController(serviceName);
+
+            // assume the service is not installed or the test can't work
+            Assert.False(InstallerServices.IsInstalled(serviceName), "The service must not be installed.");
 
             ServiceCommands commands = new ServiceCommands();
-            commands.Install(serviceName);
+            bool installed = commands.Install(serviceName);
 
             // verify that the service has been installed
+            Assert.True(installed, "The service has not been installed.");
+            Assert.True(InstallerServices.IsInstalled(serviceName), "The service is still not installed.");
+
+            // installed service should be stopped by default
             string status = commands.GetStatus(serviceName);
             Assert.Equal(ServiceControllerStatus.Stopped.ToString(), status);
         }
@@ -53,15 +60,15 @@ namespace DaemonNT.Test
         public void UninstallAlreadyInstalledService()
         {
             string serviceName = "MyServer";
-            ServiceController sc = new ServiceController(serviceName);
+
+            Assert.True(InstallerServices.IsInstalled(serviceName), "The service must be installed.");
 
             ServiceCommands commands = new ServiceCommands();
-            commands.Install(serviceName);
+            bool uninstalled = commands.Uninstall(serviceName);
 
             // verify that the service has been uninstalled
-            // TODO: checking empty status is not the best way
-            string status = commands.GetStatus(serviceName);
-            Assert.Equal(string.Empty, status);
+            Assert.True(uninstalled, "The service has not been uninstalled.");
+            Assert.False(InstallerServices.IsInstalled(serviceName), "The service is still installed.");
         }
 
         /// <summary>
@@ -74,7 +81,7 @@ namespace DaemonNT.Test
         public void StartAndStopInstalledService()
         {
             string serviceName = "MyServer";
-            TimeSpan timeout = new TimeSpan(0, 0, 0, 2); // 2 sec
+            TimeSpan timeout = new TimeSpan(0, 0, 0, 1); // 1 sec
             ServiceCommands commands = new ServiceCommands();
 
             ServiceControllerStatus runningStatus = ServiceControllerStatus.Running;
@@ -83,33 +90,36 @@ namespace DaemonNT.Test
             if (!stoppedStatus.ToString().Equals(
                 commands.GetStatus(serviceName)))
             {
+                // there's no Assert.Equal with a user message
                 Assert.True(false, "The service is not prepared to run.");
             }
 
             using (ServiceController sc = new ServiceController(serviceName))
             {
                 // execute
-                commands.Start(serviceName);
+                bool started = commands.Start(serviceName);
 
                 // verify 
+                Assert.True(started, "The service was not started.");
                 sc.WaitForStatus(runningStatus, timeout);
                 Assert.Equal(runningStatus.ToString(), commands.GetStatus(serviceName));
 
                 // execute
-                commands.Stop(serviceName);
+                bool stopped = commands.Stop(serviceName);
 
                 // verify
+                Assert.True(stopped, "The service was not stopped.");
                 sc.WaitForStatus(stoppedStatus, timeout);
                 Assert.Equal(stoppedStatus.ToString(), commands.GetStatus(serviceName));
             }
         }
 
         //[Fact]
-        public void GetServiceStatus()
-        {
-            string serviceName = "MyServer";
-            string status = new ServiceCommands().GetStatus(serviceName);
-            Console.WriteLine("{0}: {1}", serviceName, status);
-        }
+        //public void StartServiceInDebugMode()
+        //{
+        //    string serviceName = "MyServer";
+        //    ServiceCommands commands = new ServiceCommands();
+        //    commands.Debug(serviceName);
+        //}
     }
 }
