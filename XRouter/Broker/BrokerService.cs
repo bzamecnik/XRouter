@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Xml.Linq;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
+using System.Threading.Tasks;
 
 namespace XRouter.Broker
 {
@@ -145,7 +146,7 @@ namespace XRouter.Broker
             storage.UpdateToken(targetTokenGuid, delegate(Token token) {
                 if (token.MessageFlowState.AssignedProcessor == updatingProcessorName) {
                     token.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
-                    token.AddMessage(message, messageName);
+                    token.AddMessage(messageName, message);
                 }
             });
         }
@@ -159,8 +160,9 @@ namespace XRouter.Broker
                     t.SaveMessageFlowState();
                 });
 
-                GatewayAccessor sourceGateway = componentsAccessors.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == token.SourceGatewayName);
-                sourceGateway.ReceiveReturn(tokenGuid, resultMessage);
+                XDocument sourceMetadata = token.GetSourceMetadata();
+                GatewayAccessor sourceGateway = componentsAccessors.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == token.SourceAddress.GatewayName);
+                sourceGateway.ReceiveReturn(tokenGuid, resultMessage, new SerializableXDocument(sourceMetadata));
 
                 storage.UpdateToken(tokenGuid, delegate(Token t) {
                     t.State = TokenState.Finished;
@@ -168,13 +170,13 @@ namespace XRouter.Broker
             }
         }
 
-        public SerializableXDocument SendMessage(EndpointAddress address, SerializableXDocument message)
+        public SerializableXDocument SendMessage(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata)
         {
             ComponentAccessor component;
             if (componentsAccessors.TryGetValue(address.GatewayName, out component)) {
                 if (component is GatewayAccessor) {
                     GatewayAccessor gateway = (GatewayAccessor)component;
-                    SerializableXDocument result = gateway.SendMessageToOutputEndPoint(address, message);
+                    SerializableXDocument result = gateway.SendMessageToOutputEndPoint(address, message, metadata);
                     return result;
                 }
             }

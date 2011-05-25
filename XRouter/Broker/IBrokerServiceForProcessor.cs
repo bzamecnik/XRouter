@@ -21,7 +21,7 @@ namespace XRouter.Broker
         void FinishToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument resultMessage);
 
         // NOTE: synchronous
-        SerializableXDocument SendMessage(EndpointAddress address, SerializableXDocument message);
+        SerializableXDocument SendMessage(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata);
 
         MessageFlowConfiguration[] GetActiveMessageFlows();
 

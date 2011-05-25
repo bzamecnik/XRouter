@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("XRouter.Gateway.Adapter.Endpoint.Test")]
+[assembly: AssemblyTitle("XRouter.Adapters")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("The XRouter Team")]
-[assembly: AssemblyProduct("XRouter.Gateway.Adapter.Endpoint.Test")]
-[assembly: AssemblyCopyright("Copyright © The XRouter Team 2011")]
+[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyProduct("XRouter.Adapters")]
+[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("56be127a-a244-40d8-a30a-64d1f8a3cbac")]
+[assembly: Guid("3745c996-00ca-4c5f-95f1-5e2fa9c3fe4e")]
 
 // Version information for an assembly consists of the following four values:
 //

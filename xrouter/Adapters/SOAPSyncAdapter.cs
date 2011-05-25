@@ -13,7 +13,7 @@
 //using System.IO;
 //using XRouter.Common;
 
-//namespace XRouter.Adapters.TestingPlugins
+//namespace XRouter.Adapters
 //{
 
 //    //! Adapter bezi v jednom tasku, naslouchani je asynchroni, begincontext, kdyz prijde zprava vytvori se dalsi task pro jeji obsluhu
@@ -66,7 +66,7 @@
 //            }
 //            return null; //! vraceni vysledku
 //        }
-		
+
 
 //        private void adapterRun(string listenerAddress)
 //        {
@@ -84,7 +84,7 @@
 //                // zpracuje prichozi SOAP 
 //                HttpListenerRequest request = context.Request;
 //                XDocument xDoc = XDocument.Load(request.InputStream);
-		
+
 //                Token token = ReceiveMessage(xDoc);
 
 //                if (token != null)

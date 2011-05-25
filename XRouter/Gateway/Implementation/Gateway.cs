@@ -9,146 +9,107 @@ using System.Threading;
 using System.Threading.Tasks;
 using XRouter.Common;
 using XRouter.Broker;
+using XRouter.Common.Utils;
+using System.Collections.Concurrent;
 
 namespace XRouter.Gateway.Implementation
 {
     public class Gateway : IGatewayService
     {
-        private static readonly string BinPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
         public string Name { get; private set; }
 
         public XmlReduction ConfigurationReduction { get; private set; }
 
-        private IBrokerServiceForGateway broker { get; set; }
+        internal ApplicationConfiguration Configuration { get; private set; }
 
-        private Dictionary<string, AdapterService> AdapterServices { get; set; }
+        private IBrokerServiceForGateway Broker { get; set; }
 
-        private Dictionary<ManualResetEvent, ResultMessage> dictSyncToken = new Dictionary<ManualResetEvent, ResultMessage>();
+        private Dictionary<string, AdapterService> AdapterServicesByName { get; set; }
 
-        private List<Task> adapterTasks = new List<Task>();
+        private ConcurrentDictionary<Guid, MessageResultHandler> waintingResultMessageHandlers;
 
         public Gateway()
         {
             ConfigurationReduction = new XmlReduction();
+            waintingResultMessageHandlers = new ConcurrentDictionary<Guid, MessageResultHandler>();
         }
 
         public void UpdateConfig(ApplicationConfiguration config)
         {
+            Configuration = config;
         }
 
-        public void Start(string componentName, IBrokerServiceForGateway broker)
+        public void Start(string name, IBrokerServiceForGateway broker)
         {
-            this.broker = broker;
+            Broker = broker;
+            Name = name;
 
-            StartCore();
-        }
+            Configuration = Broker.GetConfiguration(ConfigurationReduction);
 
-        private void StartCore()
-        {
-            var configuration = broker.GetConfiguration(ConfigurationReduction);
-
-            AdapterServices = new Dictionary<string, AdapterService>();
-            var adaptersConfig = configuration.GetComponentConfiguration(Name).Element("adapters").Elements("adapter");
+            #region Create adapters and AdapterServices
+            AdapterServicesByName = new Dictionary<string, AdapterService>();
+            var adaptersConfig = Configuration.GetComponentConfiguration(Name).Element("adapters").Elements("adapter");
             foreach (var adapterConfig in adaptersConfig) {
                 string adapterName = adapterConfig.Attribute(XName.Get("name")).Value;
-                string typeAddress = adapterConfig.Attribute(XName.Get("type")).Value;
-                AdapterService pluginService = GetEndpointsPluginInstance(typeAddress, adapterConfig, adapterName);
-                AdapterServices.Add(adapterName, pluginService);
-            }
-
-            #region Start endpoints
-            foreach (var AdapterService in AdapterServices.Values) {
-                Task task = Task.Factory.StartNew(() => AdapterService.Client.Start());
-                adapterTasks.Add(task);
+                string typeFullNameAndAssembly = adapterConfig.Attribute(XName.Get("type")).Value;
+                AdapterService adapterService = CreateServiceForAdapter(typeFullNameAndAssembly, adapterConfig, adapterName);
+                AdapterServicesByName.Add(adapterName, adapterService);
             }
             #endregion
-        }
 
-        private AdapterService GetEndpointsPluginInstance(string typeAddress, XElement pluginConfig, string adapterName)
-        {
-            string[] addressParts = typeAddress.Split(';');
-            string assemblyFile = addressParts[0].Trim();
-            string typeFullName = addressParts[1].Trim();
-
-            string assemblyFullPath = Path.Combine(BinPath, assemblyFile);
-            Assembly assembly = Assembly.LoadFile(assemblyFullPath);
-            Type type = assembly.GetType(typeFullName, true);
-
-            var adapterService = new AdapterService(this, adapterName);
-            var constructor = type.GetConstructor(new Type[] { typeof(XElement), typeof(IAdapterService) });
-            var adapterObject = constructor.Invoke(new object[] { pluginConfig, adapterService });
-            var plugin = (IAdapter)adapterObject;
-            adapterService.Client = plugin;
-            return adapterService;
+            #region Start adapters
+            foreach (var adapterService in AdapterServicesByName.Values) {
+                Task.Factory.StartNew(delegate {
+                    adapterService.Adapter.Start(adapterService);
+                }, TaskCreationOptions.LongRunning);
+            }
+            #endregion
         }
 
         public void Stop()
         {
-            #region Stop endpoints
-            foreach (var AdapterService in AdapterServices.Values)
-            {
-                AdapterService.Client.Stop();
+            foreach (var adapterService in AdapterServicesByName.Values) {
+                adapterService.Adapter.Stop();
             }
-            #endregion
-
-            adapterTasks.Clear();
         }
 
-        public XDocument ReceiveMessage(Token token)
-        {            
-            ManualResetEvent e = new ManualResetEvent(false);
-
-            dictSyncToken.Add(e, new ResultMessage(token.Guid));
-
-            broker.ReceiveToken(token);
-            e.WaitOne(); // Nastavit cas timeoute tokenu, pokud token vyprsi vraci null
-
-            var content = dictSyncToken[e].Content;
-            dictSyncToken.Remove(e);
-            return content;
-
-        }
-
-        public void ReceiveReturn(Guid tokenGuid, SerializableXDocument resultMessage)
+        private AdapterService CreateServiceForAdapter(string typeFullNameAndAssembly, XElement adapterConfig, string adapterName)
         {
-            var syncPair = dictSyncToken.SingleOrDefault(pair => pair.Value.TokenGuid == tokenGuid);
-            if (syncPair.Key == null) {
-                throw new Exception("Token guid does not exist.");
-            }
-            syncPair.Value.Content = resultMessage;
-            syncPair.Key.Set();
+            var plugin = TypeUtils.CreateTypeInstance<IAdapter>(typeFullNameAndAssembly);
+            var adapterService = new AdapterService(this, adapterName);
+            adapterService.Adapter = plugin;
+            return adapterService;
         }
 
-        public void ReceiveMessageAsync(Token token)
-        {
-            //! doplnit info do tokeku
-            broker.ReceiveToken(token);
-        }
-
-        public SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message)
+        public SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata)
         {
             if (address.GatewayName != Name) {
                 throw new ArgumentException("Incorrect gateway name.", "address");
             }
-
-            AdapterService adapterService = AdapterServices.Values.SingleOrDefault(a => a.AdapterName == address.AdapterName);
-            if (adapterService == null) {
+            if (!AdapterServicesByName.ContainsKey(address.AdapterName)) {
                 throw new ArgumentException("Incorrect adapter name.", "address");
             }
 
-            return adapterService.SendMessageToOutputEndPoint(address, message);
+            AdapterService adapterService = AdapterServicesByName[address.AdapterName];
+            XDocument result = adapterService.SendMessage(address, message, metadata);
+            return new SerializableXDocument(result);
         }
 
-        private class ResultMessage
+        internal void ReceiveToken(Token token, MessageResultHandler resultHandler = null)
         {
-            public Guid TokenGuid { get; private set; }
+            if (resultHandler != null) {
+                waintingResultMessageHandlers.AddOrUpdate(token.Guid, resultHandler, (key, oldValue) => resultHandler);
+            }
+            Task.Factory.StartNew(delegate {
+                Broker.ReceiveToken(token);
+            });
+        }
 
-            public XDocument Content { get; set; }
-
-            public ResultMessage(Guid tokenGuid)
-            {
-                TokenGuid = tokenGuid;
+        public void ReceiveReturn(Guid tokenGuid, SerializableXDocument resultMessage, SerializableXDocument sourceMetadata)
+        {
+            MessageResultHandler resultHandler;
+            if (waintingResultMessageHandlers.TryRemove(tokenGuid, out resultHandler)) {
+                resultHandler(tokenGuid, resultMessage.XDocument, sourceMetadata.XDocument);
             }
         }
     }

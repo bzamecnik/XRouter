@@ -14,6 +14,9 @@ namespace XRouter.Common
 
         public static implicit operator XDocument(SerializableXDocument serializableXDocument)
         {
+            if (serializableXDocument == null) {
+                return null;
+            }
             return serializableXDocument.XDocument;
         }
 

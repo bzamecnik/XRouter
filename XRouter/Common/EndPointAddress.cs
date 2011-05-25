@@ -7,16 +7,11 @@ namespace XRouter.Common
 {
     public class EndpointAddress
     {
-        public string GatewayName { get; set; }
+        public string GatewayName { get; private set; }
 
         public string AdapterName { get; private set; }
 
         public string EndPointName { get; private set; }
-
-        public EndpointAddress(string adapterName, string endpointName)
-            : this(null, adapterName, endpointName)
-        {
-        }
 
         public EndpointAddress(string gatewayName, string adapterName, string endpointName)
         {

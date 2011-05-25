@@ -8,13 +8,10 @@ using XRouter.Common;
 
 namespace XRouter.Gateway
 {
+    public delegate void MessageResultHandler(Guid tokenGuid, XDocument resultMessage, XDocument sourceMetadata);
+
 	public interface IAdapterService
 	{
-		//IInputEndpoint CreateInputEndpoint(string endpointName, Action<ReceivedMessageHandler> registerListener);
-
-		//IOutputEndpoint CreateOutputEndpoint(string endpointName, Action<Token, MessageSendResultHandler> sendAsync);
-
-        XDocument ReceiveMessage(Token token);
-		void ReceiveMessageAsync(Token token);
+        void ReceiveMessage(XDocument message, string endpointName, XDocument metadata = null, MessageResultHandler resultHandler = null);
 	}
 }

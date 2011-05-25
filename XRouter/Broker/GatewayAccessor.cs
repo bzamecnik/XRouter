@@ -13,17 +13,17 @@ namespace XRouter.Broker
         {
         }
 
-        public SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message)
+        public SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata)
         {
             IGatewayService gateway = GetComponent<IGatewayService>();
-            SerializableXDocument result = gateway.SendMessageToOutputEndPoint(address, message);
+            SerializableXDocument result = gateway.SendMessageToOutputEndPoint(address, message, metadata);
             return result;
         }
 
-        public void ReceiveReturn(Guid tokenGuid, SerializableXDocument resultMessage)
+        public void ReceiveReturn(Guid tokenGuid, SerializableXDocument resultMessage, SerializableXDocument sourceMetadata)
         {
             IGatewayService gateway = GetComponent<IGatewayService>();
-            gateway.ReceiveReturn(tokenGuid, resultMessage);
+            gateway.ReceiveReturn(tokenGuid, resultMessage, sourceMetadata);
         }
     }
 }

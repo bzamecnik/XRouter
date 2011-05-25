@@ -44,56 +44,5 @@ namespace XRouter.ComponentHosting
             processor.Stop();
             broker.Stop();
         }
-
-        private static object CreateTypeInstance(string typeAndAssembly)
-        {
-            string typeFullName;
-            string assemblyPath;
-            string[] parts = typeAndAssembly.Split(',');
-            if (parts.Length == 2) {
-                typeFullName = parts[0].Trim();
-                assemblyPath = parts[1].Trim();
-            } else if (parts.Length == 1) {
-                typeFullName = parts[0].Trim();
-                assemblyPath = null;
-            } else {
-                throw new InvalidOperationException(string.Format("Invalid type identification: '{0}'", typeAndAssembly));
-            }
-
-            return CreateTypeInstance(typeFullName, assemblyPath);
-        }
-
-        private static object CreateTypeInstance(string typeFullName, string assemblyPath)
-        {
-            if ((assemblyPath != null) && (!Path.IsPathRooted(assemblyPath))) {
-                assemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, assemblyPath);
-            }
-
-            #region Prepare type
-            Type type;
-            try {
-                if (assemblyPath != null) {
-                    Assembly assembly = Assembly.LoadFrom(assemblyPath);
-                    type = assembly.GetType(typeFullName, true);
-                } else {
-                    type = Type.GetType(typeFullName, true);
-                }
-            } catch (Exception ex) {
-                throw new InvalidOperationException(string.Format("Cannot access type '{0}'.", typeFullName), ex);
-            }
-            #endregion
-
-            #region Create instance
-            object instance;
-            try {
-                instance = Activator.CreateInstance(type, true);
-            } catch (Exception ex) {
-                throw new InvalidOperationException(string.Format("Cannot create instance of type '{0}' using default constructor.", typeFullName), ex);
-            }
-            #endregion
-
-            return instance;
-        }
-
     }
 }

@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6F3C917B-E777-4BE9-9C2B-3DA9C81419A3}</ProjectGuid>
+    <ProjectGuid>{22D3C3BC-6341-4909-A5C1-CA8BE1455770}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XRouter.EndpointPlugins.Test</RootNamespace>
-    <AssemblyName>XRouter.EndpointPlugins.Test</AssemblyName>
+    <RootNamespace>XRouter.Adapters</RootNamespace>
+    <AssemblyName>XRouter.Adapters</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,12 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirectoryAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SOAPAsyncAdapter.cs" />
+    <Compile Include="SOAPSyncAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XRouter.EndpointPlugins.csproj">
-      <Project>{A4518F6C-4860-4D4C-9DF6-15C4318F9C74}</Project>
-      <Name>XRouter.EndpointPlugins</Name>
+    <ProjectReference Include="..\Gateway\XRouter.Gateway.csproj">
+      <Project>{67A83368-80F1-467D-950A-64DD5F1EAD6C}</Project>
+      <Name>XRouter.Gateway</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

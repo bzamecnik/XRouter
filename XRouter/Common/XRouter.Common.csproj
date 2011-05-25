@@ -61,6 +61,7 @@
     <Compile Include="Token.cs" />
     <Compile Include="TokenState.cs" />
     <Compile Include="MessageFlowState.cs" />
+    <Compile Include="Utils\TypeUtils.cs" />
     <Compile Include="XmlReduction.cs" />
     <Compile Include="Xrm\XrmTarget.cs" />
   </ItemGroup>

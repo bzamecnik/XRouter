@@ -3,20 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using XRouter.Common;
+using System.Xml.Linq;
 
 namespace XRouter.Gateway
 {
-    /// <summary>
-    /// <remarks>
-    /// Constructor must have signature:
-    ///     constructor(XElement configuration, IEndpointsPluginService service)
-    /// </remarks>
-    /// </summary>
     public interface IAdapter
     {
-        void Start();
+        void Start(IAdapterService service);
         void Stop();
 
-        SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message);
+        XDocument SendMessage(string endpointName, XDocument message, XDocument metadata);
     }
 }

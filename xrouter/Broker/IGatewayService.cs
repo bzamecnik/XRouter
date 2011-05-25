@@ -11,8 +11,8 @@ namespace XRouter.Broker
         void Start(string componentName, IBrokerServiceForGateway brokerService);
         void Stop();
 
-        void ReceiveReturn(Guid tokenGuid, SerializableXDocument resultMessage);
+        void ReceiveReturn(Guid tokenGuid, SerializableXDocument resultMessage, SerializableXDocument sourceMetadata);
 
-        SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message);
+        SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata);
     }
 }

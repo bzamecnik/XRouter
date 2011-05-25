@@ -75,11 +75,8 @@
   <ItemGroup>
     <Compile Include="IAdapter.cs" />
     <Compile Include="IAdapterService.cs" />
-    <Compile Include="Implementation\Endpoint.cs" />
     <Compile Include="Implementation\AdapterService.cs" />
     <Compile Include="Implementation\Gateway.cs" />
-    <Compile Include="Implementation\InputEndpoint.cs" />
-    <Compile Include="Implementation\OutputEndpoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

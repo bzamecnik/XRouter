@@ -12,7 +12,7 @@ namespace XRouter.Processor
     {
         void CreateMessage(Guid targetTokenGuid, string messageName, XDocument message);
 
-        XDocument SendMessage(EndpointAddress target, XDocument message);
+        XDocument SendMessage(EndpointAddress target, XDocument message, XDocument metadata);
 
         XDocument GetXmlResource(XrmTarget target);
     }
