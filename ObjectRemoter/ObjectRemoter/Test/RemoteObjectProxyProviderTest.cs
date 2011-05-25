@@ -157,7 +157,7 @@
         }
 
         [Fact]
-        public void SetProperty()
+        public void SetRemoteProperty()
         {
             FullService service = new FullService() { Property = 1 };
             RemoteObjectAddress address = ObjectServer.PublishObject(service);
@@ -169,7 +169,7 @@
         }
 
         [Fact]
-        public void CallMethod()
+        public void CallRemoteMethod()
         {
             FullService service = new FullService();
             RemoteObjectAddress address = ObjectServer.PublishObject(service);
@@ -179,16 +179,53 @@
             Assert.Equal("FOO", result);
         }
 
+        // TODO:
+        // - throws and exception when remotely calling Invoke() method
+        //   - SampleEventHandler is in object[] and is treated as object
+        //     (which is marked [Serializable]), but SampleEventHandler
+        //     itself is not marked [Serializable]
+        //   - should be resolved by fixing ticket #31
+        [Fact]
+        public void CallRemoteEvent()
+        {
+            FullService service = new FullService();
+            RemoteObjectAddress address = ObjectServer.PublishObject(service);
+            IFullService proxy = RemoteObjectProxyProvider.GetProxy<IFullService>(address);
+            string result = string.Empty;
+            // add event handler remotely
+            proxy.Event += (sender, args) => { result = args.Text; };
+            // raise the event locally on the remote site
+            // (it calls our local handler attached to the event
+            // which sets the result to the 'result' variable)
+            proxy.RaiseEvent("foo");
+
+            Assert.Equal("foo", result);
+        }
+
+        // NOTE: It is not possible to remotely raise the event by direct
+        // invocation of the event. The event in the remote proxy is
+        // accessible only through an interface and it supports only
+        // adding and removing handlers, not invocation.
+        // So the following code doesn't work in C#:
+
         //[Fact]
-        //public void CallEvent()
+        //public void RaiseRemoteEvent()
         //{
         //    FullService service = new FullService();
-        //    service.Event += (value) => { Property = value; };
+        //    string result = string.Empty;
+        //    // add event handler locally
+        //    service.Event += (sender, args) => { result = args.Text; };
         //    RemoteObjectAddress address = ObjectServer.PublishObject(service);
         //    IFullService proxy = RemoteObjectProxyProvider.GetProxy<IFullService>(address);
-        //    string result = proxy.Method("foo");
 
-        //    Assert.Equal("FOO", result);
+        //    // raise the event locally on the remote site
+        //    if (proxy.Event != null)
+        //    {
+        //        proxy.Event(this, new SampleEventArgs("foo"));
+        //    }
+        //    proxy.Event("foo");
+
+        //    Assert.Equal("foo", result);
         //}
 
         #endregion
@@ -227,8 +264,13 @@
         // (methods, properties, events)
         public interface IFullService : IRemotelyReferable
         {
+            // sample property
             int Property { get; set; }
-            event EventHandler Event;
+            // sample event
+            event SampleEventHandler Event;
+            // method from which the event is raised
+            void RaiseEvent(string input);
+            // sample method
             string Method(string input);
         }
 
@@ -241,11 +283,30 @@
                 set { property = value; }
             }
 
-            public event EventHandler Event = delegate { };
+            public event SampleEventHandler Event = delegate { };
+
+            public void RaiseEvent(string text)
+            {
+                if (Event != null)
+                {
+                    Event(this, new SampleEventArgs(text));
+                }
+            }
 
             public string Method(string input)
             {
                 return input.ToUpper();
+            }
+        }
+
+        public delegate void SampleEventHandler(object sender, SampleEventArgs e);
+
+        public class SampleEventArgs : EventArgs
+        {
+            public string Text { get; set; }
+            public SampleEventArgs(string text)
+            {
+                Text = text;
             }
         }
 

@@ -54,6 +54,13 @@
         }
 
         [Fact]
+        public void MarshalAndUnmarshallArrayOfBoxedInt32()
+        {
+            object[] array = { (object)654321354, (object)061506, (object)0, (object)-546510 };
+            MarshalAndUnmarshallArray(array);
+        }
+
+        [Fact]
         public void MarshalAndUnmarshallArrayOfDouble()
         {
             MarshalAndUnmarshallArray(new[] {
@@ -65,6 +72,28 @@
         public void MarshalAndUnmarshallEmptyArrayOfString()
         {
             MarshalAndUnmarshallArray(new string[] { });
+        }
+
+        // array of serializable class instances
+        [Fact]
+        public void MarshalArrayOfSerializables()
+        {
+            SampleSerializable[] array = {
+                new SampleSerializable("foo", 42, null),
+                new SampleSerializable("bar", 1, new SampleSerializable("baz", 2, null)),
+            };
+            MarshalAndUnmarshallArray<SampleSerializable>(array);
+        }
+
+        // array of serializable class instances as object[]
+        [Fact]
+        public void MarshalArrayOfSerializablesAsArrayOfObject()
+        {
+            object[] array = {
+                (object)new SampleSerializable("foo", 42, null),
+                (object)new SampleSerializable("bar", 1, new SampleSerializable("baz", 2, null)),
+            };
+            MarshalAndUnmarshallArray<object>(array);
         }
 
         [Fact]
@@ -263,6 +292,50 @@
             var original = new SampleClass("foo", 42);
             Type type = typeof(SampleClass);
             Assert.Throws<ArgumentException>(() => Marshalling.Marshal(original, type));
+        }
+
+        // array of non-serializable class instances
+        [Fact]
+        public void MarshalArrayOfUnsupportedClassInstances()
+        {
+            SampleClass[] array = {
+                new SampleClass("foo", 42),
+                new SampleClass("bar", 1),
+            };
+            Assert.Throws<ArgumentException>(() => Marshalling.Marshal(array, typeof(SampleClass[])));
+        }
+
+        // array of non-serializable objects as object[]
+        [Fact]
+        public void MarshalArrayOfUnsupportedClassInstancesAsArrayOfObjects()
+        {
+            object[] array = {
+                (object)new SampleClass("foo", 42),
+                (object)new SampleClass("bar", 1),
+            };
+            Assert.Throws<ArgumentException>(() => Marshalling.Marshal(array, typeof(object[])));
+        }
+
+        // array of non-serializable struct instances
+        [Fact]
+        public void MarshalArrayOfUnsupportedStructInstances()
+        {
+            SampleStruct[] array = {
+                new SampleStruct("foo", 42),
+                new SampleStruct("bar", 1),
+            };
+            Assert.Throws<ArgumentException>(() => Marshalling.Marshal(array, typeof(SampleStruct[])));
+        }
+
+        // array of non-serializable struct instances as object[]
+        [Fact]
+        public void MarshalArrayOfUnsupportedStructInstancesAsArrayOfObjects()
+        {
+            object[] array = {
+                (object)new SampleStruct("foo", 42),
+                (object)new SampleStruct("bar", 1),
+            };
+            Assert.Throws<ArgumentException>(() => Marshalling.Marshal(array, typeof(object[])));
         }
 
         [Fact]
@@ -652,6 +725,7 @@
             }
         }
 
+        // not marked as [Serializable]
         private class SampleClass
         {
             public string text;
@@ -664,6 +738,7 @@
             }
         }
 
+        // not marked as [Serializable]
         private struct SampleStruct
         {
             public string text;
