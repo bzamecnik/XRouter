@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 using System.Xml.Linq;
 using XRouter.Common;
 
-namespace XRouter.Gateway.Implementation
+namespace XRouter.Gateway
 {
 	class AdapterService : IAdapterService
 	{

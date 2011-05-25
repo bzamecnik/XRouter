@@ -33,7 +33,7 @@ namespace XRouter.ComponentHosting
             string processorName = args.Settings[SectionKey_Processor].Parameters[SettingsKey_ComponentName];
             processor.Start(processorName, broker);
 
-            gateway = new XRouter.Gateway.Implementation.Gateway();
+            gateway = new XRouter.Gateway.Gateway();
             string gatewayName = args.Settings[SectionKey_Gateway].Parameters[SettingsKey_ComponentName];
             gateway.Start(gatewayName, broker);
         }

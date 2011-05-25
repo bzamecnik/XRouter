@@ -12,7 +12,7 @@ using XRouter.Broker;
 using XRouter.Common.Utils;
 using System.Collections.Concurrent;
 
-namespace XRouter.Gateway.Implementation
+namespace XRouter.Gateway
 {
     public class Gateway : IGatewayService
     {
