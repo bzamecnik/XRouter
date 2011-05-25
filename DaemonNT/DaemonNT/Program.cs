@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.ServiceProcess;
+    using DaemonNT.Installation;
+    using System.Linq;
 
     /// <summary>
     /// Provides a console program to run various DaemonNT commands.
@@ -105,7 +107,7 @@
 
         private static void CheckStatus(ServiceCommands commands, string serviceName)
         {
-            bool isInstalled = commands.IsInstalled(serviceName);
+            bool isInstalled = InstallerServices.IsInstalled(serviceName);
             if (isInstalled)
             {
                 string status = commands.GetStatus(serviceName);
@@ -119,9 +121,15 @@
 
         private static void ListServices(ServiceCommands commands)
         {
-            var services = commands.ListServices();
-            Console.WriteLine("Configured services: {0}",
-                string.Join(", ", services));
+            List<string> services = commands.ListServices().ToList();
+            services.Sort();
+            var installedServiceNames = Installation.InstallerServices.GetInstalledServices().Select((service) => service.ServiceName);
+            Console.WriteLine("Configured services:");
+            foreach (var service in services)
+            {
+                bool installed = installedServiceNames.Contains(service);
+                Console.WriteLine("{0}{1}", service, installed ? " - installed" : "");
+            }
         }
 
         private static void PrintUsage()

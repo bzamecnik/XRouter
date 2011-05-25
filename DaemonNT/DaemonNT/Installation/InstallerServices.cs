@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Linq;
+    using System.ServiceProcess;
 
     /// <summary>
     /// Provides an implementation of installing and uninstalling NT services.
@@ -55,6 +57,24 @@
 
             // perform the uninstallation process generating a log file
             System.Configuration.Install.ManagedInstallerClass.InstallHelper(args.ToArray());
+        }
+
+        /// <summary>
+        /// Gets the list of all currently installed NT services.
+        /// </summary>
+        /// <returns>The list of service controllers.</returns>
+        public static ServiceController[] GetInstalledServices()
+        {
+            return ServiceController.GetServices();
+        }
+
+        /// <summary>
+        /// Checks if the service is installed.
+        /// </summary>
+        /// <param name="serviceName">Service name</param>
+        public static bool IsInstalled(string serviceName)
+        {
+            return GetInstalledServices().Select((service) => service.ServiceName).Contains(serviceName);
         }
     }
 }
