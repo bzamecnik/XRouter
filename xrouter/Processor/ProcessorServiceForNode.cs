@@ -38,7 +38,7 @@ namespace XRouter.Processor
             BrokerService.AddMessageToToken(ProcessorName, targetTokenGuid, messageName, new SerializableXDocument(message));
         }
 
-        public XDocument SendMessage(EndpointAddress target, XDocument message, XDocument metadata)
+        public XDocument SendMessage(EndpointAddress target, XDocument message, XDocument metadata = null)
         {
             var result = BrokerService.SendMessage(target, new SerializableXDocument(message), new SerializableXDocument(metadata));
             return result.XDocument;

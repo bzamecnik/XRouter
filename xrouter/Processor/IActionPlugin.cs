@@ -6,7 +6,7 @@ using XRouter.Common;
 
 namespace XRouter.Processor
 {
-    public interface IActionPlugin
+    public interface IActionPlugin : IDisposable
     {
         void Initialize(IProcessorServiceForAction processorService);
 

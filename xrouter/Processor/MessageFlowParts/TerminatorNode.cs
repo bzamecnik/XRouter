@@ -21,7 +21,7 @@ namespace XRouter.Processor.MessageFlowParts
         {
             XDocument resultMessage = null;
             if (Config.IsReturningOutput) {
-                resultMessage = Config.OutputMessageSelection.GetSelectedDocument(token);
+                resultMessage = Config.ResultMessageSelection.GetSelectedDocument(token);
             }
 
             ProcessorService.FinishToken(token, resultMessage);

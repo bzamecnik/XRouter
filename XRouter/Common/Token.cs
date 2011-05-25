@@ -15,18 +15,22 @@ namespace XRouter.Common
     {
         public Guid Guid { get; private set; }
 
+        private object syncLock = new object();
+
         public SerializableXDocument Content { get; private set; }
 
         private MessageFlowState _messageFlowState;
         public MessageFlowState MessageFlowState {
             get {
-                if (_messageFlowState == null) {
-                    XElement workFlowStateElement = Content.XDocument.XPathSelectElement("token/messageflow-state");
-                    XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowState));
-                    XmlReader xmlReader = workFlowStateElement.CreateReader();
-                    _messageFlowState = (MessageFlowState)serializer.Deserialize(xmlReader);
+                lock (syncLock) {
+                    if (_messageFlowState == null) {
+                        XElement workFlowStateElement = Content.XDocument.XPathSelectElement("token/messageflow-state");
+                        XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowState));
+                        XmlReader xmlReader = workFlowStateElement.CreateReader();
+                        _messageFlowState = (MessageFlowState)serializer.Deserialize(xmlReader);
+                    }
+                    return _messageFlowState;
                 }
-                return _messageFlowState;
 
                 //var workFlowStateElement = Content.XDocument.XPathSelectElement("token/messageflow-state");
                 //if (workFlowStateElement == null) {
@@ -43,37 +47,47 @@ namespace XRouter.Common
 
         public TokenState State {
             get {
-                TokenState result;
-                Enum.TryParse<TokenState>(GetTokenAttribute("state"), out result);
-                return result;
+                lock (syncLock) {
+                    TokenState result;
+                    Enum.TryParse<TokenState>(GetTokenAttribute("state"), out result);
+                    return result;
+                }
             } set {
-                SetTokenAttribute("state", value.ToString());
+                lock (syncLock) {
+                    SetTokenAttribute("state", value.ToString());
+                }
             }
         }
 
         public DateTime Timeout {
             get {
-                return DateTime.Parse(GetTokenAttribute("timeout"), CultureInfo.InvariantCulture);
+                lock (syncLock) {
+                    return DateTime.Parse(GetTokenAttribute("timeout"), CultureInfo.InvariantCulture);
+                }
             } set {
-                SetTokenAttribute("timeout", value.ToString(CultureInfo.InvariantCulture));
+                lock (syncLock) {
+                    SetTokenAttribute("timeout", value.ToString(CultureInfo.InvariantCulture));
+                }
             }
         }
 
         private EndpointAddress _sourceAddress;
         public EndpointAddress SourceAddress {
             get {
-                if (_sourceAddress == null) {
-                    var sourceAddressElement = Content.XDocument.XPathSelectElement("token/source-address");
-                    if (sourceAddressElement != null) {
-                        string gateway = sourceAddressElement.Attribute(XName.Get("gateway")).Value;
-                        string adapter = sourceAddressElement.Attribute(XName.Get("adapter")).Value;
-                        string endpoint = sourceAddressElement.Attribute(XName.Get("endpoint")).Value;
-                        _sourceAddress = new EndpointAddress(gateway, adapter, endpoint);
-                    } else {
-                        _sourceAddress = new EndpointAddress(string.Empty, string.Empty, string.Empty);
+                lock (syncLock) {
+                    if (_sourceAddress == null) {
+                        var sourceAddressElement = Content.XDocument.XPathSelectElement("token/source-address");
+                        if (sourceAddressElement != null) {
+                            string gateway = sourceAddressElement.Attribute(XName.Get("gateway")).Value;
+                            string adapter = sourceAddressElement.Attribute(XName.Get("adapter")).Value;
+                            string endpoint = sourceAddressElement.Attribute(XName.Get("endpoint")).Value;
+                            _sourceAddress = new EndpointAddress(gateway, adapter, endpoint);
+                        } else {
+                            _sourceAddress = new EndpointAddress(string.Empty, string.Empty, string.Empty);
+                        }
                     }
+                    return _sourceAddress;
                 }
-                return _sourceAddress;
             }
         }
 
@@ -96,10 +110,12 @@ namespace XRouter.Common
 
         public Token Clone()
         {
-            Token result = new Token();
-            result.Guid = Guid;
-            result.Content = Content;
-            return result;
+            lock (syncLock) {
+                Token result = new Token();
+                result.Guid = Guid;
+                result.Content = Content;
+                return result;
+            }
         }
 
         public void SaveMessageFlowState()
@@ -109,10 +125,12 @@ namespace XRouter.Common
 
         public void SaveMessageFlowState(MessageFlowState messageFlowState)
         {
-            XElement workFlowStateElement = Content.XDocument.XPathSelectElement("token/messageflow-state");
-            XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowState));
-            XmlWriter xmlWriter = workFlowStateElement.CreateWriter();
-            serializer.Serialize(xmlWriter, messageFlowState);
+            lock (syncLock) {
+                XElement workFlowStateElement = Content.XDocument.XPathSelectElement("token/messageflow-state");
+                XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowState));
+                XmlWriter xmlWriter = workFlowStateElement.CreateWriter();
+                serializer.Serialize(xmlWriter, messageFlowState);
+            }
         }
 
         public void SaveSourceAddress()
@@ -122,60 +140,74 @@ namespace XRouter.Common
 
         public void SaveSourceAddress(EndpointAddress sourceAddress)
         {
-            var sourceAddressElement = Content.XDocument.XPathSelectElement("token/source-address");
-            if (sourceAddressElement == null) {
-                sourceAddressElement = new XElement("source-address");
-                Content.XDocument.XPathSelectElement("token").Add(sourceAddressElement);
+            lock (syncLock) {
+                var sourceAddressElement = Content.XDocument.XPathSelectElement("token/source-address");
+                if (sourceAddressElement == null) {
+                    sourceAddressElement = new XElement("source-address");
+                    Content.XDocument.XPathSelectElement("token").Add(sourceAddressElement);
+                }
+                sourceAddressElement.SetAttributeValue("gateway", sourceAddress.GatewayName);
+                sourceAddressElement.SetAttributeValue("adapter", sourceAddress.AdapterName);
+                sourceAddressElement.SetAttributeValue("endpoint", sourceAddress.EndPointName);
             }
-            sourceAddressElement.SetAttributeValue("gateway", sourceAddress.GatewayName);
-            sourceAddressElement.SetAttributeValue("adapter", sourceAddress.AdapterName);
-            sourceAddressElement.SetAttributeValue("endpoint", sourceAddress.EndPointName);
         }
 
         public void SaveSourceMetadata(XDocument sourceMetadata)
         {
-            if (sourceMetadata == null) {
-                return;
-            }
+            lock (syncLock) {
+                if (sourceMetadata == null) {
+                    return;
+                }
 
-            XElement sourceMetadataElement = Content.XDocument.XPathSelectElement("token/source-metadata");
-            sourceMetadataElement.Add(sourceMetadata.Root);
+                XElement sourceMetadataElement = Content.XDocument.XPathSelectElement("token/source-metadata");
+                sourceMetadataElement.Add(sourceMetadata.Root);
+            }
         }
 
         public XDocument GetSourceMetadata()
         {
-            XElement sourceMetadataElement = Content.XDocument.XPathSelectElement("token/source-metadata");
-            XDocument result = new XDocument();
-            result.Add(sourceMetadataElement);
-            return result;
+            lock (syncLock) {
+                XElement sourceMetadataElement = Content.XDocument.XPathSelectElement("token/source-metadata");
+                XDocument result = new XDocument();
+                result.Add(sourceMetadataElement);
+                return result;
+            }
         }
 
         public void AddMessage(string name, XDocument message)
         {
-            var messagesElement = Content.XDocument.XPathSelectElement("token/messages");
-            XElement messageElement = new XElement(XName.Get("message"), message);
-            messageElement.SetAttributeValue(XName.Get("name"), name);
+            lock (syncLock) {
+                var messagesElement = Content.XDocument.XPathSelectElement("token/messages");
+                XElement messageElement = new XElement(XName.Get("message"), message);
+                messageElement.SetAttributeValue(XName.Get("name"), name);
+            }
         }
 
         public XElement GetMessage(string name)
         {
-            var message = Content.XDocument.XPathSelectElement("token/messages/message[@name=]" + name);
-            return message;
+            lock (syncLock) {
+                var message = Content.XDocument.XPathSelectElement("token/messages/message[@name=]" + name);
+                return message;
+            }
         }
 
         private string GetTokenAttribute(string name)
         {
-            var tokenAttribute = Content.XDocument.XPathSelectElement("token").Attribute(XName.Get(name));
-            if (tokenAttribute != null) {
-                return tokenAttribute.Value;
-            } else {
-                return null;
+            lock (syncLock) {
+                var tokenAttribute = Content.XDocument.XPathSelectElement("token").Attribute(XName.Get(name));
+                if (tokenAttribute != null) {
+                    return tokenAttribute.Value;
+                } else {
+                    return null;
+                }
             }
         }
 
         private void SetTokenAttribute(string name, string value)
         {
-            Content.XDocument.XPathSelectElement("token").SetAttributeValue(name, value);
+            lock (syncLock) {
+                Content.XDocument.XPathSelectElement("token").SetAttributeValue(name, value);
+            }
         }
 
         //public void SetInputAdapterVariable(string name, string value)

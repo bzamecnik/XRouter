@@ -10,6 +10,6 @@ namespace XRouter.Common.MessageFlowConfig
     {
         public bool IsReturningOutput { get; set; }
 
-        public TokenSelection OutputMessageSelection { get; set; }
+        public TokenSelection ResultMessageSelection { get; set; }
     }
 }

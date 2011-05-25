@@ -22,6 +22,9 @@ namespace XRouter.Common
 
         public SerializableXDocument(XDocument xdocument)
         {
+            if (xdocument == null) {
+                xdocument = new XDocument();
+            }
             XDocument = xdocument;
         }
 

@@ -9,7 +9,21 @@ namespace XRouter.Common.MessageFlowConfig
 {
     public class TokenSelection
     {
-        public string XPath { get; set; }
+        private string _selectionPattern;
+        public string SelectionPattern {
+            get { return _selectionPattern; }
+            set {
+                _selectionPattern = value;
+                XPath = _selectionPattern;
+            }
+        }
+
+        public string XPath { get; private set; }
+
+        public TokenSelection(string selectionPattern)
+        {
+            SelectionPattern = selectionPattern;
+        }
 
         public XDocument GetSelectedDocument(Token token)
         {

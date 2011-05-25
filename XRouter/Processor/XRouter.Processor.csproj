@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuiltInActions\SendMessageAction.cs" />
     <Compile Include="IActionPlugin.cs" />
     <Compile Include="IProcessorServiceForAction.cs" />
     <Compile Include="MessageFlowParts\ActionNode.cs" />
