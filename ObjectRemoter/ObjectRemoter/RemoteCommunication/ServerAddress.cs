@@ -13,8 +13,8 @@ namespace ObjectRemoter.RemoteCommunication
     /// </summary>
     internal class ServerAddress
     {
-        private static readonly int PORT_RANGE_START = 10000;
-        private static readonly int PORT_RANGE_END = 30000;
+        private static readonly int PortRangeStart = 10000;
+        private static readonly int PortRangeEnd = 30000;
 
         private static Random rnd = new Random();
 
@@ -74,7 +74,7 @@ namespace ObjectRemoter.RemoteCommunication
         /// <returns>Local server address</returns>
         public static ServerAddress GetLocalServerAddress()
         {
-            int port = rnd.Next(PORT_RANGE_START, PORT_RANGE_END);
+            int port = rnd.Next(PortRangeStart, PortRangeEnd);
 
             string localHostName = Dns.GetHostName();
             IPAddress ipAddress = ChooseIPAddress(localHostName);

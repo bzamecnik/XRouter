@@ -25,12 +25,12 @@ namespace DaemonNT.GUI.ConfigEditor
             InitializeComponent();
 
             installerStartTypeComboBox.Items.AddRange(
-                InstallerSettings.VALID_START_MODE_VALUES.ToArray());
-            installerStartTypeComboBox.Text = InstallerSettings.DEFAULT_START_MODE_VALUE;
+                InstallerSettings.ValidStartModeValues.ToArray());
+            installerStartTypeComboBox.Text = InstallerSettings.DefaultStartModeValue;
 
             installerAccountComboBox.Items.AddRange(
-                InstallerSettings.VALID_ACCOUNT_VALUES.ToArray());
-            installerAccountComboBox.Text = InstallerSettings.DEFAULT_ACCOUNT_VALUE;
+                InstallerSettings.ValidAccountValues.ToArray());
+            installerAccountComboBox.Text = InstallerSettings.DefaultAccountValue;
         }
 
         private void editServiceSettingsButton_Click(object sender, EventArgs e)

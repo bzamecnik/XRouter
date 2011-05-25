@@ -25,7 +25,7 @@
         /// <summary>
         /// Buffer size (number of records) of the event log.
         /// </summary>
-        private static readonly int EVENT_BUFFER_SIZE = 1000;
+        private static readonly int EventBufferSize = 1000;
 
         /// <summary>
         /// Provides a facility for efficient, thread-safe logging of
@@ -45,7 +45,7 @@
             Logger logger = new Logger();
             logger.serviceName = serviceName;
             logger.isDebugMode = isDebugMode;
-            logger.Event = EventLogger.Create(serviceName, EVENT_BUFFER_SIZE);
+            logger.Event = EventLogger.Create(serviceName, EventBufferSize);
 
             return logger;
         }

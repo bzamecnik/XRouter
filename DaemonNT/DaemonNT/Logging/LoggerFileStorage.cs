@@ -30,14 +30,14 @@
         /// TODO: this should not be hard-coded, but rather configured,
         /// eg. in the config file.
         /// </remarks>
-        private static readonly string LOG_RELATIVE_DIRECTORY = "Logs";
+        private static readonly string RelativePathToLogs = "Logs";
 
         public LoggerFileStorage(string source)
         {
             this.source = source;
             // TODO: should we use AppDomain.CurrentDomain.BaseDirectory or
             // Directory.GetCurrentDirectory()
-            this.directory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, LOG_RELATIVE_DIRECTORY);
+            this.directory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, RelativePathToLogs);
         }
 
         private void Save(DateTime logDateTime, string logItem)

@@ -11,7 +11,7 @@ namespace DaemonNT.Configuration
     /// <see cref="DaemonNT.TraceLogger"/>
     internal sealed class TraceLoggerSettings
     {
-        public readonly int DEFAULT_BUFFER_SIZE = 1000;
+        public readonly int DefaultBufferSize = 1000;
 
         /// <summary>
         /// Number of log records the buffer has capacity for.
@@ -30,7 +30,7 @@ namespace DaemonNT.Configuration
         /// </summary>
         public TraceLoggerSettings()
         {
-            this.BufferSize = DEFAULT_BUFFER_SIZE;
+            this.BufferSize = DefaultBufferSize;
             this.Storages = new List<TraceLoggerStorageSettings>();
         }
     }

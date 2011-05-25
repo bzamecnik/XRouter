@@ -42,7 +42,7 @@
                     Console.WriteLine("Request: {0}, response: {1}", request, response);
                 }
             }
-            catch (ThreadAbortException ex)
+            catch (ThreadAbortException)
             {
                 Console.WriteLine("Service loop thread was aborted.");
             }

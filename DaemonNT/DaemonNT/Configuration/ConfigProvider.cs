@@ -15,7 +15,7 @@
     {
         // NOTE: this constant can be public, eg. so that it can be displayed
         // within a help message
-        public static readonly string DEFAULT_CONFIG_FILE_NAME = "DaemonNT.xml";
+        public static readonly string DefaultConfigFileName = "DaemonNT.xml";
 
         /// <summary>
         /// Loads the configuration for the specified service from a default
@@ -75,7 +75,7 @@
             {
                 // TODO: should we use AppDomain.CurrentDomain.BaseDirectory or
                 // Directory.GetCurrentDirectory()
-                configFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DEFAULT_CONFIG_FILE_NAME);
+                configFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DefaultConfigFileName);
             }
             XDocument xConfig = XDocument.Load(configFile, LoadOptions.SetLineInfo);
 
