@@ -219,6 +219,12 @@ namespace DaemonNT
         /// <returns>True if the service was successfully started.</returns>
         public bool Start(string serviceName)
         {
+            if (!InstallerServices.IsInstalled(serviceName))
+            {
+                Console.WriteLine("Error: Service '{0}' is not installed.", serviceName);
+                return false;
+            }
+
             bool? started = (bool?)WorkWithServiceController(serviceName,
                 (sc) =>
                 {
@@ -241,11 +247,21 @@ namespace DaemonNT
         /// <returns>True if the service was successfully restarted.</returns>
         public bool Restart(string serviceName)
         {
+            if (!InstallerServices.IsInstalled(serviceName))
+            {
+                Console.WriteLine("Error: Service '{0}' is not installed.", serviceName);
+                return false;
+            }
+
             bool? restarted = (bool?)WorkWithServiceController(serviceName,
                 (sc) =>
                 {
-                    sc.Stop();
-                    // TODO: wait for the Stopped status
+                    if (GetStatus(serviceName) == ServiceControllerStatus.Running.ToString())
+                    {
+                        sc.Stop();
+                    }
+                    // TODO: there could be a timeout
+                    sc.WaitForStatus(ServiceControllerStatus.Stopped);
                     sc.Start();
                     // TODO: wait for the Running status
                     // - the whole method should accept a timeout parameter
@@ -267,6 +283,12 @@ namespace DaemonNT
         /// <returns>True if the service was successfully stopped.</returns>
         public bool Stop(string serviceName)
         {
+            if (!InstallerServices.IsInstalled(serviceName))
+            {
+                Console.WriteLine("Error: Service '{0}' is not installed.", serviceName);
+                return false;
+            }
+
             bool? stopped = (bool?)WorkWithServiceController(serviceName,
                 (sc) =>
                 {
