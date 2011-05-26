@@ -17,9 +17,14 @@
     {
         public static void Main(string[] args)
         {
+            #region Parse command-line arguments
+
             // TODO: Lepe poresit parametry prikazove radky (az bude definitivne jiste,
             // co vsechno bude v sobe DaemonNT obsahovat - pokud budeme napr. implementovat
             // watchdog ci konfiguracni GUI)
+
+            // TODO:
+            // - if the argument parsing gets too complex better use a specialized library
 
             List<string> arguments = new List<string>();
             arguments.AddRange(args);
@@ -37,14 +42,20 @@
 
             ServiceCommands commands = new ServiceCommands();
 
-            // first argument is optional
-            if (arguments.Count == 3)
+            // non-mandatory option parameters
+            while ((arguments.Count > 0) && arguments[0].StartsWith("-"))
             {
                 if (arguments[0].StartsWith("--config-file="))
                 {
                     commands.ConfigFile = arguments[0].Split(new[] { '=' }, 2)[1];
-                    arguments.RemoveAt(0);
                 }
+                arguments.RemoveAt(0);
+            }
+
+            if (arguments.Count < 1)
+            {
+                PrintUsage();
+                return;
             }
 
             string command = arguments[0];
@@ -61,6 +72,10 @@
                     return;
                 }
             }
+
+            #endregion
+
+            #region Execute the requested command
 
             try
             {
@@ -100,9 +115,11 @@
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine("Error: {0}", ex);
+                Console.Error.WriteLine("Error: {0}", ex.Message);
                 Environment.Exit(-1);
             }
+
+            #endregion
         }
 
         private static void CheckStatus(ServiceCommands commands, string serviceName)
