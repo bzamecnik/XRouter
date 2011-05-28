@@ -12,6 +12,6 @@ namespace XRouter.Common.ComponentInterfaces
 
         void ReceiveReturn(Guid tokenGuid, SerializableXDocument resultMessage, SerializableXDocument sourceMetadata);
 
-        SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata);
+        SerializableXDocument SendMessage(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata);
     }
 }

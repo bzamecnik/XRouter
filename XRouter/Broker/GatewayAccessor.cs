@@ -19,7 +19,7 @@ namespace XRouter.Broker
 
         public SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata)
         {
-            SerializableXDocument result = gateway.SendMessageToOutputEndPoint(address, message, metadata);
+            SerializableXDocument result = gateway.SendMessage(address, message, metadata);
             return result;
         }
 

@@ -38,6 +38,7 @@ namespace XRouter.Processor.MessageFlowParts
                 ValidatorResults results = validator.Validate(testedDocument, false);
                 if (results.IsValid) {
                     targetNodeName = branches[validator];
+                    break;
                 }
             }
             #endregion

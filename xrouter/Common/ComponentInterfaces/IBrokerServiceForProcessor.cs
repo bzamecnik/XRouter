@@ -24,6 +24,6 @@ namespace XRouter.Common.ComponentInterfaces
 
         MessageFlowConfiguration[] GetActiveMessageFlows();
 
-        SerializableXDocument GetXmlResource(XrmTarget target);
+        SerializableXDocument GetXmlResource(XrmUri target);
     }
 }

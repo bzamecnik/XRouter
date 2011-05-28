@@ -55,9 +55,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IAdapter.cs" />
+    <Compile Include="Adapter.cs" />
     <Compile Include="IAdapterService.cs" />
-    <Compile Include="AdapterService.cs" />
     <Compile Include="Gateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -100,19 +99,6 @@
       <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
       <Name>XRouter.Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Examples\DirectoryConfiguration.xml">
-      <SubType>Designer</SubType>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Examples\SOAPSyncConfiguration.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Examples\SOAPAsyncConfiguration.xml">
-      <SubType>Designer</SubType>
-    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -19,6 +19,7 @@ namespace XRouter.Broker.Dispatching
         private object tokenDispatchingLock = new object();
 
         private Task backgroundCheckings;
+        private bool isStopping;
 
         internal Dispatcher(IBrokerServiceForDispatcher brokerService)
         {
@@ -65,6 +66,7 @@ namespace XRouter.Broker.Dispatching
                         if (token.MessageFlowState.MessageFlowGuid == new Guid()) {
                             Guid messageFlowGuid = config.GetCurrentMessageFlowGuid();
                             brokerService.UpdateTokenMessageFlow(tokenGuid, messageFlowGuid);
+                            token.MessageFlowState.MessageFlowGuid = messageFlowGuid;
                         }
                         try {
                             processor.AddWork(token);
@@ -81,7 +83,7 @@ namespace XRouter.Broker.Dispatching
 
         private void StartBackgroundCheckings()
         {
-            while (true) {
+            while (!isStopping) {
                 Thread.Sleep(BackgroundCheckingInterval);
 
                 #region Check unresponsible processors
@@ -112,6 +114,11 @@ namespace XRouter.Broker.Dispatching
                 }
                 #endregion
             }
+        }
+
+        public void Stop()
+        {
+            isStopping = true;
         }
     }
 }

@@ -11,45 +11,35 @@ using System.Threading;
 
 namespace XRouter.Adapters
 {
-    class DirectoryAdapter : IAdapter
+    class DirectoryAdapter : Adapter
     {
         private static readonly string BinPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-        private IAdapterService service;
 
         private TimeSpan checkingInterval;
         private ConcurrentDictionary<string, string> outputEndpointToPathMap;
         private ConcurrentDictionary<string, string> inputEndpointToPathMap;
 
-        private volatile bool isStopped;
-
-        public void Start(IAdapterService service)
+        protected override void Run()
         {
-            this.service = service;
-
             #region Emulate reading configuration (will be automatic later)
-            string inputDir1 = Path.Combine(BinPath, "inputDir1");
-            string inputDir2 = Path.Combine(BinPath, "inputDir2");
-            string outputDir1 = Path.Combine(BinPath, "output1");
-            string outputDir2 = Path.Combine(BinPath, "output2");
-            if (!Directory.Exists(inputDir1)) { Directory.CreateDirectory(inputDir1); }
-            if (!Directory.Exists(inputDir2)) { Directory.CreateDirectory(inputDir2); }
-            if (!Directory.Exists(outputDir1)) { Directory.CreateDirectory(outputDir1); }
-            if (!Directory.Exists(outputDir2)) { Directory.CreateDirectory(outputDir2); }
+            string inputDir1 = @"C:\XRouterTest\IN";
+            string outputDir1 = @"C:\XRouterTest\A";
+            string outputDir2 = @"C:\XRouterTest\B";
+            string outputDir3 = @"C:\XRouterTest\C";
 
             inputEndpointToPathMap = new ConcurrentDictionary<string, string>();
-            inputEndpointToPathMap.AddOrUpdate("inputDir1", inputDir1, (key, oldValue) => null);
-            inputEndpointToPathMap.AddOrUpdate("inputDir2", inputDir2, (key, oldValue) => null);
+            inputEndpointToPathMap.AddOrUpdate("IN", inputDir1, (key, oldValue) => null);          
 
             outputEndpointToPathMap = new ConcurrentDictionary<string, string>();
-            outputEndpointToPathMap.AddOrUpdate("outputDir1", outputDir1, (key, oldValue) => null);
-            outputEndpointToPathMap.AddOrUpdate("outputDir2", outputDir2, (key, oldValue) => null);
+            outputEndpointToPathMap.AddOrUpdate("A", outputDir1, (key, oldValue) => null);
+            outputEndpointToPathMap.AddOrUpdate("B", outputDir2, (key, oldValue) => null);
+            outputEndpointToPathMap.AddOrUpdate("C", outputDir3, (key, oldValue) => null);
 
             checkingInterval = TimeSpan.FromMilliseconds(100);
             #endregion
 
             #region Watch input directories
-            while (!isStopped) {
+            while (IsRunning) {
                 Thread.Sleep(checkingInterval);
 
                 foreach (var enpointNameAndPath in inputEndpointToPathMap) {
@@ -59,13 +49,21 @@ namespace XRouter.Adapters
                     string[] newFiles = Directory.GetFiles(path);
                     foreach (string newFilePath in newFiles) {
 
-                        string fileContent = File.ReadAllText(newFilePath);
+                        string fileContent;
+                        try
+                        {
+                            fileContent = File.ReadAllText(newFilePath);
+                        }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
                         XDocument message = new XDocument();
                         XElement root = new XElement(XName.Get("content"), fileContent);
                         message.Add(root);
 
                         try {
-                            service.ReceiveMessage(message, enpointName);
+                            ReceiveMessage(message, enpointName);
                         } catch (Exception ex) {
                             // message receiving failed
                             continue;
@@ -78,12 +76,7 @@ namespace XRouter.Adapters
             #endregion
         }
 
-        public void Stop()
-        {
-            isStopped = true;
-        }
-
-        public XDocument SendMessage(string endpointName, XDocument message, XDocument metadata)
+        public override XDocument SendMessage(string endpointName, XDocument message, XDocument metadata)
         {
             string targetPath;
             if (outputEndpointToPathMap.TryGetValue(endpointName, out targetPath)) {

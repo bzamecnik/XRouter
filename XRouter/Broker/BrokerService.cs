@@ -9,6 +9,7 @@ using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
 using System.Threading.Tasks;
 using XRouter.Common.ComponentInterfaces;
+using System.Threading;
 
 namespace XRouter.Broker
 {
@@ -19,6 +20,8 @@ namespace XRouter.Broker
 
         private Dispatching.Dispatcher dispatcher;
         private XmlResourceManager xmlResourceManager;
+
+        private object syncLock = new object();
 
         public BrokerService()
         {
@@ -40,12 +43,15 @@ namespace XRouter.Broker
             }
             #endregion
 
-            xmlResourceManager = new XmlResourceManager(storage, GetConfiguration);
+            xmlResourceManager = new XmlResourceManager(storage);
             dispatcher = new Dispatching.Dispatcher(this);
         }
 
         public void Stop()
         {
+            // Make sure that all operations are completed and no one will be running after this call
+            Monitor.Enter(syncLock);
+            dispatcher.Stop();
         }
 
         public ApplicationConfiguration GetConfiguration(XmlReduction reduction)
@@ -103,6 +109,7 @@ namespace XRouter.Broker
         {
             storage.UpdateToken(tokenGuid, delegate(Token token) {
                 token.MessageFlowState.MessageFlowGuid = messageFlowGuid;
+                token.SaveMessageFlowState();
             });
         }
 
@@ -121,47 +128,66 @@ namespace XRouter.Broker
 
         public void ReceiveToken(Token token)
         {
-            token.State = TokenState.Received;
-            storage.SaveToken(token);
-            dispatcher.NotifyAboutNewToken(token);
+            lock (syncLock)
+            {
+                token.State = TokenState.Received;
+                storage.SaveToken(token);
+                dispatcher.NotifyAboutNewToken(token);
+            }
         }
 
         public void UpdateTokenMessageFlowState(string updatingProcessorName, Guid tokenGuid, MessageFlowState messageFlowState)
         {
-            storage.UpdateToken(tokenGuid, delegate(Token token) {
-                if (token.MessageFlowState.AssignedProcessor == updatingProcessorName) {
-                    token.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
-                    token.SaveMessageFlowState(messageFlowState);
-                }
-            });
+            lock (syncLock)
+            {
+                storage.UpdateToken(tokenGuid, delegate(Token token)
+                {
+                    if (token.MessageFlowState.AssignedProcessor == updatingProcessorName)
+                    {
+                        token.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
+                        token.SaveMessageFlowState(messageFlowState);
+                    }
+                });
+            }
         }
 
         public void AddMessageToToken(string updatingProcessorName, Guid targetTokenGuid, string messageName, SerializableXDocument message)
         {
-            storage.UpdateToken(targetTokenGuid, delegate(Token token) {
-                if (token.MessageFlowState.AssignedProcessor == updatingProcessorName) {
-                    token.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
-                    token.AddMessage(messageName, message);
-                }
-            });
+            lock (syncLock)
+            {
+                storage.UpdateToken(targetTokenGuid, delegate(Token token)
+                {
+                    if (token.MessageFlowState.AssignedProcessor == updatingProcessorName)
+                    {
+                        token.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
+                        token.AddMessage(messageName, message);
+                    }
+                });
+            }
         }
 
         public void FinishToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument resultMessage)
         {
-            Token token = storage.GetToken(tokenGuid);
-            if (token.MessageFlowState.AssignedProcessor == updatingProcessorName) {
-                storage.UpdateToken(tokenGuid, delegate(Token t) {
-                    t.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
-                    t.SaveMessageFlowState();
-                });
+            lock (syncLock)
+            {
+                Token token = storage.GetToken(tokenGuid);
+                if (token.MessageFlowState.AssignedProcessor == updatingProcessorName)
+                {
+                    storage.UpdateToken(tokenGuid, delegate(Token t)
+                    {
+                        t.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
+                        t.SaveMessageFlowState();
+                    });
 
-                XDocument sourceMetadata = token.GetSourceMetadata();
-                GatewayAccessor sourceGateway = componentsAccessors.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == token.SourceAddress.GatewayName);
-                sourceGateway.ReceiveReturn(tokenGuid, resultMessage, new SerializableXDocument(sourceMetadata));
+                    XDocument sourceMetadata = token.GetSourceMetadata();
+                    GatewayAccessor sourceGateway = componentsAccessors.Values.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == token.SourceAddress.GatewayName);
+                    sourceGateway.ReceiveReturn(tokenGuid, resultMessage, new SerializableXDocument(sourceMetadata));
 
-                storage.UpdateToken(tokenGuid, delegate(Token t) {
-                    t.State = TokenState.Finished;
-                });
+                    storage.UpdateToken(tokenGuid, delegate(Token t)
+                    {
+                        t.State = TokenState.Finished;
+                    });
+                }
             }
         }
 
@@ -191,10 +217,12 @@ namespace XRouter.Broker
             return result.ToArray();
         }
 
-        public SerializableXDocument GetXmlResource(XrmTarget target)
+        public SerializableXDocument GetXmlResource(XrmUri target)
         {
             XDocument xmlResource = xmlResourceManager.GetXmlResource(target);
             return new SerializableXDocument(xmlResource);
         }
     }
 }
+
+

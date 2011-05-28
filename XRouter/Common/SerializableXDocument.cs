@@ -4,12 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
+using System.Xml.Schema;
+using System.Xml;
 
 namespace XRouter.Common
 {
-    [Serializable]
-    public class SerializableXDocument : ISerializable
+    [DataContract]
+    public class SerializableXDocument
     {
+        [DataMember]
+        private string XmlContent {
+            get { return XDocument.ToString(); }
+            set { XDocument = XDocument.Parse(value); }
+        }
+
         public XDocument XDocument { get; private set; }
 
         public static implicit operator XDocument(SerializableXDocument serializableXDocument)
@@ -26,18 +35,6 @@ namespace XRouter.Common
                 xdocument = new XDocument();
             }
             XDocument = xdocument;
-        }
-
-        protected SerializableXDocument(SerializationInfo info, StreamingContext context)
-        {
-            string xml = info.GetString("xml");
-            XDocument = XDocument.Parse(xml);
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            string xml = XDocument.ToString();
-            info.AddValue("xml", xml);
         }
 
         public override string ToString()

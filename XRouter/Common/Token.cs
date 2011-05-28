@@ -24,10 +24,11 @@ namespace XRouter.Common
             get {
                 lock (syncLock) {
                     if (_messageFlowState == null) {
-                        XElement workFlowStateElement = Content.XDocument.XPathSelectElement("token/messageflow-state");
-                        XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowState));
-                        XmlReader xmlReader = workFlowStateElement.CreateReader();
-                        _messageFlowState = (MessageFlowState)serializer.Deserialize(xmlReader);
+                        _messageFlowState = new MessageFlowState();
+                        //XElement workFlowStateElement = Content.XDocument.XPathSelectElement("token/messageflow-state");
+                        //XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowState));
+                        //XmlReader xmlReader = workFlowStateElement.CreateReader();
+                        //_messageFlowState = (MessageFlowState)serializer.Deserialize(xmlReader);
                     }
                     return _messageFlowState;
                 }
@@ -125,12 +126,13 @@ namespace XRouter.Common
 
         public void SaveMessageFlowState(MessageFlowState messageFlowState)
         {
-            lock (syncLock) {
-                XElement workFlowStateElement = Content.XDocument.XPathSelectElement("token/messageflow-state");
-                XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowState));
-                XmlWriter xmlWriter = workFlowStateElement.CreateWriter();
-                serializer.Serialize(xmlWriter, messageFlowState);
-            }
+            //lock (syncLock) {
+            //    XElement workFlowStateElement = Content.XDocument.XPathSelectElement("token/messageflow-state");
+            //    XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowState));
+            //    XmlWriter xmlWriter = workFlowStateElement.CreateWriter();
+            //    serializer.Serialize(xmlWriter, messageFlowState);
+            //}
+            _messageFlowState = messageFlowState;
         }
 
         public void SaveSourceAddress()
@@ -177,9 +179,10 @@ namespace XRouter.Common
         public void AddMessage(string name, XDocument message)
         {
             lock (syncLock) {
-                var messagesElement = Content.XDocument.XPathSelectElement("token/messages");
-                XElement messageElement = new XElement(XName.Get("message"), message);
-                messageElement.SetAttributeValue(XName.Get("name"), name);
+                var xMessages = Content.XDocument.XPathSelectElement("token/messages");
+                XElement xMessage = new XElement(XName.Get("message"), message.Root);
+                xMessage.SetAttributeValue(XName.Get("name"), name);
+                xMessages.Add(xMessage);
             }
         }
 

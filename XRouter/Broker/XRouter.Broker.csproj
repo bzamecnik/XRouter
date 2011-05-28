@@ -48,7 +48,6 @@
     <Compile Include="PersistentStorage.cs" />
     <Compile Include="ProcessorAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XmlResourceManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ObjectRemoter\ObjectRemoter\ObjectRemoter.csproj">

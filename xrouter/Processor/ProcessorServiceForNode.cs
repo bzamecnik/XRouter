@@ -45,7 +45,7 @@ namespace XRouter.Processor
             return result.XDocument;
         }
 
-        public XDocument GetXmlResource(XrmTarget target)
+        public XDocument GetXmlResource(XrmUri target)
         {
             var result = BrokerService.GetXmlResource(target);
             return result.XDocument;

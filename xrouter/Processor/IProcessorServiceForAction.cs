@@ -14,6 +14,6 @@ namespace XRouter.Processor
 
         XDocument SendMessage(EndpointAddress target, XDocument message, XDocument metadata = null);
 
-        XDocument GetXmlResource(XrmTarget target);
+        XDocument GetXmlResource(XrmUri target);
     }
 }

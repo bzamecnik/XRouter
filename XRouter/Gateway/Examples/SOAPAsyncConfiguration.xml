@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<soapAsyncConfiguration>
-  <outputEndpoints>
-    <outputEndpoint name="" address="" />
-  </outputEndpoints>
-</soapAsyncConfiguration>
-<!--Seznam adres na ktere ma naslouchat
-Seznam ouput adres na ktere muže zasilat zpravu (mozna jen jedna adresa) ( nebo to bude soucasti tokenu ??)
-"http://localhost:8080/"-->

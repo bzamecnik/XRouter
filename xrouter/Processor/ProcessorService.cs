@@ -26,6 +26,11 @@ namespace XRouter.Processor
         private BlockingCollection<Token> tokensToProcess;
         private ConcurrentBag<SingleThreadProcessor> concurrentProcessors;
 
+        private object addWorkLock = new object();
+        private volatile bool isStopping;
+        private int tokensCount;
+        private ManualResetEvent tokensFinishedEvent;
+
         public void Start(string componentName, IBrokerServiceForProcessor brokerService)
         {
             Name = componentName;
@@ -36,7 +41,10 @@ namespace XRouter.Processor
             Configuration = BrokerService.GetConfiguration(ConfigReduction);
             serviceForNode = new ProcessorServiceForNode(Name, BrokerService, Configuration);
 
+            tokensCount = 0;
+            tokensFinishedEvent = new ManualResetEvent(true);
             tokensToProcess = new BlockingCollection<Token>(new ConcurrentQueue<Token>());
+            isStopping = false;
 
             #region Create and start concurrentProcessors
             int concurrentThreadsCount = Configuration.GetConcurrentThreadsCountForProcessor(Name);
@@ -53,9 +61,11 @@ namespace XRouter.Processor
 
         public void Stop()
         {
-            tokensToProcess.CompleteAdding();
-            foreach (var processor in concurrentProcessors) {
-                processor.Stop();
+            lock (addWorkLock)
+            {
+                isStopping = true;
+                tokensFinishedEvent.WaitOne();
+                tokensToProcess.CompleteAdding();
             }
         }
 
@@ -72,8 +82,26 @@ namespace XRouter.Processor
 
         public void AddWork(Token token)
         {
-            if (token.State != TokenState.Finished) {
-                tokensToProcess.Add(token);
+            lock (addWorkLock)
+            {
+                if (isStopping)
+                {
+                    throw new InvalidOperationException("Cannot add token because processor is stopping.");
+                }
+                if (token.State != TokenState.Finished)
+                {
+                    tokensFinishedEvent.Reset();
+                    Interlocked.Increment(ref tokensCount);
+                    tokensToProcess.Add(token);
+                }
+            }
+        }
+
+        internal void DecrementTokensCount()
+        {
+            if (Interlocked.Decrement(ref tokensCount) == 0)
+            {
+                tokensFinishedEvent.Set();
             }
         }
     }

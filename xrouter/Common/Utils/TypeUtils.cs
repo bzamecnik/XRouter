@@ -40,7 +40,10 @@ namespace XRouter.Common.Utils
                     Assembly assembly = Assembly.LoadFrom(assemblyPath);
                     type = assembly.GetType(typeFullName, true);
                 } else {
-                    type = Type.GetType(typeFullName, true);
+                    type = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType(typeFullName, false)).FirstOrDefault(t => t != null);
+                    if (type == null) {
+                        throw new InvalidOperationException(string.Format("Cannot find type '{0}'.", typeFullName));
+                    }
                 }
             } catch (Exception ex) {
                 throw new InvalidOperationException(string.Format("Cannot access type '{0}'.", typeFullName), ex);

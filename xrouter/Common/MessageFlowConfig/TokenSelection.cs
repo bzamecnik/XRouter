@@ -4,21 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using System.Runtime.Serialization;
 
 namespace XRouter.Common.MessageFlowConfig
 {
+    [DataContract]
     public class TokenSelection
     {
-        private string _selectionPattern;
-        public string SelectionPattern {
-            get { return _selectionPattern; }
-            set {
-                _selectionPattern = value;
-                XPath = _selectionPattern;
-            }
-        }
-
-        public string XPath { get; private set; }
+        [DataMember]
+        public string SelectionPattern { get; set; }
 
         public TokenSelection(string selectionPattern)
         {
@@ -35,8 +29,14 @@ namespace XRouter.Common.MessageFlowConfig
 
         public XElement GetSelectedElement(Token token)
         {
-            XElement result = token.Content.XDocument.XPathSelectElement(XPath);
+            string xpath = GetXPath();
+            XElement result = token.Content.XDocument.XPathSelectElement(xpath);
             return result;
+        }
+
+        private string GetXPath()
+        {
+            return SelectionPattern;
         }
     }
 }

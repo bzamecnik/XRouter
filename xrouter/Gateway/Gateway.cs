@@ -25,7 +25,7 @@ namespace XRouter.Gateway
 
         private IBrokerServiceForGateway Broker { get; set; }
 
-        private Dictionary<string, AdapterService> AdapterServicesByName { get; set; }
+        private Dictionary<string, Adapter> AdaptersByName { get; set; }
 
         private ConcurrentDictionary<Guid, MessageResultHandler> waintingResultMessageHandlers;
 
@@ -48,51 +48,47 @@ namespace XRouter.Gateway
             Configuration = Broker.GetConfiguration(ConfigurationReduction);
 
             #region Create adapters and AdapterServices
-            AdapterServicesByName = new Dictionary<string, AdapterService>();
+            AdaptersByName = new Dictionary<string, Adapter>();
             var adaptersConfig = Configuration.GetComponentConfiguration(Name).Element("adapters").Elements("adapter");
             foreach (var adapterConfig in adaptersConfig) {
                 string adapterName = adapterConfig.Attribute(XName.Get("name")).Value;
                 string typeFullNameAndAssembly = adapterConfig.Attribute(XName.Get("type")).Value;
-                AdapterService adapterService = CreateServiceForAdapter(typeFullNameAndAssembly, adapterConfig, adapterName);
-                AdapterServicesByName.Add(adapterName, adapterService);
+                Adapter adapter = CreateAdapter(typeFullNameAndAssembly, adapterConfig, adapterName);
+                AdaptersByName.Add(adapterName, adapter);
             }
             #endregion
 
             #region Start adapters
-            foreach (var adapterService in AdapterServicesByName.Values) {
-                Task.Factory.StartNew(delegate {
-                    adapterService.Adapter.Start(adapterService);
-                }, TaskCreationOptions.LongRunning);
+            foreach (var adapter in AdaptersByName.Values) {
+                adapter.Start();
             }
             #endregion
         }
 
         public void Stop()
         {
-            foreach (var adapterService in AdapterServicesByName.Values) {
-                adapterService.Adapter.Stop();
-            }
+            Parallel.ForEach(AdaptersByName.Values, delegate(Adapter adapter)
+            {
+                adapter.Stop();
+            });
         }
 
-        private AdapterService CreateServiceForAdapter(string typeFullNameAndAssembly, XElement adapterConfig, string adapterName)
+        private Adapter CreateAdapter(string typeFullNameAndAssembly, XElement adapterConfig, string adapterName)
         {
-            var plugin = TypeUtils.CreateTypeInstance<IAdapter>(typeFullNameAndAssembly);
-            var adapterService = new AdapterService(this, adapterName);
-            adapterService.Adapter = plugin;
-            return adapterService;
+            var adapter = TypeUtils.CreateTypeInstance<Adapter>(typeFullNameAndAssembly);
+            adapter.Gateway = this;
+            adapter.AdapterName = adapterName;
+            return adapter;
         }
 
-        public SerializableXDocument SendMessageToOutputEndPoint(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata)
+        public SerializableXDocument SendMessage(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata)
         {
-            if (address.GatewayName != Name) {
-                throw new ArgumentException("Incorrect gateway name.", "address");
-            }
-            if (!AdapterServicesByName.ContainsKey(address.AdapterName)) {
+            if (!AdaptersByName.ContainsKey(address.AdapterName)) {
                 throw new ArgumentException("Incorrect adapter name.", "address");
             }
 
-            AdapterService adapterService = AdapterServicesByName[address.AdapterName];
-            XDocument result = adapterService.SendMessage(address, message, metadata);
+            Adapter adapter = AdaptersByName[address.AdapterName];
+            XDocument result = adapter.SendMessage(address.EndPointName, message.XDocument, metadata.XDocument);
             return new SerializableXDocument(result);
         }
 

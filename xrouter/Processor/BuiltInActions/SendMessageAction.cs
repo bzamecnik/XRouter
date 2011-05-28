@@ -8,11 +8,13 @@ using System.Xml.Linq;
 
 namespace XRouter.Processor.BuiltInActions
 {
-    class SendMessageAction : IActionPlugin
+    public class SendMessageAction : IActionPlugin
     {
         private IProcessorServiceForAction processorService;
 
         #region Configuration
+        public XElement XConfig { get; set; }
+
         private string targetGatewayName;
         private string targetAdapternName;
         private string targetEndpointName;
@@ -29,10 +31,10 @@ namespace XRouter.Processor.BuiltInActions
 
             #region Emulate reading configuration (will be automatic later)
             targetGatewayName = "gateway1";
-            targetAdapternName = "adapter1";
-            targetEndpointName = "outputDir1";
+            targetAdapternName = "directoryAdapter";
+            targetEndpointName = XConfig.Value;
 
-            messageSelection = new TokenSelection("token/messages/message[@name='input']");
+            messageSelection = new TokenSelection("token/messages/message[@name='input']/content");
             resultMessageName = string.Empty;
             #endregion
 
@@ -50,6 +52,7 @@ namespace XRouter.Processor.BuiltInActions
             }
         }
 
+        // TODO: Disposing
         public void Dispose()
         {
         }

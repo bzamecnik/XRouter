@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using XRouter.Common.MessageFlowConfig;
 using System.Xml.Serialization;
+using XRouter.Common.Utils;
 
 namespace XRouter.Common
 {
@@ -13,6 +14,10 @@ namespace XRouter.Common
     public class ApplicationConfiguration
     {
         public SerializableXDocument Content { get; private set; }
+
+        public ApplicationConfiguration()
+        {
+        }
 
         public ApplicationConfiguration(XDocument content)
         {
@@ -74,25 +79,34 @@ namespace XRouter.Common
 
         public Guid GetCurrentMessageFlowGuid()
         {
-            Guid result = Guid.Parse((string)Content.XDocument.XPathEvaluate("/configuration/messageflows@current-guid"));
+            XElement xMessageFlows = Content.XDocument.XPathSelectElement("/configuration/messageflows");
+            String current = xMessageFlows.Attribute(XName.Get("current")).Value;
+            Guid result = Guid.Parse(current);
             return result;
+        }
+
+        public void SetCurrentMessageFlowGuid(Guid guid)
+        {
+            XElement xMessageFlows = Content.XDocument.XPathSelectElement("/configuration/messageflows");
+            xMessageFlows.SetAttributeValue(XName.Get("current"), guid.ToString());
         }
 
         public MessageFlowConfiguration GetMessageFlow(Guid guid)
         {
-            XElement messageFlowElement = Content.XDocument.XPathSelectElement(string.Format("/configuration/messageflows/messageflow[@guid='{0}']", guid));
-            XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowConfiguration));
-            var result = (MessageFlowConfiguration)serializer.Deserialize(messageFlowElement.CreateReader());
+            string xpath = string.Format("/configuration/messageflows/messageflow[@guid='{0}']", guid);
+            XElement xMessageFlow = Content.XDocument.XPathSelectElement(xpath);
+
+            var result = XSerializer.Deserialize<MessageFlowConfiguration>(xMessageFlow);
             return result;
         }
 
         public void AddMessageFlow(MessageFlowConfiguration messageFlow)
         {
-            XElement messageFlowElement = new XElement(XName.Get("messageflow"));
-            messageFlowElement.SetAttributeValue(XName.Get("guid"), messageFlow.Guid);
-            XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowConfiguration));
-            serializer.Serialize(messageFlowElement.CreateWriter(), messageFlow);
-            Content.XDocument.XPathSelectElement("/configuration/messageflows").Add(messageFlowElement);
+            XElement xMessageFlow = new XElement(XName.Get("messageflow"));
+            XSerializer.Serializer(messageFlow, xMessageFlow);
+            xMessageFlow.SetAttributeValue(XName.Get("guid"), messageFlow.Guid);
+
+            Content.XDocument.XPathSelectElement("/configuration/messageflows").Add(xMessageFlow);
         }
     }
 }
