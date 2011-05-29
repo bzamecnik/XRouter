@@ -34,7 +34,7 @@ namespace XRouter.Processor.BuiltInActions
             targetAdapternName = "directoryAdapter";
             targetEndpointName = XConfig.Value;
 
-            messageSelection = new TokenSelection("token/messages/message[@name='input']/content");
+            messageSelection = new TokenSelection("token/messages/message[@name='result']/content");
             resultMessageName = string.Empty;
             #endregion
 

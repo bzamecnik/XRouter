@@ -37,96 +37,6 @@ namespace XRouter.Broker
     </dispatcher>
     <messageflows current='bcf9e0dd-818d-492c-84b6-4c27ca668221'>
         <messageflow guid='bcf9e0dd-818d-492c-84b6-4c27ca668221' name='abc' version='1'>
-          <MessageFlowConfiguration xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"" z:Id=""1"" xmlns:z=""http://schemas.microsoft.com/2003/10/Serialization/"" xmlns=""http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig"">
-            <Guid>27063bda-5f37-4efc-841c-3c62ee31c4ba</Guid>
-            <Name z:Id=""2"">messageflow1</Name>
-            <Nodes z:Id=""3"" z:Size=""7"">
-              <NodeConfiguration z:Id=""4"" i:type=""CbrNodeConfiguration"">
-                <Name z:Id=""5"">switchA</Name>
-                <Branches xmlns:d4p1=""http://schemas.microsoft.com/2003/10/Serialization/Arrays"" z:Id=""6"" z:Size=""1"">
-                  <d4p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
-                    <d4p1:Key xmlns:d6p1=""http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm"" z:Id=""7"">
-                      <d6p1:XPath z:Id=""8"">//item[@name='containsA']</d6p1:XPath>
-                    </d4p1:Key>
-                    <d4p1:Value z:Id=""9"" i:type=""ActionNodeConfiguration"">
-                      <Name z:Id=""10"">sendToA</Name>
-                      <Actions z:Id=""11"" z:Size=""1"">
-                        <ActionConfiguration z:Id=""12"">
-                          <PluginConfiguration xmlns:d9p1=""http://schemas.datacontract.org/2004/07/XRouter.Common"" z:Id=""13"">
-                            <d9p1:XmlContent z:Id=""14"">&lt;target&gt;A&lt;/target&gt;</d9p1:XmlContent>
-                          </PluginConfiguration>
-                          <PluginTypeFullName z:Id=""15"">XRouter.Processor.BuiltInActions.SendMessageAction</PluginTypeFullName>
-                        </ActionConfiguration>
-                      </Actions>
-                      <NextNode z:Id=""16"" i:type=""CbrNodeConfiguration"">
-                        <Name z:Id=""17"">switchB</Name>
-                        <Branches z:Id=""18"" z:Size=""1"">
-                          <d4p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
-                            <d4p1:Key xmlns:d10p1=""http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm"" z:Id=""19"">
-                              <d10p1:XPath z:Id=""20"">//item[@name='containsB']</d10p1:XPath>
-                            </d4p1:Key>
-                            <d4p1:Value z:Id=""21"" i:type=""ActionNodeConfiguration"">
-                              <Name z:Id=""22"">sendToB</Name>
-                              <Actions z:Id=""23"" z:Size=""1"">
-                                <ActionConfiguration z:Id=""24"">
-                                  <PluginConfiguration xmlns:d13p1=""http://schemas.datacontract.org/2004/07/XRouter.Common"" z:Id=""25"">
-                                    <d13p1:XmlContent z:Id=""26"">&lt;target&gt;B&lt;/target&gt;</d13p1:XmlContent>
-                                  </PluginConfiguration>
-                                  <PluginTypeFullName z:Ref=""15"" i:nil=""true"" />
-                                </ActionConfiguration>
-                              </Actions>
-                              <NextNode z:Id=""27"" i:type=""CbrNodeConfiguration"">
-                                <Name z:Id=""28"">switchC</Name>
-                                <Branches z:Id=""29"" z:Size=""1"">
-                                  <d4p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
-                                    <d4p1:Key xmlns:d14p1=""http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm"" z:Id=""30"">
-                                      <d14p1:XPath z:Id=""31"">//item[@name='containsC']</d14p1:XPath>
-                                    </d4p1:Key>
-                                    <d4p1:Value z:Id=""32"" i:type=""ActionNodeConfiguration"">
-                                      <Name z:Id=""33"">sendToC</Name>
-                                      <Actions z:Id=""34"" z:Size=""1"">
-                                        <ActionConfiguration z:Id=""35"">
-                                          <PluginConfiguration xmlns:d17p1=""http://schemas.datacontract.org/2004/07/XRouter.Common"" z:Id=""36"">
-                                            <d17p1:XmlContent z:Id=""37"">&lt;target&gt;C&lt;/target&gt;</d17p1:XmlContent>
-                                          </PluginConfiguration>
-                                          <PluginTypeFullName z:Ref=""15"" i:nil=""true"" />
-                                        </ActionConfiguration>
-                                      </Actions>
-                                      <NextNode z:Id=""38"" i:type=""TerminatorNodeConfiguration"">
-                                        <Name z:Id=""39"">term1</Name>
-                                        <IsReturningOutput>false</IsReturningOutput>
-                                        <ResultMessageSelection i:nil=""true"" />
-                                      </NextNode>
-                                    </d4p1:Value>
-                                  </d4p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
-                                </Branches>
-                                <DefaultTarget z:Ref=""38"" i:nil=""true"" />
-                                <TestedSelection z:Id=""40"">
-                                  <SelectionPattern z:Id=""41"">/token/messages/message[@name='input']/*[1]</SelectionPattern>
-                                </TestedSelection>
-                              </NextNode>
-                            </d4p1:Value>
-                          </d4p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
-                        </Branches>
-                        <DefaultTarget z:Ref=""27"" i:nil=""true"" />
-                        <TestedSelection z:Ref=""40"" i:nil=""true"" />
-                      </NextNode>
-                    </d4p1:Value>
-                  </d4p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
-                </Branches>
-                <DefaultTarget z:Ref=""16"" i:nil=""true"" />
-                <TestedSelection z:Ref=""40"" i:nil=""true"" />
-              </NodeConfiguration>
-              <NodeConfiguration z:Ref=""16"" i:nil=""true"" />
-              <NodeConfiguration z:Ref=""27"" i:nil=""true"" />
-              <NodeConfiguration z:Ref=""9"" i:nil=""true"" />
-              <NodeConfiguration z:Ref=""21"" i:nil=""true"" />
-              <NodeConfiguration z:Ref=""32"" i:nil=""true"" />
-              <NodeConfiguration z:Ref=""38"" i:nil=""true"" />
-            </Nodes>
-            <RootNode z:Ref=""4"" i:nil=""true"" />
-            <Version>1</Version>
-          </MessageFlowConfiguration>
         </messageflow>
     </messageflows>
     <xml-resource-storage>
@@ -159,6 +69,14 @@ namespace XRouter.Broker
                     </rule>
               </pattern>
             </schema>
+         </item>
+
+        <item name='xslt1'>
+            <xsl:transform version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
+                <xsl:template match='/'>
+                    <content>Original content: <xsl:value-of select='.'/></content>
+                </xsl:template>
+            </xsl:transform>
          </item>
 
     </xml-resource-storage>
