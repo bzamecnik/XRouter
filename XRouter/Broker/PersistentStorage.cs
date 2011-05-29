@@ -41,42 +41,163 @@ namespace XRouter.Broker
     </messageflows>
     <xml-resource-storage>
 
-         <item name='containsA'>
-            <schema xmlns='http://purl.oclc.org/dsdl/schematron'>
-                <pattern id='containsText'>
-                    <rule context='/content'>
-                        <assert test=""/content[contains(., 'A')]"" />
-                    </rule>
-              </pattern>
+        <item name='schematron_sample1_detection'>
+            <schema xmlns='http://purl.oclc.org/dsdl/schematron' queryBinding='xpath'> 
+             <pattern>
+              <rule context='/'>
+               <assert test='message'/>
+              </rule>
+              <rule context='/message/a|/message/b|/message/c'>   
+               <assert test='true()'/>
+              </rule>
+
+              <rule context='item'>
+                <assert test='false()'/>
+              </rule>
+              <!--
+                <rule context='*'>
+                  <assert test='false()'/>
+                </rule>
+              -->
+             </pattern>
+            </schema>
+        </item>
+
+         <item name='schematron_sample1_contains_A'>
+            <schema xmlns='http://purl.oclc.org/dsdl/schematron' queryBinding='xpath'> 
+             <pattern>
+              <rule context='/message'>
+               <assert test='a'/>
+              </rule>
+             </pattern>
             </schema>
          </item>
 
-        <item name='containsB'>
-            <schema xmlns='http://purl.oclc.org/dsdl/schematron'>
-                <pattern id='containsText'>
-                    <rule context='/content'>
-                        <assert test=""/content[contains(., 'B')]"" />
-                    </rule>
-              </pattern>
+        <item name='schematron_sample1_contains_B'>
+            <schema xmlns='http://purl.oclc.org/dsdl/schematron' queryBinding='xpath'> 
+             <pattern>
+              <rule context='/message'>
+               <assert test='b'/>  
+              </rule>
+             </pattern>
             </schema>
          </item>
 
-        <item name='containsC'>
-            <schema xmlns='http://purl.oclc.org/dsdl/schematron'>
-                <pattern id='containsText'>
-                    <rule context='/content'>
-                        <assert test=""/content[contains(., 'C')]"" />
-                    </rule>
-              </pattern>
+        <item name='schematron_sample1_contains_C'>
+            <schema xmlns='http://purl.oclc.org/dsdl/schematron' queryBinding='xpath'>
+             <pattern>
+              <rule context='/message'>
+               <assert test='c'/>
+              </rule>
+             </pattern>
             </schema>
          </item>
 
-        <item name='xslt1'>
-            <xsl:transform version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
-                <xsl:template match='/'>
-                    <content>Original content: <xsl:value-of select='.'/></content>
-                </xsl:template>
-            </xsl:transform>
+        <item name='schematron_sample2_detection'>
+            <schema xmlns='http://purl.oclc.org/dsdl/schematron'>
+             <pattern>
+              <rule context='/'>
+               <assert test='message'/>
+              </rule>
+              <rule context='/message/item'>
+               <assert test='true()'/>
+              </rule>
+
+              <!--
+                <rule context='*'>
+                  <assert test='false()'/>
+                </rule>
+              -->
+             </pattern>
+            </schema> 
+        </item>
+
+        <item name='schematron_sample2_targetA'>
+            <schema xmlns='http://purl.oclc.org/dsdl/schematron' queryBinding='xpath'> 
+             <pattern>
+              <rule context='/message'>
+                <assert test='10>sum(item/@price) and sum(item/@price)>=0' />
+              </rule> 
+             </pattern>
+            </schema>
+         </item>
+
+        <item name='schematron_sample2_targetB'>
+            <schema xmlns='http://purl.oclc.org/dsdl/schematron' queryBinding='xpath'> 
+             <pattern>
+              <rule context='/message'>
+                <assert test='20>sum(item/@price) and sum(item/@price)>=10' />
+              </rule> 
+             </pattern>
+            </schema>
+         </item>
+
+        <item name='schematron_sample2_targetC'>
+            <schema xmlns='http://purl.oclc.org/dsdl/schematron' queryBinding='xpath'> 
+             <pattern>
+              <rule context='/message'>
+                <assert test='30>sum(item/@price) and sum(item/@price)>=20' />
+              </rule> 
+             </pattern>
+            </schema>
+         </item>
+
+        <item name='schematron_sample3_detection'>
+            <schema xmlns='http://purl.oclc.org/dsdl/schematron' queryBinding='xpath'>
+             <ns prefix='S' uri='http://www.w3.org/2003/05/soap-envelope'/> 
+             <pattern>
+              <rule context='/'>
+               <assert test='S:Envelope'/>
+              </rule>
+             </pattern>  
+            </schema>
+         </item>
+
+        <item name='schematron_sample3_targetA'>
+            <schema xmlns='http://purl.oclc.org/dsdl/schematron' queryBinding='xpath'>
+             <ns prefix='S' uri='http://www.w3.org/2003/05/soap-envelope'/> 
+             <ns prefix='wsa' uri='http://www.w3.org/2005/08/addressing'/> 
+             <pattern>
+               <rule context='/S:Envelope/S:Header/wsa:To'>
+                  <assert test="".='OutA'""/>
+               </rule>
+             </pattern>  
+            </schema>
+         </item>
+
+        <item name='schematron_sample3_targetB'>
+            <schema xmlns='http://purl.oclc.org/dsdl/schematron' queryBinding='xpath'>
+             <ns prefix='S' uri='http://www.w3.org/2003/05/soap-envelope'/> 
+             <ns prefix='wsa' uri='http://www.w3.org/2005/08/addressing'/> 
+             <pattern>
+               <rule context='/S:Envelope/S:Header/wsa:To'>
+                  <assert test="".='OutB'""/>
+               </rule>
+             </pattern>  
+            </schema>
+         </item>
+
+        <item name='schematron_sample3_targetC'>
+            <schema xmlns='http://purl.oclc.org/dsdl/schematron' queryBinding='xpath'>
+             <ns prefix='S' uri='http://www.w3.org/2003/05/soap-envelope'/> 
+             <ns prefix='wsa' uri='http://www.w3.org/2005/08/addressing'/> 
+             <pattern>
+               <rule context='/S:Envelope/S:Header/wsa:To'>
+                  <assert test="".='OutC'""/>
+               </rule>
+             </pattern>  
+            </schema>
+         </item>
+
+        <item name='xslt_sample3'>
+            <xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:S='http://www.w3.org/2003/05/soap-envelope'>
+             <xsl:template match='node()|@*'>
+              <xsl:copy>
+               <xsl:apply-templates select='node()|@*'/>
+              </xsl:copy>
+             </xsl:template>
+             <xsl:template match='S:Header'/>
+            </xsl:stylesheet>
          </item>
 
     </xml-resource-storage>

@@ -30,10 +30,10 @@ namespace XRouter.Processor.BuiltInActions
             this.processorService = processorService;
 
             #region Emulate reading configuration (will be automatic later)
-            xlstUri = new XrmUri("//item[@name='xslt1']");
+            xlstUri = new XrmUri("//item[@name='" + XConfig.Attribute(XName.Get("xslt")).Value + "']");
 
-            inputMessageSelection = new TokenSelection("token/messages/message[@name='input']/content");
-            outputMessageName = "result";
+            inputMessageSelection = new TokenSelection("token/messages/message[@name='" + XConfig.Attribute(XName.Get("input")).Value + "']/*[1]");
+            outputMessageName = XConfig.Attribute(XName.Get("output")).Value;
             #endregion
 
             XDocument xsltDocument = processorService.GetXmlResource(xlstUri);

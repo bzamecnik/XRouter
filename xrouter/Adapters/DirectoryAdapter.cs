@@ -23,18 +23,18 @@ namespace XRouter.Adapters
         protected override void Run()
         {
             #region Emulate reading configuration (will be automatic later)
-            string inputDir1 = @"C:\XRouterTest\IN";
-            string outputDir1 = @"C:\XRouterTest\A";
-            string outputDir2 = @"C:\XRouterTest\B";
-            string outputDir3 = @"C:\XRouterTest\C";
+            string inputDir1 = @"C:\XRouterTest\In";
+            string outputDir1 = @"C:\XRouterTest\OutA";
+            string outputDir2 = @"C:\XRouterTest\OutB";
+            string outputDir3 = @"C:\XRouterTest\OutC";
 
             inputEndpointToPathMap = new ConcurrentDictionary<string, string>();
-            inputEndpointToPathMap.AddOrUpdate("IN", inputDir1, (key, oldValue) => null);          
+            inputEndpointToPathMap.AddOrUpdate("In", inputDir1, (key, oldValue) => null);          
 
             outputEndpointToPathMap = new ConcurrentDictionary<string, string>();
-            outputEndpointToPathMap.AddOrUpdate("A", outputDir1, (key, oldValue) => null);
-            outputEndpointToPathMap.AddOrUpdate("B", outputDir2, (key, oldValue) => null);
-            outputEndpointToPathMap.AddOrUpdate("C", outputDir3, (key, oldValue) => null);
+            outputEndpointToPathMap.AddOrUpdate("OutA", outputDir1, (key, oldValue) => null);
+            outputEndpointToPathMap.AddOrUpdate("OutB", outputDir2, (key, oldValue) => null);
+            outputEndpointToPathMap.AddOrUpdate("OutC", outputDir3, (key, oldValue) => null);
 
             checkingInterval = TimeSpan.FromMilliseconds(100);
             #endregion
@@ -59,9 +59,7 @@ namespace XRouter.Adapters
                         {
                             continue;
                         }
-                        XDocument message = new XDocument();
-                        XElement root = new XElement(XName.Get("content"), fileContent);
-                        message.Add(root);
+                        XDocument message = XDocument.Parse(fileContent);
 
                         XDocument metadata = new XDocument();
                         XElement xMetadata = new XElement(XName.Get("file-metadata"));
@@ -94,8 +92,7 @@ namespace XRouter.Adapters
                     fileName = string.Format("output {0:00}_{1:00}_{2:00}_{3:000}.txt", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, DateTime.Now.Millisecond);
                 }
                 TraceLog.Info(string.Format("Writing output file '{0}' into '{1}'", fileName, targetPath));
-                string content = message.Root.Value;
-                File.WriteAllText(Path.Combine(targetPath, fileName), content);
+                File.WriteAllText(Path.Combine(targetPath, fileName), message.ToString());
             }
             return null;
         }

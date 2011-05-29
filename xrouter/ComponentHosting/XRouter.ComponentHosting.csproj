@@ -71,6 +71,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Misc\daemonNT_config.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample1 a.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample1 ab.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample1 b.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample1 c.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample2 a.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample2 b.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample2 c.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample3 a.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample3 b.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample3 c.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Misc\XRouterTest\In\" />
+    <Folder Include="Misc\XRouterTest\OutA\" />
+    <Folder Include="Misc\XRouterTest\OutB\" />
+    <Folder Include="Misc\XRouterTest\OutC\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

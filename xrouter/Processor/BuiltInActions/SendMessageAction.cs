@@ -33,9 +33,9 @@ namespace XRouter.Processor.BuiltInActions
             #region Emulate reading configuration (will be automatic later)
             targetGatewayName = "gateway1";
             targetAdapternName = "directoryAdapter";
-            targetEndpointName = XConfig.Value;
+            targetEndpointName = XConfig.Attribute(XName.Get("output")).Value;
 
-            messageSelection = new TokenSelection("token/messages/message[@name='result']/content");
+            messageSelection = new TokenSelection("token/messages/message[@name='" + XConfig.Attribute(XName.Get("input")).Value + "']/*[1]");
             metadataSelection = new TokenSelection("token/source-metadata/file-metadata");
             resultMessageName = string.Empty;
             #endregion
