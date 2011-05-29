@@ -37,6 +37,7 @@ namespace XRouter.Processor.MessageFlowParts
 
         public override string Evaluate(Token token)
         {
+            TraceLog.Info("Evaluating action: " + Name);
             Parallel.ForEach(actions, delegate(IActionPlugin action) {
                 action.Evaluate(token);
             });

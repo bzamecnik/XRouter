@@ -31,13 +31,11 @@ namespace XRouter.Processor
             foreach (Token token in tokensToProcess.GetConsumingEnumerable()) {
                 MessageFlow messageFlow = GetMessageFlowForToken(token);
                 bool canContinue = messageFlow.DoStep(token);
-                if (canContinue)
-                {
+                if (canContinue) {
                     tokensToProcess.Add(token);
-                }
-                else
-                {
+                } else {
                     processorService.DecrementTokensCount();
+                    TraceLog.Info("Processor finished token with GUID " + token.Guid);
                 }
             }
         }

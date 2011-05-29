@@ -19,6 +19,7 @@ namespace XRouter.Processor.MessageFlowParts
 
         public override string Evaluate(Token token)
         {
+            TraceLog.Info("Entering Terminator: " + Name);
             XDocument resultMessage = null;
             if (Config.IsReturningOutput) {
                 resultMessage = Config.ResultMessageSelection.GetSelectedDocument(token);

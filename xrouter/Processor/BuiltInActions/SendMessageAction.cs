@@ -20,6 +20,7 @@ namespace XRouter.Processor.BuiltInActions
         private string targetEndpointName;
 
         private TokenSelection messageSelection;
+        private TokenSelection metadataSelection;
         private string resultMessageName;
         #endregion
 
@@ -35,6 +36,7 @@ namespace XRouter.Processor.BuiltInActions
             targetEndpointName = XConfig.Value;
 
             messageSelection = new TokenSelection("token/messages/message[@name='result']/content");
+            metadataSelection = new TokenSelection("token/source-metadata/file-metadata");
             resultMessageName = string.Empty;
             #endregion
 
@@ -43,9 +45,12 @@ namespace XRouter.Processor.BuiltInActions
 
         public void Evaluate(Token token)
         {
-            XDocument message =  messageSelection.GetSelectedDocument(token);
+            TraceLog.Info(string.Format("Sending '{0}' to output endpoint '{1}'", messageSelection.SelectionPattern, targetEndpoint.ToString()));
 
-            XDocument outputMessage = processorService.SendMessage(targetEndpoint, message);
+            XDocument message =  messageSelection.GetSelectedDocument(token);
+            XDocument metadata = metadataSelection.GetSelectedDocument(token);
+
+            XDocument outputMessage = processorService.SendMessage(targetEndpoint, message, metadata);
 
             if (resultMessageName.Length > 0) {
                 processorService.CreateMessage(token.Guid, resultMessageName, outputMessage);

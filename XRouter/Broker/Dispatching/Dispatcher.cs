@@ -69,6 +69,7 @@ namespace XRouter.Broker.Dispatching
                             token.MessageFlowState.MessageFlowGuid = messageFlowGuid;
                         }
                         try {
+                            TraceLog.Info(string.Format("Dispatcher assigning token '{0}' to processor '{1}'", token.Guid, processor.ComponentName));
                             processor.AddWork(token);
                         } catch {
                             continue; // if adding token to processor fails, try next one

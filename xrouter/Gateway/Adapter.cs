@@ -41,6 +41,8 @@ namespace XRouter.Gateway
             token.SaveSourceAddress(new EndpointAddress(Gateway.Name, AdapterName, endpointName));
             token.SaveSourceMetadata(metadata);
             token.AddMessage(Constants.InputMessageName, message);
+            TraceLog.Info("Created token with GUID " + token.Guid);
+
             Gateway.ReceiveToken(token, resultHandler);
         }
 

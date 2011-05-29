@@ -43,6 +43,8 @@ namespace XRouter.Processor.BuiltInActions
 
         public void Evaluate(Token token)
         {
+            TraceLog.Info(string.Format("Entering xsl transformation of '{0}' to message '{1}'", inputMessageSelection.SelectionPattern, outputMessageName));
+
             XDocument inputMessage = inputMessageSelection.GetSelectedDocument(token);
             var reader = inputMessage.Root.CreateReader();
 

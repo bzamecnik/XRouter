@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using System.IO;
 using System.Threading;
+using XRouter.Common;
 
 namespace XRouter.Adapters
 {
@@ -62,8 +63,14 @@ namespace XRouter.Adapters
                         XElement root = new XElement(XName.Get("content"), fileContent);
                         message.Add(root);
 
+                        XDocument metadata = new XDocument();
+                        XElement xMetadata = new XElement(XName.Get("file-metadata"));
+                        xMetadata.SetAttributeValue("filename", Path.GetFileName(newFilePath));
+                        metadata.Add(xMetadata);
+
+                        TraceLog.Info("Found input file " + Path.GetFileName(newFilePath));
                         try {
-                            ReceiveMessage(message, enpointName);
+                            ReceiveMessage(message, enpointName, metadata);
                         } catch (Exception ex) {
                             // message receiving failed
                             continue;
@@ -80,7 +87,13 @@ namespace XRouter.Adapters
         {
             string targetPath;
             if (outputEndpointToPathMap.TryGetValue(endpointName, out targetPath)) {
-                string fileName = string.Format("output {0:00}_{1:00}_{2:00}_{3:000}.txt", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, DateTime.Now.Millisecond);
+                string fileName;
+                if (metadata != null) {
+                    fileName = metadata.Element(XName.Get("file-metadata")).Attribute(XName.Get("filename")).Value;
+                } else {
+                    fileName = string.Format("output {0:00}_{1:00}_{2:00}_{3:000}.txt", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, DateTime.Now.Millisecond);
+                }
+                TraceLog.Info(string.Format("Writing output file '{0}' into '{1}'", fileName, targetPath));
                 string content = message.Root.Value;
                 File.WriteAllText(Path.Combine(targetPath, fileName), content);
             }

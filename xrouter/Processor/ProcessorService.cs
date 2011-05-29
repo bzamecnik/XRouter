@@ -82,6 +82,7 @@ namespace XRouter.Processor
 
         public void AddWork(Token token)
         {
+            TraceLog.Info("Processor received a token with GUID " + token.Guid);
             lock (addWorkLock)
             {
                 if (isStopping)

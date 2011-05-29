@@ -35,7 +35,7 @@ namespace XRouter.Common
 
         public override string ToString()
         {
-            return string.Format("{0}/{1}/{2]", GatewayName, AdapterName, EndPointName);
+            return string.Format("{0}/{1}/{2}", GatewayName, AdapterName, EndPointName);
         }
     }
 }
