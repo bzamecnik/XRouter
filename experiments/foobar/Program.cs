@@ -11,7 +11,7 @@ namespace foobar
         {
         }
         
-        public void Foo(int fooParam) {
+        public void Bar(int barParam) {
 				}
     }
 }
