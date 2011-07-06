@@ -27,6 +27,8 @@ namespace XRouter.Broker
         <gateway name='gateway1'>
             <adapters>
                 <adapter name='directoryAdapter' type='XRouter.Adapters.DirectoryAdapter,..\..\..\..\xrouter\Adapters\bin\debug\XRouter.Adapters.dll'>
+                    <objectConfig>
+                    </objectConfig>
                 </adapter>
             </adapters>
         </gateway>

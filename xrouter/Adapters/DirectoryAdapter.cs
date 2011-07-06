@@ -9,6 +9,7 @@ using System.Reflection;
 using System.IO;
 using System.Threading;
 using XRouter.Common;
+using ObjectConfigurator;
 
 namespace XRouter.Adapters
 {

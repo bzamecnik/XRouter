@@ -11,6 +11,37 @@ namespace XRouter.Common.Utils
     {
         public static T CreateTypeInstance<T>(string typeAndAssembly)
         {
+            Type type = GetType(typeAndAssembly);
+            return CreateTypeInstance<T>(type);
+        }
+
+        public static T CreateTypeInstance<T>(string typeFullName, string assemblyPath)
+        {
+            Type type = GetType(typeFullName, assemblyPath);
+            return CreateTypeInstance<T>(type);
+        }
+
+
+        private static T CreateTypeInstance<T>(Type type)
+        {
+            #region Create instance
+            object instance;
+            try {
+                instance = Activator.CreateInstance(type, true);
+            } catch (Exception ex) {
+                throw new InvalidOperationException(string.Format("Cannot create instance of type '{0}' using default constructor.", type.FullName), ex);
+            }
+            #endregion
+
+            if (!(instance is T)) {
+                throw new InvalidOperationException(string.Format("Type '{0}' does not implement/extend '{1}'.", type.FullName, typeof(T).FullName));
+            }
+
+            return (T)instance;
+        }
+
+        public static Type GetType(string typeAndAssembly)
+        {
             string typeFullName;
             string assemblyPath;
             string[] parts = typeAndAssembly.Split(',');
@@ -24,10 +55,10 @@ namespace XRouter.Common.Utils
                 throw new InvalidOperationException(string.Format("Invalid type identification: '{0}'", typeAndAssembly));
             }
 
-            return CreateTypeInstance<T>(typeFullName, assemblyPath);
+            return GetType(typeFullName, assemblyPath);
         }
 
-        public static T CreateTypeInstance<T>(string typeFullName, string assemblyPath)
+        public static Type GetType(string typeFullName, string assemblyPath)
         {
             if ((assemblyPath != null) && (!Path.IsPathRooted(assemblyPath))) {
                 assemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, assemblyPath);
@@ -50,20 +81,7 @@ namespace XRouter.Common.Utils
             }
             #endregion
 
-            #region Create instance
-            object instance;
-            try {
-                instance = Activator.CreateInstance(type, true);
-            } catch (Exception ex) {
-                throw new InvalidOperationException(string.Format("Cannot create instance of type '{0}' using default constructor.", typeFullName), ex);
-            }
-            #endregion
-
-            if (!(instance is T)) {
-                throw new InvalidOperationException(string.Format("Type '{0}' does not implement/extend '{1}'.", typeFullName, typeof(T).FullName));
-            }
-
-            return (T)instance;
+            return type;
         }
     }
 }

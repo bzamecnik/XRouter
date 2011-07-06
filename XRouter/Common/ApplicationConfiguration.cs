@@ -7,12 +7,15 @@ using System.Xml.XPath;
 using XRouter.Common.MessageFlowConfig;
 using System.Xml.Serialization;
 using XRouter.Common.Utils;
+using System.Runtime.Serialization;
 
 namespace XRouter.Common
 {
     [Serializable]
+    [DataContract]
     public class ApplicationConfiguration
     {
+        [DataMember]
         public SerializableXDocument Content { get; private set; }
 
         public ApplicationConfiguration()
@@ -29,6 +32,57 @@ namespace XRouter.Common
             XDocument reducedContent = reduction.GetReducedXml(Content);
             var result = new ApplicationConfiguration(reducedContent);
             return result;
+        }
+
+
+        public XElement GetComponentsElement(ComponentType componentType)
+        {
+            string componentElementName = componentType.ToString().ToLower();
+            var xComponents = System.Xml.XPath.Extensions.XPathSelectElements(Content, string.Format("/configuration/components/{0}", componentElementName));
+            XElement xRoot = new XElement(XName.Get(componentElementName));
+            foreach (var xComponenent in xComponents) {
+                xRoot.Add(xComponenent);
+            }
+            return xRoot;
+        }
+
+        public void SaveComponentsElement(ComponentType componentType, XElement xNewComponents)
+        {
+            string componentElementName = componentType.ToString().ToLower();
+            var xOldComponents = System.Xml.XPath.Extensions.XPathSelectElements(Content, string.Format("/configuration/components/{0}", componentElementName));
+            foreach (var xComponent in xOldComponents) {
+                xComponent.Remove();
+            }
+
+            var xComponents = System.Xml.XPath.Extensions.XPathSelectElement(Content, "/configuration/components");
+            foreach (var xNewComponent in xNewComponents.Elements()) {
+                xComponents.Add(xNewComponent);
+            }
+        }
+
+        public void SaveComponentElement(ComponentType componentType, XElement xComponent)
+        {
+            string componentElementName = componentType.ToString().ToLower();
+            string name = xComponent.Attribute(XName.Get("name")).Value;
+            var xOldComponent = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format("/configuration/components/{0}[@name='{1}']", componentElementName, name));
+            if (xOldComponent != null) {
+                xOldComponent.Remove();
+            }
+
+            var xComponents = System.Xml.XPath.Extensions.XPathSelectElement(Content, "/configuration/components");
+            xComponents.Add(xComponent);
+        }
+
+        public void SaveAdapterElement(string gatewayName, XElement xAdapter)
+        {
+            string adapterName = xAdapter.Attribute(XName.Get("name")).Value;
+            var xOldAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format("/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']", gatewayName, adapterName));
+            if (xOldAdapter != null) {
+                xOldAdapter.Remove();
+            }
+
+            var xAdapters = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format("/configuration/components/gateway[@name='{0}']/adapters", gatewayName));
+            xAdapters.Add(xAdapter);
         }
 
         public string[] GetComponentNames()
@@ -107,6 +161,22 @@ namespace XRouter.Common
             xMessageFlow.SetAttributeValue(XName.Get("guid"), messageFlow.Guid);
 
             Content.XDocument.XPathSelectElement("/configuration/messageflows").Add(xMessageFlow);
+        }
+
+        public XDocument GetXrmContent()
+        {
+            XElement xrmContent = Content.XDocument.XPathSelectElement("/configuration/xml-resource-storage");
+            XDocument result = new XDocument();
+            result.Add(xrmContent);
+            return result;
+        }
+
+        public void SaveXrmContent(XElement xrmContent)
+        {
+            XElement oldXrmContent = Content.XDocument.XPathSelectElement("/configuration/xml-resource-storage");
+            XElement xContainer = oldXrmContent.Parent;
+            oldXrmContent.Remove();
+            xContainer.Add(xrmContent);
         }
     }
 }

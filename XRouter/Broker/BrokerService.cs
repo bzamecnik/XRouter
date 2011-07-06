@@ -1,18 +1,21 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using wcf = System.ServiceModel;
 using System.Text;
-using XRouter.Common;
-using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
+using XRouter.Common;
+using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
-using System.Threading.Tasks;
-using XRouter.Common.ComponentInterfaces;
-using System.Threading;
+using System.Xml;
 
 namespace XRouter.Broker
 {
+    [wcf.ServiceBehavior(InstanceContextMode = wcf.InstanceContextMode.Single)]
     public class BrokerService : IBrokerService, IBrokerServiceForDispatcher
     {
         private PersistentStorage storage;
@@ -22,6 +25,8 @@ namespace XRouter.Broker
         private XmlResourceManager xmlResourceManager;
 
         private object syncLock = new object();
+
+        private wcf.ServiceHost hostForManagemenet;
 
         public BrokerService()
         {
@@ -45,6 +50,21 @@ namespace XRouter.Broker
 
             xmlResourceManager = new XmlResourceManager(storage);
             dispatcher = new Dispatching.Dispatcher(this);
+
+            #region Publish IBrokerServiceForManagement
+            hostForManagemenet = new wcf.ServiceHost(this, new Uri("http://localhost:9090/XRouter.ServiceForManagement"));
+            wcf.NetNamedPipeBinding binding = new wcf.NetNamedPipeBinding(wcf.NetNamedPipeSecurityMode.None);
+            binding.ReaderQuotas = new XmlDictionaryReaderQuotas() { MaxBytesPerRead = int.MaxValue, MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue };
+
+            wcf.Description.ServiceMetadataBehavior smb = new wcf.Description.ServiceMetadataBehavior();
+            smb.HttpGetEnabled = true;
+            smb.HttpGetUrl = new Uri("http://localhost:9091/XRouter.ServiceForManagement");
+            hostForManagemenet.Description.Behaviors.Add(smb);
+
+            hostForManagemenet.AddServiceEndpoint(typeof(IBrokerServiceForManagement), binding, "net.pipe://localhost/XRouter.ServiceForManagement");
+
+            hostForManagemenet.Open();
+            #endregion
         }
 
         public void Stop()
@@ -52,6 +72,7 @@ namespace XRouter.Broker
             // Make sure that all operations are completed and no one will be running after this call
             Monitor.Enter(syncLock);
             dispatcher.Stop();
+            hostForManagemenet.Close();
         }
 
         public ApplicationConfiguration GetConfiguration(XmlReduction reduction)

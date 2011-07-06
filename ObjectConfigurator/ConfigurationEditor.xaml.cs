@@ -89,10 +89,10 @@ namespace ObjectConfigurator
 
         private FrameworkElement CreateHeaderCell(ItemMetadata itemMetadata)
         {
-            TextBlock textBlock = new TextBlock();
-            textBlock.Text = itemMetadata.UserName;
-            textBlock.ToolTip = itemMetadata.UserDescription;
-            return textBlock;
+            Label result = new Label();
+            result.Content = itemMetadata.UserName;
+            result.ToolTip = itemMetadata.UserDescription;
+            return result;
         }
     }
 }
