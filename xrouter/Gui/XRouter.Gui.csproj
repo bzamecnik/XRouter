@@ -58,6 +58,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ConfigurationControlManager.cs" />
+    <Compile Include="ConfigurationControls\Messageflow\MessageflowConfigurationControl.xaml.cs">
+      <DependentUpon>MessageflowConfigurationControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="IConfigurationControl.cs" />
     <Compile Include="Service References\XRouter.Gui.Service\Reference.cs">
@@ -79,6 +82,10 @@
     <Page Include="ConfigurationControls\Gateway\GatewayConfigurationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ConfigurationControls\Messageflow\MessageflowConfigurationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ConfigurationControls\Processor\ProcessorConfigurationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -239,6 +246,10 @@
     <ProjectReference Include="..\..\ObjectRemoter\ObjectRemoter\ObjectRemoter.csproj">
       <Project>{0C9BE6CE-CA69-4EDB-B021-496EEAA0319D}</Project>
       <Name>ObjectRemoter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SimpleDiagrammer\SimpleDiagrammer.csproj">
+      <Project>{C11BCFD6-9026-462E-A7CA-64037DFA974B}</Project>
+      <Name>SimpleDiagrammer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\XRouter.Common.csproj">
       <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>

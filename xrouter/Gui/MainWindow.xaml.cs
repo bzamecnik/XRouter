@@ -26,10 +26,17 @@ namespace XRouter.Gui
 		IConfigurationControl currentConfigurationControl;
 
 		public MainWindow()
-		{
-			InitializeComponent();
+        {
+            #region Run xrouter server
+            string binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string daemonNTPath = System.IO.Path.Combine(binPath, @"..\..\..\ComponentHosting\bin\debug\DaemonNT.exe");
+            var serverProcesss = new System.Diagnostics.ProcessStartInfo(daemonNTPath, "debug xrouter");
+            serverProcesss.WorkingDirectory = System.IO.Path.GetDirectoryName(daemonNTPath);
+            System.Diagnostics.Process.Start(serverProcesss);
+            System.Threading.Thread.Sleep(2000);
+            #endregion
 
-
+            InitializeComponent();
 		}
 
 		private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

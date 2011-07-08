@@ -24,11 +24,6 @@ namespace XRouter.Gui.ConfigurationControls.Adapter
 	/// </summary>
 	public partial class AdapterConfigurationControl : UserControl, IConfigurationControl
 	{
-        public AdapterConfigurationControl()
-		{
-			InitializeComponent();
-		}
-
 		public bool IsDirty
 		{
 			get { throw new NotImplementedException(); }
@@ -42,6 +37,11 @@ namespace XRouter.Gui.ConfigurationControls.Adapter
         private IBrokerServiceForManagement brokerService;
         private ConfigurationTree configTreeNode;
         private ApplicationConfiguration appConfig;
+
+        public AdapterConfigurationControl()
+        {
+            InitializeComponent();
+        }
 
         public void Initialize(ApplicationConfiguration appConfig, IBrokerServiceForManagement brokerService, ConfigurationTree configTreeNode)
 		{

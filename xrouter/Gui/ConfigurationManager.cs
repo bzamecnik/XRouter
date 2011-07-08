@@ -42,6 +42,7 @@ namespace XRouter.Gui
 			IConfigurationControl adaptercontrol = (IConfigurationControl)ConfigurationControlManager.LoadUserControlFormFile("XRouter.Gui.exe", "XRouter.Gui.ConfigurationControls.Adapter.AdapterConfigurationControl");
             IConfigurationControl gatewaycontrol = (IConfigurationControl)ConfigurationControlManager.LoadUserControlFormFile("XRouter.Gui.exe", "XRouter.Gui.ConfigurationControls.Gateway.GatewayConfigurationControl");
             IConfigurationControl dispatchercontrol = (IConfigurationControl)ConfigurationControlManager.LoadUserControlFormFile("XRouter.Gui.exe", "XRouter.Gui.ConfigurationControls.Dispatcher.DispatcherConfigurationControl");
+            IConfigurationControl messageflowcontrol = (IConfigurationControl)ConfigurationControlManager.LoadUserControlFormFile("XRouter.Gui.exe", "XRouter.Gui.ConfigurationControls.Messageflow.MessageflowConfigurationControl");
 			//ConfigurationControlManager.LoadUserControlFormFile("DirectoryAdapterConfigurationControl.dll", "DirectoryAdapterConfigurationControl.ConfigurationControl")
 
 
@@ -69,7 +70,7 @@ namespace XRouter.Gui
 			
 			node_Root.Children.Add(dispatcher);
 
-            node_Root.Children.Add(new ConfigurationTree("MessageFlow", null, node_Root, null));
+            node_Root.Children.Add(new ConfigurationTree("MessageFlow", messageflowcontrol, node_Root, null));
             node_Root.Children.Add(new ConfigurationTree("Seznam dostupných adaptérů", null, node_Root, null));
 
 
