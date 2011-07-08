@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using XRouter.Common;
 using XRouter.Common.ComponentInterfaces;
+using XRouter.Common.MessageFlowConfig;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow
 {
@@ -41,7 +42,10 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             this.brokerService = brokerService;
             this.configTreeNode = configTreeNode;
 
-            uiDesignerContainer.Child = new SimpleDiagrammer.Tests.Test1.MainControl();
+
+            MessageFlowConfiguration messageflow = appConfig.GetMessageFlow(appConfig.GetCurrentMessageFlowGuid());
+            MessageflowGraphPresenter graphPresenter = new MessageflowGraphPresenter(messageflow);
+            uiDesignerContainer.Child = graphPresenter.CreateGraphCanvas();
         }
 
         public void Save()

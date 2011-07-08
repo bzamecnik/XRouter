@@ -83,7 +83,6 @@ namespace SimpleDiagrammer
             newLocation -= CanvasLocationOffset;
 
             Location = newLocation;
-            System.Diagnostics.Trace.WriteLine(Location);
         }        
 
         public IEnumerable<Node> GetAdjacentNodes()

@@ -61,6 +61,9 @@
     <Compile Include="ConfigurationControls\Messageflow\MessageflowConfigurationControl.xaml.cs">
       <DependentUpon>MessageflowConfigurationControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ConfigurationControls\Messageflow\MessageflowEdgePresenter.cs" />
+    <Compile Include="ConfigurationControls\Messageflow\MessageflowGraphPresenter.cs" />
+    <Compile Include="ConfigurationControls\Messageflow\MessageflowNodePresenter.cs" />
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="IConfigurationControl.cs" />
     <Compile Include="Service References\XRouter.Gui.Service\Reference.cs">
