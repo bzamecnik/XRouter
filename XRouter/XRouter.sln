@@ -58,8 +58,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectConfigurator", "..\Ob
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CLR", "CLR", "{3DCD8466-938F-49B0-9EC0-3D01FD1061D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Data.CLR", "Data.CLR\XRouter.Data.CLR.csproj", "{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Gui", "Gui\XRouter.Gui.csproj", "{C39EC164-BED9-4101-940B-E62A9411893D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDiagrammer", "..\SimpleDiagrammer\SimpleDiagrammer.csproj", "{C11BCFD6-9026-462E-A7CA-64037DFA974B}"
@@ -268,20 +266,6 @@ Global
 		{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}.Release|Mixed Platforms.Build.0 = Release|x86
 		{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}.Release|x86.ActiveCfg = Release|x86
 		{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}.Release|x86.Build.0 = Release|x86
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Debug|Mixed Platforms.Deploy.0 = Debug|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|Mixed Platforms.Deploy.0 = Release|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|x86.ActiveCfg = Release|Any CPU
 		{C39EC164-BED9-4101-940B-E62A9411893D}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{C39EC164-BED9-4101-940B-E62A9411893D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{C39EC164-BED9-4101-940B-E62A9411893D}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -332,9 +316,5 @@ Global
 		{75DA200B-E8F1-4698-ADA1-77611103174F} = {15D730A0-A12C-4170-B539-10B30F80ED5A}
 		{B9B223C3-F9BF-4CB2-B3E8-84B3805B58A9} = {4466A363-92FF-4FB7-ABBF-0235C06CC71D}
 		{0A4BD4F2-0DEC-4EBF-8DBE-B6A7A4EBB24C} = {65DD6F0C-FF87-45CA-8288-1A25C391ECC4}
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D} = {3DCD8466-938F-49B0-9EC0-3D01FD1061D2}
-	EndGlobalSection
-	GlobalSection(SpecExplorer.ActivityCompletionStatus) = preSolution
-		SpecExplorer.ActivityCompletionStatus = TestExisting: ;ModelFromScratch: 
 	EndGlobalSection
 EndGlobal

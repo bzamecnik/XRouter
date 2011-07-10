@@ -19,5 +19,14 @@ namespace XRouter.Common.ComponentInterfaces
 
         [OperationContract]
         void ChangeConfiguration(ApplicationConfiguration config);
+
+        [OperationContract]
+        EventLogEntry[] GetEventLogEntries(DateTime minDate, DateTime maxDate, LogLevelFilters logLevelFilter, int pageSize, int pageNumber);
+
+        [OperationContract]
+        TraceLogEntry[] GetTraceLogEntries(DateTime minDate, DateTime maxDate, LogLevelFilters logLevelFilter, int pageSize, int pageNumber);
+
+        [OperationContract]
+        Token[] GetTokens(int pageSize, int pageNumber);
     }
 }

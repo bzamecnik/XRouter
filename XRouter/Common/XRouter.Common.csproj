@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdapterType.cs" />
     <Compile Include="ApplicationConfiguration.cs" />
     <Compile Include="ComponentInterfaces\IBrokerService.cs" />
     <Compile Include="ComponentInterfaces\IBrokerServiceForComponent.cs" />
@@ -54,10 +55,13 @@
     <Compile Include="Constants.cs" />
     <Compile Include="EndpointAddress.cs" />
     <Compile Include="EventLog.cs" />
+    <Compile Include="EventLogEntry.cs" />
+    <Compile Include="EventLogReader.cs" />
     <Compile Include="GatewayProvider.cs" />
     <Compile Include="IComponentController.cs" />
     <Compile Include="ComponentInterfaces\IComponentService.cs" />
     <Compile Include="ComponentInterfaces\IProcessorService.cs" />
+    <Compile Include="LogLevelFilters.cs" />
     <Compile Include="ProcessorProvider.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="LimitedConcurrencyLevelTaskScheduler.cs" />
@@ -73,6 +77,8 @@
     <Compile Include="Token.cs" />
     <Compile Include="TokenState.cs" />
     <Compile Include="MessageFlowState.cs" />
+    <Compile Include="TraceLogEntry.cs" />
+    <Compile Include="TraceLogReader.cs" />
     <Compile Include="Utils\TypeUtils.cs" />
     <Compile Include="Utils\XSerializer.cs" />
     <Compile Include="XmlReduction.cs" />

@@ -7,22 +7,34 @@ using System.Xml.XPath;
 using System.Globalization;
 using System.Xml.Serialization;
 using System.Xml;
+using System.Runtime.Serialization;
 
 namespace XRouter.Common
 {
     [Serializable]
+    [DataContract]
     public class Token
     {
+        [DataMember]
         public Guid Guid { get; private set; }
 
-        private object syncLock = new object();
+        private object _syncLock = new object();
+        private object SyncLock {
+            get {
+                if (_syncLock == null) {
+                    _syncLock = new object();
+                }
+                return _syncLock;
+            }
+        }
 
+        [DataMember]
         public SerializableXDocument Content { get; private set; }
 
         private MessageFlowState _messageFlowState;
         public MessageFlowState MessageFlowState {
             get {
-                lock (syncLock) {
+                lock (SyncLock) {
                     if (_messageFlowState == null) {
                         _messageFlowState = new MessageFlowState();
                         //XElement workFlowStateElement = Content.XDocument.XPathSelectElement("token/messageflow-state");
@@ -48,13 +60,13 @@ namespace XRouter.Common
 
         public TokenState State {
             get {
-                lock (syncLock) {
+                lock (SyncLock) {
                     TokenState result;
                     Enum.TryParse<TokenState>(GetTokenAttribute("state"), out result);
                     return result;
                 }
             } set {
-                lock (syncLock) {
+                lock (SyncLock) {
                     SetTokenAttribute("state", value.ToString());
                 }
             }
@@ -62,11 +74,11 @@ namespace XRouter.Common
 
         public DateTime Timeout {
             get {
-                lock (syncLock) {
+                lock (SyncLock) {
                     return DateTime.Parse(GetTokenAttribute("timeout"), CultureInfo.InvariantCulture);
                 }
             } set {
-                lock (syncLock) {
+                lock (SyncLock) {
                     SetTokenAttribute("timeout", value.ToString(CultureInfo.InvariantCulture));
                 }
             }
@@ -75,7 +87,7 @@ namespace XRouter.Common
         private EndpointAddress _sourceAddress;
         public EndpointAddress SourceAddress {
             get {
-                lock (syncLock) {
+                lock (SyncLock) {
                     if (_sourceAddress == null) {
                         var sourceAddressElement = Content.XDocument.XPathSelectElement("token/source-address");
                         if (sourceAddressElement != null) {
@@ -111,7 +123,7 @@ namespace XRouter.Common
 
         public Token Clone()
         {
-            lock (syncLock) {
+            lock (SyncLock) {
                 Token result = new Token();
                 result.Guid = Guid;
                 result.Content = Content;
@@ -142,7 +154,7 @@ namespace XRouter.Common
 
         public void SaveSourceAddress(EndpointAddress sourceAddress)
         {
-            lock (syncLock) {
+            lock (SyncLock) {
                 var sourceAddressElement = Content.XDocument.XPathSelectElement("token/source-address");
                 if (sourceAddressElement == null) {
                     sourceAddressElement = new XElement("source-address");
@@ -156,7 +168,7 @@ namespace XRouter.Common
 
         public void SaveSourceMetadata(XDocument sourceMetadata)
         {
-            lock (syncLock) {
+            lock (SyncLock) {
                 if (sourceMetadata == null) {
                     return;
                 }
@@ -168,7 +180,7 @@ namespace XRouter.Common
 
         public XDocument GetSourceMetadata()
         {
-            lock (syncLock) {
+            lock (SyncLock) {
                 XElement sourceMetadataElement = Content.XDocument.XPathSelectElement("token/source-metadata");
                 XDocument result = new XDocument();
                 result.Add(sourceMetadataElement);
@@ -178,7 +190,7 @@ namespace XRouter.Common
 
         public void AddMessage(string name, XDocument message)
         {
-            lock (syncLock) {
+            lock (SyncLock) {
                 var xMessages = Content.XDocument.XPathSelectElement("token/messages");
                 XElement xMessage = new XElement(XName.Get("message"), message.Root);
                 xMessage.SetAttributeValue(XName.Get("name"), name);
@@ -188,7 +200,7 @@ namespace XRouter.Common
 
         public XElement GetMessage(string name)
         {
-            lock (syncLock) {
+            lock (SyncLock) {
                 var message = Content.XDocument.XPathSelectElement("token/messages/message[@name=]" + name);
                 return message;
             }
@@ -196,7 +208,7 @@ namespace XRouter.Common
 
         private string GetTokenAttribute(string name)
         {
-            lock (syncLock) {
+            lock (SyncLock) {
                 var tokenAttribute = Content.XDocument.XPathSelectElement("token").Attribute(XName.Get(name));
                 if (tokenAttribute != null) {
                     return tokenAttribute.Value;
@@ -208,7 +220,7 @@ namespace XRouter.Common
 
         private void SetTokenAttribute(string name, string value)
         {
-            lock (syncLock) {
+            lock (SyncLock) {
                 Content.XDocument.XPathSelectElement("token").SetAttributeValue(name, value);
             }
         }

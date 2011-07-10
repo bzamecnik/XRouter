@@ -34,8 +34,9 @@ namespace XRouter.Common
             return result;
         }
 
+        #region General component operations
 
-        public XElement GetComponentsElement(ComponentType componentType)
+        public XElement GetComponentElements(ComponentType componentType)
         {
             string componentElementName = componentType.ToString().ToLower();
             var xComponents = System.Xml.XPath.Extensions.XPathSelectElements(Content, string.Format("/configuration/components/{0}", componentElementName));
@@ -46,7 +47,7 @@ namespace XRouter.Common
             return xRoot;
         }
 
-        public void SaveComponentsElement(ComponentType componentType, XElement xNewComponents)
+        public void SaveComponentElements(ComponentType componentType, XElement xNewComponents)
         {
             string componentElementName = componentType.ToString().ToLower();
             var xOldComponents = System.Xml.XPath.Extensions.XPathSelectElements(Content, string.Format("/configuration/components/{0}", componentElementName));
@@ -73,17 +74,43 @@ namespace XRouter.Common
             xComponents.Add(xComponent);
         }
 
-        public void SaveAdapterElement(string gatewayName, XElement xAdapter)
+        public void AddComponent(ComponentType componentType, string name)
         {
-            string adapterName = xAdapter.Attribute(XName.Get("name")).Value;
-            var xOldAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format("/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']", gatewayName, adapterName));
-            if (xOldAdapter != null) {
-                xOldAdapter.Remove();
-            }
+            XElement xComponent;
+            switch (componentType) {
+		        case ComponentType.Gateway:
+                    xComponent = XElement.Parse(string.Format(@"
+<gateway name='{0}'>
+    <adapters>
+    </adapters>
+</gateway>
+", name));
+                    break;
+                case ComponentType.Processor:
+                    xComponent = XElement.Parse(string.Format(@"
+<processor name='{0}' concurrent-threads='4'>
+</processor>
+", name));
 
-            var xAdapters = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format("/configuration/components/gateway[@name='{0}']/adapters", gatewayName));
-            xAdapters.Add(xAdapter);
+                    break;
+                default:
+                    throw new ArgumentException("Unknown component type", "componentType");
+	        }
+            var xComponents = System.Xml.XPath.Extensions.XPathSelectElement(Content, "/configuration/components");
+            xComponents.Add(xComponent);
         }
+
+        public void RemoveComponent(string name)
+        {
+            var xComponents = System.Xml.XPath.Extensions.XPathSelectElement(Content, "/configuration/components");
+            foreach (var xComponent in xComponents.Elements().ToArray()) {
+                string componentName = xComponent.Attribute(XName.Get("name")).Value;
+                if (componentName == name) {
+                    xComponent.Remove();
+                    return;
+                }
+            }
+        }        
 
         public string[] GetComponentNames()
         {
@@ -94,6 +121,82 @@ namespace XRouter.Common
 
             return allComponentsNames.ToArray();
         }
+        #endregion
+
+        #region Adapter types
+
+        public AdapterType[] GetAdapterTypes()
+        {
+            var xAdapterTypes = System.Xml.XPath.Extensions.XPathSelectElement(Content, "/configuration/adapter-types");
+            List<AdapterType> result = new List<AdapterType>();
+            foreach (XElement xAdapterType in xAdapterTypes.Elements()) {
+                string name = xAdapterType.Attribute(XName.Get("name")).Value;
+                string assemblyAndClrType = xAdapterType.Attribute(XName.Get("clr-type")).Value;
+                AdapterType adapterType = new AdapterType(name, assemblyAndClrType);
+                result.Add(adapterType);
+            }
+            return result.ToArray();
+        }
+
+        public AdapterType GetAdapterType(string name)
+        {
+            var xAdapterType = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format("/configuration/adapter-types/adapter-type[@name='{0}']", name));
+            string assemblyAndClrType = xAdapterType.Attribute(XName.Get("clr-type")).Value;
+            AdapterType adapterType = new AdapterType(name, assemblyAndClrType);
+            return adapterType;
+        }
+
+        public void AddAdapterType(AdapterType adapterType)
+        {
+            XElement xAdapterType = new XElement(XName.Get("adapter-type"));
+            xAdapterType.SetAttributeValue(XName.Get("name"), adapterType.Name);
+            xAdapterType.SetAttributeValue(XName.Get("clr-type"), adapterType.AssemblyAndClrType);
+
+            var xAdapterTypes = System.Xml.XPath.Extensions.XPathSelectElement(Content, "/configuration/adapter-types");
+            xAdapterTypes.Add(xAdapterType);
+        }
+
+        public void RemoveAdapterType(string name)
+        {
+            var xAdapterType = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format("/configuration/adapter-types/adapter-type[@name='{0}']", name));
+            xAdapterType.Remove();
+        }
+
+        #endregion
+
+        #region Adapter configurations
+
+        public XElement[] GetAdapterConfigurations(string gatewayName)
+        {
+            var xAdapters = System.Xml.XPath.Extensions.XPathSelectElements(Content, string.Format("/configuration/components/gateway[@name='{0}']/adapters/adapter", gatewayName));
+            return xAdapters.ToArray();
+        }
+
+        public XElement GetAdapterConfiguration(string gatewayName, string adapterName)
+        {
+            var xAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format("/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']", gatewayName, adapterName));
+            return xAdapter;
+        }
+
+        public void SaveAdapterConfiguration(string gatewayName, XElement xAdapterConfiguration)
+        {
+            string adapterName = xAdapterConfiguration.Attribute(XName.Get("name")).Value;
+            var xOldAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format("/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']", gatewayName, adapterName));
+            if (xOldAdapter != null) {
+                xOldAdapter.Remove();
+            }
+
+            var xAdapters = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format("/configuration/components/gateway[@name='{0}']/adapters", gatewayName));
+            xAdapters.Add(xAdapterConfiguration);
+        }
+
+        public void RemoveAdapterConfiguration(string gatewayName, string adapterName)
+        {
+            var xAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format("/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']", gatewayName, adapterName));
+            xAdapter.Remove();
+        }
+
+        #endregion
 
         public TimeSpan GetNonRunningProcessorResponseTimeout()
         {

@@ -66,11 +66,6 @@
     <Compile Include="ConfigurationControls\Messageflow\MessageflowNodePresenter.cs" />
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="IConfigurationControl.cs" />
-    <Compile Include="Service References\XRouter.Gui.Service\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <Compile Include="Themes\Properties\Resources.Designer.cs" />
     <Compile Include="Themes\Properties\Settings.Designer.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
@@ -222,23 +217,12 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Themes\Properties\Resources.resx" />
-    <None Include="app.config" />
     <None Include="Properties\DataSources\XRouter.Common.ApplicationConfiguration.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="Service References\XRouter.Gui.Service\BrokerService.wsdl" />
-    <None Include="Service References\XRouter.Gui.Service\XRouter.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\XRouter.Gui.Service\XRouter1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\XRouter.Gui.Service\XRouter2.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Themes\Properties\Settings.settings" />
   </ItemGroup>
   <ItemGroup>
@@ -258,27 +242,6 @@
       <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
       <Name>XRouter.Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\XRouter.Gui.Service\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\XRouter.Gui.Service\XRouter.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\XRouter.Gui.Service\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\XRouter.Gui.Service\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\XRouter.Gui.Service\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

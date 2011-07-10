@@ -26,7 +26,7 @@ namespace XRouter.Broker
     <components>
         <gateway name='gateway1'>
             <adapters>
-                <adapter name='directoryAdapter' type='XRouter.Adapters.DirectoryAdapter,..\..\..\..\xrouter\Adapters\bin\debug\XRouter.Adapters.dll'>
+                <adapter name='directoryAdapter' type='directoryAdapter'>
                     <objectConfig>
                     </objectConfig>
                 </adapter>
@@ -37,6 +37,9 @@ namespace XRouter.Broker
     </components>
     <dispatcher nonrunning-processor-response-timeout='60'>
     </dispatcher>
+    <adapter-types>
+        <adapter-type name='directoryAdapter' clr-type='XRouter.Adapters.DirectoryAdapter,..\..\..\..\xrouter\Adapters\bin\debug\XRouter.Adapters.dll' />
+    </adapter-types>
     <messageflows current='bcf9e0dd-818d-492c-84b6-4c27ca668221'>
         <messageflow guid='bcf9e0dd-818d-492c-84b6-4c27ca668221' name='abc' version='1'>
         </messageflow>
@@ -247,6 +250,13 @@ namespace XRouter.Broker
         {
             Token token = InternalTokens.First(t => t.Guid == tokenGuid);
             return token;
+        }
+
+        public Token[] GetTokens(int pageSize, int pageNumber)
+        {
+            int tokensToSkip = (pageNumber - 1) * pageSize;
+            var result = InternalTokens.Skip(tokensToSkip).Take(pageNumber).ToArray();
+            return result;
         }
 
         public IEnumerable<Token> GetUndispatchedTokens()

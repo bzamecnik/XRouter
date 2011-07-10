@@ -18,6 +18,8 @@ namespace XRouter.Broker
     [wcf.ServiceBehavior(InstanceContextMode = wcf.InstanceContextMode.Single)]
     public class BrokerService : IBrokerService, IBrokerServiceForDispatcher
     {
+        private static readonly string LogDirectory = "Logs";
+
         private PersistentStorage storage;
         private ConcurrentDictionary<string, ComponentAccessor> componentsAccessors = new ConcurrentDictionary<string, ComponentAccessor>();
 
@@ -27,6 +29,9 @@ namespace XRouter.Broker
         private object syncLock = new object();
 
         private wcf.ServiceHost hostForManagemenet;
+
+        private EventLogReader eventLogReader;
+        private TraceLogReader traceLogReader;
 
         public BrokerService()
         {
@@ -48,6 +53,9 @@ namespace XRouter.Broker
             }
             #endregion
 
+            eventLogReader = new EventLogReader(LogDirectory);
+            traceLogReader = new TraceLogReader(LogDirectory);
+
             xmlResourceManager = new XmlResourceManager(storage);
             dispatcher = new Dispatching.Dispatcher(this);
 
@@ -60,6 +68,13 @@ namespace XRouter.Broker
             smb.HttpGetEnabled = true;
             smb.HttpGetUrl = new Uri("http://localhost:9091/XRouter.ServiceForManagement");
             hostForManagemenet.Description.Behaviors.Add(smb);
+
+            foreach (var b in hostForManagemenet.Description.Behaviors) {
+                if (b is wcf.Description.ServiceDebugBehavior) {
+                    var sdb = (wcf.Description.ServiceDebugBehavior)b;
+                    sdb.IncludeExceptionDetailInFaults = true;
+                }
+            }            
 
             hostForManagemenet.AddServiceEndpoint(typeof(IBrokerServiceForManagement), binding, "net.pipe://localhost/XRouter.ServiceForManagement");
 
@@ -98,6 +113,21 @@ namespace XRouter.Broker
                 var reducedConfig = config.GetReducedConfiguration(component.ConfigurationReduction);
                 component.UpdateConfig(reducedConfig);
             }
+        }
+
+        public EventLogEntry[] GetEventLogEntries(DateTime minDate, DateTime maxDate, LogLevelFilters logLevelFilter, int pageSize, int pageNumber)
+        {
+            return eventLogReader.GetEntries(minDate, maxDate, logLevelFilter, pageSize, pageNumber);
+        }
+
+        public TraceLogEntry[] GetTraceLogEntries(DateTime minDate, DateTime maxDate, LogLevelFilters logLevelFilter, int pageSize, int pageNumber)
+        {
+            return traceLogReader.GetEntries(minDate, maxDate, logLevelFilter, pageSize, pageNumber);
+        }
+
+        public Token[] GetTokens(int pageSize, int pageNumber)
+        {
+            return storage.GetTokens(pageSize, pageNumber);
         }
 
         IEnumerable<ProcessorAccessor> IBrokerServiceForDispatcher.GetProcessors()

@@ -72,7 +72,7 @@ namespace XRouter.Gui.ConfigurationControls.Adapter
             xObjectConfig.Remove();
             originalConfig.Add(editor.SaveConfiguration().Root);
 
-            appConfig.SaveAdapterElement(gatewayName, originalConfig);
+            appConfig.SaveAdapterConfiguration(gatewayName, originalConfig);
 		}
 
 		public void Clear()

@@ -5,6 +5,8 @@ using System.Text;
 using XRouter.Common;
 using XRouter.Common.ComponentInterfaces;
 using System.Xml.Linq;
+using wcf = System.ServiceModel;
+using System.Xml;
 
 namespace XRouter.Gui
 {
@@ -34,10 +36,18 @@ namespace XRouter.Gui
         public static IBrokerServiceForManagement BrokerService { get; private set; }
 
 		public static ConfigurationTree LoadConfigurationTree()
-		{
-            BrokerService = new XRouter.Gui.Service.BrokerServiceForManagementClient();
+        {
+            #region Get proxy for remote BrokerService
+            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress("net.pipe://localhost/XRouter.ServiceForManagement");
+            var binding = new wcf.NetNamedPipeBinding(wcf.NetNamedPipeSecurityMode.None);
+            binding.ReaderQuotas = new XmlDictionaryReaderQuotas() { MaxBytesPerRead = int.MaxValue, MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue };
+            wcf.ChannelFactory<IBrokerServiceForManagement> channelFactory = new wcf.ChannelFactory<IBrokerServiceForManagement>(binding, endpointAddress);
+            BrokerService = channelFactory.CreateChannel();
+            #endregion
+
+
             ApplicationConfiguration = BrokerService.GetConfiguration();
-            var gws = ApplicationConfiguration.GetComponentsElement(Common.ComponentType.Gateway);
+            var gws = ApplicationConfiguration.GetComponentElements(Common.ComponentType.Gateway);
 
 			IConfigurationControl adaptercontrol = (IConfigurationControl)ConfigurationControlManager.LoadUserControlFormFile("XRouter.Gui.exe", "XRouter.Gui.ConfigurationControls.Adapter.AdapterConfigurationControl");
             IConfigurationControl gatewaycontrol = (IConfigurationControl)ConfigurationControlManager.LoadUserControlFormFile("XRouter.Gui.exe", "XRouter.Gui.ConfigurationControls.Gateway.GatewayConfigurationControl");
@@ -52,7 +62,7 @@ namespace XRouter.Gui
             ConfigurationTree node_Gateways = new ConfigurationTree("Gateways", null, node_Root, null);
             node_Root.Children.Add(node_Gateways);
 
-            foreach (XElement xGateway in ApplicationConfiguration.GetComponentsElement(ComponentType.Gateway).Elements()) {
+            foreach (XElement xGateway in ApplicationConfiguration.GetComponentElements(ComponentType.Gateway).Elements()) {
                 string gatewayName = xGateway.Attribute(XName.Get("name")).Value;
                 ConfigurationTree node_Gateway = new ConfigurationTree(gatewayName, gatewaycontrol, node_Gateways, xGateway);
                 node_Gateways.Children.Add(node_Gateway);
