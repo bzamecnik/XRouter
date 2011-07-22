@@ -87,11 +87,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BasicItemType.cs" />
+    <Compile Include="ClassMetadata.cs" />
+    <Compile Include="CollectionItemType.cs" />
+    <Compile Include="DictionaryItemType.cs" />
+    <Compile Include="EnumItemType.cs" />
+    <Compile Include="ItemEditors\CollectionItemEditor.cs" />
+    <Compile Include="ItemEditors\DictionaryItemEditor.cs" />
     <Compile Include="ItemEditors\EnumItemEditor.cs" />
+    <Compile Include="ItemType.cs" />
     <Compile Include="Tests\Test1\ConfigurableObject.cs" />
     <Compile Include="Tests\Test1\MainControl.xaml.cs">
       <DependentUpon>MainControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ValueValidators\ValueValidatorAttribute.cs" />
     <Page Include="ConfigurationEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

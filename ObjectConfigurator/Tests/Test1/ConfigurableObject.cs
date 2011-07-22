@@ -14,16 +14,16 @@ namespace ObjectConfigurator.Tests.Test1
 
     class ConfigurableObject
     {
-        [ConfigurationItem]
+        [ConfigurationItem("privateString", "description", "default")]
         private string privateString;
 
-        [ConfigurationItem("Integer", "Integer value expected.")]
+        [ConfigurationItem("Integer", "Integer value expected.", 10)]
         public int Int { get; set; }
 
-        [ConfigurationItem]
+        [ConfigurationItem("Double", "description", 1.5d)]
         public double Double { get; private set; }
 
-        [ConfigurationItem]
+        [ConfigurationItem("enumValue", "description", EnumType.EnumValue2)]
         private EnumType enumValue;
 
         public void SetValues()

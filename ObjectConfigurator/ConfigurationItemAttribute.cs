@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Collections.ObjectModel;
 
 namespace ObjectConfigurator
 {
@@ -10,20 +11,13 @@ namespace ObjectConfigurator
     {
         public string UserName { get; set; }
         public string UserDescription { get; set; }
+        public object DefaultValue { get; set; }
 
-        public ConfigurationItemAttribute()
-        {
-        }
-
-        public ConfigurationItemAttribute(string userDescription)
-        {
-            UserDescription = userDescription;
-        }
-
-        public ConfigurationItemAttribute(string userName, string userDescription)
+        public ConfigurationItemAttribute(string userName, string userDescription, object defaultValue)
         {
             UserName = userName;
             UserDescription = userDescription;
+            DefaultValue = defaultValue;
         }
     }
 }

@@ -2,30 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Controls;
 using System.Xml.Linq;
 
 namespace ObjectConfigurator.ItemEditors
 {
-    class TextItemEditor : ItemEditor
+    class DictionaryItemEditor : ItemEditor
     {
-        private TextBox uiText;
-
-        public TextItemEditor(ItemMetadata metadata)
+        public DictionaryItemEditor(ItemMetadata metadata)
             : base(metadata)
         {
-            uiText = new TextBox();
-            Representation = uiText;
         }
 
         public override void WriteToXElement(XElement target)
         {
-            target.Value = uiText.Text;
+            throw new NotImplementedException();
         }
 
         public override void ReadFromXElement(XElement source)
         {
-            uiText.Text = source.Value;
+            throw new NotImplementedException();
         }
     }
 }

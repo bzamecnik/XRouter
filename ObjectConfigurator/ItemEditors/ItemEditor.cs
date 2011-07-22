@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Xml.Linq;
 
 namespace ObjectConfigurator.ItemEditors
 {
@@ -20,16 +21,23 @@ namespace ObjectConfigurator.ItemEditors
 
         public static ItemEditor CreateEditor(ItemMetadata metadata)
         {
-            ItemEditor result;
-            if (typeof(Enum).IsAssignableFrom(metadata.Type)) {
-                result = new EnumItemEditor(metadata);
-            } else {
-                result = new TextItemEditor(metadata);
+            if (metadata.Type is BasicItemType) {
+                return new TextItemEditor(metadata);
+            } 
+            if (metadata.Type is EnumItemType) {
+                return new EnumItemEditor(metadata);
+            } 
+            if (metadata.Type is CollectionItemType) {
+                return new CollectionItemEditor(metadata);
             }
-            return result;
+            if (metadata.Type is DictionaryItemType) {
+                return new DictionaryItemEditor(metadata);
+            }
+            throw new InvalidOperationException("Unknown item type.");
         }
 
-        public abstract void SetValue(object value);
-        public abstract object GetValue();
+        public abstract void WriteToXElement(XElement target);
+
+        public abstract void ReadFromXElement(XElement source);
     }
 }

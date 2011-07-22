@@ -18,14 +18,14 @@ namespace ObjectConfigurator
 {
     public partial class ConfigurationEditor : UserControl
     {
-        public Type TargetType { get; set; }
+        public ClassMetadata ClassMetadata { get; private set; }
 
         private List<ItemEditor> itemEditors;
 
-        internal ConfigurationEditor(Type targetType)
+        internal ConfigurationEditor(ClassMetadata classMetadata)
         {
             InitializeComponent();
-            TargetType = targetType;
+            ClassMetadata = classMetadata;
 
             PrepareItemEditors();
         }
@@ -35,12 +35,7 @@ namespace ObjectConfigurator
             foreach (var itemEditor in itemEditors) {
                 string itemName = itemEditor.Metadata.Name;
                 XElement xItem = config.Root.Elements().FirstOrDefault(e => e.Attribute(Configurator.XName_ItemNameAttribute).Value == itemName);
-                if (xItem != null) {
-                    object value = itemEditor.Metadata.ReadFromXElement(xItem);
-                    itemEditor.SetValue(value);
-                } else {
-                    itemEditor.SetValue(null);
-                }
+                itemEditor.ReadFromXElement(xItem);
             }
         }
 
@@ -50,8 +45,7 @@ namespace ObjectConfigurator
             foreach (var itemEditor in itemEditors) {
                 XElement xItem = new XElement(Configurator.XName_ItemElement);
                 xItem.SetAttributeValue(Configurator.XName_ItemNameAttribute, itemEditor.Metadata.Name);
-                object value = itemEditor.GetValue();
-                itemEditor.Metadata.WriteToXElement(xItem, value);
+                itemEditor.WriteToXElement(xItem);
                 xConfig.Add(xItem);
             }
 
@@ -63,8 +57,7 @@ namespace ObjectConfigurator
         private void PrepareItemEditors()
         {
             itemEditors = new List<ItemEditor>();
-            IEnumerable<ItemMetadata> itemsMetadata = Configurator.GetItemsMetadata(TargetType);
-            foreach (ItemMetadata itemMetadata in itemsMetadata) {
+            foreach (ItemMetadata itemMetadata in ClassMetadata.ConfigurableItems) {
                 uiItemsContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
 
                 FrameworkElement header = CreateHeaderCell(itemMetadata);
