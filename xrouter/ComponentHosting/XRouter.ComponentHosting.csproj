@@ -40,8 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AllInOneXRouterHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XRouterService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DaemonNT\DaemonNT\DaemonNT.csproj">

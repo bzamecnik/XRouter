@@ -74,6 +74,8 @@ namespace XRouter.Adapters
                             // message receiving failed
                             continue;
                         }
+                     
+                        // spolehlivost
 
                         File.Delete(newFilePath);
                     }

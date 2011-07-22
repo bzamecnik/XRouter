@@ -58,6 +58,9 @@ namespace XRouter.Processor.MessageFlowParts
             #endregion
 
             string nextNodeName = currentNode.Evaluate(token);
+
+            // TODO ulozit pokud je persistentni akce
+
             token.MessageFlowState.NextNodeName = nextNodeName;
             token.SaveMessageFlowState();
 

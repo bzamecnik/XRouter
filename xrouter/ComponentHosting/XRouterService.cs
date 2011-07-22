@@ -15,7 +15,7 @@ using XRouter.Common.Xrm;
 
 namespace XRouter.ComponentHosting
 {
-    class AllInOneXRouterHost : Service
+    class XRouterService : Service
     {
         private static readonly string SectionKey_Broker = "broker";
         private static readonly string SectionKey_Gateway = "gateway";
@@ -45,8 +45,6 @@ namespace XRouter.ComponentHosting
 
             processor.Start(processorName, broker);
             gateway.Start(gatewayName, broker);
-
-
 
             var config = broker.GetConfiguration();
 
