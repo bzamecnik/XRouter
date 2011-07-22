@@ -25,6 +25,7 @@ namespace XRouter.Common.MessageFlowConfig
         public CbrNodeConfiguration()
         {
             Branches = new Dictionary<XrmUri, NodeConfiguration>();
+            TestedSelection = new TokenSelection(string.Empty);
         }
     }
 }

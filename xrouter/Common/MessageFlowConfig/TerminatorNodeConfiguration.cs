@@ -14,5 +14,10 @@ namespace XRouter.Common.MessageFlowConfig
 
         [DataMember]
         public TokenSelection ResultMessageSelection { get; set; }
+
+        public TerminatorNodeConfiguration()
+        {
+            ResultMessageSelection = new TokenSelection(string.Empty);
+        }
     }
 }

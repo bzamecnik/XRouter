@@ -12,6 +12,8 @@ namespace SimpleDiagrammer
 
         public object Content { get; protected set; }
 
+        public virtual Point Location { get; set; }
+
         public virtual FrameworkElement DragArea { 
             get { return null; } 
         }

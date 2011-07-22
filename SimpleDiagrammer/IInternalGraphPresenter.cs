@@ -7,8 +7,7 @@ namespace SimpleDiagrammer
 {
     interface IInternalGraphPresenter
     {
-        event Action NodesChanged;
-        event Action EdgesChanged;
+        event Action GraphChanged;
 
         IEnumerable<object> GetNodes();
         IEnumerable<object> GetEdges();

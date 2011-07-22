@@ -10,6 +10,8 @@ namespace SimpleDiagrammer
     {
         object Node { get;  }
 
+        Point Location { get; set; }
+
         object Content { get; }
 
         FrameworkElement DragArea { get; }

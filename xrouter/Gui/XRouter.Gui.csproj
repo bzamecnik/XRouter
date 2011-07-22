@@ -64,6 +64,16 @@
     <Compile Include="ConfigurationControls\Messageflow\MessageflowEdgePresenter.cs" />
     <Compile Include="ConfigurationControls\Messageflow\MessageflowGraphPresenter.cs" />
     <Compile Include="ConfigurationControls\Messageflow\MessageflowNodePresenter.cs" />
+    <Compile Include="ConfigurationControls\Messageflow\NodePropertiesEditors\ActionNodePropertiesEditor.xaml.cs">
+      <DependentUpon>ActionNodePropertiesEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationControls\Messageflow\NodePropertiesEditors\CbrNodePropertiesEditor.xaml.cs">
+      <DependentUpon>CbrNodePropertiesEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationControls\Messageflow\NodePropertiesEditors\TerminatorNodePropertiesEditor.xaml.cs">
+      <DependentUpon>TerminatorNodePropertiesEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationControls\Messageflow\NodeSelectionManager.cs" />
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="IConfigurationControl.cs" />
     <Compile Include="Themes\Properties\Resources.Designer.cs" />
@@ -82,6 +92,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ConfigurationControls\Messageflow\MessageflowConfigurationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfigurationControls\Messageflow\NodePropertiesEditors\ActionNodePropertiesEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfigurationControls\Messageflow\NodePropertiesEditors\CbrNodePropertiesEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfigurationControls\Messageflow\NodePropertiesEditors\TerminatorNodePropertiesEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

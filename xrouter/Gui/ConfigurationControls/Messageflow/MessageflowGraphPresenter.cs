@@ -9,22 +9,25 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
 {
     class MessageflowGraphPresenter : GraphPresenter<NodeConfiguration, Tuple<NodeConfiguration, NodeConfiguration>>
     {
-        private MessageFlowConfiguration messageflow;
+        internal MessageFlowConfiguration Messageflow { get; private set; }
 
-        public MessageflowGraphPresenter(MessageFlowConfiguration messageflow)
+        internal NodeSelectionManager NodeSelectionManager { get; private set; }
+
+        public MessageflowGraphPresenter(MessageFlowConfiguration messageflow, NodeSelectionManager nodeSelectionManager)
         {
-            this.messageflow = messageflow;
+            Messageflow = messageflow;
+            NodeSelectionManager = nodeSelectionManager;
         }
 
         public override IEnumerable<NodeConfiguration> GetNodes()
         {
-            return messageflow.Nodes;
+            return Messageflow.Nodes;
         }
 
         public override IEnumerable<Tuple<NodeConfiguration, NodeConfiguration>> GetEdges()
         {
-            var result = new List<Tuple<NodeConfiguration,NodeConfiguration>>();
-            foreach (var node in messageflow.Nodes) {
+            var result = new List<Tuple<NodeConfiguration, NodeConfiguration>>();
+            foreach (var node in Messageflow.Nodes) {
                 if (node is CbrNodeConfiguration) {
                     var cbrNode = (CbrNodeConfiguration)node;
                     foreach (var targetNode in cbrNode.Branches.Values) {
@@ -36,17 +39,24 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                     result.Add(Tuple.Create(node, actionNode.NextNode));
                 }
             }
-            return result.Where(t => !(t.Item2 is TerminatorNodeConfiguration));
+
+            return result
+                .Where(e => e.Item2 != null);
         }
 
         public override NodePresenter<NodeConfiguration> CreateNodePresenter(NodeConfiguration node)
         {
-            return new MessageflowNodePresenter(node);
+            return new MessageflowNodePresenter(node, this, NodeSelectionManager);
         }
 
         public override EdgePresenter<NodeConfiguration, Tuple<NodeConfiguration, NodeConfiguration>> CreateEdgePresenter(Tuple<NodeConfiguration, NodeConfiguration> edge)
         {
             return new MessageflowEdgePresenter(edge, edge.Item1, edge.Item2);
+        }
+
+        public new void RaiseGraphChanged()
+        {
+            base.RaiseGraphChanged();
         }
     }
 }

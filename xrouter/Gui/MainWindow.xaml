@@ -3,10 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:XRouter.Gui"
         xmlns:themes="clr-namespace:XRouter.Gui.Themes"
-    themes:ThemeManager.Theme="ExpressionDark"
+        themes:ThemeManager.Theme="ExpressionDark"
         Background="{DynamicResource WindowBackgroundBrush}"
         Title="XRouter - Confuguration manager" Height="750" Width="1000" MinWidth="400" MinHeight="200" Loaded="Window_Loaded" >
-
     <Grid>
         <Grid.RowDefinitions>            
             <RowDefinition Height="*" />

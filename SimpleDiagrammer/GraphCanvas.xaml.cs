@@ -31,6 +31,8 @@ namespace SimpleDiagrammer
 
         public Canvas Canvas { get; private set; }
 
+        public Vector CanvasLocationOffset { get; private set; }
+
         internal GraphCanvas(IInternalGraphPresenter graphPresenter)
         {
             InitializeComponent();
@@ -46,8 +48,7 @@ namespace SimpleDiagrammer
 
         private void GraphCanvas_Loaded(object sender, RoutedEventArgs e)
         {
-            GraphPresenter.NodesChanged += GraphPresenter_NodesChanged;
-            GraphPresenter.EdgesChanged += GraphPresenter_EdgesChanged;
+            GraphPresenter.GraphChanged += GraphPresenter_GraphChanged;
             UpdateDiagram();
 
             DispatcherTimer layoutUpdateTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(50), DispatcherPriority.Normal, delegate {
@@ -88,10 +89,15 @@ namespace SimpleDiagrammer
 
         private void UpdateDiagramLayout()
         {
+            List<UIElement> oldCanvasChildren = Canvas.Children.OfType<UIElement>().ToList();
+
             #region Compute layout of nodes
-            uiCanvas.Children.Clear();
             foreach (Node node in Nodes) {
-                uiCanvas.Children.Add(node.UIFrame);
+                if (oldCanvasChildren.Contains(node.UIFrame)) {
+                    oldCanvasChildren.Remove(node.UIFrame);
+                } else {
+                    uiCanvas.Children.Add(node.UIFrame);
+                }
             }
             uiCanvas.UpdateLayout();
             layoutAlgorithm.UpdateLayout(Nodes);
@@ -102,13 +108,13 @@ namespace SimpleDiagrammer
             double minY = Nodes.Min(n => n.Location.Y);
             double maxX = Nodes.Max(n => n.Location.X + n.Size.Width);
             double maxY = Nodes.Max(n => n.Location.Y + n.Size.Height);
-            double absMaxX = Math.Max(Math.Abs(minX), Math.Abs(maxX));
-            double absMaxY = Math.Max(Math.Abs(minY), Math.Abs(maxY));
-            uiCanvas.Width = absMaxX * 2;
-            uiCanvas.Height = absMaxY * 2;
+            double maxAbsX = Math.Max(Math.Abs(minX), Math.Abs(maxX));
+            double maxAbsY = Math.Max(Math.Abs(minY), Math.Abs(maxY));
+            uiCanvas.Width = maxAbsX * 2;
+            uiCanvas.Height = maxAbsY * 2;
+            CanvasLocationOffset = new Vector(maxAbsX, maxAbsY);
             foreach (Node node in Nodes) {
-                node.CanvasLocationOffset = new Vector(absMaxX, absMaxY);
-                Point canvasLocation = node.Location + node.CanvasLocationOffset;
+                Point canvasLocation = node.Location + CanvasLocationOffset;
                 Canvas.SetLeft(node.UIFrame, canvasLocation.X);
                 Canvas.SetTop(node.UIFrame, canvasLocation.Y);
             }
@@ -116,23 +122,24 @@ namespace SimpleDiagrammer
 
             #region Update layout of edges
             foreach (Edge edge in Edges) {
-                uiCanvas.Children.Add(edge.UILink);
+                if (oldCanvasChildren.Contains(edge.UILink)) {
+                    oldCanvasChildren.Remove(edge.UILink);
+                } else {
+                    uiCanvas.Children.Add(edge.UILink);
+                }
             }
             uiCanvas.UpdateLayout();
             foreach (Edge edge in Edges) {
                 edge.UpdatePosition();
             }
             #endregion
+
+            foreach (UIElement canvasChild in oldCanvasChildren) {
+                Canvas.Children.Remove(canvasChild);
+            }
         }
 
-        private void GraphPresenter_EdgesChanged()
-        {
-            Dispatcher.Invoke(new Action(delegate {
-                UpdateDiagram();
-            }));
-        }
-
-        private void GraphPresenter_NodesChanged()
+        private void GraphPresenter_GraphChanged()
         {
             Dispatcher.Invoke(new Action(delegate {
                 UpdateDiagram();

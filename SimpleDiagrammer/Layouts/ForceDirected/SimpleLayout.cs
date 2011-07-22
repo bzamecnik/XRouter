@@ -8,6 +8,8 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
 {
     class SimpleLayout : LayoutAlgorithm
     {
+        private static readonly Random random = new Random();
+
         private const double ATTRACTION_CONSTANT = 0.1;		// spring constant
         private const double REPULSION_CONSTANT = 10000;	// charge constant
 
@@ -18,6 +20,16 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
 
         public override void UpdateLayout(IEnumerable<Node> nodes)
         {
+            #region Separate overlapping nodes
+            foreach (Node node1 in nodes) {
+                foreach (Node node2 in nodes) {
+                    if ((node1 != node2) && (CalcDistance(node1.Location, node2.Location) < 1.0d)) {
+                        node1.Location += new Vector(random.NextDouble() * 100d - 50d, random.NextDouble() * 100d - 50d);
+                    }
+                }
+            }
+            #endregion
+
             #region Update nodeToLayoutInfo
             foreach (Node node in nodeToLayoutInfo.Keys.ToArray()) {
                 if (!nodes.Contains(node)) {

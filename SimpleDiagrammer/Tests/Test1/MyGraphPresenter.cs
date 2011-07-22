@@ -48,16 +48,14 @@ namespace SimpleDiagrammer.Tests.Test1
         public void AddNode(Node node)
         {
             nodes.Add(node);
-            RaiseNodesChanged();
+            RaiseGraphChanged();
         }
 
         public void RemoveNode(Node node)
         {
             edges.RemoveAll(e => e.Source == node || e.Target == node);
-            RaiseEdgesChanged();
-
             nodes.Remove(node);
-            RaiseNodesChanged();
+            RaiseGraphChanged();
         }
 
         public void AddEdge(Node source, Node target)
@@ -66,7 +64,7 @@ namespace SimpleDiagrammer.Tests.Test1
             edge.Source = source;
             edge.Target = target;
             edges.Add(edge);
-            RaiseEdgesChanged();
+            RaiseGraphChanged();
         }
 
         public override IEnumerable<Node> GetNodes()

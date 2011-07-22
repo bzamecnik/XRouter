@@ -7,8 +7,7 @@ namespace SimpleDiagrammer
 {
     public abstract class GraphPresenter<TNode, TEdge> : IInternalGraphPresenter
     {
-        public event Action NodesChanged = delegate { };
-        public event Action EdgesChanged = delegate { };
+        public event Action GraphChanged = delegate { };
 
         public GraphCanvas CreateGraphCanvas()
         {
@@ -16,14 +15,9 @@ namespace SimpleDiagrammer
             return result;
         }
 
-        protected void RaiseNodesChanged()
+        protected void RaiseGraphChanged()
         {
-            NodesChanged();
-        }
-
-        protected void RaiseEdgesChanged()
-        {
-            EdgesChanged();
+            GraphChanged();
         }
 
         public abstract IEnumerable<TNode> GetNodes();

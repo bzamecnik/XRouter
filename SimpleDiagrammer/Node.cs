@@ -10,8 +10,6 @@ namespace SimpleDiagrammer
 {
     class Node
     {
-        private static Random random = new Random();
-
         public FrameworkElement UIFrame { get; private set; }
 
         public IInternalNodePresenter Presenter { get; private set; }
@@ -20,9 +18,10 @@ namespace SimpleDiagrammer
 
         public object NodeObject { get; private set; }
 
-        public Point Location { get; set; }
-
-        public Vector CanvasLocationOffset { get; set; }
+        public Point Location {
+            get { return Presenter.Location; }
+            set { Presenter.Location = value; }
+        }
 
         public Size Size {
             get {
@@ -44,7 +43,6 @@ namespace SimpleDiagrammer
             border.Content = Presenter.Content;
 
             UIFrame = border;
-            Location = new Point(random.NextDouble() * 100d - 50d, random.NextDouble() * 100d - 50d);
             Canvas.SetZIndex(UIFrame, 1);
 
             #region Prepare dragging
@@ -78,9 +76,9 @@ namespace SimpleDiagrammer
                 return;
             }
 
-            Point newLocation = e.GetPosition(GraphCanvas);
+            Point newLocation = e.GetPosition(GraphCanvas.Canvas);
             newLocation -= dragOffset;
-            newLocation -= CanvasLocationOffset;
+            newLocation -= GraphCanvas.CanvasLocationOffset;
 
             Location = newLocation;
         }        
