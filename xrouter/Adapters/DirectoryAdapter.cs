@@ -48,9 +48,21 @@ namespace XRouter.Adapters
                     string enpointName = enpointNameAndPath.Key;
                     string path = enpointNameAndPath.Value;
 
-                    string[] newFiles = Directory.GetFiles(path);
+                    string[] newFiles;
+                    try
+                    {
+                        newFiles = Directory.GetFiles(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        EventLog.Error(string.Format(
+                            "Cannot read files from directory: {0}. Details: {1}",
+                            path, ex.Message));
+                        continue;
+                    }
                     foreach (string newFilePath in newFiles) {
-
+                        try
+                        {
                         string fileContent;
                         try
                         {
@@ -68,16 +80,20 @@ namespace XRouter.Adapters
                         metadata.Add(xMetadata);
 
                         TraceLog.Info("Found input file " + Path.GetFileName(newFilePath));
-                        try {
-                            ReceiveMessage(message, enpointName, metadata);
-                        } catch (Exception ex) {
-                            // message receiving failed
-                            continue;
-                        }
-                     
+                        
+                        ReceiveMessage(message, enpointName, metadata);
+
                         // spolehlivost
 
                         File.Delete(newFilePath);
+                        }
+                        catch (Exception ex)
+                        {
+                            EventLog.Error(string.Format(
+                                "Error while receiving file {0}. Details: {1}",
+                                newFilePath, ex.Message));
+                            // TODO: protentially store bad file contents into TraceLog
+                        }
                     }
                 }
             }
