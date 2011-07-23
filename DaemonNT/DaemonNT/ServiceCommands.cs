@@ -55,11 +55,16 @@ namespace DaemonNT
                 {
                     serviceHost.Start();
                     Console.WriteLine("The service '{0}' is running in debug mode.", serviceName);
-                    Console.WriteLine("Press CTRL+C to stop the service ...", serviceName);
+                    Console.WriteLine("Press CTRL+C or type 'exit' to stop the service ...", serviceName);
                     Console.CancelKeyPress += (sender, e) => serviceHost.Stop();
                     while (true)
                     {
-                        System.Threading.Thread.Sleep(100);
+                        string request = Console.ReadLine();
+                        if (request == "exit")
+                        {
+                            serviceHost.Stop();
+                            return;
+                        }
                     }
                 }
                 catch (Exception e)
