@@ -6,6 +6,11 @@ using System.Collections.ObjectModel;
 
 namespace ObjectConfigurator
 {
+    /// <summary>
+    /// Marks a configuration item (field or property) to be managed by
+    /// Configurator. Also enables to provide further information such as a
+    /// user-friendly item name and description.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public sealed class ConfigurationItemAttribute : Attribute
     {

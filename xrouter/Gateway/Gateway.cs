@@ -27,12 +27,12 @@ namespace XRouter.Gateway
 
         private Dictionary<string, Adapter> AdaptersByName { get; set; }
 
-        private ConcurrentDictionary<Guid, MessageResultHandler> waintingResultMessageHandlers;
+        private ConcurrentDictionary<Guid, MessageResultHandler> waitingResultMessageHandlers;
 
         public Gateway()
         {
             ConfigurationReduction = new XmlReduction();
-            waintingResultMessageHandlers = new ConcurrentDictionary<Guid, MessageResultHandler>();
+            waitingResultMessageHandlers = new ConcurrentDictionary<Guid, MessageResultHandler>();
         }
 
         public void UpdateConfig(ApplicationConfiguration config)
@@ -76,6 +76,7 @@ namespace XRouter.Gateway
 
         private Adapter CreateAdapter(string typeFullNameAndAssembly, XElement adapterConfig, string adapterName)
         {
+            // TODO: adapterConfig is not used!
             var adapter = TypeUtils.CreateTypeInstance<Adapter>(typeFullNameAndAssembly);
             adapter.Gateway = this;
             adapter.AdapterName = adapterName;
@@ -96,7 +97,7 @@ namespace XRouter.Gateway
         internal void ReceiveToken(Token token, MessageResultHandler resultHandler = null)
         {
             if (resultHandler != null) {
-                waintingResultMessageHandlers.AddOrUpdate(token.Guid, resultHandler, (key, oldValue) => resultHandler);
+                waitingResultMessageHandlers.AddOrUpdate(token.Guid, resultHandler, (key, oldValue) => resultHandler);
             }
             Task.Factory.StartNew(delegate {
                 Broker.ReceiveToken(token);
@@ -106,7 +107,7 @@ namespace XRouter.Gateway
         public void ReceiveReturn(Guid tokenGuid, SerializableXDocument resultMessage, SerializableXDocument sourceMetadata)
         {
             MessageResultHandler resultHandler;
-            if (waintingResultMessageHandlers.TryRemove(tokenGuid, out resultHandler)) {
+            if (waitingResultMessageHandlers.TryRemove(tokenGuid, out resultHandler)) {
                 resultHandler(tokenGuid, resultMessage.XDocument, sourceMetadata.XDocument);
             }
         }

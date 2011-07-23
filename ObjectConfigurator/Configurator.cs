@@ -7,6 +7,31 @@ using System.Reflection;
 
 namespace ObjectConfigurator
 {
+    /// <summary>
+    /// Provides configuration of objects in a unified way to enable
+    /// persistence and GUI editing.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// By configuration is meant the state of class instance fields and
+    /// properties. Each such a field or property (further refered to as
+    /// a configuration item) annotated by the [ConfigurationItem] attribute
+    /// can processed by Configurator. Along with some lower-level information
+    /// about the items the whole information about an item is called item
+    /// metadata. It is captured by reflection.
+    /// </para>
+    /// <para>
+    /// The [ConfigurationItem] attribute, besides marking which item to
+    /// work with, can also hold the user-friendly information about the item,
+    /// such as a name and description which can be shown within a GUI editor.
+    /// </para>
+    /// <para>
+    /// Configurator can export the item metadata to XML and import it back.
+    /// Item metadata can also be edited in a GUI editor.
+    /// </para>
+    /// </remarks>
+    /// <see cref="ConfigurationItemAttribute"/>
+    /// <see cref="ItemMetadata"/>
     public static class Configurator
     {
         internal static readonly XName XName_RootElement = XName.Get("objectConfig");

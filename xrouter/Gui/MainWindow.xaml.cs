@@ -61,6 +61,7 @@ namespace XRouter.Gui
 
 		private void Save_Click(object sender, RoutedEventArgs e)
 		{
+            // TODO: fix a NullReferenceException
 			currentConfigurationControl.Save();
             ConfigurationManager.BrokerService.ChangeConfiguration(ConfigurationManager.ApplicationConfiguration);
 		}
