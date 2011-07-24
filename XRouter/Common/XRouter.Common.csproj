@@ -68,7 +68,7 @@
     <Compile Include="LimitedConcurrencyLevelTaskScheduler.cs" />
     <Compile Include="MessageFlowConfig\ActionConfiguration.cs" />
     <Compile Include="MessageFlowConfig\ActionNodeConfiguration.cs" />
-    <Compile Include="MessageFlowConfig\CbrNode.cs" />
+    <Compile Include="MessageFlowConfig\CbrNodeConfiguration.cs" />
     <Compile Include="MessageFlowConfig\MessageFlowConfiguration.cs" />
     <Compile Include="MessageFlowConfig\NodeConfiguration.cs" />
     <Compile Include="MessageFlowConfig\TerminatorNodeConfiguration.cs" />
