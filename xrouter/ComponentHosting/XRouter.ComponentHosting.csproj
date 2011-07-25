@@ -70,7 +70,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Misc\daemonNT_config.xml" />
+    <Content Include="Misc\daemonNT_config.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Misc\XRouterTest\Samples\sample1 a.xml" />
     <Content Include="Misc\XRouterTest\Samples\sample1 ab.xml" />
     <Content Include="Misc\XRouterTest\Samples\sample1 b.xml" />

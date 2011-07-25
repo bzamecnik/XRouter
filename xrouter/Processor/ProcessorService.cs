@@ -11,6 +11,10 @@ using XRouter.Common.ComponentInterfaces;
 
 namespace XRouter.Processor
 {
+    /// <summary>
+    /// Multi-threaded processor of tokens. It manages several single-threaded
+    /// processors which do the actual processing.
+    /// </summary>
     public class ProcessorService : IProcessorService
     {
         public string Name { get; private set; }
@@ -30,6 +34,8 @@ namespace XRouter.Processor
         private volatile bool isStopping;
         private int tokensCount;
         private ManualResetEvent tokensFinishedEvent;
+
+        #region IProcessorService interface
 
         public void Start(string componentName, IBrokerServiceForProcessor brokerService)
         {
@@ -69,12 +75,6 @@ namespace XRouter.Processor
             }
         }
 
-        public void UpdateConfig(ApplicationConfiguration config)
-        {
-            Configuration = config;
-            serviceForNode.Configuration = config;
-        }
-
         public double GetUtilization()
         {
             return 0.5d;
@@ -97,6 +97,18 @@ namespace XRouter.Processor
                 }
             }
         }
+
+        #endregion
+
+        #region IComponentService interface
+
+        public void UpdateConfig(ApplicationConfiguration config)
+        {
+            Configuration = config;
+            serviceForNode.Configuration = config;
+        }
+
+        #endregion
 
         internal void DecrementTokensCount()
         {
