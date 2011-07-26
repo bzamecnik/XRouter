@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ObjectConfigurator.ItemEditors;
+using ObjectConfigurator.ValueEditors;
 using System.Xml.Linq;
 
 namespace ObjectConfigurator
@@ -20,7 +20,7 @@ namespace ObjectConfigurator
     {
         public ClassMetadata ClassMetadata { get; private set; }
 
-        private List<ItemEditor> itemEditors;
+        private List<ValueEditor> valueEditors;
 
         internal ConfigurationEditor(ClassMetadata classMetadata)
         {
@@ -32,21 +32,26 @@ namespace ObjectConfigurator
 
         public void LoadConfiguration(XDocument config)
         {
-            foreach (var itemEditor in itemEditors) {
-                string itemName = itemEditor.Metadata.Name;
+            for (int i = 0; i < valueEditors.Count; i++) {
+                ValueEditor valueEditor = valueEditors[i];
+                string itemName = ClassMetadata.ConfigurableItems[i].Name;
                 XElement xItem = config.Root.Elements().FirstOrDefault(e => e.Attribute(Configurator.XName_ItemNameAttribute).Value == itemName);
-                itemEditor.ReadFromXElement(xItem);
+                valueEditor.ReadFromXElement(xItem);
             }
         }
 
         public XDocument SaveConfiguration()
         {
             XElement xConfig = new XElement(Configurator.XName_RootElement);
-            foreach (var itemEditor in itemEditors) {
+            for (int i = 0; i < valueEditors.Count; i++) {
+                ValueEditor valueEditor = valueEditors[i];
+                string itemName = ClassMetadata.ConfigurableItems[i].Name;
                 XElement xItem = new XElement(Configurator.XName_ItemElement);
-                xItem.SetAttributeValue(Configurator.XName_ItemNameAttribute, itemEditor.Metadata.Name);
-                itemEditor.WriteToXElement(xItem);
-                xConfig.Add(xItem);
+                xItem.SetAttributeValue(Configurator.XName_ItemNameAttribute, itemName);
+                bool isValid = valueEditor.WriteToXElement(xItem);
+                if (isValid) {
+                    xConfig.Add(xItem);
+                }
             }
 
             XDocument result = new XDocument();
@@ -56,25 +61,41 @@ namespace ObjectConfigurator
 
         private void PrepareItemEditors()
         {
-            itemEditors = new List<ItemEditor>();
+            valueEditors = new List<ValueEditor>();
             foreach (ItemMetadata itemMetadata in ClassMetadata.ConfigurableItems) {
                 uiItemsContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+
+                Border rowBackground = new Border {
+                    Background = new LinearGradientBrush {
+                        GradientStops = {
+                            new GradientStop(Colors.White, -1),
+                            new GradientStop(Colors.AliceBlue, 2)
+                        }
+                    },
+                    Margin = new Thickness(2),
+                    BorderBrush = Brushes.Gainsboro,
+                    BorderThickness = new Thickness(1),
+                    CornerRadius = new CornerRadius(5)
+                };
+                Grid.SetRow(rowBackground, uiItemsContainer.RowDefinitions.Count - 1);
+                Grid.SetColumnSpan(rowBackground, 2);
+                uiItemsContainer.Children.Add(rowBackground);
 
                 FrameworkElement header = CreateHeaderCell(itemMetadata);
                 Grid.SetRow(header, uiItemsContainer.RowDefinitions.Count - 1);
                 Grid.SetColumn(header, 0);
-                header.VerticalAlignment = VerticalAlignment.Center;
+                header.VerticalAlignment = VerticalAlignment.Top;
                 header.HorizontalAlignment = HorizontalAlignment.Right;
-                header.Margin = new Thickness(5, 2, 5, 2);
+                header.Margin = new Thickness(5, 4, 5, 4);
                 uiItemsContainer.Children.Add(header);
 
-                ItemEditor itemEditor = ItemEditor.CreateEditor(itemMetadata);
-                itemEditors.Add(itemEditor);
+                ValueEditor itemEditor = ValueEditor.CreateEditor(itemMetadata.Type, itemMetadata.Validators, itemMetadata.SerializedDefaultValue);
+                valueEditors.Add(itemEditor);
 
                 Grid.SetRow(itemEditor.Representation, uiItemsContainer.RowDefinitions.Count - 1);
                 Grid.SetColumn(itemEditor.Representation, 1);
                 itemEditor.Representation.VerticalAlignment = VerticalAlignment.Center;
-                itemEditor.Representation.Margin = new Thickness(5, 2, 5, 2);
+                itemEditor.Representation.Margin = new Thickness(5, 6, 5, 8);
                 itemEditor.Representation.ToolTip = itemMetadata.UserDescription;
                 uiItemsContainer.Children.Add(itemEditor.Representation);
             }
@@ -83,6 +104,7 @@ namespace ObjectConfigurator
         private FrameworkElement CreateHeaderCell(ItemMetadata itemMetadata)
         {
             Label result = new Label();
+            result.FontWeight = FontWeights.Bold;
             result.Content = itemMetadata.UserName;
             result.ToolTip = itemMetadata.UserDescription;
             return result;

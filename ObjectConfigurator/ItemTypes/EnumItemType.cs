@@ -5,7 +5,7 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.Xml.Linq;
 
-namespace ObjectConfigurator
+namespace ObjectConfigurator.ItemTypes
 {
     class EnumItemType : ItemType
     {
@@ -29,6 +29,11 @@ namespace ObjectConfigurator
             string value = source.Value;
             object result = Enum.Parse(clrType, value);
             return result;
+        }
+
+        public override void WriteDefaultValueToXElement(XElement target)
+        {
+            target.Value = ValueNames.First();
         }
     }
 }

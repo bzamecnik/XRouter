@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Xml.Linq;
 
-namespace ObjectConfigurator
+namespace ObjectConfigurator.ItemTypes
 {
     class BasicItemType : ItemType
     {
@@ -14,7 +14,7 @@ namespace ObjectConfigurator
             typeof(SByte), typeof(Int16), typeof(Int32), typeof(Int64), 
             typeof(Byte), typeof(UInt16), typeof(UInt32), typeof(UInt64),
             typeof(Single), typeof(Double),
-            typeof(Boolean), typeof(String)
+            typeof(Decimal), typeof(Boolean), typeof(String)
         };
 
         public BasicItemType(Type clrType)
@@ -24,18 +24,33 @@ namespace ObjectConfigurator
 
         public override void WriteToXElement(XElement target, object value)
         {
-            string content = ToString(value);
-            target.SetValue(content);
+            string content = ValueToString(value);
+            if (content != null) {
+                target.SetValue(content);
+            }
         }
 
         public override object ReadFromXElement(XElement source)
         {
-            object result = Parse(source.Value);
+            if (source.Value == null) {
+                return null;
+            }
+            object result = ParseValue(source.Value);
             return result;
         }
 
-        public string ToString(object value)
+        public override void WriteDefaultValueToXElement(XElement target)
         {
+            object defaultValue = CreateInstance();
+            WriteToXElement(target, defaultValue);
+        }
+
+        public string ValueToString(object value)
+        {
+            if (value == null) {
+                return null;
+            }
+
             Type clrType = GetClrType();
             string result;
             if (clrType == typeof(string)) {
@@ -48,7 +63,7 @@ namespace ObjectConfigurator
             return result;
         }
 
-        public object Parse(string str)
+        public object ParseValue(string str)
         {
             Type clrType = GetClrType();
             object result;

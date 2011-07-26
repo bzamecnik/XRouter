@@ -87,19 +87,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BasicItemType.cs" />
+    <Compile Include="ItemTypes\BasicItemType.cs" />
     <Compile Include="ClassMetadata.cs" />
-    <Compile Include="CollectionItemType.cs" />
-    <Compile Include="DictionaryItemType.cs" />
-    <Compile Include="EnumItemType.cs" />
-    <Compile Include="ItemEditors\CollectionItemEditor.cs" />
-    <Compile Include="ItemEditors\DictionaryItemEditor.cs" />
-    <Compile Include="ItemEditors\EnumItemEditor.cs" />
-    <Compile Include="ItemType.cs" />
+    <Compile Include="ItemTypes\CollectionItemType.cs" />
+    <Compile Include="ItemTypes\DictionaryItemType.cs" />
+    <Compile Include="ItemTypes\EnumItemType.cs" />
+    <Compile Include="ValueEditors\CollectionValueEditor.cs" />
+    <Compile Include="ValueEditors\DictionaryValueEditor.cs" />
+    <Compile Include="ValueEditors\EnumValueEditor.cs" />
+    <Compile Include="ItemTypes\ItemType.cs" />
     <Compile Include="Tests\Test1\ConfigurableObject.cs" />
     <Compile Include="Tests\Test1\MainControl.xaml.cs">
       <DependentUpon>MainControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ValueValidators\CountRangeValidatorAttribute.cs" />
+    <Compile Include="ValueValidators\RangeValidatorAttribute.cs" />
+    <Compile Include="ValueValidators\RegexValidatorAttribute.cs" />
     <Compile Include="ValueValidators\ValueValidatorAttribute.cs" />
     <Page Include="ConfigurationEditor.xaml">
       <SubType>Designer</SubType>
@@ -118,8 +121,8 @@
     </Compile>
     <Compile Include="ConfigurationItemAttribute.cs" />
     <Compile Include="Configurator.cs" />
-    <Compile Include="ItemEditors\ItemEditor.cs" />
-    <Compile Include="ItemEditors\TextItemEditor.cs" />
+    <Compile Include="ValueEditors\ValueEditor.cs" />
+    <Compile Include="ValueEditors\BasicValueEditor.cs" />
     <Compile Include="ItemMetadata.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -153,6 +156,15 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\delete.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

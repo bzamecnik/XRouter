@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace ObjectConfigurator
+namespace ObjectConfigurator.ItemTypes
 {
     public abstract class ItemType
     {
@@ -27,8 +27,20 @@ namespace ObjectConfigurator
             return clrTypeCache;
         }
 
+        internal object CreateInstance()
+        {
+            Type clrType = GetClrType();
+            if (clrType == typeof(string)) {
+                return string.Empty;
+            }
+
+            object result = Activator.CreateInstance(clrType, true);
+            return result;
+        }
+
         public abstract void WriteToXElement(XElement target, object value);
         public abstract object ReadFromXElement(XElement source);
+        public abstract void WriteDefaultValueToXElement(XElement target);
 
         public static ItemType GetItemType(Type clrType)
         {
@@ -39,21 +51,25 @@ namespace ObjectConfigurator
                 IEnumerable<string> valueNames = Enum.GetValues(clrType).OfType<object>().Select(v => v.ToString());
                 return new EnumItemType(clrType, valueNames);
             }
-            if (typeof(IDictionary<,>).IsAssignableFrom(clrType)) {
+            {
                 Type dictionaryInterface = clrType.GetInterface(typeof(IDictionary<,>).FullName);
-                Type[] genericArgs = dictionaryInterface.GetGenericArguments();
-                Type keyClrType = genericArgs[0];
-                Type valueClrType = genericArgs[1];
-                ItemType keyItemType = GetItemType(keyClrType);
-                ItemType valueItemType = GetItemType(valueClrType);
-                return new DictionaryItemType(clrType, keyItemType, valueItemType);
+                if (dictionaryInterface != null) {
+                    Type[] genericArgs = dictionaryInterface.GetGenericArguments();
+                    Type keyClrType = genericArgs[0];
+                    Type valueClrType = genericArgs[1];
+                    ItemType keyItemType = GetItemType(keyClrType);
+                    ItemType valueItemType = GetItemType(valueClrType);
+                    return new DictionaryItemType(clrType, keyItemType, valueItemType);
+                }
             }
-            if (typeof(ICollection<>).IsAssignableFrom(clrType)) {
+            {
                 Type collectionInterface = clrType.GetInterface(typeof(ICollection<>).FullName);
-                Type[] genericArgs = collectionInterface.GetGenericArguments();
-                Type elementClrType = genericArgs[0];
-                ItemType elementItemType = GetItemType(elementClrType);
-                return new CollectionItemType(clrType, elementItemType);
+                if (collectionInterface != null) {
+                    Type[] genericArgs = collectionInterface.GetGenericArguments();
+                    Type elementClrType = genericArgs[0];
+                    ItemType elementItemType = GetItemType(elementClrType);
+                    return new CollectionItemType(clrType, elementItemType);
+                }
             }
             throw new ArgumentException("Cannot convert CLR type to ItemType.", "clrType");
         }

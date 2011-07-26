@@ -5,18 +5,20 @@ using System.Text;
 using System.Windows.Controls;
 using System.Windows;
 using System.Xml.Linq;
+using ObjectConfigurator.ValueValidators;
+using ObjectConfigurator.ItemTypes;
 
-namespace ObjectConfigurator.ItemEditors
+namespace ObjectConfigurator.ValueEditors
 {
-    class EnumItemEditor : ItemEditor
+    class EnumValueEditor : ValueEditor
     {
         private ComboBox uiValue;
-        private EnumItemType enumItemType;
+        private EnumItemType enumValueType;
 
-        public EnumItemEditor(ItemMetadata metadata)
-            : base(metadata)
+        public EnumValueEditor(ItemType valueType, IEnumerable<ValueValidatorAttribute> validators, XElement serializedDefaultValue)
+            : base(valueType, validators, serializedDefaultValue)
         {
-            enumItemType = (EnumItemType)metadata.Type;
+            enumValueType = (EnumItemType)ValueType;
 
             uiValue = new ComboBox {
                 IsEditable = false,
@@ -24,7 +26,7 @@ namespace ObjectConfigurator.ItemEditors
             };
             Representation = uiValue;
 
-            foreach (string valueName in enumItemType.ValueNames) {
+            foreach (string valueName in enumValueType.ValueNames) {
                 ComboBoxItem item = new ComboBoxItem {
                     Content = valueName,
                     Tag = valueName
@@ -34,16 +36,20 @@ namespace ObjectConfigurator.ItemEditors
             uiValue.SelectedIndex = 0;
         }
 
-        public override void WriteToXElement(XElement target)
+        public override bool WriteToXElement(XElement target)
         {
             string selectedValueName = (string)(((ComboBoxItem)uiValue.SelectedItem).Tag);
             target.Value = selectedValueName;
+            return true;
         }
 
         public override void ReadFromXElement(XElement source)
         {
-            string valueName = source.Value;
+            if (source == null) {
+                source = SerializedDefaultValue;
+            }
 
+            string valueName = source.Value;
             var uiItems = uiValue.Items.OfType<ComboBoxItem>();
             var uiItem = uiItems.FirstOrDefault(i => i.Tag.Equals(valueName));
             if (uiItem != null) {

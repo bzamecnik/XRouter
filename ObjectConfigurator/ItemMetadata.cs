@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using System.Globalization;
 using System.Collections.ObjectModel;
 using ObjectConfigurator.ValueValidators;
+using ObjectConfigurator.ItemTypes;
 
 namespace ObjectConfigurator
 {
@@ -28,7 +29,7 @@ namespace ObjectConfigurator
 
         public string UserDescription { get; private set; }
 
-        public object DefaultValue { get; private set; }
+        public XElement SerializedDefaultValue { get; private set; }
 
         public ReadOnlyCollection<ValueValidatorAttribute> Validators { get; private set; }
 
@@ -60,26 +61,105 @@ namespace ObjectConfigurator
             }
 
             VerifyDefaultValue(clrType, attribute.DefaultValue, Name);
-            DefaultValue = attribute.DefaultValue;
+            SerializedDefaultValue = new XElement(XName.Get("defaultValue"));
+
+            #region In case of dictionary type, convert default array of keys and values into dictionary
+            if ((Type is DictionaryItemType) && (attribute.DefaultValue != null)) {
+                Dictionary<object, object> defaultDictionary = new Dictionary<object, object>();
+                Array defaultArray = (Array)attribute.DefaultValue;
+                for (int i = 0; i < defaultArray.Length / 2; i++) {
+                    object key = defaultArray.GetValue((i * 2) + 0);
+                    object value = defaultArray.GetValue((i * 2) + 1);
+                    defaultDictionary.Add(key, value);
+                }
+                attribute.DefaultValue = defaultDictionary;
+            }
+            #endregion
+
+            Type.WriteToXElement(SerializedDefaultValue, attribute.DefaultValue);
+        }
+
+        public object GetDefaultValue()
+        {
+            object result = Type.ReadFromXElement(SerializedDefaultValue);
+            return result;
         }
 
         private void VerifyDefaultValue(Type expectedType, object defaultValue, string itemName)
         {
-            if (defaultValue != null) {
-                if (!expectedType.IsAssignableFrom(defaultValue.GetType())) {
-                    throw new InvalidOperationException(string.Format("Default value is not assignable to field/property \"{0}\"", itemName));
+            if (Type is CollectionItemType) {
+                if (defaultValue != null) {
+                    Type defaultValueType = defaultValue.GetType();
+                    Type expectedElementType = ((CollectionItemType)Type).ElementType.GetClrType();
+                    if ((!defaultValueType.IsArray) || (!expectedElementType.IsAssignableFrom(defaultValueType.GetElementType()))) {
+                        throw new InvalidOperationException(string.Format("Default value of field/property \"{0}\" must be array which has the same type of elements as has this field/property.", itemName));
+                    }
+                }
+            } else if (Type is DictionaryItemType) {
+                if (defaultValue != null) {
+                    Type defaultValueType = defaultValue.GetType();
+                    if (!defaultValueType.IsArray) {
+                        throw new InvalidOperationException(string.Format("Default value of field/property \"{0}\" must be array containing keys and values in pairs.", itemName));
+                    }
+                    Array defaultValueArray = (Array)defaultValue;
+                    if (defaultValueArray.Length % 2 != 0) {
+                        throw new InvalidOperationException(string.Format("Default value of field/property \"{0}\" must be array containing keys and values in pairs.", itemName));
+                    }
+                    Type expectedKeyType = ((DictionaryItemType)Type).KeyType.GetClrType();
+                    Type expectedValueType = ((DictionaryItemType)Type).ValueType.GetClrType();
+                    for (int i = 0; i < defaultValueArray.Length / 2; i++) {
+                        #region Determine keyType and valueType
+                        object key = defaultValueArray.GetValue((i * 2) + 0);
+                        object value = defaultValueArray.GetValue((i * 2) + 1);
+                        Type keyType;
+                        Type valueType;
+                        if (key != null) {
+                            keyType = key.GetType();
+                        } else {
+                            keyType = typeof(string);
+                        }
+                        if (value != null) {
+                            valueType = value.GetType();
+                        } else {
+                            valueType = typeof(string);
+                        }
+                        #endregion
+                        if (!expectedKeyType.IsAssignableFrom(keyType)) {
+                            throw new InvalidOperationException(string.Format("Default value of field/property \"{0}\" contains key at index {1} which has invalid type {2}. Expected key type is {3}.", itemName, i * 2, keyType, expectedKeyType));
+                        }
+                        if (!expectedValueType.IsAssignableFrom(valueType)) {
+                            throw new InvalidOperationException(string.Format("Default value of field/property \"{0}\" contains value at index {1} which has invalid type {2}. Expected value type is {3}.", itemName, (i * 2) + 1, valueType, expectedValueType));
+                        }
+                    }
                 }
             } else {
-                if (!expectedType.IsClass) {
-                    throw new InvalidOperationException(string.Format("Default value for field/property \"{0}\" is null but the field/property type is not class.", itemName));
+                if (defaultValue != null) {
+                    if (!expectedType.IsAssignableFrom(defaultValue.GetType())) {
+                        throw new InvalidOperationException(string.Format("Default value is not assignable to field/property \"{0}\"", itemName));
+                    }
+                } else {
+                    if (!expectedType.IsClass) {
+                        throw new InvalidOperationException(string.Format("Default value for field/property \"{0}\" is null but the field/property type is not class.", itemName));
+                    }
                 }
             }
 
-            string errorDescription = string.Empty;
-            bool isValid = Validators.All(v => v.IsValid(defaultValue, out errorDescription));
+            string errorDescription;
+            bool isValid = IsValid(defaultValue, out errorDescription);
             if (!isValid) {
                 throw new InvalidOperationException(string.Format("Default value for field/property \"{0}\" does not pass one or more validators. {1}", itemName, errorDescription));
             }
+        }
+
+        public bool IsValid(object value, out string errorDescription)
+        {
+            foreach (var validator in Validators) {
+                if (!validator.IsValid(value, out errorDescription)) {
+                    return false;
+                }
+            }
+            errorDescription = null;
+            return true;
         }
 
         public object GetValue(object target)

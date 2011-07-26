@@ -32,16 +32,20 @@ namespace ObjectConfigurator.Tests.Test1
 
         void MainControl_Loaded(object sender, RoutedEventArgs e)
         {
-            ConfigurableObject obj = new ConfigurableObject();
-            obj.SetValues();
+            try {
+                ConfigurableObject obj = new ConfigurableObject();
+                obj.SetValues();
 
-            savedConfig = Configurator.SaveConfiguration(obj);
-            obj = new ConfigurableObject();
-            Configurator.LoadConfiguration(obj, savedConfig);
+                savedConfig = Configurator.SaveConfiguration(obj);
+                obj = new ConfigurableObject();
+                Configurator.LoadConfiguration(obj, savedConfig);
 
-            editor = Configurator.CreateEditor(typeof(ConfigurableObject));
-            uiEditorContainer.Child = editor;
-            editor.LoadConfiguration(savedConfig);
+                editor = Configurator.CreateEditor(typeof(ConfigurableObject));
+                uiEditorContainer.Child = editor;
+                editor.LoadConfiguration(savedConfig);
+            } catch (Exception ex) {
+                throw;
+            }
         }
 
         private void uiLoad_Click(object sender, RoutedEventArgs e)

@@ -11,7 +11,7 @@ namespace ObjectConfigurator
     /// Configurator. Also enables to provide further information such as a
     /// user-friendly item name and description.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = true, AllowMultiple = false)]
     public sealed class ConfigurationItemAttribute : Attribute
     {
         public string UserName { get; set; }

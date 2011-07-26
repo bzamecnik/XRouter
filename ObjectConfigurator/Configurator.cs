@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Reflection;
+using ObjectConfigurator.ItemTypes;
 
 namespace ObjectConfigurator
 {
@@ -63,15 +64,46 @@ namespace ObjectConfigurator
             Type targetType = targetObject.GetType();
             ClassMetadata classMetadata = new ClassMetadata(targetType);
 
+            List<ItemMetadata> unsetItems = new List<ItemMetadata>(classMetadata.ConfigurableItems);
+
             var xItems = config.Root.Elements(XName_ItemElement);
             foreach (XElement xItem in xItems) {
                 string name = xItem.Attribute(XName_ItemNameAttribute).Value;
                 ItemMetadata item = classMetadata.ConfigurableItems.FirstOrDefault(i => i.Name == name);
                 if (item != null) {
+                    unsetItems.Remove(item);
                     object value = item.ReadFromXElement(xItem);
                     item.SetValue(targetObject, value);
                 }
             }
+
+            #region Set default values for unset items
+            foreach (ItemMetadata item in unsetItems) {
+                object defaultValue;
+
+                if (item.Type is CollectionItemType) {
+                    CollectionItemType collectionItemType = (CollectionItemType)item.Type;
+                    defaultValue = collectionItemType.CreateInstance();
+                    foreach (object element in (Array)item.GetDefaultValue()) {
+                        collectionItemType.AddToCollection(defaultValue, element);
+                    }
+                } 
+                else if (item.Type is DictionaryItemType) {
+                    DictionaryItemType dictionaryItemType = (DictionaryItemType)item.Type;
+                    defaultValue = dictionaryItemType.CreateInstance();
+                    foreach (object pair in (Array)item.GetDefaultValue()) {
+                        object key, value;
+                        dictionaryItemType.ExtractKeyAndValueFromPair(pair, out key, out value);
+                        dictionaryItemType.AddToDictionary(defaultValue, key, value);
+                    }
+                } 
+                else {
+                    defaultValue = item.GetDefaultValue();
+                }
+
+                item.SetValue(targetObject, defaultValue);
+            }
+            #endregion
         }
 
         public static ConfigurationEditor CreateEditor(Type targetType)
