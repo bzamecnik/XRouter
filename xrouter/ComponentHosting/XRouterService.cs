@@ -12,6 +12,7 @@ using XRouter.Common.MessageFlowConfig;
 using XRouter.Processor.BuiltInActions;
 using System.Xml.Linq;
 using XRouter.Common.Xrm;
+using XRouter.Processor.MessageFlowBuilding;
 
 namespace XRouter.ComponentHosting
 {
@@ -49,22 +50,22 @@ namespace XRouter.ComponentHosting
             var config = broker.GetConfiguration();
 
             #region Create message flow
-            var terminator = CreateTerminator("termination");
+            var terminator = MessageFlowBuilder.CreateTerminator("termination");
 
             #region Sample 1
-            var sample1_sendToC = CreateSender("sample1_sendToC", inputMessage: "input", outputEndpoint: "OutC", nextNode: terminator);
-            var sample1_containsC = CreateCbr("sample1_containsC", testedMessage: "input", defaultTarget: terminator, cases: new CbrCase("schematron_sample1_contains_C", sample1_sendToC));
-            var sample1_sendToB = CreateSender("sample1_sendToB", inputMessage: "input", outputEndpoint: "OutB", nextNode: sample1_containsC);
-            var sample1_containsB = CreateCbr("sample1_containsB", testedMessage: "input", defaultTarget: sample1_containsC, cases: new CbrCase("schematron_sample1_contains_B", sample1_sendToB));
-            var sample1_sendToA = CreateSender("sample1_sendToA", inputMessage: "input", outputEndpoint: "OutA", nextNode: sample1_containsB);
-            var sample1_containsA = CreateCbr("sample1_containsA", testedMessage: "input", defaultTarget: sample1_containsB, cases: new CbrCase("schematron_sample1_contains_A", sample1_sendToA));
+            var sample1_sendToC = MessageFlowBuilder.CreateSender("sample1_sendToC", inputMessage: "input", outputEndpoint: "OutC", nextNode: terminator);
+            var sample1_containsC = MessageFlowBuilder.CreateCbr("sample1_containsC", testedMessage: "input", defaultTarget: terminator, cases: new CbrCase("schematron_sample1_contains_C", sample1_sendToC));
+            var sample1_sendToB = MessageFlowBuilder.CreateSender("sample1_sendToB", inputMessage: "input", outputEndpoint: "OutB", nextNode: sample1_containsC);
+            var sample1_containsB = MessageFlowBuilder.CreateCbr("sample1_containsB", testedMessage: "input", defaultTarget: sample1_containsC, cases: new CbrCase("schematron_sample1_contains_B", sample1_sendToB));
+            var sample1_sendToA = MessageFlowBuilder.CreateSender("sample1_sendToA", inputMessage: "input", outputEndpoint: "OutA", nextNode: sample1_containsB);
+            var sample1_containsA = MessageFlowBuilder.CreateCbr("sample1_containsA", testedMessage: "input", defaultTarget: sample1_containsB, cases: new CbrCase("schematron_sample1_contains_A", sample1_sendToA));
             #endregion
 
             #region Sample 2
-            var sample2_sendToA = CreateSender("sample2_sendToA", inputMessage: "input", outputEndpoint: "OutA", nextNode: terminator);
-            var sample2_sendToB = CreateSender("sample2_sendToB", inputMessage: "input", outputEndpoint: "OutB", nextNode: terminator);
-            var sample2_sendToC = CreateSender("sample2_sendToC", inputMessage: "input", outputEndpoint: "OutC", nextNode: terminator);
-            var sample2_priceSumSwitch = CreateCbr("sample2_priceSumSwitch", testedMessage: "input", defaultTarget: terminator, cases: new[] {
+            var sample2_sendToA = MessageFlowBuilder.CreateSender("sample2_sendToA", inputMessage: "input", outputEndpoint: "OutA", nextNode: terminator);
+            var sample2_sendToB = MessageFlowBuilder.CreateSender("sample2_sendToB", inputMessage: "input", outputEndpoint: "OutB", nextNode: terminator);
+            var sample2_sendToC = MessageFlowBuilder.CreateSender("sample2_sendToC", inputMessage: "input", outputEndpoint: "OutC", nextNode: terminator);
+            var sample2_priceSumSwitch = MessageFlowBuilder.CreateCbr("sample2_priceSumSwitch", testedMessage: "input", defaultTarget: terminator, cases: new[] {
                 new CbrCase("schematron_sample2_targetA", sample2_sendToA),
                 new CbrCase("schematron_sample2_targetB", sample2_sendToB),
                 new CbrCase("schematron_sample2_targetC", sample2_sendToC)
@@ -72,18 +73,18 @@ namespace XRouter.ComponentHosting
             #endregion
 
             #region Sample 3
-            var sample3_sendToA = CreateSender("sample3_sendToA", inputMessage: "result", outputEndpoint: "OutA", nextNode: terminator);
-            var sample3_sendToB = CreateSender("sample3_sendToB", inputMessage: "result", outputEndpoint: "OutB", nextNode: terminator);
-            var sample3_sendToC = CreateSender("sample3_sendToC", inputMessage: "result", outputEndpoint: "OutC", nextNode: terminator);
-            var sample3_targetSwitch = CreateCbr("sample3_targetSwitch", testedMessage: "input", defaultTarget: terminator, cases: new[] {
+            var sample3_sendToA = MessageFlowBuilder.CreateSender("sample3_sendToA", inputMessage: "result", outputEndpoint: "OutA", nextNode: terminator);
+            var sample3_sendToB = MessageFlowBuilder.CreateSender("sample3_sendToB", inputMessage: "result", outputEndpoint: "OutB", nextNode: terminator);
+            var sample3_sendToC = MessageFlowBuilder.CreateSender("sample3_sendToC", inputMessage: "result", outputEndpoint: "OutC", nextNode: terminator);
+            var sample3_targetSwitch = MessageFlowBuilder.CreateCbr("sample3_targetSwitch", testedMessage: "input", defaultTarget: terminator, cases: new[] {
                 new CbrCase("schematron_sample3_targetA", sample3_sendToA),
                 new CbrCase("schematron_sample3_targetB", sample3_sendToB),
                 new CbrCase("schematron_sample3_targetC", sample3_sendToC)
             });
-            var sample3_transform = CreateTransformation("sample3_transform", xslt: "xslt_sample3", inputMessage: "input", outputMessage: "result", nextNode: sample3_targetSwitch);
+            var sample3_transform = MessageFlowBuilder.CreateTransformation("sample3_transform", xslt: "xslt_sample3", inputMessage: "input", outputMessage: "result", nextNode: sample3_targetSwitch);
             #endregion
 
-            var mainSampleSwitch = CreateCbr("sampleRecognition", testedMessage: "input", defaultTarget: terminator, cases: new[] {
+            var mainSampleSwitch = MessageFlowBuilder.CreateCbr("sampleRecognition", testedMessage: "input", defaultTarget: terminator, cases: new[] {
                 new CbrCase("schematron_sample1_detection", sample1_containsA),
                 new CbrCase("schematron_sample2_detection", sample2_priceSumSwitch),
                 new CbrCase("schematron_sample3_detection", sample3_transform)
@@ -104,59 +105,6 @@ namespace XRouter.ComponentHosting
             config.SetCurrentMessageFlowGuid(messageFlowConfig.Guid);
             broker.ChangeConfiguration(config);
         }
-
-        #region Message flow  creation support
-        private TerminatorNodeConfiguration CreateTerminator(string name)
-        {
-            return new TerminatorNodeConfiguration() { Name = name, IsReturningOutput = false };
-        }
-
-        private ActionNodeConfiguration CreateSender(string name, string inputMessage, string outputEndpoint, NodeConfiguration nextNode)
-        {
-            return new ActionNodeConfiguration() {
-               Name = name, NextNode = nextNode, Actions = {
-                    new ActionConfiguration() {
-                        PluginTypeFullName = typeof(SendMessageAction).FullName,
-                        PluginConfiguration = new SerializableXDocument(XDocument.Parse("<config input='"+inputMessage+"' output='"+outputEndpoint+"' />"))
-                    }
-                }
-            };
-        }
-
-        private ActionNodeConfiguration CreateTransformation(string name, string xslt, string inputMessage, string outputMessage, NodeConfiguration nextNode)
-        {
-            return new ActionNodeConfiguration() {
-                Name = name, NextNode = nextNode, Actions = { 
-                    new ActionConfiguration() { 
-                        PluginTypeFullName = typeof(XsltTransformationAction).FullName,
-                        PluginConfiguration = new SerializableXDocument(XDocument.Parse("<config xslt='"+xslt+"' input='"+inputMessage+"' output='"+outputMessage+"' />"))
-                    }
-                }
-            };
-        }
-
-        private CbrNodeConfiguration CreateCbr(string name, string testedMessage, NodeConfiguration defaultTarget, params CbrCase[] cases)
-        {
-            var testedMessageSelection = new TokenSelection("/token/messages/message[@name='" + testedMessage + "']/*[1]");
-            var result = new CbrNodeConfiguration() { Name = name, TestedSelection = testedMessageSelection, DefaultTarget = defaultTarget };
-            foreach (CbrCase cbrCase in cases) {
-                result.Branches.Add(new XrmUri("//item[@name='" + cbrCase.Schematron + "']"), cbrCase.TargetNode);
-            }
-            return result;
-        }
-
-        private class CbrCase
-        {
-            public string Schematron { get; private set; }
-            public NodeConfiguration TargetNode { get; private set; }
-
-            public CbrCase(string schematron, NodeConfiguration targetNode)
-            {
-                Schematron = schematron;
-                TargetNode = targetNode;
-            }
-        }
-        #endregion
 
         protected override void OnStop(OnStopServiceArgs args)
         {

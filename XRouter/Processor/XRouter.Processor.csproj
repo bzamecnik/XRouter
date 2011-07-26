@@ -46,6 +46,8 @@
     <Compile Include="BuiltInActions\XsltTransformationAction.cs" />
     <Compile Include="IActionPlugin.cs" />
     <Compile Include="IProcessorServiceForAction.cs" />
+    <Compile Include="MessageFlowBuilding\CbrCase.cs" />
+    <Compile Include="MessageFlowBuilding\MessageFlowBuilder.cs" />
     <Compile Include="MessageFlowParts\ActionNode.cs" />
     <Compile Include="MessageFlowParts\CbrNode.cs" />
     <Compile Include="MessageFlowParts\MessageFlow.cs" />
