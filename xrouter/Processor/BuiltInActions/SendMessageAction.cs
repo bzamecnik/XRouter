@@ -16,7 +16,7 @@ namespace XRouter.Processor.BuiltInActions
         public XElement XConfig { get; set; }
 
         private string targetGatewayName;
-        private string targetAdapternName;
+        private string targetAdapterName;
         private string targetEndpointName;
 
         private TokenSelection messageSelection;
@@ -32,7 +32,7 @@ namespace XRouter.Processor.BuiltInActions
 
             #region Emulate reading configuration (will be automatic later)
             targetGatewayName = "gateway1";
-            targetAdapternName = "directoryAdapter";
+            targetAdapterName = "directoryAdapter";
             targetEndpointName = XConfig.Attribute(XName.Get("output")).Value;
 
             messageSelection = new TokenSelection("token/messages/message[@name='" + XConfig.Attribute(XName.Get("input")).Value + "']/*[1]");
@@ -40,7 +40,7 @@ namespace XRouter.Processor.BuiltInActions
             resultMessageName = string.Empty;
             #endregion
 
-            targetEndpoint = new EndpointAddress(targetGatewayName, targetAdapternName, targetEndpointName);
+            targetEndpoint = new EndpointAddress(targetGatewayName, targetAdapterName, targetEndpointName);
         }
 
         public void Evaluate(Token token)

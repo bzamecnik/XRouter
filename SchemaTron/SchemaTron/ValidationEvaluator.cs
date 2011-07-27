@@ -110,6 +110,8 @@ namespace SchemaTron
 
         private bool IsContextUsed(XPathNavigator contextNode)
         {
+            //// TODO: the following foreach could be simplified by using Exists():
+            // return usedContext.Exists((nav) => contextNode.ComparePosition(nav) == System.Xml.XmlNodeOrder.Same);
             foreach (XPathNavigator nav in this.usedContext)
             {
                 if (contextNode.ComparePosition(nav) == System.Xml.XmlNodeOrder.Same)
