@@ -84,9 +84,6 @@ namespace ObjectConfigurator
                 FrameworkElement header = CreateHeaderCell(itemMetadata);
                 Grid.SetRow(header, uiItemsContainer.RowDefinitions.Count - 1);
                 Grid.SetColumn(header, 0);
-                header.VerticalAlignment = VerticalAlignment.Top;
-                header.HorizontalAlignment = HorizontalAlignment.Right;
-                header.Margin = new Thickness(5, 4, 5, 4);
                 uiItemsContainer.Children.Add(header);
 
                 ValueEditor itemEditor = ValueEditor.CreateEditor(itemMetadata.Type, itemMetadata.Validators, itemMetadata.SerializedDefaultValue);
@@ -104,6 +101,9 @@ namespace ObjectConfigurator
         private FrameworkElement CreateHeaderCell(ItemMetadata itemMetadata)
         {
             Label result = new Label();
+            result.Margin = new Thickness(10, 10, 10, 0);
+            result.VerticalAlignment = VerticalAlignment.Top;
+            result.HorizontalAlignment = HorizontalAlignment.Right;
             result.FontWeight = FontWeights.Bold;
             result.Content = itemMetadata.UserName;
             result.ToolTip = itemMetadata.UserDescription;
