@@ -37,7 +37,7 @@ namespace SimpleDiagrammer
         {
             InitializeComponent();
 
-            layoutAlgorithm = new SimpleLayout();
+            layoutAlgorithm = new ForceDirectedLayout();
 
             Canvas = uiCanvas;
             Nodes = new List<Node>();

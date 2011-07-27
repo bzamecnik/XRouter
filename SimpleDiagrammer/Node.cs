@@ -24,9 +24,7 @@ namespace SimpleDiagrammer
         }
 
         public Size Size {
-            get {
-                return new Size(UIFrame.ActualWidth, UIFrame.ActualHeight);
-            }
+            get { return new Size(UIFrame.ActualWidth, UIFrame.ActualHeight); }
         }
 
         private FrameworkElement dragArea;

@@ -1,20 +1,22 @@
-﻿using System;
+﻿//source of inspiration: http://www.brad-smith.info/blog/archives/129
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using SimpleDiagrammer.Support;
 
 namespace SimpleDiagrammer.Layouts.ForceDirected
 {
-    class SimpleLayout : LayoutAlgorithm
+    class ForceDirectedLayout : LayoutAlgorithm
     {
         private static readonly Random random = new Random();
 
         private const double ATTRACTION_CONSTANT = 0.1;		// spring constant
-        private const double REPULSION_CONSTANT = 10000;	// charge constant
+        private const double REPULSION_CONSTANT = 5000;	// charge constant
 
         private const double DEFAULT_DAMPING = 0.5;
-        private const int DEFAULT_SPRING_LENGTH = 100;
+        private const int DEFAULT_SPRING_LENGTH = 120;
 
         private Dictionary<Node, NodeLayoutInfo> nodeToLayoutInfo = new Dictionary<Node, NodeLayoutInfo>();
 
@@ -38,21 +40,21 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
             }
             foreach (Node node in nodes) {
                 if (!nodeToLayoutInfo.ContainsKey(node)) {
-                    NodeLayoutInfo layoutInfo = new NodeLayoutInfo(node, new MyVector(), new Point());
+                    NodeLayoutInfo layoutInfo = new NodeLayoutInfo(node, new Vector(), new Point());
                     nodeToLayoutInfo.Add(node, layoutInfo);
                 }
             }
             #endregion
 
-            double totalDisplacement = 0;
             foreach (NodeLayoutInfo current in nodeToLayoutInfo.Values) {
-                // express the node's current position as a vector, relative to the origin
-                MyVector currentPosition = new MyVector(CalcDistance(new Point(), current.Node.Location), GetBearingAngle(new Point(), current.Node.Location));
-                MyVector netForce = new MyVector(0, 0);
+                Point currentPosition = current.Node.Location;
+                Vector netForce = new Vector(0, 0);
 
                 // determine repulsion between nodes
                 foreach (Node other in nodes) {
-                    if (other != current.Node) netForce += CalcRepulsionForce(current.Node, other);
+                    if (other != current.Node) {
+                        netForce += CalcRepulsionForce(current.Node, other);
+                    }
                 }
 
                 // determine attraction caused by connections
@@ -60,19 +62,22 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
                     netForce += CalcAttractionForce(current.Node, child, DEFAULT_SPRING_LENGTH);
                 }
                 foreach (Node parent in nodes) {
-                    if (parent.GetAdjacentNodes().Contains(current.Node)) netForce += CalcAttractionForce(current.Node, parent, DEFAULT_SPRING_LENGTH);
+                    if (parent.GetAdjacentNodes().Contains(current.Node)) {
+                        netForce += CalcAttractionForce(current.Node, parent, DEFAULT_SPRING_LENGTH);
+                    }
                 }
 
                 // apply net force to node velocity
                 current.Velocity = (current.Velocity + netForce) * DEFAULT_DAMPING;
 
-                // apply velocity to node position
-                current.NextPosition = (currentPosition + current.Velocity).ToPoint();
+                if (current.Velocity.Length >= 1) {
+                    // apply velocity to node position
+                    current.NextPosition = currentPosition + current.Velocity;
+                }
             }
 
-            // move nodes to resultant positions (and calculate total displacement)
+            // move nodes to resultant positions
             foreach (NodeLayoutInfo current in nodeToLayoutInfo.Values) {
-                totalDisplacement += CalcDistance(current.Node.Location, current.NextPosition);
                 current.Node.Location = current.NextPosition;
             }
         }
@@ -84,28 +89,16 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
         /// <param name="y">The node creating the force.</param>
         /// <param name="springLength">The length of the spring, in pixels.</param>
         /// <returns>A Vector representing the attraction force.</returns>
-        private MyVector CalcAttractionForce(Node x, Node y, double springLength)
+        private Vector CalcAttractionForce(Node x, Node y, double springLength)
         {
-            double proximity = Math.Max(CalcDistance(x.Location, y.Location), 1d);
+            //double proximity = Math.Max(GetNodeDistance(x, y), 1);
+            double proximity = Math.Max(CalcDistance(x.Location, y.Location), 1);
 
             // Hooke's Law: F = -kx
             double force = ATTRACTION_CONSTANT * Math.Max(proximity - springLength, 0);
             double angle = GetBearingAngle(x.Location, y.Location);
 
-            return new MyVector(force, angle);
-        }
-
-        /// <summary>
-        /// Calculates the distance between two points.
-        /// </summary>
-        /// <param name="a">The first point.</param>
-        /// <param name="b">The second point.</param>
-        /// <returns>The pixel distance between the two points.</returns>
-        public static double CalcDistance(Point a, Point b)
-        {
-            double xDist = (a.X - b.X);
-            double yDist = (a.Y - b.Y);
-            return Math.Sqrt(Math.Pow(xDist, 2) + Math.Pow(yDist, 2));
+            return CreateVectorFromLengthAndDirection(force, angle);
         }
 
         /// <summary>
@@ -114,15 +107,23 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
         /// <param name="x">The node that the force is acting on.</param>
         /// <param name="y">The node creating the force.</param>
         /// <returns>A Vector representing the repulsion force.</returns>
-        private MyVector CalcRepulsionForce(Node x, Node y)
+        private Vector CalcRepulsionForce(Node x, Node y)
         {
-            double proximity = Math.Max(CalcDistance(x.Location, y.Location), 1);
+            double proximity = Math.Max(GetNodeDistance(x, y), 20);
 
             // Coulomb's Law: F = k(Qq/r^2)
             double force = -(REPULSION_CONSTANT / Math.Pow(proximity, 2));
             double angle = GetBearingAngle(x.Location, y.Location);
 
-            return new MyVector(force, angle);
+            Rect rect1 = new Rect(x.Location, x.Size);
+            Rect rect2 = new Rect(y.Location, y.Size);
+
+            return CreateVectorFromLengthAndDirection(force, angle);
+        }
+
+        private double GetNodeDistance(Node node1, Node node2)
+        {
+            return MathUtils.GetLinkLengthBetweenRectangles(new Rect(node1.Location, node1.Size), new Rect(node2.Location, node2.Size));
         }
 
         /// <summary>
@@ -155,13 +156,33 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
         }
 
         /// <summary>
+        /// Calculates the distance between two points.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <returns>The pixel distance between the two points.</returns>
+        public double CalcDistance(Point a, Point b)
+        {
+            double xDist = (a.X - b.X);
+            double yDist = (a.Y - b.Y);
+            return Math.Sqrt(Math.Pow(xDist, 2) + Math.Pow(yDist, 2));
+        }
+
+        private Vector CreateVectorFromLengthAndDirection(double length, double direction)
+        {
+            double x = length * Math.Cos((Math.PI / 180.0) * direction);
+            double y = length * Math.Sin((Math.PI / 180.0) * direction);
+            return new Vector(x, y);
+        }
+
+        /// <summary>
         /// Private inner class used to track the node's position and velocity during simulation.
         /// </summary>
         private class NodeLayoutInfo
         {
 
             public Node Node;			// reference to the node in the simulation
-            public MyVector Velocity;		// the node's current velocity, expressed in vector form
+            public Vector Velocity;		// the node's current velocity, expressed in vector form
             public Point NextPosition;	// the node's position after the next iteration
 
             /// <summary>
@@ -170,7 +191,7 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
             /// <param name="node"></param>
             /// <param name="velocity"></param>
             /// <param name="nextPosition"></param>
-            public NodeLayoutInfo(Node node, MyVector velocity, Point nextPosition)
+            public NodeLayoutInfo(Node node, Vector velocity, Point nextPosition)
             {
                 Node = node;
                 Velocity = velocity;

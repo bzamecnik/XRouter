@@ -28,12 +28,14 @@ namespace XRouter.Gui
 		public MainWindow()
         {
             #region Run xrouter server
-            string binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            string daemonNTPath = System.IO.Path.Combine(binPath, @"..\..\..\ComponentHosting\bin\debug\DaemonNT.exe");
-            var serverProcesss = new System.Diagnostics.ProcessStartInfo(daemonNTPath, "debug xrouter");
-            serverProcesss.WorkingDirectory = System.IO.Path.GetDirectoryName(daemonNTPath);
-            System.Diagnostics.Process.Start(serverProcesss);
-            System.Threading.Thread.Sleep(2000);
+            if (System.Diagnostics.Process.GetProcessesByName("DaemonNT").Length == 0) {
+                string binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                string daemonNTPath = System.IO.Path.Combine(binPath, @"..\..\..\ComponentHosting\bin\debug\DaemonNT.exe");
+                var serverProcesss = new System.Diagnostics.ProcessStartInfo(daemonNTPath, "debug xrouter");
+                serverProcesss.WorkingDirectory = System.IO.Path.GetDirectoryName(daemonNTPath);
+                System.Diagnostics.Process.Start(serverProcesss);
+                System.Threading.Thread.Sleep(2000);
+            }
             #endregion
 
             InitializeComponent();

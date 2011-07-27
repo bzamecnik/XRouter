@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Shapes;
 using System.Windows.Controls;
 using System.Windows.Media;
+using SimpleDiagrammer.Support;
 
 namespace SimpleDiagrammer
 {
@@ -93,7 +94,7 @@ namespace SimpleDiagrammer
             Point sourceLocation = new Point(Canvas.GetLeft(Source.UIFrame), Canvas.GetTop(Source.UIFrame));
             Point targetLocation = new Point(Canvas.GetLeft(Target.UIFrame), Canvas.GetTop(Target.UIFrame));
             Point sourceEndPoint, targetEndPoint;
-            ComputeLinkEnds(new Rect(sourceLocation, Source.Size), new Rect(targetLocation, Target.Size), 0, out sourceEndPoint, out targetEndPoint);
+            MathUtils.ComputeLinkBetweenRectangles(new Rect(sourceLocation, Source.Size), new Rect(targetLocation, Target.Size), 0, out sourceEndPoint, out targetEndPoint);
             sourceEndPoint.Y -= UILink.ActualHeight / 2d;
             targetEndPoint.Y -= UILink.ActualHeight / 2d;
 
@@ -128,62 +129,5 @@ namespace SimpleDiagrammer
             };
             return result;
         }
-
-        #region Support
-
-        private void ComputeLinkEnds(Rect sourceBounds, Rect targetBounds, double positionOffset, out Point sourceEndPoint, out Point targetEndPoint)
-        {
-            Point sourceCenter = new Point(sourceBounds.X + sourceBounds.Width / 2, sourceBounds.Y + sourceBounds.Height / 2);
-            Point targetCenter = new Point(targetBounds.X + targetBounds.Width / 2, targetBounds.Y + targetBounds.Height / 2);
-            Vector direction = targetCenter - sourceCenter;
-
-            Vector normal = new Vector(-direction.Y, direction.X);
-            normal.Normalize();
-            Point offsettedSourceCenter = sourceCenter + (normal * positionOffset);
-            Point offsettedTargetCenter = targetCenter + (normal * positionOffset);
-
-            sourceEndPoint = GetRectangleAndLineIntersection(sourceBounds, offsettedSourceCenter, offsettedTargetCenter);
-            targetEndPoint = GetRectangleAndLineIntersection(targetBounds, offsettedTargetCenter, offsettedSourceCenter);
-        }
-
-        private Point GetRectangleAndLineIntersection(Rect rectangle, Point lineStart, Point lineEnd)
-        {
-            Point result = lineStart;
-            if (GetLinesIntersection(rectangle.TopLeft, rectangle.TopRight, lineStart, lineEnd, ref result)) {
-                return result;
-            }
-            if (GetLinesIntersection(rectangle.TopRight, rectangle.BottomRight, lineStart, lineEnd, ref result)) {
-                return result;
-            }
-            if (GetLinesIntersection(rectangle.BottomRight, rectangle.BottomLeft, lineStart, lineEnd, ref result)) {
-                return result;
-            }
-            if (GetLinesIntersection(rectangle.BottomLeft, rectangle.TopLeft, lineStart, lineEnd, ref result)) {
-                return result;
-            }
-            return result;
-        }
-
-        private bool GetLinesIntersection(Point line1Point1, Point line1Point2, Point line2Point1, Point line2Point2, ref Point intersection)
-        {
-            double q = (line1Point1.Y - line2Point1.Y) * (line2Point2.X - line2Point1.X) - (line1Point1.X - line2Point1.X) * (line2Point2.Y - line2Point1.Y);
-            double d = (line1Point2.X - line1Point1.X) * (line2Point2.Y - line2Point1.Y) - (line1Point2.Y - line1Point1.Y) * (line2Point2.X - line2Point1.X);
-            if (d == 0) {
-                return false;
-            }
-
-            double r = q / d;
-            q = (line1Point1.Y - line2Point1.Y) * (line1Point2.X - line1Point1.X) - (line1Point1.X - line2Point1.X) * (line1Point2.Y - line1Point1.Y);
-            double s = q / d;
-            if (r < 0 || r > 1 || s < 0 || s > 1) {
-                return false;
-            }
-
-            intersection.X = line1Point1.X + (int)(0.5 + r * (line1Point2.X - line1Point1.X));
-            intersection.Y = line1Point1.Y + (int)(0.5 + r * (line1Point2.Y - line1Point1.Y));
-            return true;
-        }
-
-        #endregion
     }
 }

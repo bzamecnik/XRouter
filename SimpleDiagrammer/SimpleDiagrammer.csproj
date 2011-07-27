@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Support\MathUtils.cs" />
     <Compile Include="Tests\Test1\Edge.cs" />
     <Compile Include="Tests\Test1\MainControl.xaml.cs">
       <DependentUpon>MainControl.xaml</DependentUpon>
@@ -88,8 +89,7 @@
     <Compile Include="IInternalGraphPresenter.cs" />
     <Compile Include="IInternalNodePresenter.cs" />
     <Compile Include="Layouts\LayoutAlgorithm.cs" />
-    <Compile Include="Layouts\ForceDirected\MyVector.cs" />
-    <Compile Include="Layouts\ForceDirected\SimpleLayout.cs" />
+    <Compile Include="Layouts\ForceDirected\ForceDirectedLayout.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
