@@ -4,13 +4,22 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using XRouter.Common.ComponentInterfaces;
+using XRouter.Common.MessageFlowConfig;
 using wcf = System.ServiceModel;
 
 namespace XRouter.Test
 {
     public class ConfigurationManager
     {
+        public string BasePath { get; set; }
+
+        public ConfigurationManager()
+        {
+            BasePath = string.Empty;
+        }
+
         public static IBrokerServiceForManagement GetBrokerServiceProxy()
         {
             // NOTE: code taken from XRouter.Gui.ConfigurationManager
@@ -22,13 +31,55 @@ namespace XRouter.Test
         }
 
         /// <summary>
+        /// Modifies the current XRouter configuration with a custom message
+        /// flow and XML resource storage.
+        /// </summary>
+        public static void ReplaceConfiguration(
+            MessageFlowConfiguration messageFlow,
+            XElement xrm)
+        {
+            IBrokerServiceForManagement broker = GetBrokerServiceProxy();
+            ReplaceConfiguration(broker, messageFlow, xrm);
+        }
+
+        /// <summary>
+        /// Modifies the current XRouter configuration with a custom message
+        /// flow and XML resource storage.
+        /// </summary>
+        public static void ReplaceConfiguration(
+            IBrokerServiceForManagement broker,
+            MessageFlowConfiguration messageFlow,
+            XElement xrm)
+        {
+            // load current configuration
+            var configuration = broker.GetConfiguration();
+            var xConfig = configuration.Content.XDocument;
+
+            // remove all message flows
+            xConfig.XPathSelectElement("/configuration/messageflows").RemoveNodes();
+
+            // add current message flow
+            configuration.AddMessageFlow(messageFlow);
+            configuration.SetCurrentMessageFlowGuid(messageFlow.Guid);
+
+            // remove all previous XRM items
+            xConfig.XPathSelectElement("/configuration/xml-resource-storage").RemoveNodes();
+
+            // add needed XRM items
+            configuration.SaveXrmContent(xrm);
+
+            // update the configuration
+            broker.ChangeConfiguration(configuration);
+        }
+
+        /// <summary>
         /// Creates a XML resource storage and loads all requested items
         /// from files into the storage.
         /// </summary>
         /// <param name="resourceNames"></param>
         /// <param name="testName"></param>
         /// <returns></returns>
-        public static XElement LoadXrmItems(IEnumerable<string> resourceNames, string testName)
+        public XElement LoadXrmItems(IEnumerable<string> resourceNames, string testName)
         {
             XElement storage = new XElement("xml-resource-storage");
             foreach (string resource in resourceNames)
@@ -47,16 +98,16 @@ namespace XRouter.Test
         /// <param name="subPath"></param>
         /// <param name="testName"></param>
         /// <returns></returns>
-        private static XDocument LoadXmlFile(string resourceName, string subPath, string testName)
+        private XDocument LoadXmlFile(string resourceName, string subPath, string testName)
         {
             if (!Regex.IsMatch(resourceName, @"[a-zA-Z0-9_\-]+"))
             {
                 throw new ArgumentException();
             }
-            string fileName = string.Format(@"Data\{0}\{1}\{2}.xml", testName, subPath, resourceName);
+            string fileName = Path.Combine(BasePath, string.Format(@"Data\{0}\{1}\{2}.xml", testName, subPath, resourceName));
             if (!File.Exists(fileName))
             {
-                fileName = string.Format(@"Data\Common\{0}\{1}.xml", subPath, resourceName);
+                fileName = Path.Combine(BasePath, string.Format(@"Data\Common\{0}\{1}.xml", subPath, resourceName));
             }
             return XDocument.Load(fileName);
         }
@@ -67,9 +118,9 @@ namespace XRouter.Test
         /// <param name="resourceName"></param>
         /// <param name="testName"></param>
         /// <returns></returns>
-        private static XElement LoadXrmItemFromFile(string resourceName, string testName)
+        private XElement LoadXrmItemFromFile(string resourceName, string testName)
         {
-            XDocument doc = LoadXmlFile(resourceName, @"config\XRM", testName);
+            XDocument doc = LoadXmlFile(resourceName, @"Config\XRM", testName);
             XElement item = new XElement("item");
             item.SetAttributeValue("name", resourceName);
             item.Add(doc.Root);
@@ -82,9 +133,9 @@ namespace XRouter.Test
         /// <param name="resourceName"></param>
         /// <param name="testName"></param>
         /// <returns></returns>
-        public static XElement LoadMessageFlowFromFile(string resourceName, string testName)
+        public XElement LoadMessageFlowFromFile(string resourceName, string testName)
         {
-            XDocument doc = LoadXmlFile(resourceName, @"config\MessageFlow", testName);
+            XDocument doc = LoadXmlFile(resourceName, @"Config\MessageFlow", testName);
             return doc.Root;
         }
     }

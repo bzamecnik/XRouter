@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<menu>
+  <validSinceDate>2011/07/27</validSinceDate>
+  <currency>CZK</currency>
+  <foods>
+    <food id="food0001" category="dinner">
+      <name>Svíčková na smetaně</name>
+      <description>Hovězí svíčková na smetaně s houskovými knedlíky</description>
+      <price>150</price>
+      <amount unit="kg">0.25</amount>
+    </food>
+    <food id="food0002" category="soup">
+      <name>Gulášová polévka</name>
+      <description></description>
+      <price>40</price>
+      <amount unit="l">0.5</amount>
+    </food>
+    <food id="food0003" category="appetizer">
+      <name>Utopenec</name>
+      <description>Utopenec s chlebem a hořčicí</description>
+      <price>40</price>
+      <amount unit="kg">0.15</amount>
+    </food>
+  </foods>
+  <drinks>
+    <drink id="drink0001" category="water" alcoholic="false">
+      <name>Minerání voda</name>
+      <description>v láhvi</description>
+      <price>15</price>
+      <amount unit="l">0.5</amount>
+    </drink>
+    <drink id="drink0002" category="beer" alcoholic="true">
+      <name>Svijanská Desítka 10 %</name>
+      <description>točená</description>
+      <price>20</price>
+      <amount unit="l">0.5</amount>
+    </drink>
+    <drink id="drink0003" category="coffee" alcoholic="false">
+      <name>Espresso</name>
+      <description></description>
+      <price>30</price>
+      <amount unit="l">0.1</amount>
+    </drink>
+    <drink id="drink0004" category="soft_drink" alcoholic="false">
+      <name>Kofola</name>
+      <description>točená</description>
+      <price>25</price>
+      <amount unit="l">0.5</amount>
+    </drink>
+    <drink id="drink0005" category="wine" alcoholic="true">
+      <name>Rosé Špigle-Bočky 2006</name>
+      <description>Němčičky</description>
+      <price>200</price>
+      <amount unit="l">0.75</amount>
+    </drink>
+  </drinks>
+</menu>
