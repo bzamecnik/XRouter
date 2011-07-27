@@ -24,10 +24,10 @@ namespace XRouter.Processor.MessageFlowParts
                 IActionPlugin action = TypeUtils.CreateTypeInstance<IActionPlugin>(actionConfig.PluginTypeFullName);
                 
                 if (action is SendMessageAction) {
-                    ((SendMessageAction)action).XConfig = actionConfig.PluginConfiguration.XDocument.Root;
+                    ((SendMessageAction)action).XConfig = actionConfig.Configuration.XDocument.Root;
                 }
                 if (action is XsltTransformationAction) {
-                    ((XsltTransformationAction)action).XConfig = actionConfig.PluginConfiguration.XDocument.Root;
+                    ((XsltTransformationAction)action).XConfig = actionConfig.Configuration.XDocument.Root;
                 }
 
                 action.Initialize(ProcessorService);

@@ -7,6 +7,7 @@ using XRouter.Processor.BuiltInActions;
 using System.Xml.Linq;
 using XRouter.Common;
 using XRouter.Common.Xrm;
+using ObjectConfigurator;
 
 namespace XRouter.Processor.MessageFlowBuilding
 {
@@ -23,7 +24,8 @@ namespace XRouter.Processor.MessageFlowBuilding
                 Name = name, NextNode = nextNode, Actions = {
                     new ActionConfiguration() {
                         PluginTypeFullName = typeof(SendMessageAction).FullName,
-                        PluginConfiguration = new SerializableXDocument(XDocument.Parse("<config input='"+inputMessage+"' output='"+outputEndpoint+"' />"))
+                        Configuration = new SerializableXDocument(XDocument.Parse("<config input='"+inputMessage+"' output='"+outputEndpoint+"' />")),
+                        ConfigurationMetadata = new ClassMetadata(typeof(SendMessageAction))
                     }
                 }
             };
@@ -35,7 +37,8 @@ namespace XRouter.Processor.MessageFlowBuilding
                 Name = name, NextNode = nextNode, Actions = { 
                     new ActionConfiguration() { 
                         PluginTypeFullName = typeof(XsltTransformationAction).FullName,
-                        PluginConfiguration = new SerializableXDocument(XDocument.Parse("<config xslt='"+xslt+"' input='"+inputMessage+"' output='"+outputMessage+"' />"))
+                        Configuration = new SerializableXDocument(XDocument.Parse("<config xslt='"+xslt+"' input='"+inputMessage+"' output='"+outputMessage+"' />")),
+                        ConfigurationMetadata = new ClassMetadata(typeof(XsltTransformationAction))
                     }
                 }
             };

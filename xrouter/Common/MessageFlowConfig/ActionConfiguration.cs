@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
+using ObjectConfigurator;
 
 namespace XRouter.Common.MessageFlowConfig
 {
@@ -13,6 +14,9 @@ namespace XRouter.Common.MessageFlowConfig
         public string PluginTypeFullName { get; set; }
 
         [DataMember]
-        public SerializableXDocument PluginConfiguration { get; set; }
+        public SerializableXDocument Configuration { get; set; }
+
+        [DataMember]
+        public ClassMetadata ConfigurationMetadata { get; set; }
     }
 }
