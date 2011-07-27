@@ -85,6 +85,7 @@ namespace ObjectConfigurator.ValueEditors
         {
             AddListItemForElement(xDefaultElementValue);
             CheckErrors();
+            RaiseValueChanged();
         }
 
         public override bool WriteToXElement(XElement target)
@@ -121,6 +122,7 @@ namespace ObjectConfigurator.ValueEditors
         {
             ValueEditor elementEditor = ValueEditor.CreateEditor(collectionValueType.ElementType, new ValueValidatorAttribute[0], xDefaultElementValue);
             elementEditor.ReadFromXElement(xElement);
+            elementEditor.ValueChanged += delegate { RaiseValueChanged(); };
 
             Button uiRemove = new Button {
                 Content = new Image {
@@ -134,6 +136,7 @@ namespace ObjectConfigurator.ValueEditors
                 Border itemToRemove = uiItems.Children.OfType<Border>().First(i => i.Tag == elementEditor);
                 uiItems.Children.Remove(itemToRemove);
                 CheckErrors();
+                RaiseValueChanged();
             };
             Grid.SetColumn(uiRemove, 1);
 

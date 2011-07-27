@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using System.Windows;
 using ObjectConfigurator.ValueValidators;
 using ObjectConfigurator.ItemTypes;
+using System.Windows.Input;
 
 namespace ObjectConfigurator.ValueEditors
 {
@@ -34,6 +35,8 @@ namespace ObjectConfigurator.ValueEditors
 
             uiText = new TextBox();
             uiText.TextChanged += uiText_TextChanged;
+            uiText.KeyDown += uiText_KeyDown;
+            uiText.LostFocus += uiText_LostFocus;
             Grid.SetColumn(uiText, 0);
             grid.Children.Add(uiText);
 
@@ -51,6 +54,24 @@ namespace ObjectConfigurator.ValueEditors
         private void uiText_TextChanged(object sender, TextChangedEventArgs e)
         {
             CheckError();
+        }
+
+        private void uiText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter) {
+                object value;
+                if (TryGetValue(out value)) {
+                    RaiseValueChanged();
+                }
+            }
+        }
+
+        private void uiText_LostFocus(object sender, RoutedEventArgs e)
+        {
+            object value;
+            if (TryGetValue(out value)) {
+                RaiseValueChanged();
+            }
         }
 
         private void CheckError()

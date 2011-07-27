@@ -20,6 +20,8 @@ namespace ObjectConfigurator
     {
         public ClassMetadata ClassMetadata { get; private set; }
 
+        public event Action ConfigurationChanged = delegate { };
+
         private List<ValueEditor> valueEditors;
 
         internal ConfigurationEditor(ClassMetadata classMetadata)
@@ -87,6 +89,7 @@ namespace ObjectConfigurator
                 uiItemsContainer.Children.Add(header);
 
                 ValueEditor itemEditor = ValueEditor.CreateEditor(itemMetadata.Type, itemMetadata.Validators, itemMetadata.SerializedDefaultValue);
+                itemEditor.ValueChanged += delegate { ConfigurationChanged(); };
                 valueEditors.Add(itemEditor);
 
                 Grid.SetRow(itemEditor.Representation, uiItemsContainer.RowDefinitions.Count - 1);

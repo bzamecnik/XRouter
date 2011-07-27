@@ -88,6 +88,7 @@ namespace ObjectConfigurator.ValueEditors
         {
             AddListItemForPair(xDefaultKey, xDefaultValue);
             CheckErrors();
+            RaiseValueChanged();
         }
 
         public override bool WriteToXElement(XElement target)
@@ -133,8 +134,12 @@ namespace ObjectConfigurator.ValueEditors
         {
             ValueEditor keyEditor = ValueEditor.CreateEditor(dictionaryValueType.KeyType, new ValueValidatorAttribute[0], xDefaultKey);
             keyEditor.ReadFromXElement(xKey);
+            keyEditor.ValueChanged += delegate { RaiseValueChanged(); };
+
             ValueEditor valueEditor = ValueEditor.CreateEditor(dictionaryValueType.ValueType, new ValueValidatorAttribute[0], xDefaultValue);
             valueEditor.ReadFromXElement(xValue);
+            valueEditor.ValueChanged += delegate { RaiseValueChanged(); };
+
             var editorsPair = new KeyValuePair<ValueEditor, ValueEditor>(keyEditor, valueEditor);
 
             Button uiRemove = new Button {
@@ -146,10 +151,10 @@ namespace ObjectConfigurator.ValueEditors
                 Margin = new Thickness(2, 0, 0, 0)
             };
             uiRemove.Click += delegate {
-                
                 Border itemToRemove = uiItems.Children.OfType<Border>().First(i => editorsPair.Equals(i.Tag));
                 uiItems.Children.Remove(itemToRemove);
                 CheckErrors();
+                RaiseValueChanged();
             };
             Grid.SetColumn(uiRemove, 2);
 

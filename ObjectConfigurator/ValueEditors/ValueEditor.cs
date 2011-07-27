@@ -20,6 +20,8 @@ namespace ObjectConfigurator.ValueEditors
 
         public FrameworkElement Representation { get; protected set; }
 
+        public event Action ValueChanged = delegate { };
+
         protected ValueEditor(ItemType valueType, IEnumerable<ValueValidatorAttribute> validators, XElement serializedDefaultValue)
         {
             ValueType = valueType;
@@ -42,6 +44,11 @@ namespace ObjectConfigurator.ValueEditors
                 return new DictionaryValueEditor(valueType, validators, serializedDefaultValue);
             }
             throw new InvalidOperationException("Unknown item type.");
+        }
+
+        protected void RaiseValueChanged()
+        {
+            ValueChanged();
         }
 
         protected bool IsValid(object value, out string errorDescription)

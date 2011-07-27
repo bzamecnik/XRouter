@@ -24,6 +24,8 @@ namespace ObjectConfigurator.ValueEditors
                 IsEditable = false,
                 HorizontalAlignment = HorizontalAlignment.Left
             };
+            uiValue.SelectionChanged += uiValue_SelectionChanged;
+
             Representation = uiValue;
 
             foreach (string valueName in enumValueType.ValueNames) {
@@ -34,6 +36,11 @@ namespace ObjectConfigurator.ValueEditors
                 uiValue.Items.Add(item);
             }
             uiValue.SelectedIndex = 0;
+        }
+
+        private void uiValue_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            RaiseValueChanged();
         }
 
         public override bool WriteToXElement(XElement target)
