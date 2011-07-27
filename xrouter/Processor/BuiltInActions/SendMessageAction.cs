@@ -5,6 +5,7 @@ using System.Text;
 using XRouter.Common;
 using XRouter.Common.MessageFlowConfig;
 using System.Xml.Linq;
+using ObjectConfigurator;
 
 namespace XRouter.Processor.BuiltInActions
 {
@@ -15,8 +16,13 @@ namespace XRouter.Processor.BuiltInActions
         #region Configuration
         public XElement XConfig { get; set; }
 
+        [ConfigurationItem("Gateway", "Gateway", "")]
         private string targetGatewayName;
+
+        [ConfigurationItem("Adapter", "Adapter", "")]
         private string targetAdapterName;
+
+        [ConfigurationItem("Endpoint", "Endpoint", "")]
         private string targetEndpointName;
 
         private TokenSelection messageSelection;

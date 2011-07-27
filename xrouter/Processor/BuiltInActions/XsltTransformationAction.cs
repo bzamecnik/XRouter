@@ -8,6 +8,7 @@ using XRouter.Common.Xrm;
 using XRouter.Common;
 using System.Xml.Xsl;
 using System.Xml;
+using ObjectConfigurator;
 
 namespace XRouter.Processor.BuiltInActions
 {
@@ -20,6 +21,8 @@ namespace XRouter.Processor.BuiltInActions
 
         private XrmUri xlstUri;
         private TokenSelection inputMessageSelection;
+
+        [ConfigurationItem("Output message name", "Output message name", "Output")]
         private string outputMessageName;
         #endregion
 
