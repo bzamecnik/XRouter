@@ -9,69 +9,65 @@ using System.Text;
 namespace XRouter.Test.Common
 {
     /// <summary>
-    /// Compares each file in the correct results with the actual results made by XRouter
+    /// Compares files in two directories recursively.
+    /// XML files are first normalized before comparison.
     /// </summary>
     public class XmlDirectoryComparer
     {
-        private string correctRoot;
-        private string resultRoot;
-
-        private IEnumerable<MessageFile> correctMessageFiles;
-        private IEnumerable<MessageFile> resultMessageFiles;
-
-        public XmlDirectoryComparer(string correctRoot, string resultRoot)
+        public static bool Equals(string expectedRoot, string actualRoot)
         {
-            this.correctRoot = Path.GetFullPath(correctRoot);
-            this.resultRoot = Path.GetFullPath(resultRoot);
+            return Equals(expectedRoot, actualRoot, false);
         }
 
-        public void Compare()
+        public static bool Equals(string expectedRoot, string actualRoot, bool printDetails)
         {
-            correctMessageFiles = GetMessageFilesFromRoot(correctRoot);
-            resultMessageFiles = GetMessageFilesFromRoot(resultRoot);
+            IEnumerable<MessageFile> correctMessageFiles = GetMessageFilesFromRoot(Path.GetFullPath(expectedRoot));
+            IEnumerable<MessageFile> resultMessageFiles = GetMessageFilesFromRoot(Path.GetFullPath(actualRoot));
 
             PathAndHashCompare pathAndHashCompare = new PathAndHashCompare();
             PathCompare pathCompare = new PathCompare();
 
             bool areIdentical = correctMessageFiles.SequenceEqual(resultMessageFiles, pathAndHashCompare);
-            if (areIdentical)
-            {
-                Console.WriteLine("Results are correct!");
-                return;
-            }
-            else
-            {
-                Console.WriteLine("Results are incorrect!");
-                Console.WriteLine();
-            }
 
-            //missing file messages
+            if (printDetails)
+            {
+                if (!areIdentical)
+                {
+                    Console.WriteLine("Found differences between {0} and {1}:\n",
+                        expectedRoot, actualRoot);
+                    PrintDetails(correctMessageFiles, resultMessageFiles, pathAndHashCompare, pathCompare);
+                }
+            }
+            return areIdentical;
+        }
+
+        private static void PrintDetails(
+            IEnumerable<MessageFile> correctMessageFiles,
+            IEnumerable<MessageFile> resultMessageFiles,
+            PathAndHashCompare pathAndHashCompare,
+            PathCompare pathCompare)
+        {
+            //missing message files
             var missingMessageFiles = (from messageFile in correctMessageFiles
                                        select messageFile).Except(resultMessageFiles, pathCompare);
             if (missingMessageFiles.Any())
             {
-                Console.WriteLine("Missing message files:");
-                foreach (var v in missingMessageFiles)
-                {
-                    Console.WriteLine(v.path);
-                }
+                Console.WriteLine("Missing files:");
+                Console.WriteLine(string.Join("\n", missingMessageFiles.Select((file) => file.path)));
                 Console.WriteLine();
             }
 
-            //redundant file messages
+            //redundant message files
             var redundantMessageFiles = (from messageFile in resultMessageFiles
                                          select messageFile).Except(correctMessageFiles, pathCompare);
             if (redundantMessageFiles.Any())
             {
-                Console.WriteLine("Redundant message files:");
-                foreach (var v in redundantMessageFiles)
-                {
-                    Console.WriteLine(v.path);
-                }
+                Console.WriteLine("Redundant files:");
+                Console.WriteLine(string.Join("\n", redundantMessageFiles.Select((file) => file.path)));
                 Console.WriteLine();
             }
 
-            //wrong file messages
+            //different message files
             var wrongMessageFiles = (from messageFile in correctMessageFiles
                                      select messageFile)
                                      .Except(resultMessageFiles, pathAndHashCompare)
@@ -79,16 +75,13 @@ namespace XRouter.Test.Common
                                      .Except(redundantMessageFiles, pathCompare);
             if (wrongMessageFiles.Any())
             {
-                Console.WriteLine("Wrong message files:");
-                foreach (var v in wrongMessageFiles)
-                {
-                    Console.WriteLine(v.path);
-                }
+                Console.WriteLine("Different files:");
+                Console.WriteLine(string.Join("\n", wrongMessageFiles.Select((file) => file.path)));
                 Console.WriteLine();
             }
         }
 
-        private IEnumerable<MessageFile> GetMessageFilesFromRoot(string root)
+        private static IEnumerable<MessageFile> GetMessageFilesFromRoot(string root)
         {
             System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(root);
             IEnumerable<FileInfo> fileList = dir.GetFiles("*.*", SearchOption.AllDirectories);

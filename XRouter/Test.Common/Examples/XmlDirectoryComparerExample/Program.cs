@@ -13,8 +13,7 @@ namespace XRouter.Test.Common
             string correctRoot = @"..\..\Data\Correct";
             string resultRoot = @"..\..\Data\Result2";
 
-            XmlDirectoryComparer comparer = new XmlDirectoryComparer(correctRoot, resultRoot);
-            comparer.Compare();
+            XmlDirectoryComparer.Equals(correctRoot, resultRoot, true);
 
             Console.ReadKey();
         }
