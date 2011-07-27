@@ -38,9 +38,31 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\Lib\ThirdParty\xUnit-1.8\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicXRouterPipelineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ObjectRemoter\ObjectRemoter\ObjectRemoter.csproj">
+      <Project>{0C9BE6CE-CA69-4EDB-B021-496EEAA0319D}</Project>
+      <Name>ObjectRemoter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\XRouter.Common.csproj">
+      <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
+      <Name>XRouter.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Processor\XRouter.Processor.csproj">
+      <Project>{69C0BC8F-EEF4-4DA8-B220-2B35AA20F273}</Project>
+      <Name>XRouter.Processor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Test.Common\XRouter.Test.Common.csproj">
+      <Project>{36110949-7E99-41E5-BCB3-B84275CD7505}</Project>
+      <Name>XRouter.Test.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
