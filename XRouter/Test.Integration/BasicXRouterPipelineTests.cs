@@ -1,22 +1,34 @@
 ﻿using System;
-using System.Xml.Linq;
+using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Utils;
+using XRouter.Test.Common;
 using XRouter.Processor.MessageFlowBuilding;
 using Xunit;
+using System.Threading;
 
 namespace XRouter.Test.Integration
 {
     public class BasicXRouterPipelineTests
     {
+        /// <summary>
+        /// Path to original files - test configurations and data.
+        /// </summary>
+        private static readonly string OriginalsPath = @"..\..\Data\";
+        /// <summary>
+        /// Path to a directory managed by a directory adapter of a live XRouter service.
+        /// </summary>
+        private static readonly string WorkingPath = @"C:\XRouterTest\";
+
         public ConfigurationManager ConfigManager { get; set; }
         public BasicXRouterPipelineTests()
         {
             ConfigManager = new ConfigurationManager()
             {
-                BasePath = @"..\..\"
+                BasePath = OriginalsPath
             };
         }
 
@@ -89,6 +101,28 @@ namespace XRouter.Test.Integration
             SchemaTron.ValidatorResults results = validator.Validate(xIn, true);
             Console.WriteLine(results.IsValid ? "valid" : "invalid");
             Console.WriteLine(string.Join("\n", results.ViolatedAssertions.Select((info) => info.ToString())));
+        }
+
+        [Fact]
+        public void ProvideInputFileAndCheckResults()
+        {
+            string source = Path.Combine(OriginalsPath, @"Test1\Input\RestaurantMenu_instance.xml");
+            string dest = Path.Combine(WorkingPath, @"In\RestaurantMenu_instance.xml");
+            // let the XRouter process the file
+            File.Copy(source, dest);
+
+            // TODO: find out how to correctly wait for XRouter until it
+            // processes the provided messages
+            Thread.Sleep(50);
+
+            // verify that the file was processes well
+            bool ok = XmlDirectoryComparer.Equals(
+                Path.Combine(OriginalsPath, @"Test1\ExpectedOutput\OutA"),
+                Path.Combine(WorkingPath, @"OutA"), true);
+            Assert.True(ok);
+
+            // tear down
+            File.Delete(Path.Combine(WorkingPath, @"OutA\RestaurantMenu_instance.xml"));
         }
     }
 }

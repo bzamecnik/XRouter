@@ -9,7 +9,7 @@ using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.MessageFlowConfig;
 using wcf = System.ServiceModel;
 
-namespace XRouter.Test
+namespace XRouter.Test.Common
 {
     public class ConfigurationManager
     {
@@ -17,7 +17,7 @@ namespace XRouter.Test
 
         public ConfigurationManager()
         {
-            BasePath = string.Empty;
+            BasePath = @"Data\";
         }
 
         public static IBrokerServiceForManagement GetBrokerServiceProxy()
@@ -104,10 +104,10 @@ namespace XRouter.Test
             {
                 throw new ArgumentException();
             }
-            string fileName = Path.Combine(BasePath, string.Format(@"Data\{0}\{1}\{2}.xml", testName, subPath, resourceName));
+            string fileName = Path.Combine(BasePath, string.Format(@"{0}\{1}\{2}.xml", testName, subPath, resourceName));
             if (!File.Exists(fileName))
             {
-                fileName = Path.Combine(BasePath, string.Format(@"Data\Common\{0}\{1}.xml", subPath, resourceName));
+                fileName = Path.Combine(BasePath, string.Format(@"Common\{0}\{1}.xml", subPath, resourceName));
             }
             return XDocument.Load(fileName);
         }
