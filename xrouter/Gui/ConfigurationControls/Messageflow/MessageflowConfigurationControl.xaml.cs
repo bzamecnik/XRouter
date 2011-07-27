@@ -66,23 +66,67 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
         {
             ContextMenu result = new ContextMenu();
 
-            MenuItem menuItemAddActionNode = new MenuItem { Header = new Label { Content = "Action", Margin = new Thickness(0, 0, 0, 0) } }; ;
+            MenuItem menuItemAddActionNode = new MenuItem {
+                Header = new StackPanel {
+                    Margin = new Thickness(-10, 2, 2, 2),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Orientation = Orientation.Horizontal,
+                    Children = { 
+                        new Image {
+                            Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Generic_Device.png")),
+                            Margin = new Thickness(0, 0, 5, 0),
+                            Height = 20
+                        },
+                        new TextBlock { Text = "Action", FontSize = 14, FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center }
+                    }
+                }
+            };
             menuItemAddActionNode.Click += delegate {
                 AddNode(result, delegate { return new ActionNodeConfiguration(); });
             };
 
-            MenuItem menuItemAddCbrNode = new MenuItem { Header = new Label { Content = "CBR", Margin = new Thickness(0, 0, 0, 0) } };
+            MenuItem menuItemAddCbrNode = new MenuItem {
+                Header = new StackPanel {
+                    Margin = new Thickness(-10, 2, 2, 2),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Orientation = Orientation.Horizontal,
+                    Children = { 
+                        new Image {
+                            Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/OrgChartHS.png")),
+                            Margin = new Thickness(0, 0, 5, 0),
+                            Height = 20
+                        },
+                        new TextBlock { Text = "CBR", FontSize = 14, FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center }
+                    }
+                }
+            };
             menuItemAddCbrNode.Click += delegate {
                 AddNode(result, delegate { return new CbrNodeConfiguration(); });
             };
 
-            MenuItem menuItemAddTerminatorNode = new MenuItem { Header = new Label { Content = "Terminator", Margin = new Thickness(0, 0, 0, 0) } };
+            MenuItem menuItemAddTerminatorNode = new MenuItem {
+                Header = new StackPanel {
+                    Margin = new Thickness(-10, 2, 2, 2),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Orientation = Orientation.Horizontal,
+                    Children = { 
+                        new Image {
+                            Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/1446_envelope_stamp_clsd_32.png")),
+                            Margin = new Thickness(0, 0, 5, 0),
+                            Height = 20
+                        },
+                        new TextBlock { Text = "Terminator", FontSize = 14, FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center }
+                    }
+                } 
+            };
             menuItemAddTerminatorNode.Click += delegate {
                 Point menuLocationOnCanvas = result.TranslatePoint(new Point(), graphCanvas.Canvas);
                 AddNode(result, delegate { return new TerminatorNodeConfiguration(); });
             };
 
-            MenuItem menuItemAdd = new MenuItem { Header = "Add node..." };
+            MenuItem menuItemAdd = new MenuItem {
+                Header = new TextBlock { Text = "Add node...", FontSize = 14 }  
+            };
             menuItemAdd.Items.Add(menuItemAddActionNode);
             menuItemAdd.Items.Add(menuItemAddCbrNode);
             menuItemAdd.Items.Add(menuItemAddTerminatorNode);

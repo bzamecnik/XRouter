@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using XRouter.Common.MessageFlowConfig;
+using ObjectConfigurator;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
 {
@@ -23,6 +24,9 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
         private ActionNodeConfiguration node;
         private NodeSelectionManager nodeSelectionManager;
 
+        private ActionConfiguration currentAction;
+        private ConfigurationEditor currentConfigurationEditor;
+
         internal ActionNodePropertiesEditor(ActionNodeConfiguration node, NodeSelectionManager nodeSelectionManager)
         {
             InitializeComponent();
@@ -30,6 +34,12 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
             this.nodeSelectionManager = nodeSelectionManager;
 
             uiName.Text = node.Name;
+
+            currentAction = node.Actions.First();
+            currentConfigurationEditor = Configurator.CreateEditor(currentAction.ConfigurationMetadata);
+            currentConfigurationEditor.LoadConfiguration(currentAction.Configuration.XDocument);
+
+            uiActionConfigurationContainer.Child = currentConfigurationEditor;
         }
 
         private void uiName_LostFocus(object sender, RoutedEventArgs e)

@@ -265,6 +265,24 @@
       <Name>XRouter.Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Link.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\1446_envelope_stamp_clsd_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Generic_Device.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\XML_Schema.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\OrgChartHS.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -7,6 +7,8 @@ using XRouter.Common.MessageFlowConfig;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow
 {
@@ -19,7 +21,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
         public override FrameworkElement DragArea { get { return nodeBorder; } }
 
         private Border nodeBorder;
-        private Label nodeLabel;
+        private Label uiName;
 
         public override Point Location {
             get { return node.Location; }
@@ -33,14 +35,61 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             this.messageflowGraphPresenter = messageflowGraphPresenter;
             this.propertiesManager = propertiesManager;
 
-            nodeLabel = new Label {
-                Content = node.Name,
-                Foreground = Brushes.Black
+            Image uiIcon = new Image {
+                Margin = new Thickness(0, 0, 3, 0),
+                Height = 24
             };
+            Grid.SetRow(uiIcon, 0);
+            Grid.SetColumn(uiIcon, 0);
+
+            TextBlock uiType = new TextBlock {
+                VerticalAlignment = VerticalAlignment.Center,
+                FontSize = 11
+            };
+            Grid.SetRow(uiType, 0);
+            Grid.SetColumn(uiType, 1);
+
+            uiName = new Label {
+                Content = node.Name,
+                Foreground = Brushes.Black,
+                FontSize = 13,
+                FontWeight = FontWeights.Bold
+            };
+            Grid.SetRow(uiName, 1);
+            Grid.SetColumn(uiName, 0);
+            Grid.SetColumnSpan(uiName, 3);
+
+            if (node is CbrNodeConfiguration) {
+                uiType.Text = "CBR";
+                uiIcon.Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/OrgChartHS.png"));
+            } else if (node is ActionNodeConfiguration) {
+                uiType.Text = "Action";
+                uiIcon.Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Generic_Device.png"));
+            } else if (node is TerminatorNodeConfiguration) {
+                uiType.Text = "Terminator";
+                uiIcon.Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/1446_envelope_stamp_clsd_32.png"));
+            }
+
             nodeBorder = new Border {
-                Child = nodeLabel,
-                Padding = new Thickness(5),
-                CornerRadius = new CornerRadius(5)
+                Child = new Grid {
+                    RowDefinitions = {
+                        new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                        new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }
+                    },
+                    ColumnDefinitions = {
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
+                    },
+                    Children = {
+                        uiIcon,
+                        uiType,
+                        uiName
+                    }
+                },
+                Padding = new Thickness(5, 3, 5, 5),
+                CornerRadius = new CornerRadius(5),
+                Effect = new DropShadowEffect { Opacity = 0.6, ShadowDepth = 8 }
             };
 
             nodeBorder.PreviewMouseDown += delegate {
@@ -54,7 +103,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             propertiesManager.NodeSelected += delegate { UpdateNodeSelection(); };
 
             node.NameChanged += delegate {
-                nodeLabel.Content = node.Name;
+                uiName.Content = node.Name;
             };
         }
 
@@ -62,7 +111,21 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
         {
             ContextMenu result = new ContextMenu();
 
-            MenuItem menuItemRemove = new MenuItem { Header = "Remove" };
+            MenuItem menuItemRemove = new MenuItem {
+                Header = new StackPanel {
+                    Margin = new Thickness(-13, 0, 0, 0),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Orientation = Orientation.Horizontal,
+                    Children = { 
+                        new Image {
+                            Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/delete.png")),
+                            Margin = new Thickness(0, 0, 10, 0),
+                            Height = 18
+                        },
+                        new TextBlock { Text = "Remove", FontSize = 14 }
+                    }
+                }
+            };
             menuItemRemove.Click += delegate {
                 messageflowGraphPresenter.Messageflow.RemoveNode(node);
                 messageflowGraphPresenter.RaiseGraphChanged();
@@ -74,34 +137,27 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
 
         private void UpdateNodeSelection()
         {
-            Color mainColor = Colors.LightSalmon;
-            if (node is CbrNodeConfiguration) {
-                mainColor = Colors.LightBlue;
-            } else if (node is TerminatorNodeConfiguration) {
-                mainColor = Colors.LightGray;
-            }
-
             bool isSelected = propertiesManager.SelectedNode == node;
             if (isSelected) {
                 nodeBorder.Background = new LinearGradientBrush {
                     GradientStops = {
-                        new GradientStop(mainColor, 0),
-                        new GradientStop(Colors.Black, 3),
+                        new GradientStop( Colors.CornflowerBlue, -0),
+                        new GradientStop(Colors.White, 1.4),
                     }
                 };
                 nodeBorder.BorderBrush = Brushes.Black;
                 nodeBorder.BorderThickness = new Thickness(2);
-                nodeLabel.FontWeight = FontWeights.Bold;
+                nodeBorder.LayoutTransform = new ScaleTransform(1.15, 1.15);
             } else {
                 nodeBorder.Background = new LinearGradientBrush {
                     GradientStops = {
-                        new GradientStop(mainColor, 0),
-                        new GradientStop(Colors.White, 1.5),
+                        new GradientStop( Colors.LightSkyBlue, 0),
+                        new GradientStop(Colors.White, 1.4),
                     }
                 };
                 nodeBorder.BorderBrush = Brushes.Black;
                 nodeBorder.BorderThickness = new Thickness(1);
-                nodeLabel.FontWeight = FontWeights.Normal;
+                nodeBorder.LayoutTransform = null;
             }
         }
     }
