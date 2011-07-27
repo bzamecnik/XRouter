@@ -5,13 +5,17 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using ObjectConfigurator.ValueValidators;
+using System.Runtime.Serialization;
 
 namespace ObjectConfigurator
 {
+    [DataContract]
     public class ClassMetadata
     {
+        [DataMember]
         public string ClrTypeFullName { get; private set; }
 
+        [DataMember]
         public ReadOnlyCollection<ItemMetadata> ConfigurableItems { get; private set; }
 
         private Type cachedClrType;

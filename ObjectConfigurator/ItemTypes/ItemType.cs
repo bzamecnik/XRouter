@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using System.Runtime.Serialization;
 
 namespace ObjectConfigurator.ItemTypes
 {
+    [DataContract]
     public abstract class ItemType
     {
+        [DataMember]
         public string ClrTypeFullName { get; private set; }
 
         private Type clrTypeCache;

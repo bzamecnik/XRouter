@@ -2,17 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace ObjectConfigurator.ValueValidators
 {
+    [DataContract]
     public class CountRangeValidatorAttribute : ValueValidatorAttribute
     {
         private static readonly string DefaultErrorDescription = "Collection/dictionary has {0} items but items count must be within range {1} and {2}.";
         private static readonly string InvalidValueTypeError = "Value type {0} is not collection/dictionary.";
 
+        [DataMember]
         public int MinCount { get; private set; }
+
+        [DataMember]
         public int MaxCount { get; private set; }
 
+        [DataMember]
         public string ErrorDescription { get; private set; }
 
         public CountRangeValidatorAttribute(int minCount, int maxCount)

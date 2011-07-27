@@ -5,9 +5,11 @@ using System.Text;
 using System.Globalization;
 using System.Reflection;
 using System.Xml.Linq;
+using System.Runtime.Serialization;
 
 namespace ObjectConfigurator.ItemTypes
 {
+    [DataContract]
     class BasicItemType : ItemType
     {
         internal static readonly Type[] BasicClrTypes = new[] { 

@@ -8,31 +8,51 @@ using System.Globalization;
 using System.Collections.ObjectModel;
 using ObjectConfigurator.ValueValidators;
 using ObjectConfigurator.ItemTypes;
+using System.Runtime.Serialization;
 
 namespace ObjectConfigurator
 {
+    [DataContract]
     public enum ItemMemberKind
     {
+        [EnumMember]
         Field,
+        [EnumMember]
         Property
     }
 
+    [DataContract]
+    [KnownType(typeof(BasicItemType))]
+    [KnownType(typeof(EnumItemType))]
+    [KnownType(typeof(CollectionItemType))]
+    [KnownType(typeof(DictionaryItemType))]
+    [KnownType(typeof(CountRangeValidatorAttribute))]
+    [KnownType(typeof(RangeValidatorAttribute))]
+    [KnownType(typeof(RegexValidatorAttribute))]
     public class ItemMetadata
     {
+        [DataMember]
         public ClassMetadata Owner { get; private set; }
 
+        [DataMember]
         public ItemType Type { get; private set; }
 
+        [DataMember]
         public string Name { get; private set; }
 
+        [DataMember]
         public string UserName { get; private set; }
 
+        [DataMember]
         public string UserDescription { get; private set; }
 
+        [DataMember]
         public XElement SerializedDefaultValue { get; private set; }
 
+        [DataMember]
         public ReadOnlyCollection<ValueValidatorAttribute> Validators { get; private set; }
 
+        [DataMember]
         public ItemMemberKind MemberKind { get; private set; }
 
         public ItemMetadata(ClassMetadata owner, FieldInfo field, ConfigurationItemAttribute attribute, IEnumerable<ValueValidatorAttribute> validators)

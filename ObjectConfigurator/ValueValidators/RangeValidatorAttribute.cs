@@ -2,9 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace ObjectConfigurator.ValueValidators
 {
+    [DataContract]
+    [KnownType(typeof(SByte))]
+    [KnownType(typeof(Int16))]
+    [KnownType(typeof(Int32))]
+    [KnownType(typeof(Int64))]
+    [KnownType(typeof(Byte))]
+    [KnownType(typeof(UInt16))]
+    [KnownType(typeof(UInt32))]
+    [KnownType(typeof(UInt64))]
+    [KnownType(typeof(Decimal))]
+    [KnownType(typeof(Single))]
+    [KnownType(typeof(Double))]
     public class RangeValidatorAttribute : ValueValidatorAttribute
     {
         private static readonly string DefaultErrorDescription = "Value {0} is not within allowed range. Minimal values is {1}. Maximal value is {2}.";
@@ -17,10 +30,13 @@ namespace ObjectConfigurator.ValueValidators
             typeof(Decimal)
         };
 
+        [DataMember]
         public object Min { get; private set; }
 
+        [DataMember]
         public object Max { get; private set; }
 
+        [DataMember]
         public string ErrorDescription { get; private set; }
 
         public RangeValidatorAttribute(int min, int max)

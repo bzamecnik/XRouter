@@ -4,16 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace ObjectConfigurator.ItemTypes
 {
+    [DataContract]
+    [KnownType(typeof(BasicItemType))]
+    [KnownType(typeof(EnumItemType))]
+    [KnownType(typeof(CollectionItemType))]
+    [KnownType(typeof(DictionaryItemType))]
     class DictionaryItemType : ItemType
     {
         internal static readonly XName XName_PairElement = XName.Get("pair");
         internal static readonly XName XName_KeyElement = XName.Get("key");
         internal static readonly XName XName_ValueElement = XName.Get("value");
 
+        [DataMember]
         public ItemType KeyType { get; private set; }
+
+        [DataMember]
         public ItemType ValueType { get; private set; }
 
         public DictionaryItemType(Type clrType, ItemType keyType, ItemType valueType)

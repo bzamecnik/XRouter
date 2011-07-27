@@ -4,13 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace ObjectConfigurator.ItemTypes
 {
+    [DataContract]
+    [KnownType(typeof(BasicItemType))]
+    [KnownType(typeof(EnumItemType))]
+    [KnownType(typeof(CollectionItemType))]
+    [KnownType(typeof(DictionaryItemType))]
     class CollectionItemType : ItemType
     {
         internal static readonly XName XName_CollectionElement = XName.Get("element");
 
+        [DataMember]
         public ItemType ElementType { get; private set; }
 
         public CollectionItemType(Type clrType, ItemType elementType)

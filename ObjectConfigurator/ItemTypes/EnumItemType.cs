@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.Xml.Linq;
+using System.Runtime.Serialization;
 
 namespace ObjectConfigurator.ItemTypes
 {
+    [DataContract]
     class EnumItemType : ItemType
     {
+        [DataMember]
         public ReadOnlyCollection<string> ValueNames { get; private set; }
 
         public EnumItemType(Type clrType, IEnumerable<string> valueNames)
