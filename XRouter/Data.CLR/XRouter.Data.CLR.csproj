@@ -11,7 +11,7 @@
     <ProjectGuid>{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
-    <AssemblyName>XRouterCLR</AssemblyName>
+    <AssemblyName>XRouter.Data.Clr</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <SGenUseProxyTypes>false</SGenUseProxyTypes>
     <ConnectionString>
@@ -38,7 +38,7 @@
     <DeployCode>true</DeployCode>
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>XRouterCLR</RootNamespace>
+    <RootNamespace>XRouter.Data.Clr</RootNamespace>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildBinPath)\SqlServer.targets" />

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Data;
+using System;
 using System.Collections;
-using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using Microsoft.SqlServer.Server;
 
-
-namespace XRouter.Data.CLR
+namespace XRouter.Data.Clr
 {
     public partial class XRouterUDFs
     {
