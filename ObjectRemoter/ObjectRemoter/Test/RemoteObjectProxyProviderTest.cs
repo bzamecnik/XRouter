@@ -301,6 +301,7 @@
 
         public delegate void SampleEventHandler(object sender, SampleEventArgs e);
 
+        [Serializable]
         public class SampleEventArgs : EventArgs
         {
             public string Text { get; set; }

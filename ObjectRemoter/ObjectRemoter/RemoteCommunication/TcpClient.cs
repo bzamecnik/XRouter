@@ -55,9 +55,12 @@ namespace ObjectRemoter.RemoteCommunication
 
                 var sr = new StreamReader(clientStream);
                 string result = sr.ReadLine();
-                result = result
-                    .Replace(TcpServer.CarriageReturnReplacement, "\r")
-                    .Replace(TcpServer.LineFeedReplacement, "\n");
+                if (result != null)
+                {
+                    result = result
+                        .Replace(TcpServer.CarriageReturnReplacement, "\r")
+                        .Replace(TcpServer.LineFeedReplacement, "\n");
+                }
                 return result;
             }
         }
