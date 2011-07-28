@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace ObjectConfigurator.ValueEditors
 {
-    class BasicValueEditor : ValueEditor
+    class TextualBasicValueEditor : ValueEditor
     {
         private static readonly string InvalidValueError = "Value is invalid.";
 
@@ -20,7 +20,7 @@ namespace ObjectConfigurator.ValueEditors
         private TextBox uiText;
         private Image uiError;
 
-        public BasicValueEditor(ItemType valueType, IEnumerable<ValueValidatorAttribute> validators, XElement serializedDefaultValue)
+        public TextualBasicValueEditor(ItemType valueType, IEnumerable<ValueValidatorAttribute> validators, XElement serializedDefaultValue)
             : base(valueType, validators, serializedDefaultValue)
         {
             basicValueType = (BasicItemType)ValueType;

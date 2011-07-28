@@ -32,7 +32,11 @@ namespace ObjectConfigurator.ValueEditors
         public static ValueEditor CreateEditor(ItemType valueType, IEnumerable<ValueValidatorAttribute> validators, XElement serializedDefaultValue)
         {
             if (valueType is BasicItemType) {
-                return new BasicValueEditor(valueType, validators, serializedDefaultValue);
+                if (valueType.ClrTypeFullName == typeof(Boolean).FullName) {
+                    return new BooleanValueEditor(valueType, validators, serializedDefaultValue);
+                } else {
+                    return new TextualBasicValueEditor(valueType, validators, serializedDefaultValue);
+                }
             }
             if (valueType is EnumItemType) {
                 return new EnumValueEditor(valueType, validators, serializedDefaultValue);

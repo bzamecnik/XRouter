@@ -42,6 +42,12 @@ namespace ObjectConfigurator.Tests.Test1
         [ConfigurationItem("Url", "description", "about:blank")]
         private Uri url;
 
+        [ConfigurationItem("bool1", "description", false)]
+        private bool bool1;
+
+        [ConfigurationItem("bool2", "description", true)]
+        private bool bool2;
+
         public void SetValues()
         {
             privateString = "abc";

@@ -100,6 +100,7 @@
       <DependentUpon>UriEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tests\Test1\UriItemType.cs" />
+    <Compile Include="ValueEditors\BooleanValueEditor.cs" />
     <Compile Include="ValueEditors\CollectionValueEditor.cs" />
     <Compile Include="ValueEditors\CustomValueEditor.cs" />
     <Compile Include="ValueEditors\DictionaryValueEditor.cs" />
@@ -131,7 +132,7 @@
     <Compile Include="ConfigurationItemAttribute.cs" />
     <Compile Include="Configurator.cs" />
     <Compile Include="ValueEditors\ValueEditor.cs" />
-    <Compile Include="ValueEditors\BasicValueEditor.cs" />
+    <Compile Include="ValueEditors\TextualBasicValueEditor.cs" />
     <Compile Include="ItemMetadata.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
