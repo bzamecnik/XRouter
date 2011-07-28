@@ -14,6 +14,8 @@ namespace XRouter.Common.MessageFlowConfig
         [DataMember]
         public string SelectionPattern { get; set; }
 
+        public bool IsEmpty { get { return SelectionPattern.Trim().Length == 0; } }
+
         public TokenSelection()
         {
             SelectionPattern = string.Empty;
@@ -26,6 +28,10 @@ namespace XRouter.Common.MessageFlowConfig
 
         public XDocument GetSelectedDocument(Token token)
         {
+            if (IsEmpty) {
+                return null;
+            }
+
             XElement selectedElement = GetSelectedElement(token);
             XDocument result = new XDocument();
             result.Add(selectedElement);
@@ -34,6 +40,10 @@ namespace XRouter.Common.MessageFlowConfig
 
         public XElement GetSelectedElement(Token token)
         {
+            if (IsEmpty) {
+                return null;
+            }
+
             string xpath = GetXPath();
             XElement result = token.Content.XDocument.XPathSelectElement(xpath);
             return result;
