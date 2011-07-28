@@ -22,13 +22,8 @@ namespace XRouter.Processor.MessageFlowParts
 
             foreach (ActionConfiguration actionConfig in Config.Actions) {
                 IActionPlugin action = TypeUtils.CreateTypeInstance<IActionPlugin>(actionConfig.PluginTypeFullName);
-                
-                if (action is SendMessageAction) {
-                    ((SendMessageAction)action).XConfig = actionConfig.Configuration.XDocument.Root;
-                }
-                if (action is XsltTransformationAction) {
-                    ((XsltTransformationAction)action).XConfig = actionConfig.Configuration.XDocument.Root;
-                }
+
+                ObjectConfigurator.Configurator.LoadConfiguration(action, actionConfig.Configuration);
 
                 action.Initialize(ProcessorService);
                 actions.Add(action);

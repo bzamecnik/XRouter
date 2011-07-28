@@ -17,12 +17,13 @@ namespace XRouter.Processor.BuiltInActions
         private IProcessorServiceForAction processorService;
 
         #region Configuration
-        public XElement XConfig { get; set; }
-
+        [ConfigurationItem("Xslt", null, "//item[@name='xslt']")]
         private XrmUri xlstUri;
+
+        [ConfigurationItem("Input message", null, "token/messages/message[@name='input']/*[1]")]
         private TokenSelection inputMessageSelection;
 
-        [ConfigurationItem("Output message name", "Output message name", "Output")]
+        [ConfigurationItem("Output message name", null, "output")]
         private string outputMessageName;
         #endregion
 
@@ -31,13 +32,6 @@ namespace XRouter.Processor.BuiltInActions
         public void Initialize(IProcessorServiceForAction processorService)
         {
             this.processorService = processorService;
-
-            #region Emulate reading configuration (will be automatic later)
-            xlstUri = new XrmUri("//item[@name='" + XConfig.Attribute(XName.Get("xslt")).Value + "']");
-
-            inputMessageSelection = new TokenSelection("token/messages/message[@name='" + XConfig.Attribute(XName.Get("input")).Value + "']/*[1]");
-            outputMessageName = XConfig.Attribute(XName.Get("output")).Value;
-            #endregion
 
             XDocument xsltDocument = processorService.GetXmlResource(xlstUri);
             xslTransform = new XslCompiledTransform();
@@ -53,7 +47,6 @@ namespace XRouter.Processor.BuiltInActions
 
             StringBuilder outputBuilder = new StringBuilder();
             var writer = XmlWriter.Create(outputBuilder);
-
             xslTransform.Transform(reader, writer);
 
             XDocument outputMessage = XDocument.Parse(outputBuilder.ToString());
@@ -61,7 +54,6 @@ namespace XRouter.Processor.BuiltInActions
             processorService.CreateMessage(token.Guid, outputMessageName, outputMessage);
         }
 
-        // TODO: Disposing
         public void Dispose()
         {
         }
