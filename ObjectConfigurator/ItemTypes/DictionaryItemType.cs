@@ -13,6 +13,7 @@ namespace ObjectConfigurator.ItemTypes
     [KnownType(typeof(EnumItemType))]
     [KnownType(typeof(CollectionItemType))]
     [KnownType(typeof(DictionaryItemType))]
+    [KnownType(typeof(CustomItemType))]
     class DictionaryItemType : ItemType
     {
         internal static readonly XName XName_PairElement = XName.Get("pair");

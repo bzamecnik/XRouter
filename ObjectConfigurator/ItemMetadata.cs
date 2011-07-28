@@ -26,6 +26,7 @@ namespace ObjectConfigurator
     [KnownType(typeof(EnumItemType))]
     [KnownType(typeof(CollectionItemType))]
     [KnownType(typeof(DictionaryItemType))]
+    [KnownType(typeof(CustomItemType))]
     [KnownType(typeof(CountRangeValidatorAttribute))]
     [KnownType(typeof(RangeValidatorAttribute))]
     [KnownType(typeof(RegexValidatorAttribute))]
@@ -96,7 +97,12 @@ namespace ObjectConfigurator
             }
             #endregion
 
-            Type.WriteToXElement(SerializedDefaultValue, attribute.DefaultValue);
+            if (Type is CustomItemType) {
+                CustomItemType customType = (CustomItemType)Type;
+                customType.GetCustomType().WriteDefaultValueToXElement(SerializedDefaultValue, attribute.DefaultValue);
+            } else {
+                Type.WriteToXElement(SerializedDefaultValue, attribute.DefaultValue);
+            }
         }
 
         public object GetDefaultValue()
@@ -107,7 +113,9 @@ namespace ObjectConfigurator
 
         private void VerifyDefaultValue(Type expectedType, object defaultValue, string itemName)
         {
-            if (Type is CollectionItemType) {
+            if (Type is CustomItemType) {
+                return;
+            } else if (Type is CollectionItemType) {
                 if (defaultValue != null) {
                     Type defaultValueType = defaultValue.GetType();
                     Type expectedElementType = ((CollectionItemType)Type).ElementType.GetClrType();

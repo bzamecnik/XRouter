@@ -39,6 +39,9 @@ namespace ObjectConfigurator.Tests.Test1
         [ConfigurationItem("dictionary", "description", new object[] { 4, "4" })]
         private Dictionary<int, string> dictionary;
 
+        [ConfigurationItem("Url", "description", "about:blank")]
+        private Uri url;
+
         public void SetValues()
         {
             privateString = "abc";

@@ -47,6 +47,11 @@ namespace ObjectConfigurator.ItemTypes
 
         public static ItemType GetItemType(Type clrType)
         {
+            ICustomItemType customType = Configurator.CustomItemTypes.FirstOrDefault(r => r.AcceptType(clrType.FullName));
+            if (customType != null) {
+                return new CustomItemType(clrType);
+            }
+
             if (BasicItemType.BasicClrTypes.Contains(clrType)) {
                 return new BasicItemType(clrType);
             }
@@ -74,7 +79,7 @@ namespace ObjectConfigurator.ItemTypes
                     return new CollectionItemType(clrType, elementItemType);
                 }
             }
-            throw new ArgumentException("Cannot convert CLR type to ItemType.", "clrType");
+            throw new ArgumentException(string.Format("Cannot convert CLR type {0} to ItemType.", clrType.FullName), "clrType");
         }
     }
 }

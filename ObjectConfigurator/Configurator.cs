@@ -39,6 +39,9 @@ namespace ObjectConfigurator
         internal static readonly XName XName_ItemElement = XName.Get("item");
         internal static readonly XName XName_ItemNameAttribute = XName.Get("name");
 
+        private static List<ICustomItemType> customItemTypes = new List<ICustomItemType>();
+        public static IList<ICustomItemType> CustomItemTypes { get { return customItemTypes; } } 
+
         public static XDocument SaveConfiguration(object sourceObject)
         {
             Type targetType = sourceObject.GetType();

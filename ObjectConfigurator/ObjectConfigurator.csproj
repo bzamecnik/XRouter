@@ -88,12 +88,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ICustomItemType.cs" />
+    <Compile Include="ICustomValueEditor.cs" />
     <Compile Include="ItemTypes\BasicItemType.cs" />
     <Compile Include="ClassMetadata.cs" />
     <Compile Include="ItemTypes\CollectionItemType.cs" />
+    <Compile Include="ItemTypes\CustomItemType.cs" />
     <Compile Include="ItemTypes\DictionaryItemType.cs" />
     <Compile Include="ItemTypes\EnumItemType.cs" />
+    <Compile Include="Tests\Test1\UriEditor.xaml.cs">
+      <DependentUpon>UriEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tests\Test1\UriItemType.cs" />
     <Compile Include="ValueEditors\CollectionValueEditor.cs" />
+    <Compile Include="ValueEditors\CustomValueEditor.cs" />
     <Compile Include="ValueEditors\DictionaryValueEditor.cs" />
     <Compile Include="ValueEditors\EnumValueEditor.cs" />
     <Compile Include="ItemTypes\ItemType.cs" />
@@ -130,6 +138,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Tests\Test1\MainControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tests\Test1\UriEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

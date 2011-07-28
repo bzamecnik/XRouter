@@ -27,6 +27,8 @@ namespace ObjectConfigurator.Tests.Test1
         {
             InitializeComponent();
 
+            Configurator.CustomItemTypes.Add(new UriItemType());
+
             Loaded += new RoutedEventHandler(MainControl_Loaded);
         }
 

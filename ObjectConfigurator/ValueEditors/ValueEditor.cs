@@ -43,6 +43,9 @@ namespace ObjectConfigurator.ValueEditors
             if (valueType is DictionaryItemType) {
                 return new DictionaryValueEditor(valueType, validators, serializedDefaultValue);
             }
+            if (valueType is CustomItemType) {
+                return new CustomValueEditor(valueType, validators, serializedDefaultValue);
+            }
             throw new InvalidOperationException("Unknown item type.");
         }
 

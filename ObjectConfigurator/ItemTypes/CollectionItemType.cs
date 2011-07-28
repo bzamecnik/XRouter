@@ -13,6 +13,7 @@ namespace ObjectConfigurator.ItemTypes
     [KnownType(typeof(EnumItemType))]
     [KnownType(typeof(CollectionItemType))]
     [KnownType(typeof(DictionaryItemType))]
+    [KnownType(typeof(CustomItemType))]
     class CollectionItemType : ItemType
     {
         internal static readonly XName XName_CollectionElement = XName.Get("element");
