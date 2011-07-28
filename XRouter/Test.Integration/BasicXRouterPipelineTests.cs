@@ -1,14 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Xml.Linq;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Utils;
-using XRouter.Test.Common;
 using XRouter.Processor.MessageFlowBuilding;
+using XRouter.Test.Common;
 using Xunit;
-using System.Threading;
 
 namespace XRouter.Test.Integration
 {
@@ -123,6 +124,68 @@ namespace XRouter.Test.Integration
 
             // tear down
             File.Delete(Path.Combine(WorkingPath, @"OutA\RestaurantMenu_instance.xml"));
+        }
+
+        [Fact]
+        public void CreateFloodOfFiles()
+        {
+            int filesCount = 1000;
+            int paddingZeros = 1 + (int)Math.Floor(Math.Log10(filesCount));
+            string fileFormat = "input{0:" + new String('0', paddingZeros) +"}.xml";
+            string basePath = Path.Combine(OriginalsPath, @"Test1\Input");
+            TextGenerator gen = new TextGenerator()
+            {
+                MinMessageLength = 100,
+                MaxMessageLength = 1000
+            };
+            for (int i = 0; i < filesCount; i++)
+            {
+                string fileName = string.Format(fileFormat, i);
+                string filePath = Path.Combine(basePath, fileName);
+                using (TextWriter writer = File.CreateText(filePath))
+                {
+                    writer.WriteLine("<message>");
+                    writer.WriteLine("<a>");
+                    writer.WriteLine(gen.GenerateMessage());
+                    writer.WriteLine("</a>");
+                    writer.WriteLine("</message>");
+                }
+            }
+        }
+
+        private class TextGenerator
+        {
+            /// <summary>
+            /// Minimum random message length (inclusive).
+            /// </summary>
+            public int MinMessageLength { get; set; }
+            /// <summary>
+            /// Maximum random message length (inclusive).
+            /// </summary>
+            public int MaxMessageLength { get; set; }
+
+            private Random random = new Random();
+            private StringBuilder stringBuilder = new StringBuilder();
+
+            public TextGenerator()
+            {
+                MinMessageLength = 10;
+                MaxMessageLength = 70;
+            }
+
+            public string GenerateMessage()
+            {
+                int length = random.Next(MinMessageLength, MaxMessageLength);
+                stringBuilder.Clear();
+                for (int i = 0; i < length; i++)
+                {
+                    int randomChar = random.Next(65, 90);
+                    stringBuilder.Append((char)randomChar);
+                }
+                string randomString = stringBuilder.ToString();
+                stringBuilder.Clear();
+                return randomString;
+            }
         }
     }
 }
