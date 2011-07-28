@@ -6,6 +6,7 @@ using XRouter.Common;
 using XRouter.Common.MessageFlowConfig;
 using System.Xml.Linq;
 using ObjectConfigurator;
+using System.Threading.Tasks;
 
 namespace XRouter.Processor.BuiltInActions
 {
@@ -14,24 +15,26 @@ namespace XRouter.Processor.BuiltInActions
         private IProcessorServiceForAction processorService;
 
         #region Configuration
-        public XElement XConfig { get; set; }
-
-        [ConfigurationItem("Gateway", "Gateway", "")]
+        [ConfigurationItem("Taget gateway", null, "gateway")]
         private string targetGatewayName;
 
-        [ConfigurationItem("Adapter", "Adapter", "")]
+        [ConfigurationItem("Target adapter", null, "directoryAdapter")]
         private string targetAdapterName;
 
-        [ConfigurationItem("Endpoint", "Endpoint", "")]
+        [ConfigurationItem("Target wndpoint", null, "output")]
         private string targetEndpointName;
 
-        [ConfigurationItem("Message", "Message", "")]
+        [ConfigurationItem("Message", null, "token/messages/message[@name='input']/*[1]")]
         private TokenSelection messageSelection;
 
-        [ConfigurationItem("Metadata", "Metadata", "")]
+        [ConfigurationItem("Metadata", null, "token/source-metadata/file-metadata")]
         private TokenSelection metadataSelection;
 
+        [ConfigurationItem("Result message name", null, "")]
         private string resultMessageName;
+
+        [ConfigurationItem("Timeout (in seconds)", null, 30)]
+        private int timeoutInSeconds;
         #endregion
 
         private EndpointAddress targetEndpoint;
@@ -39,17 +42,6 @@ namespace XRouter.Processor.BuiltInActions
         public void Initialize(IProcessorServiceForAction processorService)
         {
             this.processorService = processorService;
-
-            #region Emulate reading configuration (will be automatic later)
-            targetGatewayName = "gateway1";
-            targetAdapterName = "directoryAdapter";
-            targetEndpointName = XConfig.Attribute(XName.Get("output")).Value;
-
-            messageSelection = new TokenSelection("token/messages/message[@name='" + XConfig.Attribute(XName.Get("input")).Value + "']/*[1]");
-            metadataSelection = new TokenSelection("token/source-metadata/file-metadata");
-            resultMessageName = string.Empty;
-            #endregion
-
             targetEndpoint = new EndpointAddress(targetGatewayName, targetAdapterName, targetEndpointName);
         }
 
@@ -60,14 +52,19 @@ namespace XRouter.Processor.BuiltInActions
             XDocument message =  messageSelection.GetSelectedDocument(token);
             XDocument metadata = metadataSelection.GetSelectedDocument(token);
 
-            XDocument outputMessage = processorService.SendMessage(targetEndpoint, message, metadata);
+            XDocument outputMessage = null;
+            Task sendTask = Task.Factory.StartNew(delegate {
+                outputMessage = processorService.SendMessage(targetEndpoint, message, metadata);
+            });
+            bool isFinished = sendTask.Wait(TimeSpan.FromSeconds(timeoutInSeconds));
 
-            if (resultMessageName.Length > 0) {
-                processorService.CreateMessage(token.Guid, resultMessageName, outputMessage);
+            if (isFinished) {
+                if (resultMessageName.Trim().Length > 0) {
+                    processorService.CreateMessage(token.Guid, resultMessageName.Trim(), outputMessage);
+                }
             }
         }
 
-        // TODO: Disposing
         public void Dispose()
         {
         }
