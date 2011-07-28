@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace ObjectConfigurator
 {
-    public interface ICustomValueEditor
+    public interface ICustomConfigurationValueEditor
     {
         event Action ValueChanged;
 

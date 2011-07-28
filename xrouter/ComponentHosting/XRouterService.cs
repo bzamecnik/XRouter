@@ -32,6 +32,8 @@ namespace XRouter.ComponentHosting
             TraceLog.Initialize(Logger);
             EventLog.Initialize(Logger);
 
+            ObjectConfigurator.Configurator.CustomItemTypes.Add(new TokenSelectionConfigurationItemType());
+
             broker = new XRouter.Broker.BrokerService();
             processor = new XRouter.Processor.ProcessorService();
             gateway = new XRouter.Gateway.Gateway();

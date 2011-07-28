@@ -25,8 +25,12 @@ namespace XRouter.Processor.BuiltInActions
         [ConfigurationItem("Endpoint", "Endpoint", "")]
         private string targetEndpointName;
 
+        [ConfigurationItem("Message", "Message", "")]
         private TokenSelection messageSelection;
+
+        [ConfigurationItem("Metadata", "Metadata", "")]
         private TokenSelection metadataSelection;
+
         private string resultMessageName;
         #endregion
 

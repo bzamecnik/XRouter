@@ -42,9 +42,9 @@ namespace ObjectConfigurator.ItemTypes
             customType.WriteDefaultValueToXElement(target);
         }
 
-        public ICustomItemType GetCustomType()
+        public ICustomConfigurationItemType GetCustomType()
         {
-            ICustomItemType result = Configurator.CustomItemTypes.FirstOrDefault(r => r.AcceptType(ClrTypeFullName));
+            ICustomConfigurationItemType result = Configurator.CustomItemTypes.FirstOrDefault(r => r.AcceptType(ClrTypeFullName));
             if (result == null) {
                 throw new InvalidOperationException(string.Format("Cannot find custom type for {0}.", ClrTypeFullName));
             }

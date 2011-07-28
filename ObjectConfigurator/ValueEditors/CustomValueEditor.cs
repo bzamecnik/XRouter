@@ -13,8 +13,8 @@ namespace ObjectConfigurator.ValueEditors
     {
         private ComboBox uiValue;
         private CustomItemType customValueType;
-        private ICustomItemType customType;
-        private ICustomValueEditor customEditor;
+        private ICustomConfigurationItemType customType;
+        private ICustomConfigurationValueEditor customEditor;
 
         public CustomValueEditor(ItemType valueType, IEnumerable<ValueValidatorAttribute> validators, XElement serializedDefaultValue)
             : base(valueType, validators, serializedDefaultValue)

@@ -48,6 +48,10 @@
       <Project>{3CF25136-3BF3-4213-9FDC-1E80F2C75171}</Project>
       <Name>DaemonNT</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\ObjectConfigurator\ObjectConfigurator.csproj">
+      <Project>{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}</Project>
+      <Name>ObjectConfigurator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ObjectRemoter\ObjectRemoter\ObjectRemoter.csproj">
       <Project>{0C9BE6CE-CA69-4EDB-B021-496EEAA0319D}</Project>
       <Name>ObjectRemoter</Name>

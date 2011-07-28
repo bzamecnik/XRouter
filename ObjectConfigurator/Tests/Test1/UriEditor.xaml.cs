@@ -18,7 +18,7 @@ namespace ObjectConfigurator.Tests.Test1
     /// <summary>
     /// Interaction logic for UriEditor.xaml
     /// </summary>
-    public partial class UriEditor : UserControl, ICustomValueEditor
+    public partial class UriEditor : UserControl, ICustomConfigurationValueEditor
     {
         public event Action ValueChanged = delegate { };
 

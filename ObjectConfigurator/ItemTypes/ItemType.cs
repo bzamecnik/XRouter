@@ -47,7 +47,7 @@ namespace ObjectConfigurator.ItemTypes
 
         public static ItemType GetItemType(Type clrType)
         {
-            ICustomItemType customType = Configurator.CustomItemTypes.FirstOrDefault(r => r.AcceptType(clrType.FullName));
+            ICustomConfigurationItemType customType = Configurator.CustomItemTypes.FirstOrDefault(r => r.AcceptType(clrType.FullName));
             if (customType != null) {
                 return new CustomItemType(clrType);
             }

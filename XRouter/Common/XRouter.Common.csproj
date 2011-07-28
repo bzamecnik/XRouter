@@ -64,6 +64,7 @@
     <Compile Include="ComponentInterfaces\IProcessorService.cs" />
     <Compile Include="LogLevelFilters.cs" />
     <Compile Include="MessageFlowConfig\CbrNodeConfiguration.cs" />
+    <Compile Include="MessageFlowConfig\TokenSelectionConfigurationItemType.cs" />
     <Compile Include="ProcessorProvider.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="LimitedConcurrencyLevelTaskScheduler.cs" />

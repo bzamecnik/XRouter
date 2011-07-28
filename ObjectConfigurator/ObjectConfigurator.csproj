@@ -88,8 +88,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ICustomItemType.cs" />
-    <Compile Include="ICustomValueEditor.cs" />
+    <Compile Include="ICustomConfigurationItemType.cs" />
+    <Compile Include="ICustomConfigurationValueEditor.cs" />
     <Compile Include="ItemTypes\BasicItemType.cs" />
     <Compile Include="ClassMetadata.cs" />
     <Compile Include="ItemTypes\CollectionItemType.cs" />

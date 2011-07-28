@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace ObjectConfigurator
 {
-    public interface ICustomItemType
+    public interface ICustomConfigurationItemType
     {
         bool AcceptType(string typeFullName);
 
@@ -16,6 +16,6 @@ namespace ObjectConfigurator
         void WriteToXElement(XElement target, object value);
         object ReadFromXElement(XElement source);
 
-        ICustomValueEditor CreateEditor();
+        ICustomConfigurationValueEditor CreateEditor();
     }
 }

@@ -12,6 +12,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using XRouter.Common.MessageFlowConfig;
+using XRouter.Gui.CommonControls;
+using ObjectConfigurator;
 
 namespace XRouter.Gui
 {
@@ -27,6 +30,8 @@ namespace XRouter.Gui
 
 		public MainWindow()
         {
+            Configurator.CustomItemTypes.Add(new TokenSelectionConfigurationItemType(() => new TokenSelectionEditor()));
+
             #region Run xrouter server
             if (System.Diagnostics.Process.GetProcessesByName("DaemonNT").Length == 0) {
                 string binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);

@@ -39,6 +39,22 @@ namespace XRouter.Common.MessageFlowConfig
             return result;
         }
 
+        public static bool IsPatternValid(string pattern)
+        {
+            string xpath = CreateXPathFromPattern(pattern);
+            try {
+                XPathExpression.Compile(xpath);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        public static string CreateXPathFromPattern(string pattern)
+        {
+            return pattern;
+        }
+
         private string GetXPath()
         {
             return SelectionPattern;

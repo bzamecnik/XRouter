@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace ObjectConfigurator.Tests.Test1
 {
-    class UriItemType : ICustomItemType
+    class UriItemType : ICustomConfigurationItemType
     {
         public bool AcceptType(string typeFullName)
         {
@@ -33,7 +33,7 @@ namespace ObjectConfigurator.Tests.Test1
             return new Uri(source.Value);
         }
 
-        public ICustomValueEditor CreateEditor()
+        public ICustomConfigurationValueEditor CreateEditor()
         {
             return new UriEditor();
         }

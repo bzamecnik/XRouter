@@ -6,6 +6,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <TextBox Name="uiPattern" FontSize="12" LostFocus="uiPattern_LostFocus" KeyDown="uiPattern_KeyDown" />
+        <TextBox Name="uiPattern" FontSize="12" LostFocus="uiPattern_LostFocus" KeyDown="uiPattern_KeyDown" TextChanged="uiPattern_TextChanged" />
     </Grid>
 </UserControl>
