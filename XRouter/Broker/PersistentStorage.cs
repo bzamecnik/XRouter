@@ -248,15 +248,21 @@ namespace XRouter.Broker
 
         public Token GetToken(Guid tokenGuid)
         {
-            Token token = InternalTokens.First(t => t.Guid == tokenGuid);
-            return token;
+            lock (storageLock)
+            {
+                Token token = InternalTokens.First(t => t.Guid == tokenGuid);
+                return token;
+            }
         }
 
         public Token[] GetTokens(int pageSize, int pageNumber)
         {
-            int tokensToSkip = (pageNumber - 1) * pageSize;
-            var result = InternalTokens.Skip(tokensToSkip).Take(pageNumber).ToArray();
-            return result;
+            lock (storageLock)
+            {
+                int tokensToSkip = (pageNumber - 1) * pageSize;
+                var result = InternalTokens.Skip(tokensToSkip).Take(pageNumber).ToArray();
+                return result;
+            }
         }
 
         public IEnumerable<Token> GetUndispatchedTokens()
