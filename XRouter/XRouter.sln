@@ -295,14 +295,12 @@ Global
 		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Debug|Mixed Platforms.Deploy.0 = Debug|Any CPU
 		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|Mixed Platforms.Deploy.0 = Release|Any CPU
 		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
