@@ -13,7 +13,7 @@ namespace XRouter.Common.MessageFlowConfig
     public class ActionNodeConfiguration : NodeConfiguration
     {
         [DataMember]
-        public IList<ActionConfiguration> Actions { get; private set; }
+        public List<ActionConfiguration> Actions { get; private set; }
 
         [DataMember]
         public NodeConfiguration NextNode { get; set; }

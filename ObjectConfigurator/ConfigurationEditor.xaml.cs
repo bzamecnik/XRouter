@@ -103,12 +103,12 @@ namespace ObjectConfigurator
 
         private FrameworkElement CreateHeaderCell(ItemMetadata itemMetadata)
         {
-            Label result = new Label();
-            result.Margin = new Thickness(10, 10, 10, 0);
+            TextBlock result = new TextBlock();
+            result.Margin = new Thickness(10, 8, 5, 0);
             result.VerticalAlignment = VerticalAlignment.Top;
             result.HorizontalAlignment = HorizontalAlignment.Right;
             result.FontWeight = FontWeights.Bold;
-            result.Content = itemMetadata.UserName;
+            result.Text = itemMetadata.UserName;
             result.ToolTip = itemMetadata.UserDescription;
             return result;
         }

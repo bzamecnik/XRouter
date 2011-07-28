@@ -67,57 +67,24 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             ContextMenu result = new ContextMenu();
 
             MenuItem menuItemAddActionNode = new MenuItem {
-                Header = new StackPanel {
-                    Margin = new Thickness(-10, 2, 2, 2),
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Orientation = Orientation.Horizontal,
-                    Children = { 
-                        new Image {
-                            Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Generic_Device.png")),
-                            Margin = new Thickness(0, 0, 5, 0),
-                            Height = 20
-                        },
-                        new TextBlock { Text = "Action", FontSize = 14, FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center }
-                    }
-                }
+                Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Generic_Device.png")), Height = 20 },
+                Header = new TextBlock { Text = "Action", FontSize = 14, FontWeight = FontWeights.Bold }
             };
             menuItemAddActionNode.Click += delegate {
                 AddNode(result, delegate { return new ActionNodeConfiguration(); });
             };
 
             MenuItem menuItemAddCbrNode = new MenuItem {
-                Header = new StackPanel {
-                    Margin = new Thickness(-10, 2, 2, 2),
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Orientation = Orientation.Horizontal,
-                    Children = { 
-                        new Image {
-                            Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/OrgChartHS.png")),
-                            Margin = new Thickness(0, 0, 5, 0),
-                            Height = 20
-                        },
-                        new TextBlock { Text = "CBR", FontSize = 14, FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center }
-                    }
-                }
+                Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/OrgChartHS.png")), Height = 20 },
+                Header = new TextBlock { Text = "CBR", FontSize = 14, FontWeight = FontWeights.Bold }
             };
             menuItemAddCbrNode.Click += delegate {
                 AddNode(result, delegate { return new CbrNodeConfiguration(); });
             };
 
             MenuItem menuItemAddTerminatorNode = new MenuItem {
-                Header = new StackPanel {
-                    Margin = new Thickness(-10, 2, 2, 2),
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Orientation = Orientation.Horizontal,
-                    Children = { 
-                        new Image {
-                            Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/1446_envelope_stamp_clsd_32.png")),
-                            Margin = new Thickness(0, 0, 5, 0),
-                            Height = 20
-                        },
-                        new TextBlock { Text = "Terminator", FontSize = 14, FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center }
-                    }
-                } 
+                Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/1446_envelope_stamp_clsd_32.png")), Height = 20 },
+                Header = new TextBlock { Text = "Terminator", FontSize = 14, FontWeight = FontWeights.Bold }
             };
             menuItemAddTerminatorNode.Click += delegate {
                 Point menuLocationOnCanvas = result.TranslatePoint(new Point(), graphCanvas.Canvas);

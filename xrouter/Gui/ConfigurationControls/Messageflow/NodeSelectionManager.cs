@@ -43,9 +43,9 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
 
         internal MessageflowGraphPresenter MessageflowGraphPresenter { get; set; }
 
-        private ContentControl propertiesContainer;
+        private Border propertiesContainer;
 
-        public NodeSelectionManager(ContentControl propertiesContainer)
+        public NodeSelectionManager(Border propertiesContainer)
         {
             this.propertiesContainer = propertiesContainer;
         }
@@ -61,11 +61,13 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             }
 
             if (selectedNode is ActionNodeConfiguration) {
-                propertiesContainer.Content = new NodePropertiesEditors.ActionNodePropertiesEditor((ActionNodeConfiguration)selectedNode, this);
+                propertiesContainer.Child = new NodePropertiesEditors.ActionNodePropertiesEditor((ActionNodeConfiguration)selectedNode, this);
             } else if (selectedNode is CbrNodeConfiguration) {
-                propertiesContainer.Content = new NodePropertiesEditors.CbrNodePropertiesEditor((CbrNodeConfiguration)selectedNode, this);
+                propertiesContainer.Child = new NodePropertiesEditors.CbrNodePropertiesEditor((CbrNodeConfiguration)selectedNode, this);
             } else if (selectedNode is TerminatorNodeConfiguration) {
-                propertiesContainer.Content = new NodePropertiesEditors.TerminatorNodePropertiesEditor((TerminatorNodeConfiguration)selectedNode, this);
+                propertiesContainer.Child = new NodePropertiesEditors.TerminatorNodePropertiesEditor((TerminatorNodeConfiguration)selectedNode, this);
+            } else {
+                propertiesContainer.Child = null;
             }
 
             SelectedNode = selectedNode;

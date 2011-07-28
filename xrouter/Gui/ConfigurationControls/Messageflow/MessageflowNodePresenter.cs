@@ -16,27 +16,27 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
     {
         private NodeConfiguration node;
         private MessageflowGraphPresenter messageflowGraphPresenter;
-        private NodeSelectionManager propertiesManager;
+        private NodeSelectionManager nodeSelectionManager;
 
         public override FrameworkElement DragArea { get { return nodeBorder; } }
 
         private Border nodeBorder;
-        private Label uiName;
+        private TextBlock uiName;
 
         public override Point Location {
             get { return node.Location; }
             set { node.Location = value; }
         }
 
-        public MessageflowNodePresenter(NodeConfiguration node, MessageflowGraphPresenter messageflowGraphPresenter, NodeSelectionManager propertiesManager)
+        public MessageflowNodePresenter(NodeConfiguration node, MessageflowGraphPresenter messageflowGraphPresenter, NodeSelectionManager nodeSelectionManager)
             : base(node)
         {
             this.node = node;
             this.messageflowGraphPresenter = messageflowGraphPresenter;
-            this.propertiesManager = propertiesManager;
+            this.nodeSelectionManager = nodeSelectionManager;
 
             Image uiIcon = new Image {
-                Margin = new Thickness(0, 0, 3, 0),
+                Margin = new Thickness(2, 2, 6, 0),
                 Height = 24
             };
             Grid.SetRow(uiIcon, 0);
@@ -49,11 +49,12 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             Grid.SetRow(uiType, 0);
             Grid.SetColumn(uiType, 1);
 
-            uiName = new Label {
-                Content = node.Name,
+            uiName = new TextBlock {
+                Text = node.Name,
                 Foreground = Brushes.Black,
                 FontSize = 13,
-                FontWeight = FontWeights.Bold
+                FontWeight = FontWeights.Bold,
+                Margin = new Thickness(5, 2, 3, 2)
             };
             Grid.SetRow(uiName, 1);
             Grid.SetColumn(uiName, 0);
@@ -93,17 +94,17 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             };
 
             nodeBorder.PreviewMouseDown += delegate {
-                propertiesManager.SelectNode(node);
+                nodeSelectionManager.SelectNode(node);
             };
             nodeBorder.ContextMenu = CreateNodeContextMenu();
 
             Content = nodeBorder;
 
             UpdateNodeSelection();
-            propertiesManager.NodeSelected += delegate { UpdateNodeSelection(); };
+            nodeSelectionManager.NodeSelected += delegate { UpdateNodeSelection(); };
 
             node.NameChanged += delegate {
-                uiName.Content = node.Name;
+                uiName.Text = node.Name;
             };
         }
 
@@ -112,23 +113,13 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             ContextMenu result = new ContextMenu();
 
             MenuItem menuItemRemove = new MenuItem {
-                Header = new StackPanel {
-                    Margin = new Thickness(-13, 0, 0, 0),
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Orientation = Orientation.Horizontal,
-                    Children = { 
-                        new Image {
-                            Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/delete.png")),
-                            Margin = new Thickness(0, 0, 10, 0),
-                            Height = 18
-                        },
-                        new TextBlock { Text = "Remove", FontSize = 14 }
-                    }
-                }
+                Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/delete.png")), Height = 18 },
+                Header = new TextBlock { Text = "Remove", FontSize = 14 }
             };
             menuItemRemove.Click += delegate {
                 messageflowGraphPresenter.Messageflow.RemoveNode(node);
                 messageflowGraphPresenter.RaiseGraphChanged();
+                nodeSelectionManager.SelectNode(null);
             };
 
             result.Items.Add(menuItemRemove);
@@ -137,7 +128,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
 
         private void UpdateNodeSelection()
         {
-            bool isSelected = propertiesManager.SelectedNode == node;
+            bool isSelected = nodeSelectionManager.SelectedNode == node;
             if (isSelected) {
                 nodeBorder.Background = new LinearGradientBrush {
                     GradientStops = {

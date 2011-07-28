@@ -57,6 +57,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CommonControls\ListEditor.xaml.cs">
+      <DependentUpon>ListEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ConfigurationControlManager.cs" />
     <Compile Include="ConfigurationControls\Messageflow\MessageflowConfigurationControl.xaml.cs">
       <DependentUpon>MessageflowConfigurationControl.xaml</DependentUpon>
@@ -79,6 +82,10 @@
     <Compile Include="Themes\Properties\Resources.Designer.cs" />
     <Compile Include="Themes\Properties\Settings.Designer.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
+    <Page Include="CommonControls\ListEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ConfigurationControls\Adapter\AdapterConfigurationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -264,6 +271,10 @@
       <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
       <Name>XRouter.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Processor\XRouter.Processor.csproj">
+      <Project>{69C0BC8F-EEF4-4DA8-B220-2B35AA20F273}</Project>
+      <Name>XRouter.Processor</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Link.png" />
@@ -282,6 +293,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\OrgChartHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\plus.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

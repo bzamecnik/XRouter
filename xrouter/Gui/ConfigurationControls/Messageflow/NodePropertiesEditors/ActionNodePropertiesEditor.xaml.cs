@@ -13,6 +13,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using XRouter.Common.MessageFlowConfig;
 using ObjectConfigurator;
+using XRouter.Common;
+using System.Threading.Tasks;
+using System.Threading;
+using XRouter.Gui.CommonControls;
+using System.Xml.Linq;
+using XRouter.Common.Utils;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
 {
@@ -24,8 +30,9 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
         private ActionNodeConfiguration node;
         private NodeSelectionManager nodeSelectionManager;
 
-        private ActionConfiguration currentAction;
-        private ConfigurationEditor currentConfigurationEditor;
+        private ListEditor actionsListEditor;
+        private ActionConfiguration activeAction;
+        private ConfigurationEditor activeConfigurationEditor;
 
         internal ActionNodePropertiesEditor(ActionNodeConfiguration node, NodeSelectionManager nodeSelectionManager)
         {
@@ -35,11 +42,100 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
 
             uiName.Text = node.Name;
 
-            currentAction = node.Actions.First();
-            currentConfigurationEditor = Configurator.CreateEditor(currentAction.ConfigurationMetadata);
-            currentConfigurationEditor.LoadConfiguration(currentAction.Configuration.XDocument);
+            actionsListEditor = new ListEditor(AddAction);
+            actionsListEditor.ItemRemoved += RemoveAction;
+            actionsListEditor.ItemSelected += SetActiveAction;
+            uiActionsContainer.Child = actionsListEditor;
 
-            uiActionConfigurationContainer.Child = currentConfigurationEditor;
+            uiActionConfigurationRegion.Visibility = Visibility.Collapsed;
+            foreach (ActionConfiguration action in node.Actions) {
+                actionsListEditor.AddItem(CreateActionRepresentation(action));
+            }
+            actionsListEditor.SelectItem(actionsListEditor.Items.FirstOrDefault());
+        }
+
+        private FrameworkElement AddAction()
+        {
+            ActionConfiguration action = new ActionConfiguration();
+            action.Configuration = new SerializableXDocument(new XDocument());
+            action.Configuration.XDocument.Add(new XElement(XName.Get("objectConfig")));
+            action.PluginTypeFullName = typeof(XRouter.Processor.BuiltInActions.SendMessageAction).FullName;
+            action.ConfigurationMetadata = new ClassMetadata(typeof(XRouter.Processor.BuiltInActions.SendMessageAction));
+            node.Actions.Add(action);
+
+            FrameworkElement actionRepresentation = CreateActionRepresentation(action);
+            return actionRepresentation;
+        }
+
+        private FrameworkElement CreateActionRepresentation(ActionConfiguration action)
+        {
+            string[] actionTypeNames = new string[] { 
+                typeof(XRouter.Processor.BuiltInActions.SendMessageAction).FullName,
+                typeof(XRouter.Processor.BuiltInActions.XsltTransformationAction).FullName
+            };
+            ComboBox uiActionType = new ComboBox {
+                Tag = action,
+                Margin = new Thickness(10, 3, 5, 3),
+                IsEditable = false,
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+            foreach (string actionTypeName in actionTypeNames) {
+                uiActionType.Items.Add(new ComboBoxItem {
+                    Tag = actionTypeName,
+                    Content = actionTypeName.Substring(actionTypeName.LastIndexOf('.') + 1)
+                });
+            }
+            uiActionType.SelectedIndex = actionTypeNames.ToList().IndexOf(action.PluginTypeFullName);
+            uiActionType.SelectionChanged += delegate {
+                string selectedActionTypeName = (string)(((ComboBoxItem)uiActionType.SelectedItem).Tag);
+                action.PluginTypeFullName = selectedActionTypeName;
+                action.ConfigurationMetadata = new ClassMetadata(TypeUtils.GetType(selectedActionTypeName, "XRouter.Processor.dll"));
+                SetActiveAction(uiActionType);
+            };
+            Grid.SetColumn(uiActionType, 1);
+
+            var uiAction = new Grid {
+                Tag = action,
+                ColumnDefinitions = {
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
+                },
+                Children = {
+                    new Image {
+                        Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Generic_Device.png")),
+                        Height = 18,
+                        Margin = new Thickness(8, 0, 0, 0)
+                    },
+                    uiActionType
+                }
+            };
+
+            return uiAction;
+        }
+
+        private void RemoveAction(FrameworkElement uiAction)
+        {
+            ActionConfiguration action = (ActionConfiguration)uiAction.Tag;
+            node.Actions.Remove(action);
+        }
+
+        private void SetActiveAction(FrameworkElement uiAction)
+        {
+            if (uiAction == null) {
+                activeAction = null;
+                uiActionConfigurationRegion.Visibility = Visibility.Collapsed;
+                return;
+            }
+            
+            activeAction = (ActionConfiguration)uiAction.Tag;
+            uiActionConfigurationRegion.Visibility = Visibility.Visible;
+
+            activeConfigurationEditor = Configurator.CreateEditor(activeAction.ConfigurationMetadata);
+            activeConfigurationEditor.LoadConfiguration(activeAction.Configuration.XDocument);
+            activeConfigurationEditor.ConfigurationChanged += delegate {
+                activeAction.Configuration = new SerializableXDocument(activeConfigurationEditor.SaveConfiguration());
+            };
+            uiActionConfigurationContainer.Child = activeConfigurationEditor;
         }
 
         private void uiName_LostFocus(object sender, RoutedEventArgs e)
