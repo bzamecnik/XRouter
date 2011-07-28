@@ -289,10 +289,6 @@
       <Project>{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}</Project>
       <Name>ObjectConfigurator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\ObjectRemoter\ObjectRemoter\ObjectRemoter.csproj">
-      <Project>{0C9BE6CE-CA69-4EDB-B021-496EEAA0319D}</Project>
-      <Name>ObjectRemoter</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\SimpleDiagrammer\SimpleDiagrammer.csproj">
       <Project>{C11BCFD6-9026-462E-A7CA-64037DFA974B}</Project>
       <Name>SimpleDiagrammer</Name>

@@ -87,10 +87,6 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ObjectRemoter\ObjectRemoter\ObjectRemoter.csproj">
-      <Project>{0C9BE6CE-CA69-4EDB-B021-496EEAA0319D}</Project>
-      <Name>ObjectRemoter</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Broker\XRouter.Broker.csproj">
       <Project>{AF28F3BF-7340-408E-B9AC-C9CE0F17A599}</Project>
       <Name>XRouter.Broker</Name>

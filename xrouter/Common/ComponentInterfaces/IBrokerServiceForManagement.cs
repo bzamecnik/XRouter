@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ObjectRemoter;
 using System.ServiceModel;
 
 namespace XRouter.Common.ComponentInterfaces
 {
     [ServiceContract]
-    public interface IBrokerServiceForManagement : IRemotelyReferable
+    public interface IBrokerServiceForManagement
     {
         // NOTE: there should not be a single property instead of the following
         // two methods
