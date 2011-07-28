@@ -60,6 +60,7 @@
     <Compile Include="CommonControls\ListEditor.xaml.cs">
       <DependentUpon>ListEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CommonControls\Resizer.cs" />
     <Compile Include="ConfigurationControlManager.cs" />
     <Compile Include="ConfigurationControls\Messageflow\MessageflowConfigurationControl.xaml.cs">
       <DependentUpon>MessageflowConfigurationControl.xaml</DependentUpon>
@@ -78,6 +79,9 @@
     </Compile>
     <Compile Include="ConfigurationControls\Messageflow\NodeSelectionManager.cs" />
     <Compile Include="ConfigurationManager.cs" />
+    <Compile Include="Themes\Generic.xaml.cs">
+      <DependentUpon>Generic.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IConfigurationControl.cs" />
     <Compile Include="Themes\Properties\Resources.Designer.cs" />
     <Compile Include="Themes\Properties\Settings.Designer.cs" />
@@ -117,6 +121,10 @@
     <Page Include="ConfigurationControls\Processor\ProcessorConfigurationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
