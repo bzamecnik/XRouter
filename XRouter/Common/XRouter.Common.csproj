@@ -87,6 +87,7 @@
     <Compile Include="Xrm\IXmlStorage.cs" />
     <Compile Include="Xrm\XmlResourceManager.cs" />
     <Compile Include="Xrm\XrmUri.cs" />
+    <Compile Include="Xrm\XrmUriConfigurationItemType.cs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DaemonNT\DaemonNT\DaemonNT.csproj">

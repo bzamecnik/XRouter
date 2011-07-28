@@ -33,6 +33,7 @@ namespace XRouter.ComponentHosting
             EventLog.Initialize(Logger);
 
             ObjectConfigurator.Configurator.CustomItemTypes.Add(new TokenSelectionConfigurationItemType());
+            ObjectConfigurator.Configurator.CustomItemTypes.Add(new XrmUriConfigurationItemType());
 
             broker = new XRouter.Broker.BrokerService();
             processor = new XRouter.Processor.ProcessorService();

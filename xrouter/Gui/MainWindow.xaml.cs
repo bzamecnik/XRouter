@@ -15,6 +15,7 @@ using System.Xml.Linq;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Gui.CommonControls;
 using ObjectConfigurator;
+using XRouter.Common.Xrm;
 
 namespace XRouter.Gui
 {
@@ -31,6 +32,7 @@ namespace XRouter.Gui
 		public MainWindow()
         {
             Configurator.CustomItemTypes.Add(new TokenSelectionConfigurationItemType(() => new TokenSelectionEditor()));
+            Configurator.CustomItemTypes.Add(new XrmUriConfigurationItemType(() => new XrmUriEditor()));
 
             #region Run xrouter server
             if (System.Diagnostics.Process.GetProcessesByName("DaemonNT").Length == 0) {

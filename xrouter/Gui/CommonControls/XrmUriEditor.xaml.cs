@@ -12,27 +12,35 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using XRouter.Common.Xrm;
+using ObjectConfigurator;
+using System.Xml.Linq;
 
 namespace XRouter.Gui.CommonControls
 {
     /// <summary>
     /// Interaction logic for XrmUriEditor.xaml
     /// </summary>
-    public partial class XrmUriEditor : UserControl
+    public partial class XrmUriEditor : UserControl, ICustomConfigurationValueEditor
     {
+        public event Action ValueChanged = delegate { };
+
+        FrameworkElement ICustomConfigurationValueEditor.Representation { get { return this; } }
+
         private XrmUri _xrmUri;
-        public XrmUri XrmUri
-        {
+        public XrmUri XrmUri {
             get { return _xrmUri; }
             set {
                 _xrmUri = value;
                 uiXPath.Text = _xrmUri.XPath;
+                CheckValue();
             }
         }
 
         public XrmUriEditor()
         {
             InitializeComponent();
+
+            XrmUri = new XrmUri();
         }
 
         private void uiXPath_LostFocus(object sender, RoutedEventArgs e)
@@ -52,7 +60,38 @@ namespace XRouter.Gui.CommonControls
 
         private void ChangeXPath(string xpath)
         {
-            XrmUri.XPath = xpath;
+            if (XrmUri.IsXPathValid(xpath)) {
+                XrmUri.XPath = xpath;
+                ValueChanged();
+            }
+        }
+
+        bool ICustomConfigurationValueEditor.WriteToXElement(XElement target)
+        {
+            target.Value = XrmUri.XPath;
+            return true;
+        }
+
+        void ICustomConfigurationValueEditor.ReadFromXElement(XElement source)
+        {
+            XrmUri.XPath = source.Value;
+            uiXPath.Text = XrmUri.XPath;
+            CheckValue();
+        }
+
+        private void uiXPath_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CheckValue();
+        }
+
+        private void CheckValue()
+        {
+            bool isValid = XrmUri.IsXPathValid(uiXPath.Text);
+            if (isValid) {
+                uiXPath.Background = Brushes.White;
+            } else {
+                uiXPath.Background = Brushes.LightSalmon;
+            }
         }
     }
 }

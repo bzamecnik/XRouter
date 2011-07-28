@@ -21,5 +21,15 @@ namespace XRouter.Common.Xrm
         {
             XPath = xpath;
         }
+
+        public static bool IsXPathValid(string xpath)
+        {
+            try {
+                XPathExpression.Compile(xpath);
+                return true;
+            } catch {
+                return false;
+            }
+        }
     }
 }

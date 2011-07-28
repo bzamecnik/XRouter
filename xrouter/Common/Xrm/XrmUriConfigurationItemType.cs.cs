@@ -5,13 +5,13 @@ using System.Text;
 using ObjectConfigurator;
 using System.Xml.Linq;
 
-namespace XRouter.Common.MessageFlowConfig
+namespace XRouter.Common.Xrm
 {
-    public class TokenSelectionConfigurationItemType : ICustomConfigurationItemType
+    public class XrmUriConfigurationItemType : ICustomConfigurationItemType
     {
         private Func<ICustomConfigurationValueEditor> editorFactory;
 
-        public TokenSelectionConfigurationItemType(Func<ICustomConfigurationValueEditor> editorFactory = null)
+        public XrmUriConfigurationItemType(Func<ICustomConfigurationValueEditor> editorFactory = null)
         {
             if (editorFactory == null) {
                 editorFactory = delegate {
@@ -23,12 +23,12 @@ namespace XRouter.Common.MessageFlowConfig
 
         public bool AcceptType(string typeFullName)
         {
-            return typeFullName == typeof(TokenSelection).FullName;
+            return typeFullName == typeof(XrmUri).FullName;
         }
 
         public void WriteDefaultValueToXElement(XElement target)
         {
-            TokenSelection defaultValue = new TokenSelection();
+            XrmUri defaultValue = new XrmUri();
             WriteToXElement(target, defaultValue);
         }
 
@@ -40,23 +40,23 @@ namespace XRouter.Common.MessageFlowConfig
             }
 
             if (!(defaultValue is string)) {
-                throw new InvalidOperationException("Default value for configuration item of type TokenSelection must be string.");
+                throw new InvalidOperationException("Default value for configuration item of type XrmUri must be string.");
             }
-            string pattern = (string)defaultValue;
-            TokenSelection value = new TokenSelection(pattern);
+            string xpath = (string)defaultValue;
+            XrmUri value = new XrmUri(xpath);
             WriteToXElement(target, value);
         }
 
         public void WriteToXElement(XElement target, object value)
         {
-            TokenSelection tokenSelection = (TokenSelection)value;
-            target.Value = tokenSelection.SelectionPattern;
+            XrmUri xrmUri = (XrmUri)value;
+            target.Value = xrmUri.XPath;
         }
 
         public object ReadFromXElement(XElement source)
         {
-            string pattern = source.Value;
-            return new TokenSelection(pattern);
+            string xpath = source.Value;
+            return new XrmUri(xpath);
         }
 
         public ICustomConfigurationValueEditor CreateEditor()

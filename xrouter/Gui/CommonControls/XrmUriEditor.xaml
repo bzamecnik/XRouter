@@ -6,6 +6,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <TextBox Name="uiXPath" FontSize="12" LostFocus="uiXPath_LostFocus" KeyDown="uiXPath_KeyDown" />
+        <TextBox Name="uiXPath" FontSize="12" LostFocus="uiXPath_LostFocus" KeyDown="uiXPath_KeyDown" TextChanged="uiXPath_TextChanged" />
     </Grid>
 </UserControl>
