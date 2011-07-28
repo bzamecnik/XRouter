@@ -117,6 +117,8 @@ namespace XRouter.Common
     </messageflow-state>
     <messages>
     </messages>
+    <exceptions>
+    </exceptions>
 </token>
 "));
         }
@@ -195,6 +197,18 @@ namespace XRouter.Common
                 XElement xMessage = new XElement(XName.Get("message"), message.Root);
                 xMessage.SetAttributeValue(XName.Get("name"), name);
                 xMessages.Add(xMessage);
+            }
+        }
+
+        public void AddException(string sourceNodeName, Exception exception)
+        {
+            lock (SyncLock) {
+                var xExceptions = Content.XDocument.XPathSelectElement("token/exceptions");
+                XElement xException = new XElement(XName.Get("exception"));
+                xException.SetAttributeValue(XName.Get("source-node"), sourceNodeName);
+                xException.SetAttributeValue(XName.Get("message"), exception.Message);
+                xException.SetAttributeValue(XName.Get("stack-trace"), exception.StackTrace);
+                xExceptions.Add(xException);
             }
         }
 

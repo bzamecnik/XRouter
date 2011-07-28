@@ -39,7 +39,11 @@ namespace XRouter.Processor.MessageFlowParts
         {
             TraceLog.Info("Evaluating action: " + Name);
             Parallel.ForEach(actions, delegate(IActionPlugin action) {
-                action.Evaluate(token);
+                try {
+                    action.Evaluate(token);
+                } catch (Exception ex) {
+                    token.AddException(Name, ex);
+                }
             });
 
             return Config.NextNode.Name;
