@@ -9,18 +9,16 @@
     <Border Background="GhostWhite" BorderBrush="LightGray" BorderThickness="1" CornerRadius="10" Padding="5">
         <Grid>
             <StackPanel>
-                <src:Resizer Height="120" CanResizeWidth="False">
-                    <ListView Name="uiItems" SelectionChanged="uiItems_SelectionChanged" SelectionMode="Single" BorderBrush="LightGray" HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch" >
-                        <ListView.Background>
-                            <LinearGradientBrush>
-                                <LinearGradientBrush.GradientStops>
-                                    <GradientStop Color="GhostWhite" Offset="0" />
-                                    <GradientStop Color="AliceBlue" Offset="2" />
-                                </LinearGradientBrush.GradientStops>
-                            </LinearGradientBrush>
-                        </ListView.Background>
-                    </ListView>
-                </src:Resizer>
+                <ListView Name="uiItems" SelectionChanged="uiItems_SelectionChanged" MinHeight="50" SelectionMode="Single" BorderBrush="LightGray" HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch" >
+                    <ListView.Background>
+                        <LinearGradientBrush>
+                            <LinearGradientBrush.GradientStops>
+                                <GradientStop Color="GhostWhite" Offset="0" />
+                                <GradientStop Color="AliceBlue" Offset="2" />
+                            </LinearGradientBrush.GradientStops>
+                        </LinearGradientBrush>
+                    </ListView.Background>
+                </ListView>
                 <Button Name="uiAdd" Click="uiAdd_Click" Margin="2 4 2 2" HorizontalAlignment="Left">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="12" Margin="5 0 0 0" Source="/XRouter.Gui;component/Resources/plus.png" />

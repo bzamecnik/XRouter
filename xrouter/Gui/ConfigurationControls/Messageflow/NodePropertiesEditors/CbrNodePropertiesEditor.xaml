@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:XRouter.Gui.CommonControls"
+             xmlns:src="clr-namespace:XRouter.Gui.ConfigurationControls.Messageflow"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="10">
@@ -17,31 +19,51 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Name:</Label>
-        <TextBox Grid.Row="0" Grid.Column="1" Name="uiName" LostFocus="uiName_LostFocus" KeyDown="uiName_KeyDown" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="10" />
-        <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Tested message:</Label>
-        <TextBox Grid.Row="1" Grid.Column="1" Name="uiTestedMessage" LostFocus="uiTestedMessage_LostFocus" KeyDown="uiTestedMessage_KeyDown" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="10" />
-        <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Default target:</Label>
-        <ToggleButton Grid.Row="2" Grid.Column="1" Name="uiSelectDefaultTarget" Click="uiSelectDefaultTarget_Click" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10" Padding="10 2 10 2">Select</ToggleButton>
-        <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 10 0 10">Branches:</Label>
-        
-        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
-            <Border BorderBrush="Black" BorderThickness="1">
-                <Grid Name="uiBranches">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0" FontWeight="Bold" HorizontalAlignment="Center" Margin="5">Condition</Label>
-                    <Label Grid.Row="0" Grid.Column="1" FontWeight="Bold" HorizontalAlignment="Center" Margin="5">Target</Label>
-                    <Label Grid.Row="0" Grid.Column="2" FontWeight="Bold" HorizontalAlignment="Center" Margin="5">Remove</Label>
-                </Grid>
-            </Border>
-            <Button Name="uiAddBranch" Click="uiAddBranch_Click" Margin="10" HorizontalAlignment="Right" Padding="20 2 20 2">Add</Button>
-        </StackPanel>
+
+        <Border Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSkyBlue" Offset="-1" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="15 5 0 5" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="13">Name:</TextBlock>
+        <TextBox Grid.Row="0" Grid.Column="1" Name="uiName" LostFocus="uiName_LostFocus" KeyDown="uiName_KeyDown" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="8 10 10 10" />
+
+        <Border Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSkyBlue" Offset="-1" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <TextBlock Grid.Row="1" Grid.Column="0" Margin="15 5 0 5" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="13">Tested message:</TextBlock>
+        <controls:TokenSelectionEditor Grid.Row="1" Grid.Column="1" x:Name="uiTestedMessage" Margin="10" />
+
+        <Border Grid.Row="2" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightBlue" Margin="5" >
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSkyBlue" Offset="-1" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <TextBlock Grid.Row="2" Grid.Column="0" Margin="15 5 0 5" FontWeight="Bold" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center">Default target:</TextBlock>
+        <src:TargetNodeSelector Grid.Row="2" Grid.Column="1" x:Name="uiDefaultTargetSelector" Margin="8 10 10 10" />
+
+        <Border Grid.Row="3" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSkyBlue" Offset="-1" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+            <StackPanel>
+                <TextBlock Margin="10 10 10 5" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center">Branches</TextBlock>
+                <controls:ListEditor x:Name="uiBranches" Margin="5 0 5 5" />
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

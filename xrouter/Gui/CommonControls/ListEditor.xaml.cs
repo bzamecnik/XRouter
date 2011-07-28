@@ -29,11 +29,15 @@ namespace XRouter.Gui.CommonControls
         private List<FrameworkElement> internalItems = new List<FrameworkElement>();
         public ReadOnlyCollection<FrameworkElement> Items { get; private set; }
 
-        public ListEditor(Func<FrameworkElement> itemFactory)
+        public ListEditor()
         {
             InitializeComponent();
-            ItemFactory = itemFactory;
             Items = new ReadOnlyCollection<FrameworkElement>(internalItems);
+        }
+
+        public void Initialize(Func<FrameworkElement> itemFactory)
+        {
+            ItemFactory = itemFactory;   
         }
 
         public void AddItem(FrameworkElement item)

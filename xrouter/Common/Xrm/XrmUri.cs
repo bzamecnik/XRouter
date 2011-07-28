@@ -13,6 +13,10 @@ namespace XRouter.Common.Xrm
         [DataMember]
         public string XPath { get; set; }
 
+        public XrmUri()
+        {
+        }
+
         public XrmUri(string xpath)
         {
             XPath = xpath;

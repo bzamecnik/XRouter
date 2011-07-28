@@ -19,6 +19,7 @@ using System.Threading;
 using XRouter.Gui.CommonControls;
 using System.Xml.Linq;
 using XRouter.Common.Utils;
+using XRouter.Gui.Utils;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
 {
@@ -30,7 +31,6 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
         private ActionNodeConfiguration node;
         private NodeSelectionManager nodeSelectionManager;
 
-        private ListEditor actionsListEditor;
         private ActionConfiguration activeAction;
         private ConfigurationEditor activeConfigurationEditor;
 
@@ -42,17 +42,45 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
 
             uiName.Text = node.Name;
 
-            actionsListEditor = new ListEditor(AddAction);
-            actionsListEditor.ItemRemoved += RemoveAction;
-            actionsListEditor.ItemSelected += SetActiveAction;
-            uiActionsContainer.Child = actionsListEditor;
+            #region Prepare next node selector
+            uiNextNodeSelector.Initialize(nodeSelectionManager, node, () => node.NextNode, delegate(NodeConfiguration nextNode) {
+                node.NextNode = nextNode;
+            });
+            #endregion
+
+            #region Prepare actions editing
+            uiActionsListEditor.Initialize(AddAction);
+            uiActionsListEditor.ItemRemoved += RemoveAction;
+            uiActionsListEditor.ItemSelected += SetActiveAction;
 
             uiActionConfigurationRegion.Visibility = Visibility.Collapsed;
             foreach (ActionConfiguration action in node.Actions) {
-                actionsListEditor.AddItem(CreateActionRepresentation(action));
+                uiActionsListEditor.AddItem(CreateActionRepresentation(action));
             }
-            actionsListEditor.SelectItem(actionsListEditor.Items.FirstOrDefault());
+            uiActionsListEditor.SelectItem(uiActionsListEditor.Items.FirstOrDefault());
+            #endregion
         }
+
+        #region Name editing
+
+        private void uiName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            node.Name = uiName.Text;
+        }
+
+        private void uiName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter) {
+                node.Name = uiName.Text;
+            }
+            if (e.Key == Key.Escape) {
+                uiName.Text = node.Name;
+            }
+        }
+
+        #endregion
+
+        #region Actions editing
 
         private FrameworkElement AddAction()
         {
@@ -102,7 +130,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
                 },
                 Children = {
                     new Image {
-                        Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Generic_Device.png")),
+                        Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Actions-tool-animator-icon.png")),
                         Height = 18,
                         Margin = new Thickness(8, 0, 0, 0)
                     },
@@ -138,38 +166,6 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
             uiActionConfigurationContainer.Child = activeConfigurationEditor;
         }
 
-        private void uiName_LostFocus(object sender, RoutedEventArgs e)
-        {
-            node.Name = uiName.Text;
-        }
-
-        private void uiName_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter) {
-                node.Name = uiName.Text;
-            }
-            if (e.Key == Key.Escape) {
-                uiName.Text = node.Name;
-            }
-        }
-
-        private void uiSelectNextNode_Click(object sender, RoutedEventArgs e)
-        {
-            if (uiSelectNextNode.IsChecked == true) {
-                nodeSelectionManager.NodeSelecting += SelectNodeAsNextTarget;
-            } else {
-                nodeSelectionManager.NodeSelecting -= SelectNodeAsNextTarget;
-            }
-        }
-
-        private void SelectNodeAsNextTarget(object sender, NodeSelectingEventArgs e)
-        {
-            e.IsCancelled = true;
-            uiSelectNextNode.IsChecked = false;
-            nodeSelectionManager.NodeSelecting -= SelectNodeAsNextTarget;
-
-            node.NextNode = e.NewSelectedNode;
-            nodeSelectionManager.MessageflowGraphPresenter.RaiseGraphChanged();
-        }
+        #endregion
     }
 }

@@ -14,6 +14,11 @@ namespace XRouter.Common.MessageFlowConfig
         [DataMember]
         public string SelectionPattern { get; set; }
 
+        public TokenSelection()
+        {
+            SelectionPattern = string.Empty;
+        }
+
         public TokenSelection(string selectionPattern)
         {
             SelectionPattern = selectionPattern;

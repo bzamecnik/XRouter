@@ -15,6 +15,8 @@
             <Border Background="WhiteSmoke" Name="uiDesignerContainer"/>
         </ScrollViewer>
         <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" Background="LightGray" />
-        <Border Grid.Column="2" Background="AliceBlue" Name="uiNodePropertiesContainer" />
+        <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <Border Background="AliceBlue" Name="uiNodePropertiesContainer" />
+        </ScrollViewer>
     </Grid>
 </UserControl>

@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
+using XRouter.Gui.CommonControls;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
 {
@@ -31,12 +32,37 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
             this.nodeSelectionManager = nodeSelectionManager;
 
             uiName.Text = node.Name;
-            uiTestedMessage.Text = node.TestedSelection.SelectionPattern;
-            foreach (XrmUri branchKey in node.Branches.Keys) {
-                AddBranchToEditor(branchKey);
+
+            if (node.TestedSelection == null) {
+                node.TestedSelection = new TokenSelection();
             }
+            uiTestedMessage.Selection = node.TestedSelection;
+
+            uiDefaultTargetSelector.Initialize(nodeSelectionManager, node, () => node.DefaultTarget, delegate(NodeConfiguration defaultTarget) {
+                node.DefaultTarget = defaultTarget;
+            });
+
+            #region Prepare branches
+            uiBranches.Initialize(delegate {
+                XrmUri branchKey = new XrmUri();
+                node.Branches.Add(branchKey, null);
+                return CreateBranchPresentation(branchKey);
+            });
+            uiBranches.ItemRemoved += delegate(FrameworkElement uiBranch) {
+                XrmUri branchKey = (XrmUri)uiBranch.Tag;
+                node.Branches.Remove(branchKey);
+                nodeSelectionManager.MessageflowGraphPresenter.RaiseGraphChanged();
+            };
+            uiBranches.ItemAdded += delegate(FrameworkElement uiBranch) { 
+                nodeSelectionManager.MessageflowGraphPresenter.RaiseGraphChanged(); 
+            };
+            foreach (XrmUri branchKey in node.Branches.Keys) {
+                uiBranches.AddItem(CreateBranchPresentation(branchKey));
+            }
+            #endregion
         }
 
+        #region Name editing
         private void uiName_LostFocus(object sender, RoutedEventArgs e)
         {
             node.Name = uiName.Text;
@@ -51,92 +77,35 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
                 uiName.Text = node.Name;
             }
         }
+        #endregion
 
-        private void uiTestedMessage_LostFocus(object sender, RoutedEventArgs e)
+        #region Branches editing
+
+        private FrameworkElement CreateBranchPresentation(XrmUri branchKey)
         {
-            node.TestedSelection = new TokenSelection(uiTestedMessage.Text);
-        }
-
-        private void uiTestedMessage_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter) {
-                node.TestedSelection = new TokenSelection(uiTestedMessage.Text);
-            }
-            if (e.Key == Key.Escape) {
-                uiTestedMessage.Text = node.TestedSelection.SelectionPattern;
-            }
-        }
-
-        private void uiSelectDefaultTarget_Click(object sender, RoutedEventArgs e)
-        {
-            if (uiSelectDefaultTarget.IsChecked == true) {
-                nodeSelectionManager.NodeSelecting += SelectNodeAsDefaultTarget;
-            } else {
-                nodeSelectionManager.NodeSelecting -= SelectNodeAsDefaultTarget;
-            }
-        }
-
-        private void SelectNodeAsDefaultTarget(object sender, NodeSelectingEventArgs e)
-        {
-            e.IsCancelled = true;
-            uiSelectDefaultTarget.IsChecked = false;
-            nodeSelectionManager.NodeSelecting -= SelectNodeAsDefaultTarget;
-
-            node.DefaultTarget = e.NewSelectedNode;
-            nodeSelectionManager.MessageflowGraphPresenter.RaiseGraphChanged();
-        }
-
-        #region Editing branches
-
-        private void uiAddBranch_Click(object sender, RoutedEventArgs e)
-        {
-            XrmUri branchKey = new XrmUri(string.Empty);
-            node.Branches.Add(branchKey, null);
-            AddBranchToEditor(branchKey);
-        }
-
-        private void AddBranchToEditor(XrmUri branchKey)
-        {
-            uiBranches.RowDefinitions.Add(new RowDefinition());
-            int rowNumber = uiBranches.RowDefinitions.Count - 1;
-
-            TextBox uiCondition = new TextBox {
-                Text = branchKey.XPath,
+            XrmUriEditor uiCondition = new XrmUriEditor {
+                XrmUri = branchKey,
                 Margin = new Thickness(5, 2, 5, 2)
             };
-            Grid.SetRow(uiCondition, rowNumber);
             Grid.SetColumn(uiCondition, 0);
 
-            Button uiSelectTarget = new Button {
-                Content = "Select",
-                Margin = new Thickness(5, 2, 5, 2),
-                Padding = new Thickness(10, 2, 10, 2),
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+            TargetNodeSelector uiTargetSelector = new TargetNodeSelector {
+                Margin = new Thickness(5, 2, 10, 2),
             };
-            Grid.SetRow(uiSelectTarget, rowNumber);
-            Grid.SetColumn(uiSelectTarget, 1);
+            uiTargetSelector.Initialize(nodeSelectionManager, node, () => node.Branches[branchKey], delegate(NodeConfiguration targetNode) {
+                node.Branches[branchKey] = targetNode;
+            });
+            Grid.SetColumn(uiTargetSelector, 1);
 
-            Button uiRemove = new Button {
-                Content = "X",
-                Margin = new Thickness(5, 2, 5, 2),
-                Padding = new Thickness(10, 2, 10, 2),
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+            Grid result = new Grid {
+                Tag = branchKey,
+                ColumnDefinitions = {
+                    new ColumnDefinition { Width=new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width=new GridLength(1, GridUnitType.Auto) }
+                },
+                Children = { uiCondition, uiTargetSelector }
             };
-            Grid.SetRow(uiRemove, rowNumber);
-            Grid.SetColumn(uiRemove, 2);
-            uiRemove.Click += delegate {
-                uiBranches.Children.Remove(uiCondition);
-                uiBranches.Children.Remove(uiSelectTarget);
-                uiBranches.Children.Remove(uiRemove);
-                uiBranches.RowDefinitions.RemoveAt(uiBranches.RowDefinitions.Count - 1);
-                node.Branches.Remove(branchKey);
-            };
-
-            uiBranches.Children.Add(uiCondition);
-            uiBranches.Children.Add(uiSelectTarget);
-            uiBranches.Children.Add(uiRemove);
+            return result;
         }
 
         #endregion

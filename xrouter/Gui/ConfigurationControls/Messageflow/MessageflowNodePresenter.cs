@@ -62,13 +62,13 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
 
             if (node is CbrNodeConfiguration) {
                 uiType.Text = "CBR";
-                uiIcon.Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/OrgChartHS.png"));
+                uiIcon.Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/nfs-unmount-icon.png"));
             } else if (node is ActionNodeConfiguration) {
                 uiType.Text = "Action";
-                uiIcon.Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Generic_Device.png"));
+                uiIcon.Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Actions-tool-animator-icon.png"));
             } else if (node is TerminatorNodeConfiguration) {
                 uiType.Text = "Terminator";
-                uiIcon.Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/1446_envelope_stamp_clsd_32.png"));
+                uiIcon.Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Button-exit-icon.png"));
             }
 
             nodeBorder = new Border {
@@ -132,7 +132,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             if (isSelected) {
                 nodeBorder.Background = new LinearGradientBrush {
                     GradientStops = {
-                        new GradientStop( Colors.CornflowerBlue, -0),
+                        new GradientStop( Colors.CornflowerBlue, 0),
                         new GradientStop(Colors.White, 1.4),
                     }
                 };

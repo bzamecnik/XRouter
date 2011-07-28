@@ -17,6 +17,7 @@ using XRouter.Common.MessageFlowConfig;
 using SimpleDiagrammer;
 using System.Threading.Tasks;
 using System.Threading;
+using XRouter.Gui.Utils;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow
 {
@@ -67,7 +68,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             ContextMenu result = new ContextMenu();
 
             MenuItem menuItemAddActionNode = new MenuItem {
-                Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Generic_Device.png")), Height = 20 },
+                Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Actions-tool-animator-icon.png")), Height = 20 },
                 Header = new TextBlock { Text = "Action", FontSize = 14, FontWeight = FontWeights.Bold }
             };
             menuItemAddActionNode.Click += delegate {
@@ -75,7 +76,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             };
 
             MenuItem menuItemAddCbrNode = new MenuItem {
-                Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/OrgChartHS.png")), Height = 20 },
+                Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/nfs-unmount-icon.png")), Height = 20 },
                 Header = new TextBlock { Text = "CBR", FontSize = 14, FontWeight = FontWeights.Bold }
             };
             menuItemAddCbrNode.Click += delegate {
@@ -83,7 +84,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             };
 
             MenuItem menuItemAddTerminatorNode = new MenuItem {
-                Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/1446_envelope_stamp_clsd_32.png")), Height = 20 },
+                Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Button-exit-icon.png")), Height = 20 },
                 Header = new TextBlock { Text = "Terminator", FontSize = 14, FontWeight = FontWeights.Bold }
             };
             menuItemAddTerminatorNode.Click += delegate {
@@ -111,11 +112,8 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             Messageflow.Nodes.Add(node);
             MessageflowGraphPresenter.RaiseGraphChanged();
 
-            Task.Factory.StartNew(delegate {
-                Thread.Sleep(500);
-                Dispatcher.Invoke(new Action(delegate {
-                    NodeSelectionManager.SelectNode(node);
-                }));
+            ThreadUtils.InvokeLater(TimeSpan.FromSeconds(0.5), delegate {
+                NodeSelectionManager.SelectNode(node);
             });
         }
 

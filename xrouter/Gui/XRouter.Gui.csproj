@@ -61,6 +61,12 @@
       <DependentUpon>ListEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="CommonControls\Resizer.cs" />
+    <Compile Include="CommonControls\TokenSelectionEditor.xaml.cs">
+      <DependentUpon>TokenSelectionEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CommonControls\XrmUriEditor.xaml.cs">
+      <DependentUpon>XrmUriEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ConfigurationControlManager.cs" />
     <Compile Include="ConfigurationControls\Messageflow\MessageflowConfigurationControl.xaml.cs">
       <DependentUpon>MessageflowConfigurationControl.xaml</DependentUpon>
@@ -78,6 +84,9 @@
       <DependentUpon>TerminatorNodePropertiesEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="ConfigurationControls\Messageflow\NodeSelectionManager.cs" />
+    <Compile Include="ConfigurationControls\Messageflow\TargetNodeSelector.xaml.cs">
+      <DependentUpon>TargetNodeSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="Themes\Generic.xaml.cs">
       <DependentUpon>Generic.xaml</DependentUpon>
@@ -86,7 +95,16 @@
     <Compile Include="Themes\Properties\Resources.Designer.cs" />
     <Compile Include="Themes\Properties\Settings.Designer.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
+    <Compile Include="Utils\ThreadUtils.cs" />
     <Page Include="CommonControls\ListEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CommonControls\TokenSelectionEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CommonControls\XrmUriEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -115,6 +133,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ConfigurationControls\Messageflow\NodePropertiesEditors\TerminatorNodePropertiesEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfigurationControls\Messageflow\TargetNodeSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -304,6 +326,21 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Button-exit-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Actions-tool-animator-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Actions-insert-link-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\link-go-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\nfs-unmount-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -31,11 +31,12 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
 
             uiName.Text = node.Name;
             uiIsReturningOutput.IsChecked = node.IsReturningOutput;
-            if (node.IsReturningOutput) {
-                uiResultMessage.Text = node.ResultMessageSelection.SelectionPattern;
-            } else {
-                uiResultMessage.IsEnabled = false;
+            uiResultMessage.IsEnabled = node.IsReturningOutput;
+
+            if (node.ResultMessageSelection == null) {
+                node.ResultMessageSelection = new TokenSelection();
             }
+            uiResultMessage.Selection = node.ResultMessageSelection;
         }
 
         private void uiName_LostFocus(object sender, RoutedEventArgs e)
@@ -53,26 +54,10 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
             }
         }
 
-        private void uiResultMessage_LostFocus(object sender, RoutedEventArgs e)
-        {
-            node.ResultMessageSelection = new TokenSelection(uiResultMessage.Text);
-        }
-
-        private void uiResultMessage_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter) {
-                node.ResultMessageSelection = new TokenSelection(uiResultMessage.Text);
-            }
-            if (e.Key == Key.Escape) {
-                uiResultMessage.Text = node.ResultMessageSelection.SelectionPattern;
-            }
-        }
-
         private void uiReturnsResult_Click(object sender, RoutedEventArgs e)
         {
             if (uiIsReturningOutput.IsChecked == true) {
                 node.IsReturningOutput = true;
-                node.ResultMessageSelection = new TokenSelection(uiResultMessage.Text);
                 uiResultMessage.IsEnabled = true;
             } else {
                 node.IsReturningOutput = false;
