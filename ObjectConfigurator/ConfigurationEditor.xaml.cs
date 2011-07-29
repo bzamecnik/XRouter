@@ -94,22 +94,63 @@ namespace ObjectConfigurator
 
                 Grid.SetRow(itemEditor.Representation, uiItemsContainer.RowDefinitions.Count - 1);
                 Grid.SetColumn(itemEditor.Representation, 1);
+                itemEditor.Representation.ToolTip = itemMetadata.UserDescription;
                 itemEditor.Representation.VerticalAlignment = VerticalAlignment.Center;
                 itemEditor.Representation.Margin = new Thickness(5, 6, 5, 8);
-                itemEditor.Representation.ToolTip = itemMetadata.UserDescription;
                 uiItemsContainer.Children.Add(itemEditor.Representation);
             }
         }
 
         private FrameworkElement CreateHeaderCell(ItemMetadata itemMetadata)
         {
-            TextBlock result = new TextBlock();
-            result.Margin = new Thickness(10, 8, 5, 0);
-            result.VerticalAlignment = VerticalAlignment.Top;
-            result.HorizontalAlignment = HorizontalAlignment.Right;
-            result.FontWeight = FontWeights.Bold;
-            result.Text = itemMetadata.UserName;
-            result.ToolTip = itemMetadata.UserDescription;
+            TextBlock uiText = new TextBlock();
+            uiText.Text = itemMetadata.UserName;
+            uiText.ToolTip = itemMetadata.UserDescription;
+            uiText.HorizontalAlignment = HorizontalAlignment.Right;
+            uiText.FontWeight = FontWeights.Bold;
+            Grid.SetColumn(uiText, 1);
+
+            Grid result = new Grid() {
+                Margin = new Thickness(10, 8, 5, 0),
+                VerticalAlignment = VerticalAlignment.Top,
+                ColumnDefinitions = {
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
+                },
+                Children = { uiText }
+            };
+
+            if ((itemMetadata.UserDescription != null) && (itemMetadata.UserDescription.Trim().Length > 0)) {
+                ToolTip helpToolTip = new ToolTip {
+                    Background = new LinearGradientBrush {
+                        GradientStops = {
+                            new GradientStop(Colors.Yellow, -2),
+                            new GradientStop(Colors.LightYellow, 1),
+                        }
+                    },
+                    BorderBrush = Brushes.LightGray,
+                    BorderThickness = new Thickness(1),
+                    Content = new TextBlock {
+                        Text = itemMetadata.UserDescription,
+                        Margin = new Thickness(3),
+                        FontSize = 14,
+                        Foreground = Brushes.Black,
+                        FontWeight = FontWeights.SemiBold
+                    }
+                };
+                
+                Image uiHelp = new Image {
+                    ToolTip = helpToolTip,
+                    Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/ObjectConfigurator;component/Resources/Help-icon.png")),
+                    Margin = new Thickness(0, 0, 5, 0),
+                    Height = 12
+                };
+                ToolTipService.SetInitialShowDelay(uiHelp, 0);
+                ToolTipService.SetShowDuration(uiHelp, int.MaxValue);
+                Grid.SetColumn(uiHelp, 0);
+                result.Children.Add(uiHelp);
+            }
+
             return result;
         }
     }
