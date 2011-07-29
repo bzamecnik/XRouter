@@ -6,12 +6,13 @@ using wcf = System.ServiceModel;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
 using XRouter.Common;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
-using System.Xml;
+using XRouter.Common.Persistence;
 
 namespace XRouter.Broker
 {
@@ -37,9 +38,9 @@ namespace XRouter.Broker
         {
         }
 
-        public void Start(IEnumerable<GatewayProvider> gatewayProviders, IEnumerable<ProcessorProvider> processorProviders)
+        public void Start(string dbConnectionString, IEnumerable<GatewayProvider> gatewayProviders, IEnumerable<ProcessorProvider> processorProviders)
         {
-            storage = new PersistentStorage();
+            storage = new PersistentStorage(dbConnectionString);
             ApplicationConfiguration config = GetConfiguration();
 
             #region Prepare componentsAccessors
@@ -99,14 +100,14 @@ namespace XRouter.Broker
 
         public ApplicationConfiguration GetConfiguration()
         {
-            XDocument configXml = storage.GetConfigXml();
+            XDocument configXml = storage.GetApplicationConfiguration();
             var result = new ApplicationConfiguration(configXml);
             return result;
         }
 
         public void ChangeConfiguration(ApplicationConfiguration config)
         {
-            storage.SaveConfigXml(config.Content);
+            storage.SaveApplicationConfiguration(config.Content);
 
             ComponentAccessor[] components = componentsAccessors.Values.ToArray();
             foreach (var component in components) {
@@ -253,19 +254,6 @@ namespace XRouter.Broker
                 }
             }
             throw new ArgumentException("Cannot find target gateway.");
-        }
-
-        public MessageFlowConfiguration[] GetActiveMessageFlows()
-        {
-            var config = GetConfiguration();
-            var activeMessageFlowGuids = storage.GetActiveMessageFlowsGuids();
-
-            List<MessageFlowConfiguration> result = new List<MessageFlowConfiguration>();
-            foreach (var guid in activeMessageFlowGuids) {
-                MessageFlowConfiguration messageFlow = config.GetMessageFlow(guid);
-                result.Add(messageFlow);
-            }
-            return result.ToArray();
         }
 
         public SerializableXDocument GetXmlResource(XrmUri target)

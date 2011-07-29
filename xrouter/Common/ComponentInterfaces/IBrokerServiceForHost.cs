@@ -7,7 +7,7 @@ namespace XRouter.Common.ComponentInterfaces
 {
     public interface IBrokerServiceForHost
     {
-        void Start(IEnumerable<GatewayProvider> gatewayProviders, IEnumerable<ProcessorProvider> processorProviders);
+        void Start(string dbConnectionString, IEnumerable<GatewayProvider> gatewayProviders, IEnumerable<ProcessorProvider> processorProviders);
         void Stop();
     }
 }

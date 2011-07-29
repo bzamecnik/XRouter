@@ -47,7 +47,6 @@
     <Compile Include="Dispatching\Dispatcher.cs" />
     <Compile Include="GatewayAccessor.cs" />
     <Compile Include="IBrokerServiceForDispatcher.cs" />
-    <Compile Include="PersistentStorage.cs" />
     <Compile Include="ProcessorAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

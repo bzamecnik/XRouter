@@ -22,8 +22,6 @@ namespace XRouter.Common.ComponentInterfaces
         // NOTE: synchronous
         SerializableXDocument SendMessage(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata);
 
-        MessageFlowConfiguration[] GetActiveMessageFlows();
-
         SerializableXDocument GetXmlResource(XrmUri target);
     }
 }

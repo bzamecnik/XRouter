@@ -22,6 +22,7 @@ namespace XRouter.ComponentHosting
         private static readonly string SectionKey_Gateway = "gateway";
         private static readonly string SectionKey_Processor = "processor";
         private static readonly string SettingsKey_ComponentName = "component-name";
+        private static readonly string SettingsKey_ConnectionString = "connection-string";
 
         private IBrokerService broker;
         private IGatewayService gateway;
@@ -41,8 +42,10 @@ namespace XRouter.ComponentHosting
 
             string processorName = args.Settings[SectionKey_Processor].Parameters[SettingsKey_ComponentName];
             string gatewayName = args.Settings[SectionKey_Gateway].Parameters[SettingsKey_ComponentName];
+            string connectionString = args.Settings[SectionKey_Processor].Parameters[SettingsKey_ConnectionString];
 
             broker.Start(
+                connectionString,
                 new[] { new GatewayProvider(gatewayName, gateway) },
                 new[] { new ProcessorProvider(processorName, processor) }
             );

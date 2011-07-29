@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using XRouter.Common;
 using XRouter.Common.Xrm;
 
-namespace XRouter.Broker
+namespace XRouter.Common.Persistence
 {
-    class PersistentStorage : IXmlStorage
+    public class PersistentStorage : IXmlStorage
     {
         private object storageLock = new object();
 
@@ -19,8 +18,13 @@ namespace XRouter.Broker
 
         public event Action ConfigurationChanged = delegate { };
 
-        public PersistentStorage()
+        private string connectionString;
+
+        public PersistentStorage(string connectionString)
         {
+            this.connectionString = connectionString;
+
+            #region In memory configurationXml
             configurationXml = XDocument.Parse(@"
 <configuration>
     <components>
@@ -208,17 +212,19 @@ namespace XRouter.Broker
     </xml-resource-storage>
 </configuration>
 ");
+            #endregion
+
             InternalTokens = new List<Token>();
         }
 
-        public XDocument GetConfigXml()
+        public XDocument GetApplicationConfiguration()
         {
             lock (storageLock) {
                 return configurationXml;
             }
         }
 
-        public void SaveConfigXml(XDocument configXml)
+        public void SaveApplicationConfiguration(XDocument configXml)
         {
             lock (storageLock) {
                 this.configurationXml = configXml;
@@ -248,8 +254,7 @@ namespace XRouter.Broker
 
         public Token GetToken(Guid tokenGuid)
         {
-            lock (storageLock)
-            {
+            lock (storageLock) {
                 Token token = InternalTokens.First(t => t.Guid == tokenGuid);
                 return token;
             }
@@ -257,8 +262,7 @@ namespace XRouter.Broker
 
         public Token[] GetTokens(int pageSize, int pageNumber)
         {
-            lock (storageLock)
-            {
+            lock (storageLock) {
                 int tokensToSkip = (pageNumber - 1) * pageSize;
                 var result = InternalTokens.Skip(tokensToSkip).Take(pageNumber).ToArray();
                 return result;
@@ -281,32 +285,25 @@ namespace XRouter.Broker
             }
         }
 
-        public IEnumerable<Guid> GetActiveMessageFlowsGuids()
-        {
-            lock (storageLock) {
-                Guid[] result = InternalTokens.Where(t => t.State != TokenState.Finished).Select(t => t.MessageFlowState.MessageFlowGuid).Distinct().ToArray();
-                return result;
-            }
-        }
-
         #region Implementation of IXmlStorage
-        event Action IXmlStorage.XmlChanged {
+        event Action IXmlStorage.XmlChanged
+        {
             add { ConfigurationChanged += value; }
             remove { ConfigurationChanged -= value; }
         }
 
         void IXmlStorage.SaveXml(XDocument xml)
         {
-            XDocument config = GetConfigXml();
+            XDocument config = GetApplicationConfiguration();
             XElement xContainer = config.XPathSelectElement("/configuration/xml-resource-storage");
             xContainer.RemoveNodes();
             xContainer.Add(xml.Root);
-            SaveConfigXml(config);
+            SaveApplicationConfiguration(config);
         }
 
         XDocument IXmlStorage.LoadXml()
         {
-            XDocument config = GetConfigXml();
+            XDocument config = GetApplicationConfiguration();
             XElement xContainer = config.XPathSelectElement("/configuration/xml-resource-storage");
 
             XDocument result = new XDocument();

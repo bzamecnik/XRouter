@@ -3,6 +3,7 @@
   <service type="XRouter.ComponentHosting.XRouterService,..\..\..\..\xrouter\ComponentHosting\bin\debug\XRouter.ComponentHosting.dll" name="xrouter">
     <settings>
       <section name="broker">
+        <param name="connection-string"></param>
       </section>
       <section  name="gateway">
         <param name="component-name">gateway1</param>
