@@ -51,6 +51,10 @@ namespace XRouter.Common.MessageFlowConfig
 
         public static bool IsPatternValid(string pattern)
         {
+            if (pattern.Length == 0) {
+                return true;
+            }
+
             string xpath = CreateXPathFromPattern(pattern);
             try {
                 XPathExpression.Compile(xpath);
@@ -62,12 +66,25 @@ namespace XRouter.Common.MessageFlowConfig
 
         public static string CreateXPathFromPattern(string pattern)
         {
+            if (pattern.StartsWith("$") && (pattern.Length > 1)) {
+                return string.Format("/token/messages/message[@name='{0}']/*[1]", EncodeXml(pattern.Substring(1)));
+            }
             return pattern;
+        }
+
+        private static string EncodeXml(string raw)
+        {
+            return raw
+                .Replace("&", "&amp;")
+                .Replace("'", "&apos;")
+                .Replace("\"", "&quot;")
+                .Replace("<", "&lt;")
+                .Replace(">", "&gt;");
         }
 
         private string GetXPath()
         {
-            return SelectionPattern;
+            return CreateXPathFromPattern(SelectionPattern);
         }
     }
 }

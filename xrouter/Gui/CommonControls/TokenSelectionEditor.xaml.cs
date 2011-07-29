@@ -89,8 +89,10 @@ namespace XRouter.Gui.CommonControls
             bool isValid = TokenSelection.IsPatternValid(uiPattern.Text);
             if (isValid) {
                 uiPattern.Background = Brushes.White;
+                uiPattern.ToolTip = string.Format("XPath: {0}", TokenSelection.CreateXPathFromPattern(uiPattern.Text));
             } else {
                 uiPattern.Background = Brushes.LightSalmon;
+                uiPattern.ToolTip = null;
             }
         }
     }
