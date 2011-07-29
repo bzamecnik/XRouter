@@ -7,36 +7,36 @@ using XRouter.Common;
 using XRouter.Broker;
 using XRouter.Common.Xrm;
 using XRouter.Common.ComponentInterfaces;
+using XRouter.Processor.MessageFlowParts;
 
 namespace XRouter.Processor
 {
     class ProcessorServiceForNode : IProcessorServiceForAction
     {
-        internal string ProcessorName { get; private set; }
+        public ProcessorService Processor { get; private set; }
 
-        private IBrokerServiceForProcessor BrokerService { get; set; }
+        public string ProcessorName { get { return Processor.Name; } }
 
-        public event Action ConfigurationChanged = delegate { };
+        public ApplicationConfiguration Configuration { get { return Processor.Configuration; } }
 
-        private ApplicationConfiguration _configuration;
-        public ApplicationConfiguration Configuration {
-            get { return _configuration; }
-            internal set {
-                _configuration = value;
-                ConfigurationChanged();
-            }
-        }
+        public Node Node { get; private set; }
 
-        public ProcessorServiceForNode(string processorName, IBrokerServiceForProcessor brokerService, ApplicationConfiguration configuration)
+        private IBrokerServiceForProcessor BrokerService { get { return Processor.BrokerService; } }
+
+        public ProcessorServiceForNode(ProcessorService processor, Node node)
         {
-            ProcessorName = processorName;
-            BrokerService = brokerService;
-            Configuration = configuration;
+            Processor = processor;
+            Node = node;
         }
 
         public void CreateMessage(Guid targetTokenGuid, string messageName, XDocument message)
         {
             BrokerService.AddMessageToToken(ProcessorName, targetTokenGuid, messageName, new SerializableXDocument(message));
+        }
+
+        public void AddExceptionToToken(Guid targetTokenGuid, Exception ex)
+        {
+            BrokerService.AddExceptionToToken(ProcessorName, targetTokenGuid, Node.Name, ex.Message, ex.StackTrace);
         }
 
         public XDocument SendMessage(EndpointAddress target, XDocument message, XDocument metadata = null)

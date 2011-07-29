@@ -12,6 +12,8 @@ namespace XRouter.Processor
     {
         void CreateMessage(Guid targetTokenGuid, string messageName, XDocument message);
 
+        void AddExceptionToToken(Guid targetTokenGuid, Exception ex);
+
         XDocument SendMessage(EndpointAddress target, XDocument message, XDocument metadata = null);
 
         XDocument GetXmlResource(XrmUri target);

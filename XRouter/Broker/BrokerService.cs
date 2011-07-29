@@ -218,6 +218,18 @@ namespace XRouter.Broker
             }
         }
 
+        public void AddExceptionToToken(string updatingProcessorName, Guid targetTokenGuid, string sourceNodeName, string message, string stackTrace)
+        {
+            lock (syncLock) {
+                storage.UpdateToken(targetTokenGuid, delegate(Token token) {
+                    if (token.MessageFlowState.AssignedProcessor == updatingProcessorName) {
+                        token.MessageFlowState.LastResponseFromProcessor = DateTime.Now;
+                        token.AddException(sourceNodeName, message, stackTrace);
+                    }
+                });
+            }
+        }
+
         public void FinishToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument resultMessage)
         {
             lock (syncLock)

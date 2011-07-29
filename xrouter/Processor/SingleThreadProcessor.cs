@@ -14,16 +14,14 @@ namespace XRouter.Processor
     {
         private BlockingCollection<Token> tokensToProcess;
 
-        private ProcessorService processorService;
-        private ProcessorServiceForNode serviceForNode;
+        internal ProcessorService Processor { get; private set; }
 
         private Dictionary<Guid, MessageFlow> messageFlowsByGuid = new Dictionary<Guid, MessageFlow>();
 
-        public SingleThreadProcessor(BlockingCollection<Token> tokensToProcess, ProcessorService processorService, ProcessorServiceForNode serviceForNode)
+        public SingleThreadProcessor(BlockingCollection<Token> tokensToProcess, ProcessorService processor)
         {
             this.tokensToProcess = tokensToProcess;
-            this.serviceForNode = serviceForNode;
-            this.processorService = processorService;
+            this.Processor = processor;
         }
 
         public void Run()
@@ -34,7 +32,7 @@ namespace XRouter.Processor
                 if (canContinue) {
                     tokensToProcess.Add(token);
                 } else {
-                    processorService.DecrementTokensCount();
+                    Processor.DecrementTokensCount();
                     TraceLog.Info("Processor finished token with GUID " + token.Guid);
                 }
             }
@@ -47,9 +45,9 @@ namespace XRouter.Processor
             if (messageFlowsByGuid.ContainsKey(messageFlowGuid)) {
                 return messageFlowsByGuid[messageFlowGuid];
             } else {
-                MessageFlowConfiguration messageFlowConfiguration = processorService.Configuration.GetMessageFlow(messageFlowGuid);
+                MessageFlowConfiguration messageFlowConfiguration = Processor.Configuration.GetMessageFlow(messageFlowGuid);
 
-                MessageFlow messageFlow = new MessageFlow(messageFlowConfiguration, serviceForNode);
+                MessageFlow messageFlow = new MessageFlow(messageFlowConfiguration, Processor);
                 messageFlowsByGuid.Add(messageFlowGuid, messageFlow);
                 return messageFlow;
             }

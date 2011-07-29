@@ -21,11 +21,9 @@ namespace XRouter.Processor
 
         internal ApplicationConfiguration Configuration { get; private set; }
 
+        internal IBrokerServiceForProcessor BrokerService { get; private set; }
+
         private XmlReduction ConfigReduction { get; set; }
-
-        private IBrokerServiceForProcessor BrokerService { get; set; }
-
-        private ProcessorServiceForNode serviceForNode;
 
         private BlockingCollection<Token> tokensToProcess;
         private ConcurrentBag<SingleThreadProcessor> concurrentProcessors;
@@ -45,7 +43,6 @@ namespace XRouter.Processor
             ConfigReduction = new XmlReduction();
 
             Configuration = BrokerService.GetConfiguration(ConfigReduction);
-            serviceForNode = new ProcessorServiceForNode(Name, BrokerService, Configuration);
 
             tokensCount = 0;
             tokensFinishedEvent = new ManualResetEvent(true);
@@ -57,7 +54,7 @@ namespace XRouter.Processor
             concurrentProcessors = new ConcurrentBag<SingleThreadProcessor>();
             for (int i = 0; i < concurrentThreadsCount; i++) {
                 Task.Factory.StartNew(delegate {
-                    SingleThreadProcessor processor = new SingleThreadProcessor(tokensToProcess, this, serviceForNode);
+                    SingleThreadProcessor processor = new SingleThreadProcessor(tokensToProcess, this);
                     concurrentProcessors.Add(processor);
                     processor.Run();
                 }, TaskCreationOptions.LongRunning);
@@ -105,7 +102,6 @@ namespace XRouter.Processor
         public void UpdateConfig(ApplicationConfiguration config)
         {
             Configuration = config;
-            serviceForNode.Configuration = config;
         }
 
         #endregion

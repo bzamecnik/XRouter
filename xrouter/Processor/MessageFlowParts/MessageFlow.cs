@@ -13,16 +13,16 @@ namespace XRouter.Processor.MessageFlowParts
 
         private MessageFlowConfiguration Configuration { get; set; }
 
-        private ProcessorServiceForNode ProcessorService { get; set; }
+        private ProcessorService Processor { get; set; }
 
         private Node rootNode;
 
         private Dictionary<string, Node> nodesByName = new Dictionary<string, Node>();        
 
-        public MessageFlow(MessageFlowConfiguration configuration, ProcessorServiceForNode processorService)
+        public MessageFlow(MessageFlowConfiguration configuration, ProcessorService processor)
         {
             Configuration = configuration;
-            ProcessorService = processorService;
+            Processor = processor;
 
             #region Create nodes
             nodesByName = new Dictionary<string, Node>();
@@ -38,7 +38,7 @@ namespace XRouter.Processor.MessageFlowParts
                     throw new InvalidOperationException("Unknown node type");
                 }
 
-                node.Initialize(nodeCfg, ProcessorService);
+                node.Initialize(nodeCfg, Processor);
                 nodesByName.Add(node.Name, node);
             }
             #endregion

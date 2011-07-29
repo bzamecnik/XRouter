@@ -13,10 +13,10 @@ namespace XRouter.Processor.MessageFlowParts
 
         protected ProcessorServiceForNode ProcessorService { get; private set; }
 
-        public void Initialize(NodeConfiguration configuration, ProcessorServiceForNode processorService)
+        public void Initialize(NodeConfiguration configuration, ProcessorService processor)
         {
             Name = configuration.Name;
-            ProcessorService = processorService;
+            ProcessorService = new ProcessorServiceForNode(processor, this);
             InitializeCore(configuration);
         }
 

@@ -200,14 +200,14 @@ namespace XRouter.Common
             }
         }
 
-        public void AddException(string sourceNodeName, Exception exception)
+        public void AddException(string sourceNodeName, string message, string stackTrace)
         {
             lock (SyncLock) {
                 var xExceptions = Content.XDocument.XPathSelectElement("token/exceptions");
                 XElement xException = new XElement(XName.Get("exception"));
                 xException.SetAttributeValue(XName.Get("source-node"), sourceNodeName);
-                xException.SetAttributeValue(XName.Get("message"), exception.Message);
-                xException.SetAttributeValue(XName.Get("stack-trace"), exception.StackTrace);
+                xException.SetAttributeValue(XName.Get("message"), message);
+                xException.SetAttributeValue(XName.Get("stack-trace"), stackTrace);
                 xExceptions.Add(xException);
             }
         }

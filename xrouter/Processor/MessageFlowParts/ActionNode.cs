@@ -37,7 +37,7 @@ namespace XRouter.Processor.MessageFlowParts
                 try {
                     action.Evaluate(token);
                 } catch (Exception ex) {
-                    token.AddException(Name, ex);
+                    ProcessorService.AddExceptionToToken(token.Guid, ex);
                 }
             });
 

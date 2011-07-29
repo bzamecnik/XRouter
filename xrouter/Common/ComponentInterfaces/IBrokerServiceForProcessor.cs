@@ -16,6 +16,8 @@ namespace XRouter.Common.ComponentInterfaces
 
         void AddMessageToToken(string updatingProcessorName, Guid targetTokenGuid, string messageName, SerializableXDocument message);
 
+        void AddExceptionToToken(string updatingProcessorName, Guid targetTokenGuid, string sourceNodeName, string message, string stackTrace);
+
         /// change token state, not messageFlow state
         void FinishToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument resultMessage);
 
