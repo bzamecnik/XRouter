@@ -26,8 +26,10 @@ namespace XRouter.Test.Integration
 
         private void prepareTest(string scenarioName)
         {
-            string pathFrom = testScenarioDirectory + scenarioName;
-            string pathTo = dataDirectory + scenarioName;
+            //TODO reconfigure XRouter with some neutral config
+
+            string pathFrom = Path.Combine(testScenarioDirectory, scenarioName);
+            string pathTo = Path.Combine(dataDirectory, scenarioName);
 
             //delete old files if they are there
             if (Directory.Exists(pathTo))
@@ -47,10 +49,24 @@ namespace XRouter.Test.Integration
 
         private void compareResults(string scenarioName)
         {
-            string expectedRoot = testScenarioDirectory + scenarioName;
-            string actualRoot = dataDirectory + scenarioName;
+            string expectedRoot = Path.Combine(testScenarioDirectory, scenarioName);
+            string actualRoot = Path.Combine(dataDirectory, scenarioName);
 
             Assert.True(XmlDirectoryComparer.Equals(expectedRoot, actualRoot));
+        }
+
+        private void waitUntilXRouterIsDone()
+        {
+            Console.WriteLine("Press a key when XRouter is done");
+            Console.ReadKey();
+
+            //TODO better way to find out...
+            //string signalFile = Path.Combine(testScenarioDirectory, "XRouterIsDone");
+            //while (!File.Exists(signalFile))
+            //{
+            //    Thread.Sleep(500);
+            //}
+            //File.Delete(signalFile);
         }
 
         [Fact]
@@ -58,7 +74,9 @@ namespace XRouter.Test.Integration
         {
             prepareTest(MethodInfo.GetCurrentMethod().Name);
 
-            //reconfigure XRouter and wait till ready...
+            //reconfigure XRouter
+
+            waitUntilXRouterIsDone(); //TODO after it is implemented properly, maybe combine waiting, comparing and some common tear down parts into one method
 
             compareResults(MethodInfo.GetCurrentMethod().Name);
         }
@@ -72,7 +90,9 @@ namespace XRouter.Test.Integration
 
             //launch any WS and other listeners...
 
-            //reconfigure XRouter and wait till ready...
+            //reconfigure XRouter
+
+            waitUntilXRouterIsDone();
 
             compareResults(MethodInfo.GetCurrentMethod().Name);
 
