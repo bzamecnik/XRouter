@@ -44,16 +44,18 @@ namespace DaemonNT
                     Service service = TypesProvider.CreateService(serviceSettings.TypeClass, serviceSettings.TypeAssembly);
                     serviceHost = new ServiceDebugHost(service, serviceName, serviceSettings, logger);
                 }
-                catch (Exception e)
+                catch (Exception exception)
                 {
-                    logger.Event.LogError(String.Format("An error occurred during DaemonNT initialization: {0}", e.Message));
-                    throw e;
+                    LogException(exception, logger, serviceName,
+                        "An unexpected error occurred during initialization of service '{0}': {1}");
+                    throw exception;
                 }
 
                 // service hosting
                 try
                 {
                     serviceHost.Start();
+
                     Console.WriteLine("The service '{0}' is running in debug mode.", serviceName);
                     Console.WriteLine("Press CTRL+C or type 'exit' to stop the service ...", serviceName);
                     Console.CancelKeyPress += (sender, e) => serviceHost.Stop();
@@ -67,10 +69,11 @@ namespace DaemonNT
                         }
                     }
                 }
-                catch (Exception e)
+                catch (Exception exception)
                 {
-                    logger.Event.LogError(String.Format("An unexpected error occurred while running DaemonNT: {0}", e.Message));
-                    throw e;
+                    LogException(exception, logger, serviceName,
+                        "An unexpected error occurred while running service '{0}': {1}");
+                    throw exception;
                 }
             }
             catch (Exception e)
@@ -114,10 +117,11 @@ namespace DaemonNT
                     Service service = TypesProvider.CreateService(serviceSettings.TypeClass, serviceSettings.TypeAssembly);
                     serviceHost = new ServiceRuntimeHost(service, serviceName, serviceSettings, logger);
                 }
-                catch (Exception e)
+                catch (Exception exception)
                 {
-                    logger.Event.LogError(String.Format("An error occurred during DaemonNT initialization: {0}", e.Message));
-                    throw e;
+                    LogException(exception, logger, serviceName,
+                        "An unexpected error occurred during initialization of service '{0}': {1}");
+                    throw exception;
                 }
 
                 // service hosting
@@ -126,10 +130,11 @@ namespace DaemonNT
                     ServiceRuntimeHost.Run(serviceHost);
                     shutdown = serviceHost.Shutdown;
                 }
-                catch (Exception e)
+                catch (Exception exception)
                 {
-                    logger.Event.LogError(String.Format("An unexpected error occurred while running DaemonNT: {0}", e.Message));
-                    throw e;
+                    LogException(exception, logger, serviceName,
+                        "An unexpected error occurred while running service '{0}': {1}");
+                    throw exception;
                 }
             }
             catch (Exception e)
@@ -401,6 +406,13 @@ namespace DaemonNT
                 Console.Error.WriteLine(errorMessage, serviceName, ex.Message);
             }
             return null;
+        }
+
+        private static void LogException(Exception e, Logger logger,
+            string serviceName, string formattedMessage)
+        {
+            logger.Event.LogError(String.Format(formattedMessage, serviceName, e.Message));
+            logger.Trace.LogException(e);
         }
     }
 }
