@@ -101,7 +101,8 @@ namespace XRouter.Adapters
                 if (metadata != null) {
                     fileName = metadata.Element(XName.Get("file-metadata")).Attribute(XName.Get("filename")).Value;
                 } else {
-                    fileName = string.Format("output {0:00}_{1:00}_{2:00}_{3:000}.txt", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, DateTime.Now.Millisecond);
+                    DateTime now = DateTime.Now;
+                    fileName = string.Format("output {0:00}_{1:00}_{2:00}_{3:000}.txt", now.Hour, now.Minute, now.Second, now.Millisecond);
                 }
                 TraceLog.Info(string.Format("Writing output file '{0}' into '{1}'", fileName, targetPath));
                 File.WriteAllText(Path.Combine(targetPath, fileName), message.ToString());
