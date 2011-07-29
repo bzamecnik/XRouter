@@ -22,7 +22,7 @@ namespace SchemaTron
         /// <c>href</c> parameter.
         /// </summary>
         /// <param name="href">Absolute path to the external XML document.
-        /// Must not be null.</param>
+        /// Also can a web URI. Must not be null.</param>
         /// <returns>The loaded external XML document.</returns>    
         public XDocument Resolve(string href)
         {
@@ -31,7 +31,7 @@ namespace SchemaTron
                 throw new ArgumentNullException("href");
             }
 
-            // each external XML dokument is loaded only once
+            // each external XML document is loaded only once
             XDocument doc;
             if (!this.loadedDocs.TryGetValue(href, out doc))
             {

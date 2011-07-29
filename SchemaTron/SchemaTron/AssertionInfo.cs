@@ -3,7 +3,8 @@
 namespace SchemaTron
 {
     /// <summary>
-    /// Contains detailed information related to an assertion.
+    /// Contains detailed information related to a violated assertion
+    /// (assert or report).
     /// </summary>
     /// <remarks>
     /// This class is a data-transfer object (DTO).
@@ -18,7 +19,7 @@ namespace SchemaTron
         }
 
         /// <summary>
-        /// Indicates whether the assertion is a report.
+        /// Indicates the type of assertion: report or assert.
         /// </summary>
         public bool IsReport { get; internal set; }
 
@@ -51,8 +52,8 @@ namespace SchemaTron
         /// Represents the number of the line where the node was located.
         /// </summary>
         /// <remarks>
-        /// Only in case the validated XML document instance contained the
-        /// line information.
+        /// Available only in case the validated XML document instance
+        /// contained the line information.
         /// </remarks>
         public int LineNumber { get; internal set; }
 
@@ -60,8 +61,8 @@ namespace SchemaTron
         /// Represents the position of the node on a line.
         /// </summary>
         /// <remarks>
-        /// Only in case the validated XML document instance contained the
-        /// line information.
+        /// Available only in case the validated XML document instance
+        /// contained the line information.
         /// </remarks>
         public int LinePosition { get; internal set; }
 
@@ -72,7 +73,7 @@ namespace SchemaTron
 
         /// <summary>
         /// Represents the assertion user message with the <c>name</c> and
-        /// <c>value-of</c> elements substitued with selected values.
+        /// <c>value-of</c> elements substituted with selected values.
         /// </summary>
         public string UserMessage { get; internal set; }
 

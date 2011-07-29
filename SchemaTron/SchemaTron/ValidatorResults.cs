@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 namespace SchemaTron
 {
-    // TODO: probably rename to ValidationResult
-
     /// <summary>
     /// Detailed results of a validation.
     /// </summary>
@@ -40,7 +38,7 @@ namespace SchemaTron
         }
 
         /// <summary>
-        /// Returns a System.String which represent the current
+        /// Returns a System.String which represents the current
         /// ValidatorResults instance.
         /// </summary>
         /// <returns></returns>
