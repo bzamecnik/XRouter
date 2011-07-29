@@ -13,6 +13,7 @@ using System.IO;
 
 namespace XRouter.Processor.BuiltInActions
 {
+    [ActionPlugin("Xslt transformer", "Does xslt tansformation of a specified message.")]
     public class XsltTransformationAction : IActionPlugin
     {
         private IProcessorServiceForAction ProcessorService { get; set; }

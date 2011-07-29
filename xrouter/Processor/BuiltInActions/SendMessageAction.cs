@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace XRouter.Processor.BuiltInActions
 {
+    [ActionPlugin("Message sender", "Sends a message to a specified output endpoint.")]
     public class SendMessageAction : IActionPlugin
     {
         private IProcessorServiceForAction processorService;
