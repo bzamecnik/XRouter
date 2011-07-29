@@ -20,10 +20,15 @@ namespace XRouter.Processor.MessageFlowParts
         {
             Config = (CbrNodeConfiguration)configuration;
 
+            IInclusionResolver xrmInclusionResolver = new XrmInclusionResolver(ProcessorService);
+
             branches = new Dictionary<Validator, string>();
             foreach (var branche in Config.Branches) {
                 XDocument xSchema = ProcessorService.GetXmlResource(branche.Key);
                 Validator validator = Validator.Create(xSchema);
+                ValidatorSettings validatorSettings = new ValidatorSettings {
+                    InclusionsResolver = xrmInclusionResolver
+                };
                 branches.Add(validator, branche.Value.Name);
             }
         }
@@ -45,6 +50,23 @@ namespace XRouter.Processor.MessageFlowParts
             #endregion
 
             return targetNodeName;
+        }
+
+        private class XrmInclusionResolver : IInclusionResolver
+        {
+            private ProcessorServiceForNode processorService;
+
+            public XrmInclusionResolver(ProcessorServiceForNode processorService)
+            {
+                this.processorService = processorService;
+            }
+
+            public XDocument Resolve(string href)
+            {
+                XrmUri xrmUri = new XrmUri(href);
+                XDocument result = processorService.GetXmlResource(xrmUri);
+                return result;
+            }
         }
     }
 }
