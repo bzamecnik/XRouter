@@ -22,6 +22,11 @@ namespace XRouter.Common.Xrm
             XPath = xpath;
         }
 
+        public XrmUri(Uri uri)
+        {
+            XPath = uri.AbsolutePath;
+        }
+
         public static bool IsXPathValid(string xpath)
         {
             try {

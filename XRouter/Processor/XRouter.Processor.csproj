@@ -57,6 +57,7 @@
     <Compile Include="ProcessorServiceForNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleThreadProcessor.cs" />
+    <Compile Include="XrmXmlResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ObjectConfigurator\ObjectConfigurator.csproj">
