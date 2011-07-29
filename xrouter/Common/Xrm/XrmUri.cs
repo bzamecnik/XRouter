@@ -15,6 +15,7 @@ namespace XRouter.Common.Xrm
 
         public XrmUri()
         {
+            XPath = string.Empty;
         }
 
         public XrmUri(string xpath)
