@@ -612,6 +612,7 @@
             this.serviceNameTextBox.Name = "serviceNameTextBox";
             this.serviceNameTextBox.Size = new System.Drawing.Size(479, 20);
             this.serviceNameTextBox.TabIndex = 1;
+            this.serviceNameTextBox.TextChanged += new System.EventHandler(this.serviceNameTextBox_TextChanged);
             // 
             // label1
             // 

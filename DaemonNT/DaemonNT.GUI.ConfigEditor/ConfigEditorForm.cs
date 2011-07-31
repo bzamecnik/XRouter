@@ -18,7 +18,8 @@ namespace DaemonNT.GUI.ConfigEditor
         string ConfigFileName
         {
             get { return configFileName; }
-            set{
+            set
+            {
                 configFileName = value;
                 configFileToolStripStatusLabel.Text =
                     !string.IsNullOrEmpty(configFileName)
@@ -38,6 +39,7 @@ namespace DaemonNT.GUI.ConfigEditor
         List<string> traceLoggerStorageNames = new List<string>();
 
         SettingsEditorForm settingsEditorForm = new SettingsEditorForm();
+        ServiceNameForm serviceNameForm = new ServiceNameForm();
 
         public ConfigEditorForm()
         {
@@ -419,8 +421,13 @@ namespace DaemonNT.GUI.ConfigEditor
 
         private void newServiceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: ask for service name
-            string serviceName = "New service";
+            serviceNameForm.ServiceName = string.Empty;
+            serviceNameForm.ExistingNames = serviceNames;
+            if (serviceNameForm.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+            string serviceName = serviceNameForm.ServiceName;
             configuration.Services.Add(new ServiceSettings() { Name = serviceName });
             serviceNames.Add(serviceName);
             RefreshListBox(servicesListBox);
@@ -475,6 +482,35 @@ namespace DaemonNT.GUI.ConfigEditor
             FillConfigFromGUI();
             xmlConfiguration = ConfigProvider.ConfigurationToXML(configuration);
             xmlSourceTextBox.Text = xmlConfiguration.ToString();
+        }
+
+        private void serviceNameTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!RenameService(serviceNameTextBox.Text))
+            {
+                serviceNameTextBox.BackColor = Color.IndianRed;
+            }
+            else
+            {
+                serviceNameTextBox.BackColor = Color.White;
+            }
+        }
+
+        private bool RenameService(string newServiceName)
+        {
+            if (string.IsNullOrEmpty(newServiceName) ||
+                ((newServiceName != currentServiceName) &&
+                serviceNames.Contains(newServiceName)))
+            {
+                return false;
+            }
+
+            int index = serviceNames.IndexOf(currentServiceName);
+            currentServiceName = newServiceName;
+            currentService.Name = currentServiceName;
+            serviceNames[index] = currentServiceName;
+            RefreshListBox(servicesListBox);
+            return true;
         }
     }
 }
