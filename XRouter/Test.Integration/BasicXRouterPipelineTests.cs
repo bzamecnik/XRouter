@@ -3,7 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
+using DaemonNT;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Utils;
@@ -131,7 +133,7 @@ namespace XRouter.Test.Integration
         {
             int filesCount = 1000;
             int paddingZeros = 1 + (int)Math.Floor(Math.Log10(filesCount));
-            string fileFormat = "input{0:" + new String('0', paddingZeros) +"}.xml";
+            string fileFormat = "input{0:" + new String('0', paddingZeros) + "}.xml";
             string basePath = Path.Combine(OriginalsPath, @"Test1\Input");
             TextGenerator gen = new TextGenerator()
             {
@@ -151,6 +153,26 @@ namespace XRouter.Test.Integration
                     writer.WriteLine("</message>");
                 }
             }
+        }
+
+        [Fact]
+        public void RunXRouterInDebugMode()
+        {
+            var daemonNt = new ServiceCommands()
+            {
+                ConfigFile = @"..\..\..\ComponentHosting\Misc\DaemonNT_config.xml"
+            };
+            string serviceName = "xrouter";
+            // start the debug host in a new thread because it blocks while
+            // reading from the console
+            // TODO: this will go to the test class constructor
+            Task.Factory.StartNew(() => daemonNt.DebugStart(serviceName));
+            
+            // TODO: do some interesting stuff here
+            Thread.Sleep(2000);
+            
+            // TODO: this will go to the test class Dispose()
+            daemonNt.DebugStop(serviceName);
         }
 
         private class TextGenerator
