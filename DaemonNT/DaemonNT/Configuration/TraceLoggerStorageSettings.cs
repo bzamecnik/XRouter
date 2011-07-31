@@ -9,6 +9,7 @@ namespace DaemonNT.Configuration
     /// Represents settings of a trace logger storage.
     /// </summary>
     /// <see cref="DaemonNT.TraceLoggerStorage"/>
+    [Serializable]
     internal sealed class TraceLoggerStorageSettings
     {
         public TraceLoggerStorageSettings()

@@ -527,7 +527,9 @@
 
         private static string SerializeType(string className, string assemblyName)
         {
-            return string.Join(",", className.Trim(), assemblyName.Trim());
+            className = (className != null) ? className.Trim() : null;
+            assemblyName = (assemblyName != null) ? assemblyName.Trim() : null;
+            return string.Join(",", className, assemblyName);
         }
 
         #endregion
