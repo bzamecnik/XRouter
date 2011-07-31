@@ -121,21 +121,44 @@
         /// <summary>
         /// Validates the input XML service configuration file.
         /// </summary>
-        /// <remarks>
-        /// If the file is invalid it throws an InvalidOperationException,
-        /// otherwise return nothing.
-        /// </remarks>
         /// <param name="xConfig">XML service configuration file</param>
-        /// <exception cref="InvalidOperationException"
-        public static void ValidateConfiguration(XDocument xConfig, string configFile)
+        public static bool IsValid(XDocument xConfig)
+        {
+            ValidatorResults results;
+            IsValid(xConfig, out results);
+            return results.IsValid;
+        }
+
+        /// <summary>
+        /// Validates the input XML service configuration file providing
+        /// detailed validation results.
+        /// </summary>
+        /// <param name="xConfig">XML service configuration file</param>
+        /// <param name="results">Results of validation</param>
+        public static bool IsValid(XDocument xConfig, out ValidatorResults results)
         {
             XDocument xSchema = Resources.Provider.LoadConfigSchema();
 
             // validation
             Validator validator = Validator.Create(xSchema);
-            ValidatorResults results = validator.Validate(xConfig, true);
+            results = validator.Validate(xConfig, true);
 
-            if (!results.IsValid)
+            return results.IsValid;
+        }
+
+        /// <summary>
+        /// Validates the input XML service configuration file.
+        /// </summary>
+        /// <remarks>
+        /// If the file is invalid it throws an InvalidOperationException,
+        /// otherwise return nothing.
+        /// </remarks>
+        /// <param name="xConfig">XML service configuration file</param>
+        /// <exception cref="InvalidOperationException"></exception>
+        private static void ValidateConfiguration(XDocument xConfig, string configFile)
+        {
+            ValidatorResults results;
+            if (!IsValid(xConfig, out results))
             {
                 // create report
                 StringBuilder sb = new StringBuilder();
