@@ -85,7 +85,7 @@
                         commands.Run(serviceName);
                         break;
                     case "debug":
-                        commands.Debug(serviceName);
+                        commands.DebugStart(serviceName);
                         break;
                     case "install":
                         commands.Install(serviceName);

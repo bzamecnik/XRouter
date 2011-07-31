@@ -9,7 +9,16 @@ using DaemonNT.Logging;
 
 namespace DaemonNT
 {
-    internal class ServiceCommands
+    // TODO: can be renamed to DaemonNT
+
+    /// <summary>
+    /// Provides an API for interacting with services, such as running,
+    /// starting, checking their status etc.
+    /// </summary>
+    /// <remarks>
+    /// Note that the service name is case-sensitive!
+    /// </remarks>
+    public class ServiceCommands
     {
         /// <summary>
         /// Configuration file with service definitions and settings.
@@ -18,16 +27,20 @@ namespace DaemonNT
         /// </summary>
         public string ConfigFile { get; set; }
 
+        // service name -> debug host
+        Dictionary<string, ServiceDebugHost> serviceHosts = new Dictionary<string, ServiceDebugHost>();
+
         /// <summary>
         /// Starts the service in debug mode - inside a console application
         /// rather than a real NT service.
         /// </summary>
         /// <remarks>
         /// The service is stopped after the user presses any key in the
-        /// console.
+        /// console. Another way to stop a service running in debug mode is
+        /// to call the DebugStop() method.
         /// </remarks>
         /// <param name="serviceName">Service name</param>
-        public void Debug(string serviceName)
+        public void DebugStart(string serviceName)
         {
             Logger logger = null;
             try
@@ -54,6 +67,8 @@ namespace DaemonNT
                 // service hosting
                 try
                 {
+                    serviceHosts[serviceName] = serviceHost;
+
                     serviceHost.Start();
 
                     Console.WriteLine("The service '{0}' is running in debug mode.", serviceName);
@@ -88,6 +103,23 @@ namespace DaemonNT
                     logger.Close(false);
                 }
             }
+        }
+
+        /// <summary>
+        /// Stops a service previously ran in debug mode.
+        /// </summary>
+        /// <remarks>
+        /// The service must have been started in debug mode using the
+        /// DebugStart() method.
+        /// </remarks>
+        /// <param name="serviceName">Service name</param>
+        public void DebugStop(string serviceName)
+        {
+            if (!serviceHosts.ContainsKey(serviceName)) {
+                throw new ArgumentException("serviceName");
+            }
+            serviceHosts[serviceName].Stop();
+            serviceHosts.Remove(serviceName);
         }
 
         /// <summary>
