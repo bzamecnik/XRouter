@@ -1,5 +1,7 @@
 ﻿namespace DaemonNT.Configuration
 {
+    // TODO: rename to Section
+
     /// <summary>
     /// Represents a single section of hierarchical settings.
     /// </summary>
