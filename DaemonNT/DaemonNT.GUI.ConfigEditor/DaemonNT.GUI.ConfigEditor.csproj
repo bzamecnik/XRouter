@@ -86,6 +86,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SchemaTron\SchemaTron\SchemaTron.csproj">
+      <Project>{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}</Project>
+      <Name>SchemaTron</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DaemonNT\DaemonNT.csproj">
       <Project>{3CF25136-3BF3-4213-9FDC-1E80F2C75171}</Project>
       <Name>DaemonNT</Name>
