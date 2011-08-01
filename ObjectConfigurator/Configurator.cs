@@ -64,6 +64,9 @@ namespace ObjectConfigurator
 
         public static void LoadConfiguration(object targetObject, XDocument config)
         {
+            System.Diagnostics.Debug.Assert(config != null);
+            System.Diagnostics.Debug.Assert(config.Root != null);
+
             Type targetType = targetObject.GetType();
             ClassMetadata classMetadata = new ClassMetadata(targetType);
 
