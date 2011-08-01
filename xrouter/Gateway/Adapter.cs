@@ -18,6 +18,21 @@ namespace XRouter.Gateway
 
         internal string AdapterName { get; set; }
 
+        public XDocument config;
+        public XDocument Config
+        {
+            get
+            {
+                return config;
+            }
+            set
+            {
+                config = value;
+                System.Diagnostics.Debug.Assert(config != null);
+                ObjectConfigurator.Configurator.LoadConfiguration(this, config);
+            }
+        }
+
         public Adapter()
         {
             IsRunning = true;
