@@ -253,7 +253,22 @@ namespace XRouter.Common
             string xpath = string.Format("/configuration/messageflows/messageflow[@guid='{0}']", guid);
             XElement xMessageFlow = Content.XDocument.XPathSelectElement(xpath);
 
+            System.Diagnostics.Debug.Assert(xMessageFlow != null);
+
             var result = XSerializer.Deserialize<MessageFlowConfiguration>(xMessageFlow);
+            if (result == null)
+            {
+                System.Diagnostics.Debug.Assert(xMessageFlow.Attribute("name") != null);
+                System.Diagnostics.Debug.Assert(xMessageFlow.Attribute("version") != null);
+
+                string name = xMessageFlow.Attribute("name").Value;
+                int version = 0;
+                bool versionParsedOk = Int32.TryParse(xMessageFlow.Attribute("version").Value, out version);
+                
+                System.Diagnostics.Debug.Assert(versionParsedOk);
+                
+                result = new MessageFlowConfiguration(name, version);
+            }
             return result;
         }
 
