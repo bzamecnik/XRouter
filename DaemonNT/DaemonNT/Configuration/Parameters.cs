@@ -49,5 +49,10 @@
                 return parameters.Keys;
             }
         }
+
+        public void Remove(string key)
+        {
+            parameters.Remove(key);
+        }
     }
 }
