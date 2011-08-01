@@ -1,7 +1,9 @@
 ﻿namespace DaemonNT.Configuration
 {
+    using System;
     using System.Collections.Generic;
 
+    [Serializable]
     public abstract class SectionBase
     {
         private Dictionary<string, Sections> sections = new Dictionary<string, Sections>();

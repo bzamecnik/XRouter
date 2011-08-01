@@ -30,13 +30,15 @@
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newConfigToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.openConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.objectModelTabPage = new System.Windows.Forms.TabPage();
@@ -81,9 +83,12 @@
             this.xmlSourceTextBox = new System.Windows.Forms.TextBox();
             this.openConfigFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveConfigFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addRequiredServiceButton = new System.Windows.Forms.Button();
+            this.removeRequiredServiceButton = new System.Windows.Forms.Button();
+            this.validateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.configFileToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.objectModelTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -113,45 +118,49 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openToolStripMenuItem,
-            this.saveToolStripMenuItem,
-            this.saveAsToolStripMenuItem,
-            this.closeToolStripMenuItem,
+            this.newConfigToolStripMenuItem1,
+            this.openConfigToolStripMenuItem,
+            this.validateToolStripMenuItem,
+            this.saveConfigToolStripMenuItem,
+            this.saveAsConfigToolStripMenuItem,
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(37, 20);
             this.toolStripMenuItem1.Text = "&File";
             // 
-            // openToolStripMenuItem
+            // newConfigToolStripMenuItem1
             // 
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.openToolStripMenuItem.Text = "&Open";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            this.newConfigToolStripMenuItem1.Name = "newConfigToolStripMenuItem1";
+            this.newConfigToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.newConfigToolStripMenuItem1.Size = new System.Drawing.Size(184, 22);
+            this.newConfigToolStripMenuItem1.Text = "&New";
+            this.newConfigToolStripMenuItem1.Click += new System.EventHandler(this.newConfigToolStripMenuItem_Click);
             // 
-            // saveToolStripMenuItem
+            // openConfigToolStripMenuItem
             // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.saveToolStripMenuItem.Text = "&Save";
+            this.openConfigToolStripMenuItem.Name = "openConfigToolStripMenuItem";
+            this.openConfigToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openConfigToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.openConfigToolStripMenuItem.Text = "&Open";
+            this.openConfigToolStripMenuItem.Click += new System.EventHandler(this.openConfigToolStripMenuItem_Click);
             // 
-            // saveAsToolStripMenuItem
+            // saveConfigToolStripMenuItem
             // 
-            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.saveConfigToolStripMenuItem.Name = "saveConfigToolStripMenuItem";
+            this.saveConfigToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.saveConfigToolStripMenuItem.Text = "&Save";
+            this.saveConfigToolStripMenuItem.Click += new System.EventHandler(this.saveConfigToolStripMenuItem_Click);
+            // 
+            // saveAsConfigToolStripMenuItem
+            // 
+            this.saveAsConfigToolStripMenuItem.Name = "saveAsConfigToolStripMenuItem";
+            this.saveAsConfigToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.S)));
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.saveAsToolStripMenuItem.Text = "Save &as";
-            // 
-            // closeToolStripMenuItem
-            // 
-            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.closeToolStripMenuItem.Text = "Close";
+            this.saveAsConfigToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.saveAsConfigToolStripMenuItem.Text = "Save &as";
+            this.saveAsConfigToolStripMenuItem.Click += new System.EventHandler(this.saveAsConfigToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -163,18 +172,35 @@
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // serviceToolStripMenuItem
             // 
             this.serviceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newToolStripMenuItem,
-            this.removeToolStripMenuItem});
+            this.newServiceToolStripMenuItem,
+            this.removeServiceToolStripMenuItem});
             this.serviceToolStripMenuItem.Name = "serviceToolStripMenuItem";
             this.serviceToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
             this.serviceToolStripMenuItem.Text = "&Service";
             // 
+            // newServiceToolStripMenuItem
+            // 
+            this.newServiceToolStripMenuItem.Name = "newServiceToolStripMenuItem";
+            this.newServiceToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newServiceToolStripMenuItem.Text = "&New";
+            this.newServiceToolStripMenuItem.Click += new System.EventHandler(this.newServiceToolStripMenuItem_Click);
+            // 
+            // removeServiceToolStripMenuItem
+            // 
+            this.removeServiceToolStripMenuItem.Name = "removeServiceToolStripMenuItem";
+            this.removeServiceToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeServiceToolStripMenuItem.Text = "&Remove";
+            this.removeServiceToolStripMenuItem.Click += new System.EventHandler(this.removeServiceToolStripMenuItem_Click);
+            // 
             // statusStrip1
             // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.configFileToolStripStatusLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 610);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(753, 22);
@@ -191,6 +217,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(753, 586);
             this.tabControl1.TabIndex = 2;
+            this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
             // objectModelTabPage
             // 
@@ -414,6 +441,8 @@
             // 
             this.installerGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.installerGroupBox.Controls.Add(this.removeRequiredServiceButton);
+            this.installerGroupBox.Controls.Add(this.addRequiredServiceButton);
             this.installerGroupBox.Controls.Add(this.installerRequiredServicesListBox);
             this.installerGroupBox.Controls.Add(this.installerAccountComboBox);
             this.installerGroupBox.Controls.Add(this.accountLabel);
@@ -439,7 +468,9 @@
             this.installerRequiredServicesListBox.Location = new System.Drawing.Point(237, 65);
             this.installerRequiredServicesListBox.Name = "installerRequiredServicesListBox";
             this.installerRequiredServicesListBox.Size = new System.Drawing.Size(227, 69);
+            this.installerRequiredServicesListBox.Sorted = true;
             this.installerRequiredServicesListBox.TabIndex = 3;
+            this.installerRequiredServicesListBox.DoubleClick += new System.EventHandler(this.installerRequiredServicesListBox_DoubleClick);
             // 
             // installerAccountComboBox
             // 
@@ -581,6 +612,7 @@
             this.serviceNameTextBox.Name = "serviceNameTextBox";
             this.serviceNameTextBox.Size = new System.Drawing.Size(479, 20);
             this.serviceNameTextBox.TabIndex = 1;
+            this.serviceNameTextBox.TextChanged += new System.EventHandler(this.serviceNameTextBox_TextChanged);
             // 
             // label1
             // 
@@ -609,6 +641,7 @@
             this.xmlSourceTextBox.Multiline = true;
             this.xmlSourceTextBox.Name = "xmlSourceTextBox";
             this.xmlSourceTextBox.ReadOnly = true;
+            this.xmlSourceTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.xmlSourceTextBox.Size = new System.Drawing.Size(739, 554);
             this.xmlSourceTextBox.TabIndex = 0;
             // 
@@ -622,17 +655,36 @@
             this.saveConfigFileDialog.Filter = "XML files|*.xml|All files|*.*";
             this.saveConfigFileDialog.Title = "Save configuration file";
             // 
-            // newToolStripMenuItem
+            // addRequiredServiceButton
             // 
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.newToolStripMenuItem.Text = "&New";
+            this.addRequiredServiceButton.Location = new System.Drawing.Point(470, 64);
+            this.addRequiredServiceButton.Name = "addRequiredServiceButton";
+            this.addRequiredServiceButton.Size = new System.Drawing.Size(22, 23);
+            this.addRequiredServiceButton.TabIndex = 4;
+            this.addRequiredServiceButton.Text = "+";
+            this.addRequiredServiceButton.UseVisualStyleBackColor = true;
             // 
-            // removeToolStripMenuItem
+            // removeRequiredServiceButton
             // 
-            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.removeToolStripMenuItem.Text = "&Remove";
+            this.removeRequiredServiceButton.Location = new System.Drawing.Point(470, 93);
+            this.removeRequiredServiceButton.Name = "removeRequiredServiceButton";
+            this.removeRequiredServiceButton.Size = new System.Drawing.Size(22, 23);
+            this.removeRequiredServiceButton.TabIndex = 4;
+            this.removeRequiredServiceButton.Text = "-";
+            this.removeRequiredServiceButton.UseVisualStyleBackColor = true;
+            // 
+            // validateToolStripMenuItem
+            // 
+            this.validateToolStripMenuItem.Name = "validateToolStripMenuItem";
+            this.validateToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.validateToolStripMenuItem.Text = "&Validate";
+            this.validateToolStripMenuItem.Click += new System.EventHandler(this.validateToolStripMenuItem_Click);
+            // 
+            // configFileToolStripStatusLabel
+            // 
+            this.configFileToolStripStatusLabel.Name = "configFileToolStripStatusLabel";
+            this.configFileToolStripStatusLabel.Size = new System.Drawing.Size(31, 17);
+            this.configFileToolStripStatusLabel.Text = "File: ";
             // 
             // ConfigEditorForm
             // 
@@ -647,6 +699,8 @@
             this.Text = "DaemonNT Configuration File Editor";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.objectModelTabPage.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -674,9 +728,8 @@
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openConfigToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveConfigToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
@@ -722,11 +775,16 @@
         private System.Windows.Forms.SaveFileDialog saveConfigFileDialog;
         private System.Windows.Forms.ToolStripMenuItem serviceToolStripMenuItem;
         private System.Windows.Forms.ListBox installerRequiredServicesListBox;
-        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsConfigToolStripMenuItem;
         private System.Windows.Forms.ListBox servicesListBox;
         private System.Windows.Forms.ListBox traceLoggerStoragesListBox;
-        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newServiceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeServiceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newConfigToolStripMenuItem1;
+        private System.Windows.Forms.Button removeRequiredServiceButton;
+        private System.Windows.Forms.Button addRequiredServiceButton;
+        private System.Windows.Forms.ToolStripMenuItem validateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel configFileToolStripStatusLabel;
     }
 }
 

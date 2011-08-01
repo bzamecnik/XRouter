@@ -5,13 +5,16 @@ using System.Text;
 
 namespace DaemonNT.Configuration
 {
+    using System;
+
     /// <summary>
     /// Represents settings of a trace logger.
     /// </summary>
     /// <see cref="DaemonNT.TraceLogger"/>
+    [Serializable]
     internal sealed class TraceLoggerSettings
     {
-        public readonly int DefaultBufferSize = 1000;
+        public static readonly int DefaultBufferSize = 1000;
 
         /// <summary>
         /// Number of log records the buffer has capacity for.

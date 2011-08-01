@@ -54,6 +54,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceNameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServiceNameForm.Designer.cs">
+      <DependentUpon>ServiceNameForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -72,6 +78,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ServiceNameForm.resx">
+      <DependentUpon>ServiceNameForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SettingsEditorForm.resx">
       <DependentUpon>SettingsEditorForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -86,6 +95,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SchemaTron\SchemaTron\SchemaTron.csproj">
+      <Project>{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}</Project>
+      <Name>SchemaTron</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DaemonNT\DaemonNT.csproj">
       <Project>{3CF25136-3BF3-4213-9FDC-1E80F2C75171}</Project>
       <Name>DaemonNT</Name>
