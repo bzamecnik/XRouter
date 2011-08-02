@@ -27,7 +27,12 @@ namespace ObjectConfigurator.ItemTypes
 
         public override object ReadFromXElement(XElement source)
         {
-            if (source.Attribute(XName.Get("isNull")).Value == "true") {
+            System.Diagnostics.Debug.Assert(source != null);
+
+            XAttribute isNullAttrib = source.Attribute(XName.Get("isNull"));
+
+            if ((isNullAttrib != null) && (isNullAttrib.Value == "true"))
+            {
                 return null;
             }
 

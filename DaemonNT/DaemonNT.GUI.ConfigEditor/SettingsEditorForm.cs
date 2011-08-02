@@ -14,6 +14,8 @@ namespace DaemonNT.GUI.ConfigEditor
     {
         public Settings Settings { get; set; }
 
+        private string editedParamName;
+
         public SettingsEditorForm()
         {
             InitializeComponent();
@@ -23,26 +25,31 @@ namespace DaemonNT.GUI.ConfigEditor
 
         private void SettingsEditorForm_Load(object sender, EventArgs e)
         {
+            editedParamName = string.Empty;
             ClearGUI();
+            if (Settings == null)
+            {
+                Settings = new Settings();
+            }
             FillSettingsToGUI(Settings);
         }
 
         private void SettingsEditorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.DialogResult == System.Windows.Forms.DialogResult.OK)
-            {
-                Settings = FillSettingsFromGUI();
-            }
+            //if (this.DialogResult == System.Windows.Forms.DialogResult.OK)
+            //{
+            //    Settings = FillSettingsFromGUI();
+            //}
         }
 
         #endregion
 
         #region Helper methods - form logic
 
-        private Settings FillSettingsFromGUI()
-        {
-            return new Settings();
-        }
+        //private Settings FillSettingsFromGUI()
+        //{
+        //    return new Settings();
+        //}
 
         private void FillSettingsToGUI(Settings settings)
         {
@@ -76,8 +83,7 @@ namespace DaemonNT.GUI.ConfigEditor
             foreach (string key in parameters.Keys)
             {
                 string value = parameters[key];
-                ListViewItem item = new ListViewItem(new[] { key, value });
-                parametersListView.Items.Add(item);
+                parametersListView.Items.Add(key, value, 0);
             }
         }
 
@@ -85,21 +91,114 @@ namespace DaemonNT.GUI.ConfigEditor
         {
             sectionsTreeView.Nodes.Clear();
             parametersListView.Items.Clear();
+            sectionNameTextBox.Text = string.Empty;
+            paramNameTextBox.Text = string.Empty;
+            paramValueTextBox.Text = string.Empty;
         }
 
         #endregion
 
         private void sectionsTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            TreeNode sectionNode = sectionsTreeView.SelectedNode;
-            if (sectionNode != null)
+            SectionBase section = GetSelectedSection();
+            if (section != null)
             {
-                SectionBase section = (SectionBase)sectionNode.Tag;
-                if (section != null)
+                FillParameters(section.Parameters);
+            }
+            editedParamName = string.Empty;
+            paramNameTextBox.Text = string.Empty;
+            paramValueTextBox.Text = string.Empty;
+        }
+
+        private SectionBase GetSelectedSection()
+        {
+            TreeNode sectionNode = sectionsTreeView.SelectedNode;
+            if(sectionNode != null) {
+                return (SectionBase)sectionNode.Tag;
+            } else {
+                return Settings;
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void cancelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
+        private void addParamToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var section = GetSelectedSection();
+            string key = paramNameTextBox.Text;
+            if (!string.IsNullOrEmpty(key) && !section.Parameters.Keys.Contains(key))
+            {
+                string value = paramValueTextBox.Text;
+                parametersListView.Items.Add(key, value, 0);
+                section.Parameters[key] = value;
+            }
+            editedParamName = key;
+        }
+
+        private void removeSectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var section = GetSelectedSection();
+            string key = paramNameTextBox.Text;
+            if (!string.IsNullOrEmpty(key))
+            {
+                parametersListView.Items.RemoveByKey(key);
+                section.Parameters.Remove(key);
+            }
+        }
+
+        private void parametersListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ParamToGui();
+        }
+
+        private void ParamToGui()
+        {
+            var section = GetSelectedSection();
+            if (parametersListView.SelectedIndices.Count > 0)
+            {
+                var paramName = section.Parameters.Keys.ElementAt(parametersListView.SelectedIndices[0]);
+                editedParamName = (string)paramName.Clone();
+                paramNameTextBox.Text = paramName;
+                paramValueTextBox.Text = section.Parameters[paramName];
+            }
+            else
+            {
+                editedParamName = string.Empty;
+                paramNameTextBox.Text = string.Empty;
+                paramValueTextBox.Text = string.Empty;
+            }
+        }
+
+        private void editParamToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string key = paramNameTextBox.Text;
+            var section = GetSelectedSection();
+            
+            if (!string.IsNullOrEmpty(key))
+            {
+                string value = paramValueTextBox.Text;
+                int index = parametersListView.Items.IndexOfKey(editedParamName);
+                if (index > 0)
                 {
-                    FillParameters(section.Parameters);
+                    parametersListView.Items[index].Text = value;
+                }
+                section.Parameters[key] = value;
+                if (!section.Parameters.Keys.Contains(key))
+                {
+                    section.Parameters.Remove(editedParamName);
                 }
             }
+            editedParamName = (string)key.Clone();
         }
     }
 }

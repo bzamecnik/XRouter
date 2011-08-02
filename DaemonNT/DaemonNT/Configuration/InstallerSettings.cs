@@ -1,10 +1,12 @@
 ﻿namespace DaemonNT.Configuration
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
     /// Represents settings of a service installer.
     /// </summary>
+    [Serializable]
     internal sealed class InstallerSettings
     {
         /// <summary>

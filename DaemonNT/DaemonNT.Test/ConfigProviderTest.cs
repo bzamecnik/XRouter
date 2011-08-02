@@ -1,7 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Security.Cryptography.Xml;
 using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 using DaemonNT.Configuration;
 using Xunit;
 
@@ -96,6 +101,21 @@ namespace DaemonNT.Test
             Assert.NotNull(settings);
         }
 
+        [Fact]
+        public void SerializeGoodFullConfigSingleService()
+        {
+            string origConfigFile = @"ConfigProviderFiles\GoodFullConfigSingleService.xml";
+            string serializedConfigFile = @"ConfigProviderFiles\GoodFullConfigSingleService_serialized.xml";
+
+            var origConfiguration = ConfigProvider.LoadConfiguration(origConfigFile);
+            XDocument origConfigXml = XDocument.Load(origConfigFile);
+            XDocument serializedConfigXml = ConfigProvider.ConfigurationToXML(origConfiguration);
+            serializedConfigXml.Save(serializedConfigFile);
+
+            Assert.True(ConfigProvider.IsValid(serializedConfigXml));
+
+            Assert.Equal<XDocument>(origConfigXml, serializedConfigXml, new XmlHashCompare());
+        }
 
         #endregion
 
@@ -120,6 +140,41 @@ namespace DaemonNT.Test
                     @"ConfigProviderFiles\NonexistentConfigFile.xml"));
         }
 
+        #endregion
+
+        #region Test helpers
+        class XmlHashCompare : IEqualityComparer<XDocument>
+        {
+            public XmlHashCompare() { }
+
+            public bool Equals(XDocument xdoc1, XDocument xdoc2)
+            {
+                return (GetXmlHash(xdoc1).SequenceEqual(GetXmlHash(xdoc2)));
+            }
+
+            public int GetHashCode(XDocument xdoc)
+            {
+                string s = Encoding.ASCII.GetString(GetXmlHash(xdoc));
+                return s.GetHashCode();
+            }
+
+            public static byte[] GetXmlHash(XDocument xdoc)
+            {
+                XmlDsigC14NTransform xmlTransform = new XmlDsigC14NTransform(false);
+                xmlTransform.LoadInput(ToXmlDocument(xdoc));
+                return xmlTransform.GetDigestedOutput(new SHA1Managed());
+            }
+
+            private static XmlDocument ToXmlDocument(XDocument xDocument)
+            {
+                XmlDocument xmlDocument = new XmlDocument();
+                using (XmlReader xmlReader = xDocument.CreateReader())
+                {
+                    xmlDocument.Load(xmlReader);
+                }
+                return xmlDocument;
+            }
+        }
         #endregion
     }
 }

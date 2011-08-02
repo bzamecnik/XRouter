@@ -8,57 +8,65 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using System.IO;
 using System.Threading;
-using XRouter.Common;
+using System.Xml.Linq;
 using ObjectConfigurator;
+using XRouter.Common;
+using XRouter.Gateway;
 
 namespace XRouter.Adapters
-{   
+{
     /// <summary>
     /// Adapter umoznuje realizovat file-transfer pres sdileny adresar souboroveho systemu. 
     /// Adapter tvori sluzba, ktera se periodicky dotazuje nad nastavenymi adresari a v 
     /// pripade vyskytu zpravy, soubor nacte a odstrani ze vstupu. 
     /// Adapter tvori client, ktery umoznuje exportovat zpravu do nastaveneho adresare. 
     /// </summary>
-    class DirectoryAdapter : Adapter
-    {                                        
-        private static readonly string BinPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);       
-        
-        private TimeSpan checkingInterval;
-       
-        private ConcurrentDictionary<string, string> outputEndpointToPathMap;
-                
+    [AdapterPlugin("Directory reader and writer", "Reads and write files from/into specified directories.")]
+    public class DirectoryAdapter : Adapter
+    {
+        [ConfigurationItem("Checking interval (in seconds)", null, 0.1)]
+        private double checkingIntervalInSeconds;
+
+        [ConfigurationItem("Input directories", null, new[] { 
+            "In", @"C:\XRouterTest\In"
+        })]
         private ConcurrentDictionary<string, string> inputEndpointToPathMap;
+
+        [ConfigurationItem("Output directories", null, new[] { 
+            "OutA", @"C:\XRouterTest\OutA",
+            "OutB", @"C:\XRouterTest\OutB",
+            "OutC", @"C:\XRouterTest\OutC"
+        })]
+        private ConcurrentDictionary<string, string> outputEndpointToPathMap;
 
         protected override void Run()
         {
-            #region Emulate reading configuration (will be automatic later)
-            string inputDir1 = @"C:\XRouterTest\In";
-            string outputDir1 = @"C:\XRouterTest\OutA";
-            string outputDir2 = @"C:\XRouterTest\OutB";
-            string outputDir3 = @"C:\XRouterTest\OutC";
-
-            inputEndpointToPathMap = new ConcurrentDictionary<string, string>();
-            inputEndpointToPathMap.AddOrUpdate("In", inputDir1, (key, oldValue) => null);          
-
-            outputEndpointToPathMap = new ConcurrentDictionary<string, string>();
-            outputEndpointToPathMap.AddOrUpdate("OutA", outputDir1, (key, oldValue) => null);
-            outputEndpointToPathMap.AddOrUpdate("OutB", outputDir2, (key, oldValue) => null);
-            outputEndpointToPathMap.AddOrUpdate("OutC", outputDir3, (key, oldValue) => null);
-
-            checkingInterval = TimeSpan.FromMilliseconds(100);
-            #endregion
+            System.Diagnostics.Debug.Assert(inputEndpointToPathMap != null);
+            System.Diagnostics.Debug.Assert(outputEndpointToPathMap != null);
 
             #region Watch input directories
             while (IsRunning) {
-                Thread.Sleep(checkingInterval);
+                Thread.Sleep(TimeSpan.FromSeconds(checkingIntervalInSeconds));
 
                 foreach (var enpointNameAndPath in inputEndpointToPathMap) {
                     string enpointName = enpointNameAndPath.Key;
                     string path = enpointNameAndPath.Value;
 
-                    string[] newFiles = Directory.GetFiles(path);
+                    string[] newFiles;
+                    try
+                    {
+                        newFiles = Directory.GetFiles(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        EventLog.Error(string.Format(
+                            "Cannot read files from directory: {0}. Details: {1}",
+                            path, ex.Message));
+                        continue;
+                    }
                     foreach (string newFilePath in newFiles) {
-
+                        try
+                        {
                         string fileContent;
                         try
                         {
@@ -92,6 +100,14 @@ namespace XRouter.Adapters
                         // ale u WebServices to neni nutne
 
                         File.Delete(newFilePath);
+                        }
+                        catch (Exception ex)
+                        {
+                            EventLog.Error(string.Format(
+                                "Error while receiving file {0}. Details: {1}",
+                                newFilePath, ex.Message));
+                            // TODO: protentially store bad file contents into TraceLog
+                        }
                     }
                 }
             }
@@ -118,6 +134,6 @@ namespace XRouter.Adapters
                 File.WriteAllText(Path.Combine(targetPath, fileName), message.ToString());
             }
             return null;
-        }        
+        }
     }
 }

@@ -1,11 +1,13 @@
 ﻿namespace DaemonNT.Configuration
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
     /// Represents a set of key-value parameters within a single section of
     /// settings.
     /// </summary>
+    [Serializable]
     public sealed class Parameters
     {
         private Dictionary<string, string> parameters = new Dictionary<string, string>();
@@ -46,6 +48,11 @@
             {
                 return parameters.Keys;
             }
+        }
+
+        public void Remove(string key)
+        {
+            parameters.Remove(key);
         }
     }
 }

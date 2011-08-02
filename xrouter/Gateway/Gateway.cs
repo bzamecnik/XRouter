@@ -12,6 +12,7 @@ using XRouter.Broker;
 using XRouter.Common.Utils;
 using System.Collections.Concurrent;
 using XRouter.Common.ComponentInterfaces;
+using System.Xml.XPath;
 
 namespace XRouter.Gateway
 {
@@ -76,10 +77,10 @@ namespace XRouter.Gateway
 
         private Adapter CreateAdapter(string typeFullNameAndAssembly, XElement adapterConfig, string adapterName)
         {
-            // TODO: adapterConfig is not used!
             var adapter = TypeUtils.CreateTypeInstance<Adapter>(typeFullNameAndAssembly);
             adapter.Gateway = this;
             adapter.AdapterName = adapterName;
+            adapter.Config = new XDocument(adapterConfig.XPathSelectElement("objectConfig"));
             return adapter;
         }
 

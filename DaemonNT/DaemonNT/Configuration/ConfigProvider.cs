@@ -87,10 +87,19 @@
 
         public static XDocument ConfigurationToXML(Configuration config)
         {
-            // TODO:
-            // for each service:
-            // - serialize service settings to XML
-            throw new NotImplementedException();
+            if (config == null) {
+                throw new ArgumentNullException("config");
+            }
+
+            XElement xConfig = new XElement("config");
+            foreach (ServiceSettings service in config.Services)
+            {
+                xConfig.Add(SerializeServiceSettings(service));
+            }
+            XDocument xdoc = new XDocument();
+            xdoc.Add(xConfig);
+
+            return xdoc;
         }
 
         public static Configuration ConfigurationFromXML(XDocument xmlConfig)
@@ -108,21 +117,44 @@
         /// <summary>
         /// Validates the input XML service configuration file.
         /// </summary>
-        /// <remarks>
-        /// If the file is invalid it throws an InvalidOperationException,
-        /// otherwise return nothing.
-        /// </remarks>
         /// <param name="xConfig">XML service configuration file</param>
-        /// <exception cref="InvalidOperationException"
-        private static void ValidateConfiguration(XDocument xConfig, string configFile)
+        public static bool IsValid(XDocument xConfig)
+        {
+            ValidatorResults results;
+            IsValid(xConfig, out results);
+            return results.IsValid;
+        }
+
+        /// <summary>
+        /// Validates the input XML service configuration file providing
+        /// detailed validation results.
+        /// </summary>
+        /// <param name="xConfig">XML service configuration file</param>
+        /// <param name="results">Results of validation</param>
+        public static bool IsValid(XDocument xConfig, out ValidatorResults results)
         {
             XDocument xSchema = Resources.Provider.LoadConfigSchema();
 
             // validation
             Validator validator = Validator.Create(xSchema);
-            ValidatorResults results = validator.Validate(xConfig, true);
+            results = validator.Validate(xConfig, true);
 
-            if (!results.IsValid)
+            return results.IsValid;
+        }
+
+        /// <summary>
+        /// Validates the input XML service configuration file.
+        /// </summary>
+        /// <remarks>
+        /// If the file is invalid it throws an InvalidOperationException,
+        /// otherwise return nothing.
+        /// </remarks>
+        /// <param name="xConfig">XML service configuration file</param>
+        /// <exception cref="InvalidOperationException"></exception>
+        private static void ValidateConfiguration(XDocument xConfig, string configFile)
+        {
+            ValidatorResults results;
+            if (!IsValid(xConfig, out results))
             {
                 // create report
                 StringBuilder sb = new StringBuilder();
@@ -156,7 +188,7 @@
             result.TypeClass = typeClass;
             result.TypeAssembly = typeAssembly;
 
-            // service.setting
+            // service.settings
             XElement xSettings = xService.XPathSelectElement("./settings");
             result.Settings = DeserializeSettings(xSettings);
 
@@ -311,16 +343,18 @@
             }
         }
 
-        private static Settings DeserializeSettings(XElement xSetting)
+        // TODO: refactor common code similarly to SerializeSectionBase()
+
+        private static Settings DeserializeSettings(XElement xSettings)
         {
             Settings settings = new Settings();
 
-            if (xSetting == null)
+            if (xSettings == null)
             {
                 return settings;
             }
 
-            foreach (var node in xSetting.XPathSelectElements("child::*"))
+            foreach (var node in xSettings.XPathSelectElements("child::*"))
             {
                 XElement xElement = (XElement)node;
                 if (xElement.Name == "section")
@@ -340,6 +374,7 @@
 
         private static void DeserializeSection(Sections section, XElement xElement)
         {
+            // TODO: looks like the code is almost the same as in DeserializeSettings()
             foreach (var node in xElement.XPathSelectElements("child::*"))
             {
                 XElement nextEle = (XElement)node;
@@ -359,6 +394,139 @@
         #endregion
 
         #region Serialization
+
+        private static XElement SerializeServiceSettings(ServiceSettings service)
+        {
+            if (service == null)
+            {
+                throw new ArgumentNullException("service");
+            }
+            XElement xService = new XElement("service");
+
+            xService.SetAttributeValue("name", service.Name);
+            xService.SetAttributeValue("type", SerializeType(service.TypeClass, service.TypeAssembly));
+
+            xService.Add(SerializeSettings(service.Settings));
+            xService.Add(SerializeInstallerSettings(service.InstallerSettings));
+            xService.Add(SerializeTraceLoggerSettings(service.TraceLoggerSettings));
+
+            return xService;
+        }
+
+        private static XElement SerializeInstallerSettings(InstallerSettings installer)
+        {
+            XElement xInstaller = new XElement("installer");
+            if (installer == null)
+            {
+                return xInstaller;
+            }
+
+            {
+                XElement xDescription = new XElement("description");
+                xDescription.Value = installer.Description;
+                xInstaller.Add(xDescription);
+            }
+
+            {
+                XElement xStartType = new XElement("start-type");
+                xStartType.SetAttributeValue("value", installer.StartMode);
+                xInstaller.Add(xStartType);
+            }
+
+            XElement xAccount = new XElement("account");
+            xAccount.SetAttributeValue("value", installer.Account);
+            if (installer.Account == "User")
+            {
+                XElement xUserName = new XElement("username");
+                xUserName.Value = installer.User;
+                xAccount.Add(xUserName);
+
+                XElement xPassword = new XElement("password");
+                xPassword.Value = installer.Password;
+                xAccount.Add(xPassword);
+            }
+            xInstaller.Add(xAccount);
+
+            {
+                XElement xDependedOn = new XElement("depended-on");
+                xDependedOn.Value = string.Join(",", installer.RequiredServices);
+                xInstaller.Add(xDependedOn);
+            }
+
+            return xInstaller;
+        }
+
+        private static XElement SerializeTraceLoggerSettings(TraceLoggerSettings traceLogger)
+        {
+            XElement xTraceLogger = new XElement("trace-logger");
+            if (traceLogger == null)
+            {
+                return xTraceLogger;
+            }
+            
+            xTraceLogger.SetAttributeValue("buffer-size", traceLogger.BufferSize);
+            foreach (var storage in traceLogger.Storages)
+            {
+                XElement xStorage = new XElement("storage");
+                xStorage.SetAttributeValue("name", storage.Name);
+                xStorage.SetAttributeValue("type",
+                    SerializeType(storage.TypeClass, storage.TypeAssembly));
+
+                XElement xSettings = SerializeSettings(storage.Settings);
+                xStorage.Add(xSettings);
+                xTraceLogger.Add(xStorage);
+            }
+
+            return xTraceLogger;
+        }
+
+        private static XElement SerializeSettings(Settings settings)
+        {
+            XElement xSettings = new XElement("settings");
+            if (settings != null)
+            {
+                SerializeSectionBase(settings, xSettings);
+            }
+            return xSettings;
+        }
+
+        private static XElement SerializeSection(Sections section, string name)
+        {
+            XElement xSection = new XElement("section");
+            xSection.SetAttributeValue("name", name);
+            SerializeSectionBase(section, xSection);
+            return xSection;
+        }
+
+        private static XElement SerializeSectionBase(SectionBase section, XElement xSectionBase)
+        {
+            foreach (string subSectionName in section.Keys)
+            {
+                Sections subSection = section[subSectionName];
+                if (subSection != null)
+                {
+                    XElement xSubSection = SerializeSection(subSection, subSectionName);
+                    xSectionBase.Add(xSubSection);
+                }
+            }
+
+            foreach (string parameterKey in section.Parameters.Keys)
+            {
+                XElement xParam = new XElement("param");
+                xParam.SetAttributeValue("name", parameterKey);
+                xParam.Value = section.Parameters[parameterKey];
+                xSectionBase.Add(xParam);
+            }
+
+            return xSectionBase;
+        }
+
+        private static string SerializeType(string className, string assemblyName)
+        {
+            className = (className != null) ? className.Trim() : null;
+            assemblyName = (assemblyName != null) ? assemblyName.Trim() : null;
+            return string.Join(",", className, assemblyName);
+        }
 
         #endregion
     }

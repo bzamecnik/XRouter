@@ -1,5 +1,6 @@
 ﻿namespace DaemonNT.Configuration
 {
+    using System;
     /// <summary>
     /// Represents the information and settings of a service and its
     /// facilities.
@@ -10,6 +11,7 @@
     /// and trace logger.
     /// </remarks>
     /// <see cref="DaemonNT.Installation.ProjectInstaller"/>
+    [Serializable]
     internal sealed class ServiceSettings
     {
         public ServiceSettings()

@@ -64,6 +64,9 @@ namespace ObjectConfigurator
 
         public static void LoadConfiguration(object targetObject, XDocument config)
         {
+            System.Diagnostics.Debug.Assert(config != null);
+            System.Diagnostics.Debug.Assert(config.Root != null);
+
             Type targetType = targetObject.GetType();
             ClassMetadata classMetadata = new ClassMetadata(targetType);
 
@@ -84,25 +87,7 @@ namespace ObjectConfigurator
             foreach (ItemMetadata item in unsetItems) {
                 object defaultValue;
 
-                if (item.Type is CollectionItemType) {
-                    CollectionItemType collectionItemType = (CollectionItemType)item.Type;
-                    defaultValue = collectionItemType.CreateInstance();
-                    foreach (object element in (Array)item.GetDefaultValue()) {
-                        collectionItemType.AddToCollection(defaultValue, element);
-                    }
-                } 
-                else if (item.Type is DictionaryItemType) {
-                    DictionaryItemType dictionaryItemType = (DictionaryItemType)item.Type;
-                    defaultValue = dictionaryItemType.CreateInstance();
-                    foreach (object pair in (Array)item.GetDefaultValue()) {
-                        object key, value;
-                        dictionaryItemType.ExtractKeyAndValueFromPair(pair, out key, out value);
-                        dictionaryItemType.AddToDictionary(defaultValue, key, value);
-                    }
-                } 
-                else {
-                    defaultValue = item.GetDefaultValue();
-                }
+                defaultValue = item.GetDefaultValue();
 
                 item.SetValue(targetObject, defaultValue);
             }
