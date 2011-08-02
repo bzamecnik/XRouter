@@ -12,10 +12,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
-using XRouter.Common.MessageFlowConfig;
-using XRouter.Gui.CommonControls;
 using ObjectConfigurator;
+using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
+using XRouter.Gui.CommonControls;
 
 namespace XRouter.Gui
 {
@@ -35,7 +35,10 @@ namespace XRouter.Gui
             Configurator.CustomItemTypes.Add(new XrmUriConfigurationItemType(() => new XrmUriEditor()));
 
             #region Run xrouter server
-            if (System.Diagnostics.Process.GetProcessesByName("DaemonNT").Length == 0) {
+
+            bool isXRouterRunning = System.Diagnostics.Process.GetProcessesByName("DaemonNT").Length > 0;
+            if (!isXRouterRunning)
+            {
                 string binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                 string daemonNTPath = System.IO.Path.Combine(binPath, @"..\..\..\ComponentHosting\bin\debug\DaemonNT.exe");
                 var serverProcesss = new System.Diagnostics.ProcessStartInfo(daemonNTPath, "debug xrouter");
