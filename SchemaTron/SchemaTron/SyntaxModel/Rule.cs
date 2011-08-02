@@ -9,10 +9,7 @@ namespace SchemaTron.SyntaxModel
 {
     /// <summary>
     /// Represents a rule.
-    /// </summary>
-    /// <remarks>
-    /// TODO: describe in more detail.
-    /// </remarks>
+    /// </summary>  
     internal sealed class Rule
     {
         public string Id { get; set; }

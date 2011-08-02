@@ -9,9 +9,6 @@ namespace SchemaTron.SyntaxModel
     /// <summary>
     /// Represents an assertion.
     /// </summary>
-    /// <remarks>
-    /// TODO: describe in more detail.
-    /// </remarks>
     internal sealed class Assert
     {
         public string Id { get; set; }
@@ -23,9 +20,7 @@ namespace SchemaTron.SyntaxModel
         public XPathExpression CompiledTest { get; set; }
 
         public string Message { get; set; }
-
-        // TODO: use IEnumerable<T> or IList<T> instead of arrays
-
+       
         public bool[] DiagnosticsIsValueOf { get; set; }
 
         public string[] Diagnostics { get; set; }

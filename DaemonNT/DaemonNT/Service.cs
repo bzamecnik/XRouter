@@ -47,12 +47,20 @@ namespace DaemonNT
             // start service
             this.Logger.Event.LogInfo(string.Format(
                 "The '{0}' service is being started...", args.ServiceName));
-            
-            this.OnStart(args);
-            
-            this.Logger.Event.LogInfo(string.Format(
-                "The '{0}' service has beed started successfully!",
-                args.ServiceName));
+            try
+            {
+                this.OnStart(args);
+                this.Logger.Event.LogInfo(string.Format(
+                    "The '{0}' service has beed started successfully!",
+                    args.ServiceName));
+            }
+            catch (Exception e)
+            {
+                this.Logger.Event.LogError(string.Format(
+                    "An unexpected error occurred while starting the service: {0}",
+                    e.Message));
+                throw e;
+            }
         }
 
         /// <summary>
@@ -74,8 +82,18 @@ namespace DaemonNT
 
             // stop service
             this.Logger.Event.LogInfo("The service is being stopped...");
-            this.OnStop(args);
-            this.Logger.Event.LogInfo("The service has been stopped successfully!");
+            try
+            {
+                this.OnStop(args);
+                this.Logger.Event.LogInfo("The service has been stopped successfully!");
+            }
+            catch (Exception e)
+            {
+                this.Logger.Event.LogError(string.Format(
+                    "An unexpected error occurred while stopping the service: {0}",
+                    e.Message));
+                throw e;
+            }
         }
 
         /// <summary>

@@ -32,8 +32,7 @@ namespace SchemaTron
         /// is empty.
         /// </summary>
         public IEnumerable<AssertionInfo> ViolatedAssertions
-        {
-            // TODO: is it better to return an array or an unmodifiable list?
+        {           
             get { return ViolatedAssertionsList; }
         }
 

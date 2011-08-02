@@ -80,9 +80,7 @@ namespace SchemaTron
             {
                 settings.InclusionsResolver = new FileInclusionResolver();
             }
-
-            // TODO: The XDocument.Root can probably never be null.
-            // (Eg. opening an empty XML document results in null XDocument.)
+            
             if (xSchema.Root == null)
             {
                 throw new ArgumentException("Schema must contain root node.");
@@ -329,7 +327,7 @@ namespace SchemaTron
         /// <param name="xDocument">An instance of an XML document to be validated.
         /// Must not be null.
         /// It is recommended to supply a document with line information
-        /// (TODO: clarify this) for better diagnostics.</param>
+        /// for better diagnostics.</param>
         /// <param name="fullValidation">Indicates whether to validate the
         /// whole document regardless of any assertion, or to stop validation at
         /// the first assertion.

@@ -8,10 +8,7 @@ namespace SchemaTron.Preprocessing
 {
     /// <summary>
     /// Represents an abstract rule.
-    /// </summary>
-    /// <remarks>
-    /// TODO: describe in more detail.
-    /// </remarks>
+    /// </summary>  
     internal sealed class AbstractRule
     {
         public string Id { get; set; }

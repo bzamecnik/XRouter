@@ -8,10 +8,7 @@ namespace SchemaTron.Preprocessing
 {
     /// <summary>
     /// Represents a variable substitution.
-    /// </summary>
-    /// <remarks>
-    /// TODO: describe in more detail.
-    /// </remarks>
+    /// </summary> 
     internal sealed class Let
     {
         public string Name { get; set; }

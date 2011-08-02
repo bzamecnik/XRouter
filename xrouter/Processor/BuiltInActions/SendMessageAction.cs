@@ -22,7 +22,7 @@ namespace XRouter.Processor.BuiltInActions
         [ConfigurationItem("Target adapter", null, "directoryAdapter")]
         private string targetAdapterName;
 
-        [ConfigurationItem("Target wndpoint", null, "output")]
+        [ConfigurationItem("Target endpoint", null, "output")]
         private string targetEndpointName;
 
         [ConfigurationItem("Message", null, "token/messages/message[@name='input']/*[1]")]

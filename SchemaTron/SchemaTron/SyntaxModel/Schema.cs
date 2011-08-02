@@ -8,10 +8,7 @@ namespace SchemaTron.SyntaxModel
 {
     /// <summary>
     /// Represents a Schematron schema.
-    /// </summary>
-    /// <remarks>
-    /// TODO: describe in more detail.
-    /// </remarks>
+    /// </summary> 
     internal sealed class Schema
     {
         public IEnumerable<Namespace> Namespaces { get; set; }

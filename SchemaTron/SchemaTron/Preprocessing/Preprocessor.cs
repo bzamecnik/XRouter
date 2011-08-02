@@ -39,9 +39,7 @@ namespace SchemaTron.Preprocessing
             {
                 throw new ArgumentNullException("nsManager");
             }
-
-            // TODO: extract a constant or make it a configurable parameter
-            // (eg. store it in ValidatorSettings instance)
+            
             int maxSteps = 500; // recursion termination limit
             int i;
             for (i = 0; i < maxSteps; i++)
@@ -624,14 +622,13 @@ namespace SchemaTron.Preprocessing
             {
                 throw new ArgumentNullException("nsManager");
             }
-
-            // select ancillary elements
+            
             List<XElement> garbage = new List<XElement>();
             foreach (XElement xEle in xSchema.XPathSelectElements("//sch:dir|//sch:emph|//sch:p|//sch:span|//sch:title", nsManager))
             {
                 garbage.Add(xEle);
             }
-
+           
             // remove
             foreach (XElement xEle in garbage)
             {
