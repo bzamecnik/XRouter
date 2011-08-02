@@ -27,12 +27,12 @@ namespace XRouter.Gateway
 
         private Dictionary<string, Adapter> AdaptersByName { get; set; }
 
-        private ConcurrentDictionary<Guid, MessageResultHandler> waitingResultMessageHandlers;
+        private ConcurrentDictionary<Guid, ResultHandlingInfo> waitingResultMessageHandlers;
 
         public Gateway()
         {
             ConfigurationReduction = new XmlReduction();
-            waitingResultMessageHandlers = new ConcurrentDictionary<Guid, MessageResultHandler>();
+            waitingResultMessageHandlers = new ConcurrentDictionary<Guid, ResultHandlingInfo>();
         }
 
         public void UpdateConfig(ApplicationConfiguration config)
@@ -94,10 +94,11 @@ namespace XRouter.Gateway
             return new SerializableXDocument(result);
         }
 
-        internal void ReceiveToken(Token token, MessageResultHandler resultHandler = null)
+        internal void ReceiveToken(Token token, object context, MessageResultHandler resultHandler = null)
         {
             if (resultHandler != null) {
-                waitingResultMessageHandlers.AddOrUpdate(token.Guid, resultHandler, (key, oldValue) => resultHandler);
+                ResultHandlingInfo resultHandlingInfo = new ResultHandlingInfo(token.Guid, resultHandler, context);
+                waitingResultMessageHandlers.AddOrUpdate(token.Guid, resultHandlingInfo, (key, oldValue) => resultHandlingInfo);
             }
             Task.Factory.StartNew(delegate {
                 Broker.ReceiveToken(token);
@@ -106,9 +107,24 @@ namespace XRouter.Gateway
 
         public void ReceiveReturn(Guid tokenGuid, SerializableXDocument resultMessage, SerializableXDocument sourceMetadata)
         {
-            MessageResultHandler resultHandler;
-            if (waitingResultMessageHandlers.TryRemove(tokenGuid, out resultHandler)) {
-                resultHandler(tokenGuid, resultMessage.XDocument, sourceMetadata.XDocument);
+            ResultHandlingInfo resultHandlingInfo;
+            if (waitingResultMessageHandlers.TryRemove(tokenGuid, out resultHandlingInfo))
+            {
+                resultHandlingInfo.ResultHandler(tokenGuid, resultMessage.XDocument, sourceMetadata.XDocument, resultHandlingInfo.Context);
+            }
+        }
+
+        private class ResultHandlingInfo
+        {
+            public Guid TokenGuid { get; private set; }
+            public MessageResultHandler ResultHandler { get; private set; }
+            public object Context { get; private set; }
+
+            public ResultHandlingInfo(Guid tokenGuid, MessageResultHandler resultHandler, object context)
+            {
+                TokenGuid = tokenGuid;
+                ResultHandler = resultHandler;
+                Context = context;
             }
         }
     }

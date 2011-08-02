@@ -5,6 +5,7 @@ using System.Text;
 using XRouter.Common;
 using System.Xml.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace XRouter.Gateway
 {
@@ -35,15 +36,56 @@ namespace XRouter.Gateway
             runTask.Wait();
         }
 
-        protected void ReceiveMessage(XDocument message, string endpointName, XDocument metadata = null, MessageResultHandler resultHandler = null)
+        protected void ReceiveMessageData(string message, string endpointName, XDocument metadata, object context, MessageResultHandler resultHandler)
+        {
+            XDocument xDoc = new XDocument();
+            xDoc.Add(new XElement(XName.Get("data"))
+            {
+                Value = message
+            });
+            this.ReceiveMessageXml(xDoc, endpointName, metadata, context, resultHandler);
+        }
+
+        protected void ReceiveMessageXml(string message, string endpointName, XDocument metadata, object context, MessageResultHandler resultHandler)
+        {
+            try
+            {
+                XDocument xDoc = XDocument.Load(message, LoadOptions.SetLineInfo);
+                this.ReceiveMessageXml(xDoc, endpointName, metadata, context, resultHandler);
+            }
+            catch (Exception e)
+            {
+                TraceLog.Exception(e);
+            }            
+        }
+
+        protected void ReceiveMessageXml(Stream stream, string endpointName, XDocument metadata, object context, MessageResultHandler resultHandler)
+        {
+            try
+            {
+                XDocument xDoc = XDocument.Load(stream, LoadOptions.SetLineInfo);
+                this.ReceiveMessageXml(xDoc, endpointName, metadata, context, resultHandler);
+            }
+            catch (Exception e)
+            {
+                TraceLog.Exception(e);
+            }
+        }
+
+        protected void ReceiveMessageXml(XDocument message, string endpointName, XDocument metadata)
+        {
+            ReceiveMessageXml(message, endpointName, message, null, null);
+        }
+
+        protected void ReceiveMessageXml(XDocument message, string endpointName, XDocument metadata, object context, MessageResultHandler resultHandler)
         {
             Token token = new Token();
+
             token.SaveSourceAddress(new EndpointAddress(Gateway.Name, AdapterName, endpointName));
             token.SaveSourceMetadata(metadata);
             token.AddMessage(Constants.InputMessageName, message);
             TraceLog.Info("Created token with GUID " + token.Guid);
-
-            Gateway.ReceiveToken(token, resultHandler);
+            Gateway.ReceiveToken(token, context, resultHandler);
         }
 
         public virtual void OnTerminate()

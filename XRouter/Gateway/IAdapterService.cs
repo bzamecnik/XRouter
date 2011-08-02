@@ -7,10 +7,10 @@ using XRouter.Common;
 
 namespace XRouter.Gateway
 {
-    public delegate void MessageResultHandler(Guid tokenGuid, XDocument resultMessage, XDocument sourceMetadata);
+    public delegate void MessageResultHandler(Guid tokenGuid, XDocument resultMessage, XDocument sourceMetadata, object context);
 
 	public interface IAdapterService
 	{
-        void ReceiveMessage(XDocument message, string endpointName, XDocument metadata = null, MessageResultHandler resultHandler = null);
+        void ReceiveMessage(XDocument message, string endpointName, XDocument metadata, object context, MessageResultHandler resultHandler);
 	}
 }
