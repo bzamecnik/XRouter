@@ -11,8 +11,13 @@ using ObjectConfigurator;
 
 namespace XRouter.Processor.MessageFlowBuilding
 {
-    public class MessageFlowBuilder
+    public static class MessageFlowBuilder
     {
+        static MessageFlowBuilder() {
+            Configurator.CustomItemTypes.Add(new TokenSelectionConfigurationItemType());
+            Configurator.CustomItemTypes.Add(new XrmUriConfigurationItemType());
+        }
+
         public static TerminatorNodeConfiguration CreateTerminator(string name)
         {
             return new TerminatorNodeConfiguration() { Name = name, IsReturningOutput = false };
@@ -20,11 +25,19 @@ namespace XRouter.Processor.MessageFlowBuilding
 
         public static ActionNodeConfiguration CreateSender(string name, string inputMessage, string outputEndpoint, NodeConfiguration nextNode)
         {
+            var configuration = XDocument.Parse(
+    string.Format(
+@"<objectConfig>
+  <item name='targetEndpointName'>{0}</item>
+  <item name='messageSelection'>token/messages/message[@name='{1}']/*[1]</item>
+  <item name='targetGatewayName'>gateway1</item>
+</objectConfig>", outputEndpoint, inputMessage));
+
             return new ActionNodeConfiguration() {
                 Name = name, NextNode = nextNode, Actions = {
                     new ActionConfiguration() {
                         PluginTypeFullName = typeof(SendMessageAction).FullName,
-                        Configuration = new SerializableXDocument(XDocument.Parse("<config input='"+inputMessage+"' output='"+outputEndpoint+"' />")),
+                        Configuration = new SerializableXDocument(configuration),
                         ConfigurationMetadata = new ClassMetadata(typeof(SendMessageAction))
                     }
                 }
@@ -33,11 +46,20 @@ namespace XRouter.Processor.MessageFlowBuilding
 
         public static ActionNodeConfiguration CreateTransformation(string name, string xslt, string inputMessage, string outputMessage, NodeConfiguration nextNode)
         {
+            var configuration = XDocument.Parse(
+                string.Format(
+@"<objectConfig>
+  <item name='xlstUri'>//item[@name='{0}']</item>
+  <item name='inputMessageSelection'>token/messages/message[@name='{1}']/*[1]</item>
+  <item name='outputMessageName'>{2}</item>
+  <item name='isXsltTrusted'>false</item>
+</objectConfig>", xslt, inputMessage, outputMessage));
+
             return new ActionNodeConfiguration() {
                 Name = name, NextNode = nextNode, Actions = { 
                     new ActionConfiguration() { 
                         PluginTypeFullName = typeof(XsltTransformationAction).FullName,
-                        Configuration = new SerializableXDocument(XDocument.Parse("<config xslt='"+xslt+"' input='"+inputMessage+"' output='"+outputMessage+"' />")),
+                        Configuration = new SerializableXDocument(configuration),
                         ConfigurationMetadata = new ClassMetadata(typeof(XsltTransformationAction))
                     }
                 }
@@ -46,10 +68,17 @@ namespace XRouter.Processor.MessageFlowBuilding
 
         public static CbrNodeConfiguration CreateCbr(string name, string testedMessage, NodeConfiguration defaultTarget, params CbrCase[] cases)
         {
-            var testedMessageSelection = new TokenSelection("/token/messages/message[@name='" + testedMessage + "']/*[1]");
-            var result = new CbrNodeConfiguration() { Name = name, TestedSelection = testedMessageSelection, DefaultTarget = defaultTarget };
+            var testedMessageSelection = new TokenSelection(
+                string.Format(@"/token/messages/message[@name='{0}']/*[1]", testedMessage));
+            var result = new CbrNodeConfiguration() {
+                Name = name,
+                TestedSelection = testedMessageSelection,
+                DefaultTarget = defaultTarget
+            };
             foreach (CbrCase cbrCase in cases) {
-                result.Branches.Add(new XrmUri("//item[@name='" + cbrCase.Schematron + "']"), cbrCase.TargetNode);
+                result.Branches.Add(
+                    new XrmUri(string.Format(@"//item[@name='{0}']", cbrCase.Schematron)),
+                    cbrCase.TargetNode);
             }
             return result;
         }
