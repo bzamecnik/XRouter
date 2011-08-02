@@ -37,7 +37,7 @@ namespace ObjectConfigurator.ItemTypes
             }
 
             var customType = GetCustomType();
-            customType.WriteDefaultValueToXElement(source);
+            //customType.WriteDefaultValueToXElement(source);
             return customType.ReadFromXElement(source);
         }
 
