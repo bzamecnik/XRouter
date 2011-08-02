@@ -89,7 +89,7 @@ namespace XRouter.Gateway
 
         protected void ReceiveMessageXml(XDocument message, string endpointName, XDocument metadata)
         {
-            ReceiveMessageXml(message, endpointName, message, null, null);
+            ReceiveMessageXml(message, endpointName, metadata, null, null);
         }
 
         protected void ReceiveMessageXml(XDocument message, string endpointName, XDocument metadata, object context, MessageResultHandler resultHandler)
