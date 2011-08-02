@@ -335,4 +335,7 @@ Global
 		{FA5D66EA-EF2B-46BF-AAB6-8B6C529E506D} = {3DCD8466-938F-49B0-9EC0-3D01FD1061D2}
 		{56EDB1E6-D555-48BF-B92E-1CD1CFFF2AF6} = {D4A78E36-8B90-4F84-ACCF-6C6B32B9FFC2}
 	EndGlobalSection
+	GlobalSection(SpecExplorer.ActivityCompletionStatus) = preSolution
+		SpecExplorer.ActivityCompletionStatus = TestExisting: ;ModelFromScratch: 
+	EndGlobalSection
 EndGlobal

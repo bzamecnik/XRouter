@@ -86,7 +86,7 @@ namespace XRouter.Adapters
                         TraceLog.Info("Found input file " + Path.GetFileName(newFilePath));
                         try
                         {
-                            ReceiveMessage(message, enpointName, metadata);
+                            ReceiveMessageXml(message, enpointName, metadata);
                         }
                         catch (Exception ex)
                         {
