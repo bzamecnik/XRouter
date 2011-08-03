@@ -33,3 +33,4 @@ _ReSharper*/
 StyleCop.Cache
 *.orig
 *.vsp
+docs/*
