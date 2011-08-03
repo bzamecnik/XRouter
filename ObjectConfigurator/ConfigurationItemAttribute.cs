@@ -8,8 +8,8 @@ namespace ObjectConfigurator
 {
     /// <summary>
     /// Marks a configuration item (field or property) to be managed by
-    /// Configurator. Also enables to provide further information such as a
-    /// user-friendly item name and description.
+    /// Configurator. You can provide further information such as a
+    /// user-friendly item name and description and a default value.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = true, AllowMultiple = false)]
     public sealed class ConfigurationItemAttribute : Attribute

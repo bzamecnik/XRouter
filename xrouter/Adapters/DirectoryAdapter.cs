@@ -22,7 +22,7 @@ namespace XRouter.Adapters
     /// <para>XML files and text files (TODO) are supported.</para>
     /// <para>Unreadable files or directories are ignored.</para>
     /// </remarks>
-    [AdapterPlugin("Directory reader and writer", "Reads and write files from/into specified directories.")]
+    [AdapterPlugin("Directory I/O adapter", "Reads and writes files from/into specified directories.")]
     public class DirectoryAdapter : Adapter
     {
         [ConfigurationItem("Checking interval (in seconds)", null, 0.1)]

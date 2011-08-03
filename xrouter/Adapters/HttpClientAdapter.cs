@@ -1,42 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using XRouter.Gateway;
-using System.Xml.Linq;
-using System.Collections.Concurrent;
-using System.Reflection;
-using System.IO;
-using System.Threading;
+﻿using System.IO;
 using System.Net;
-using XRouter.Common;
+using System.Text;
+using System.Xml.Linq;
 using ObjectConfigurator;
+using XRouter.Gateway;
 
 namespace XRouter.Adapters
 {
     /// <summary>
-    /// Adapter poskytuje jednoduchy HTTP protocol sender, ktery umoznuje realizovat clienta serveru. 
-    /// HTTP content muze byt libovolny XML dokument (typicky SOAP, tj. adapter umoznuje realizovat simple 
-    /// RPC-style web service client). 
+    /// HTTP client adapter provides a simple RPC-style client which can send
+    /// messages to remote web services synchronously. The content can be
+    /// arbitrary XML document (typically SOAP).
     /// </summary>
-    [AdapterPlugin("HttpClientAdapter", "dodat description")]
+    /// <remarks>
+    /// The client sends the XML content to a service specified by its target
+    /// URI using a specified SOAP action. The request can be terminated after
+    /// given timeout. After sending the request a response from the web
+    /// service is returend.
+    /// </remarks>
+    [AdapterPlugin("HTTP client adapter", "Provides a HTTP client which can send messages to remote web services.")]
     class HttpClientAdapter : Adapter
     {
-        [ConfigurationItem("URI", "A URI prefix string is composed of a scheme (http), a host, an optional port, and an optional path. An example of a complete prefix string is 'http://www.contoso.com:8080/customerData/'.", "http://localhost:8080/")]
+        [ConfigurationItem("Target URI", "URI of the target web service. Example: 'http://www.example.com:8080/path/'.", "http://localhost:8080/")]
         public string Uri { set; get; }
-       
-        [ConfigurationItem("ContentType", "", "text/xml; charset=utf-8")]
+
+        [ConfigurationItem("Content type", "", "text/xml; charset=utf-8")]
         public string ContentType { set; get; }
- 
-        [ConfigurationItem("SOAPAction", "", "")]
+
+        [ConfigurationItem("SOAP action", "", "")]
         public string SOAPAction { set; get; }
-     
-        [ConfigurationItem("TimeOut", "Time-out value in seconds.", 60)]
+
+        [ConfigurationItem("Timeout", "Timeout in seconds.", 60)]
         public int TimeOut { set; get; }
 
         protected override void Run()
         {
-            
+            // NOTE: the adapter does not listen to receive any messagess
+            // See the HttpServiceAdapter for HTTP server functionality.
         }
 
         public override XDocument SendMessage(string endpointName, XDocument message, XDocument metadata)
@@ -51,7 +51,7 @@ namespace XRouter.Adapters
             {
                 request.Headers.Add("SOAPAction", this.SOAPAction);
             }
-                                              
+
             // nastaveni kodovani
             Encoding encoding = Encoding.UTF8;
             if (message.Declaration != null)
@@ -75,7 +75,7 @@ namespace XRouter.Adapters
 
             // ziskani odpovedi
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            XDocument xResponse = XDocument.Load(response.GetResponseStream(), LoadOptions.SetLineInfo);            
+            XDocument xResponse = XDocument.Load(response.GetResponseStream(), LoadOptions.SetLineInfo);
 
             return xResponse;
         }

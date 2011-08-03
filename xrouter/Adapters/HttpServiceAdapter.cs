@@ -1,48 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using XRouter.Gateway;
-using System.Xml.Linq;
-using System.Collections.Concurrent;
-using System.Reflection;
-using System.IO;
-using System.Threading;
 using System.Net;
-using XRouter.Common;
+using System.Xml.Linq;
 using ObjectConfigurator;
+using XRouter.Gateway;
 
 namespace XRouter.Adapters
-{    
+{
     /// <summary>
-    /// Adapter poskytuje jednoduchy HTTP protocol listener a realizuje chování serveru request/response. 
-    /// HTTP content muze byt libovolny XML dokument (typicky SOAP, tj. adapter umoznuje realizovat simple 
-    /// RPC-style web service). 
+    /// HTTP service adapter provides a simple web service listener (server).
+    /// In can receive XML messages in requests from remote clients and respond
+    /// to them in RPC style. The XML content can be arbitrary (typically SOAP).
     /// </summary>
-    [AdapterPlugin("HttpServiceAdapter", "dodat description")]
+    [AdapterPlugin("HTTP service adapter", "Provides a simple web service listener which can receive messages.")]
     class HttpServiceAdapter : Adapter
     {
-        // nastavit jako povinny        
-        [ConfigurationItem("URI", "A URI string is composed of a scheme (http), a host, an optional port, and an optional path. An example of a complete prefix string is 'http://www.contoso.com:8080/customerData/'.", "http://localhost:8080/")]
+        // nastavit jako povinny
+        [ConfigurationItem("Listener URI prefix", "It is composed of a scheme (http), host name, (optional) port, and (optional) path. Example: 'http://www.example.com:8080/path/'.", "http://localhost:8080/")]
         public string Uri { set; get; }
-                
+
         private HttpListener listener = null;
-       
+
         protected override void Run()
-        {           
+        {
             this.listener = new HttpListener();
             this.listener.Prefixes.Add(this.Uri);
             this.listener.Start();
 
             while (true)
-            {                
+            {
                 HttpListenerContext context = null;
                 try
                 {
                     context = listener.GetContext();
                 }
                 catch (HttpListenerException)
-                {                   
+                {
                     if (this.IsRunning)
                     {
                         throw;
@@ -53,13 +45,13 @@ namespace XRouter.Adapters
                     }
                 }
 
-                HttpListenerRequest request = context.Request;                                
+                HttpListenerRequest request = context.Request;
                 XDocument requestMessage = XDocument.Load(request.InputStream, LoadOptions.SetLineInfo);
 
                 this.ReceiveMessageXml(requestMessage, null, null, context, delegate(Guid tokenGuid, XDocument resultMessage, XDocument sourceMetadata, object responseContext)
-                {                   
+                {
                     HttpListenerResponse response = ((HttpListenerContext)responseContext).Response;
-                                      
+
                     response.ContentType = request.ContentType;
                     string strResponse = resultMessage.ToString();
                     byte[] bufferResponse = request.ContentEncoding.GetBytes(strResponse);
@@ -72,15 +64,15 @@ namespace XRouter.Adapters
                 });
             }
         }
-                           
+
         public override void OnTerminate()
-        {         
+        {
             this.listener.Close();
         }
 
         public override XDocument SendMessage(string endpointName, XDocument message, XDocument metadata)
         {
-            throw new NotImplementedException();            
+            throw new NotImplementedException();
         }
     }
 }
