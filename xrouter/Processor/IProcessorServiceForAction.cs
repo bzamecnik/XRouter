@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml.Linq;
-using XRouter.Common.Xrm;
 using XRouter.Common;
+using XRouter.Common.Xrm;
 
 namespace XRouter.Processor
 {

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DaemonNT.Logging;
 using System.Runtime.Serialization;
+using DaemonNT.Logging;
 
 namespace XRouter.Common
 {

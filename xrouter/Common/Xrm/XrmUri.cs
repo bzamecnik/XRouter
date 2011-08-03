@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.XPath;
 using System.Runtime.Serialization;
+using System.Xml.XPath;
 
 namespace XRouter.Common.Xrm
 {

@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using XRouter.Gateway;
-using System.Xml.Linq;
 using System.Collections.Concurrent;
-using System.Reflection;
 using System.IO;
 using System.Threading;
-using XRouter.Common;
+using System.Xml.Linq;
 using ObjectConfigurator;
+using XRouter.Common;
+using XRouter.Gateway;
 
 namespace XRouter.Adapters
 {

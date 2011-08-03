@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Xml;
-using DaemonNT;
-using System.Xml.Linq;
-using System.Xml.XPath;
-using XRouter.Common.ComponentInterfaces;
-using XRouter.Common.MessageFlowConfig;
-using wcf = System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
+using DaemonNT;
+using XRouter.Common.ComponentInterfaces;
+using wcf = System.ServiceModel;
 
 namespace XRouter.Test.Common
 {

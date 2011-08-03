@@ -2,9 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ServiceProcess;
-    using DaemonNT.Installation;
     using System.Linq;
+    using DaemonNT.Installation;
 
     /// <summary>
     /// Provides a console program to run various DaemonNT commands.

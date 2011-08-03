@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.MessageFlowConfig;
-using wcf = System.ServiceModel;
 
 namespace XRouter.Test.Common
 {

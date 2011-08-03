@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using XRouter.Common.Xrm;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using XRouter.Common.Xrm;
 
 namespace XRouter.Common.MessageFlowConfig
 {

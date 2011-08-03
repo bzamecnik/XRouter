@@ -1,9 +1,8 @@
 ﻿namespace DaemonNT.Logging
 {
     using System;
-    using System.Text;
-    using System.Threading;
     using System.Collections.Generic;
+    using System.Text;
     using DaemonNT.Configuration;
 
     /// <summary>
