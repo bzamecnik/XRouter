@@ -1,14 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using XRouter.Common;
-using System.Xml.Linq;
-using System.Threading.Tasks;
 using System.IO;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using XRouter.Common;
 
 namespace XRouter.Gateway
 {
+    /// <summary>
+    /// This is a base class providing common code for concrete adapters.
+    /// An adapter is a component of a gateway specialized in one type of
+    /// communication with external systems (such as file exchange, web
+    /// service, e-mail, etc.). It received incoming messages messages and
+    /// passes them to the gateway for further processing. Also it sends
+    /// outgoing processed messages away.
+    /// </summary>
+    /// <remarks>
+    /// The incoming messages can be received either as XML with one of
+    /// the ReceiveMessageXml() methods, or as plain-text data with the
+    /// ReceiveMessageData() method. Outgoing messages can be send with the
+    /// SendMessage() method.
+    /// </remarks>
     public abstract class Adapter
     {
         protected bool IsRunning { get; private set; }

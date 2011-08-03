@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DaemonNT;
+﻿using DaemonNT;
 using XRouter.Common;
-using XRouter.Broker;
-using System.Reflection;
-using System.IO;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.MessageFlowConfig;
-using XRouter.Processor.BuiltInActions;
-using System.Xml.Linq;
 using XRouter.Common.Xrm;
 using XRouter.Processor.MessageFlowBuilding;
 
 namespace XRouter.ComponentHosting
 {
+    /// <summary>
+    /// A DaemonNT service which runs all the XRouter components within a
+    /// single process (in multiple threads).
+    /// </summary>
     class XRouterService : Service
     {
         private static readonly string SectionKey_Broker = "broker";

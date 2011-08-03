@@ -4,6 +4,11 @@ using System.Xml.Linq;
 
 namespace XRouter.Data
 {
+    /// <summary>
+    /// Provides an API for services provided to XRouter components by a
+    /// persistent data storage, such as a database. In general it contains
+    /// methods for working with tokens, component configuration and logs.
+    /// </summary>
     public interface IDataAccess
     {
         #region Messages / Tokens

@@ -1,21 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Xml.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using XRouter.Common;
-using XRouter.Broker;
-using XRouter.Common.Utils;
 using System.Collections.Concurrent;
-using XRouter.Common.ComponentInterfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 using System.Xml.XPath;
+using XRouter.Common;
+using XRouter.Common.ComponentInterfaces;
+using XRouter.Common.Utils;
 
 namespace XRouter.Gateway
 {
+    /// <summary>
+    /// Gateway is a component which manages communication of XRouter with
+    /// external systems via various communication means.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// A gateway can manage several adapters, each specialized in one
+    /// communication protocol (such as file exchange, web services, email,
+    /// etc.). It works as a mediator between adapters and the broker.
+    /// Incoming messages are passed from adapter to the broker for being
+    /// processed and outgoing processed messages go the other way.
+    /// </para>
+    /// <para>
+    /// The code in a gateway run from broker or component hosting thread.
+    /// Each adapter runs in its own thread.
+    /// </para>
+    /// </remarks>
     public class Gateway : IGatewayService
     {
         public string Name { get; private set; }
@@ -36,10 +47,16 @@ namespace XRouter.Gateway
             waitingResultMessageHandlers = new ConcurrentDictionary<Guid, ResultHandlingInfo>();
         }
 
+        #region IComponentService Members
+
         public void UpdateConfig(ApplicationConfiguration config)
         {
             Configuration = config;
         }
+
+        #endregion
+
+        #region IGatewayService Members
 
         public void Start(string name, IBrokerServiceForGateway broker)
         {
@@ -75,15 +92,6 @@ namespace XRouter.Gateway
             });
         }
 
-        private Adapter CreateAdapter(string typeFullNameAndAssembly, XElement adapterConfig, string adapterName)
-        {
-            var adapter = TypeUtils.CreateTypeInstance<Adapter>(typeFullNameAndAssembly);
-            adapter.Gateway = this;
-            adapter.AdapterName = adapterName;
-            adapter.Config = new XDocument(adapterConfig.XPathSelectElement("objectConfig"));
-            return adapter;
-        }
-
         public SerializableXDocument SendMessage(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata)
         {
             if (!AdaptersByName.ContainsKey(address.AdapterName)) {
@@ -95,17 +103,6 @@ namespace XRouter.Gateway
             return new SerializableXDocument(result);
         }
 
-        internal void ReceiveToken(Token token, object context, MessageResultHandler resultHandler = null)
-        {
-            if (resultHandler != null) {
-                ResultHandlingInfo resultHandlingInfo = new ResultHandlingInfo(token.Guid, resultHandler, context);
-                waitingResultMessageHandlers.AddOrUpdate(token.Guid, resultHandlingInfo, (key, oldValue) => resultHandlingInfo);
-            }
-            Task.Factory.StartNew(delegate {
-                Broker.ReceiveToken(token);
-            });
-        }
-
         public void ReceiveReturn(Guid tokenGuid, SerializableXDocument resultMessage, SerializableXDocument sourceMetadata)
         {
             ResultHandlingInfo resultHandlingInfo;
@@ -113,6 +110,30 @@ namespace XRouter.Gateway
             {
                 resultHandlingInfo.ResultHandler(tokenGuid, resultMessage.XDocument, sourceMetadata.XDocument, resultHandlingInfo.Context);
             }
+        }
+
+        #endregion
+
+        internal void ReceiveToken(Token token, object context, MessageResultHandler resultHandler = null)
+        {
+            if (resultHandler != null)
+            {
+                ResultHandlingInfo resultHandlingInfo = new ResultHandlingInfo(token.Guid, resultHandler, context);
+                waitingResultMessageHandlers.AddOrUpdate(token.Guid, resultHandlingInfo, (key, oldValue) => resultHandlingInfo);
+            }
+            Task.Factory.StartNew(delegate
+            {
+                Broker.ReceiveToken(token);
+            });
+        }
+
+        private Adapter CreateAdapter(string typeFullNameAndAssembly, XElement adapterConfig, string adapterName)
+        {
+            var adapter = TypeUtils.CreateTypeInstance<Adapter>(typeFullNameAndAssembly);
+            adapter.Gateway = this;
+            adapter.AdapterName = adapterName;
+            adapter.Config = new XDocument(adapterConfig.XPathSelectElement("objectConfig"));
+            return adapter;
         }
 
         private class ResultHandlingInfo

@@ -8,6 +8,10 @@ using System.Xml.Linq;
 
 namespace XRouter.Data
 {
+    /// <summary>
+    /// An implementation of data access API using a Microsft SQL Server
+    /// database.
+    /// </summary>
     public class MsSqlDataAccess : IDataAccess
     {
         private string IPAddress;

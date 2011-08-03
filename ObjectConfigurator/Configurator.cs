@@ -10,7 +10,7 @@ namespace ObjectConfigurator
 {
     /// <summary>
     /// Provides configuration of objects in a unified way to enable
-    /// persistence and GUI editing.
+    /// persistence, injection and GUI editing.
     /// </summary>
     /// <remarks>
     /// <para>

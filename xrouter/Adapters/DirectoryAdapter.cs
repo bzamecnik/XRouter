@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using XRouter.Gateway;
-using System.Xml.Linq;
 using System.Collections.Concurrent;
-using System.Reflection;
 using System.IO;
 using System.Threading;
 using System.Xml.Linq;
@@ -16,11 +10,18 @@ using XRouter.Gateway;
 namespace XRouter.Adapters
 {
     /// <summary>
-    /// Adapter umoznuje realizovat file-transfer pres sdileny adresar souboroveho systemu. 
-    /// Adapter tvori sluzba, ktera se periodicky dotazuje nad nastavenymi adresari a v 
-    /// pripade vyskytu zpravy, soubor nacte a odstrani ze vstupu. 
-    /// Adapter tvori client, ktery umoznuje exportovat zpravu do nastaveneho adresare. 
+    /// Directory adapter provides file input/output in a shared file system
+    /// directory. It periodically polls for new files in directories under
+    /// its control. Any succesfully loaded input file is received for further
+    /// processing and removed from the file system. Also outgoing messages
+    /// can be saved into files in a specified directory.
     /// </summary>
+    /// <remarks>
+    /// <para>Each input, resp. output directory is called an input, resp.
+    /// output endpoint.</para>
+    /// <para>XML files and text files (TODO) are supported.</para>
+    /// <para>Unreadable files or directories are ignored.</para>
+    /// </remarks>
     [AdapterPlugin("Directory reader and writer", "Reads and write files from/into specified directories.")]
     public class DirectoryAdapter : Adapter
     {
@@ -77,6 +78,8 @@ namespace XRouter.Adapters
                             {
                                 continue;
                             }
+                            // TODO: if the document is not a valid XML, send it
+                            // as raw data with ReceiveMessageData()
                             XDocument message = XDocument.Parse(fileContent);
 
                             XDocument metadata = new XDocument();
