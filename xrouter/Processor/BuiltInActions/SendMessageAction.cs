@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using XRouter.Common;
-using XRouter.Common.MessageFlowConfig;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using ObjectConfigurator;
-using System.Threading.Tasks;
+using XRouter.Common;
+using XRouter.Common.MessageFlowConfig;
 
 namespace XRouter.Processor.BuiltInActions
 {
+    /// <summary>
+    /// Message flow action which sends a message to an output endpoint.
+    /// </summary>
     [ActionPlugin("Message sender", "Sends a message to a specified output endpoint.")]
     public class SendMessageAction : IActionPlugin
     {
@@ -50,17 +50,20 @@ namespace XRouter.Processor.BuiltInActions
         {
             TraceLog.Info(string.Format("Sending '{0}' to output endpoint '{1}'", messageSelection.SelectionPattern, targetEndpoint.ToString()));
 
-            XDocument message =  messageSelection.GetSelectedDocument(token);
+            XDocument message = messageSelection.GetSelectedDocument(token);
             XDocument metadata = metadataSelection.GetSelectedDocument(token);
 
             XDocument outputMessage = null;
-            Task sendTask = Task.Factory.StartNew(delegate {
+            Task sendTask = Task.Factory.StartNew(delegate
+            {
                 outputMessage = processorService.SendMessage(targetEndpoint, message, metadata);
             });
             bool isFinished = sendTask.Wait(TimeSpan.FromSeconds(timeoutInSeconds));
 
-            if (isFinished) {
-                if (resultMessageName.Trim().Length > 0) {
+            if (isFinished)
+            {
+                if (resultMessageName.Trim().Length > 0)
+                {
                     processorService.CreateMessage(token.Guid, resultMessageName.Trim(), outputMessage);
                 }
             }

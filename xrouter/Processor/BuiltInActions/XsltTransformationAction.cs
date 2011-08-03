@@ -1,34 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Xsl;
+using ObjectConfigurator;
+using XRouter.Common;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
-using XRouter.Common;
-using System.Xml.Xsl;
-using System.Xml;
-using ObjectConfigurator;
-using System.IO;
 
 namespace XRouter.Processor.BuiltInActions
 {
+    /// <summary>
+    /// Message flow action which transforms a message using a XSLT into
+    /// another message.
+    /// </summary>
+    /// <remarks>
+    /// The XSL transform is obtained from the XML resource manager.
+    /// </remarks>
     [ActionPlugin("Xslt transformer", "Does xslt tansformation of a specified message.")]
     public class XsltTransformationAction : IActionPlugin
     {
         private IProcessorServiceForAction ProcessorService { get; set; }
 
         #region Configuration
-        [ConfigurationItem("Xslt", null, "//item[@name='xslt']")]
+        [ConfigurationItem("XSLT", "XRM URI of the XSLT (XPath for selecting the XSLT from XRM)",
+            "//item[@name='xslt']")]
         private XrmUri xlstUri;
 
-        [ConfigurationItem("Input message", null, "token/messages/message[@name='input']/*[1]")]
+        [ConfigurationItem("Input message", "XPath for selecting the input message from a token",
+            "token/messages/message[@name='input']/*[1]")]
         private TokenSelection inputMessageSelection;
 
         [ConfigurationItem("Output message name", null, "output")]
         private string outputMessageName;
 
-        [ConfigurationItem("Is xslt trusted", "Allows embedded script blocks and the XSLT document() function. These are optional features which can be exploited by malicious user. Allow it only if xslt comes from trusted source.", false)]
+        [ConfigurationItem("Is XSLT trusted",
+            "Allows embedded script blocks and the XSLT document() function. " +
+            "These are optional features which can be exploited by a malicious user. " +
+            "Allow it only if the XSLT comes from a trusted source.", false)]
         private bool isXsltTrusted;
         #endregion
 
@@ -41,7 +49,8 @@ namespace XRouter.Processor.BuiltInActions
             XDocument xsltDocument = processorService.GetXmlResource(xlstUri);
             XmlReader xsltReader = xsltDocument.CreateReader();
             XsltSettings xsltSettings = XsltSettings.Default;
-            if (isXsltTrusted) {
+            if (isXsltTrusted)
+            {
                 xsltSettings = XsltSettings.TrustedXslt;
             }
             XmlResolver resolver = new XrmXmlResolver(ProcessorService);
@@ -52,7 +61,8 @@ namespace XRouter.Processor.BuiltInActions
 
         public void Evaluate(Token token)
         {
-            TraceLog.Info(string.Format("Entering XSL transformation of '{0}' to message '{1}'", inputMessageSelection.SelectionPattern, outputMessageName));
+            TraceLog.Info(string.Format("Entering XSL transformation of '{0}' to message '{1}'",
+                inputMessageSelection.SelectionPattern, outputMessageName));
 
             XDocument inputMessage = inputMessageSelection.GetSelectedDocument(token);
             var reader = inputMessage.Root.CreateReader();

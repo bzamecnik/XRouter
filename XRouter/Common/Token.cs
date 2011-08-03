@@ -1,20 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Globalization;
+using System.Runtime.Serialization;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using System.Globalization;
-using System.Xml.Serialization;
-using System.Xml;
-using System.Runtime.Serialization;
 
 namespace XRouter.Common
 {
+    /// <summary>
+    /// Represents a message and its metadata as it is processed in XRouter
+    /// pipeline. Access to is thread-safe and can be blocking. It is uniquely
+    /// identified by a GUID.
+    /// </summary>
+    /// <remarks>
+    /// As a message is processed its content can be transformed and each
+    /// version is stored in its token.
+    /// </remarks>
     [Serializable]
     [DataContract]
     public class Token
     {
+        /// <summary>
+        /// A unique identified of a token.
+        /// </summary>
         [DataMember]
         public Guid Guid { get; private set; }
 
@@ -28,10 +35,16 @@ namespace XRouter.Common
             }
         }
 
+        /// <summary>
+        /// XML content of the message.
+        /// </summary>
         [DataMember]
         public SerializableXDocument Content { get; private set; }
 
         private MessageFlowState _messageFlowState;
+        /// <summary>
+        /// State of the message flow while processing the token.
+        /// </summary>
         public MessageFlowState MessageFlowState {
             get {
                 lock (SyncLock) {
@@ -58,6 +71,9 @@ namespace XRouter.Common
             }
         }
 
+        /// <summary>
+        /// State of the token processing.
+        /// </summary>
         public TokenState State {
             get {
                 lock (SyncLock) {
@@ -85,6 +101,9 @@ namespace XRouter.Common
         }
 
         private EndpointAddress _sourceAddress;
+        /// <summary>
+        /// Identifies the adapter endpoint from which the message originates.
+        /// </summary>
         public EndpointAddress SourceAddress {
             get {
                 lock (SyncLock) {

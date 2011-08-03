@@ -5,6 +5,11 @@ using System.Text;
 
 namespace XRouter.Common
 {
+    /// <summary>
+    /// Represents an address of an adapter endpoint which can be a source
+    /// or target of a message. It consists of a gateway name, adapter name
+    /// and endpoint name.
+    /// </summary>
     public class EndpointAddress
     {
         public string GatewayName { get; private set; }

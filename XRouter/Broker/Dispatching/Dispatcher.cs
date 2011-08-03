@@ -64,6 +64,7 @@ namespace XRouter.Broker.Dispatching
                         }
 
                         if (token.MessageFlowState.MessageFlowGuid == new Guid()) {
+                            // NOTE: compare to default GUID returned by the new Guid()
                             Guid messageFlowGuid = config.GetCurrentMessageFlowGuid();
                             brokerService.UpdateTokenMessageFlow(tokenGuid, messageFlowGuid);
                             token.MessageFlowState.MessageFlowGuid = messageFlowGuid;

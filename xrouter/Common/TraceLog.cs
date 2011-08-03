@@ -1,15 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using DaemonNT.Logging;
 
 namespace XRouter.Common
 {
+    /// <summary>
+    /// Provides a log of structured data useful for tracing. Implemented
+    /// using DaemonNT logging.
+    /// </summary>
+    /// <remarks>
+    /// Must be initialized using the Initialize() method before usage.
+    /// </remarks>
     public class TraceLog
     {
-        private static DaemonNT.Logging.Logger daemonNTLogger;
+        private static Logger daemonNTLogger;
 
-        public static void Initialize(DaemonNT.Logging.Logger daemonNTLogger)
+        public static void Initialize(Logger daemonNTLogger)
         {
             TraceLog.daemonNTLogger = daemonNTLogger;
         }

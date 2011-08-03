@@ -1,17 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using XRouter.Common.MessageFlowConfig;
+﻿using System.Xml.Linq;
 using XRouter.Common;
-using System.Xml.Linq;
+using XRouter.Common.MessageFlowConfig;
 
 namespace XRouter.Processor.MessageFlowParts
 {
+    /// <summary>
+    /// Represents a node in the message flow in which processing of the token
+    /// is finished.
+    /// </summary>
+    /// <remarks>
+    /// The terminator node might return one of the messages in the token as
+    /// an output message (if configured so).
+    /// </remarks>
+    /// <see cref="XRouter.Common.MessageFlowConfig.TerminatorNodeConfiguration"/>
     class TerminatorNode : Node
     {
         private TerminatorNodeConfiguration Config { get; set; }
 
+        /// <summary>
+        /// Initializes a terminator node.
+        /// </summary>
+        /// <param name="configuration">TerminatorNodeConfiguration is expected
+        /// </param>
         public override void InitializeCore(NodeConfiguration configuration)
         {
             Config = (TerminatorNodeConfiguration)configuration;
@@ -19,9 +29,10 @@ namespace XRouter.Processor.MessageFlowParts
 
         public override string Evaluate(Token token)
         {
-            TraceLog.Info("Entering Terminator: " + Name);
+            TraceLog.Info("Entering terminator: " + Name);
             XDocument resultMessage = null;
-            if (Config.IsReturningOutput) {
+            if (Config.IsReturningOutput)
+            {
                 resultMessage = Config.ResultMessageSelection.GetSelectedDocument(token);
             }
 
