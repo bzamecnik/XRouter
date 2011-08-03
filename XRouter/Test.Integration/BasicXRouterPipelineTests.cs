@@ -15,7 +15,7 @@ using Xunit;
 
 namespace XRouter.Test.Integration
 {
-    public class BasicXRouterPipelineTests
+    public class BasicXRouterPipelineTests : IDisposable
     {
         /// <summary>
         /// Path to original files - test configurations and data.
@@ -26,53 +26,57 @@ namespace XRouter.Test.Integration
         /// </summary>
         private static readonly string WorkingPath = @"C:\XRouterTest\";
 
-        public ConfigurationManager ConfigManager { get; set; }
+        /// <summary>
+        /// Specified whether the output file created during the tests should
+        /// be deleted or left to the tester for further examination.
+        /// </summary>
+        public bool DeleteOutputFiles = true;
+
+        private ConfigurationManager configManager;
+
+        private XRouterManager xrouterManager;
+
         public BasicXRouterPipelineTests()
         {
-            ConfigManager = new ConfigurationManager()
-            {
+            xrouterManager = new XRouterManager();
+            configManager = new ConfigurationManager(xrouterManager.BrokerProxy) {
                 BasePath = OriginalsPath
             };
         }
 
-        /// <summary>
-        /// Loads and prints the current XRouter configuration.
-        /// </summary>
         [Fact]
-        public void LoadCurrentConfiguration()
+        public void ProvideInputFileAndCheckResults()
         {
-            IBrokerServiceForManagement broker = ConfigurationManager.GetBrokerServiceProxy();
-            var configuration = broker.GetConfiguration();
-            Console.WriteLine(configuration.Content.XDocument.ToString());
+            LoadSingleCbrRestaurantMenu();
+
+            string source = Path.Combine(OriginalsPath, @"Test1\Input\RestaurantMenu_instance.xml");
+            string dest = Path.Combine(WorkingPath, @"In\RestaurantMenu_instance.xml");
+            // let the XRouter process the file
+            File.Copy(source, dest);
+
+            WaitForProcessing();
+
+            // verify that the file was processed well
+            bool ok = XmlDirectoryComparer.Equals(
+                Path.Combine(OriginalsPath, @"Test1\ExpectedOutput\OutA"),
+                Path.Combine(WorkingPath, @"OutA"), true);
+            Assert.True(ok);
+
+            // tear down
+            if (DeleteOutputFiles)
+            {
+                File.Delete(Path.Combine(WorkingPath, @"OutA\RestaurantMenu_instance.xml"));
+            }
         }
 
-        [Fact]
-        public void CreateSimpleMessageFlow()
+        private static void WaitForProcessing()
         {
-            //#region Create message flow
-            //var terminator = MessageFlowBuilder.CreateTerminator("termination");
-            //var send = MessageFlowBuilder.CreateSender("sendToA",
-            //    inputMessage: "input", outputEndpoint: "OutA", nextNode: terminator);
-            //var messageFlowConfig = new MessageFlowConfiguration("sendToA", 1)
-            //{
-            //    Nodes = { send, terminator },
-            //    RootNode = send
-            //};
-            //#endregion
-
-            // load message flow
-            XElement xMessageFlow = ConfigManager.LoadMessageFlowFromFile("simple-flow", "Test1");
-            MessageFlowConfiguration messageFlow = XSerializer.Deserialize<MessageFlowConfiguration>(xMessageFlow);
-
-            // load XRM items
-            var xrm = ConfigManager.LoadXrmItems(
-                new[] { "sample1a", "sample1b", "sample1c" }, "Test1");
-
-            ConfigurationManager.ReplaceConfiguration(messageFlow, xrm);
+            // TODO: find out how to correctly wait for XRouter until it
+            // processes the provided messages
+            Thread.Sleep(1000);
         }
 
-        [Fact]
-        public void LoadSingleCbr()
+        public void LoadSingleCbrRestaurantMenu()
         {
             #region Create message flow
             var terminator = MessageFlowBuilder.CreateTerminator("termination");
@@ -89,125 +93,19 @@ namespace XRouter.Test.Integration
             };
             #endregion
 
-            var xrm = ConfigManager.LoadXrmItems(
+            var xrm = configManager.LoadXrmItems(
                 new[] { "RestaurantMenu_schematron" }, "Test1");
 
-            ConfigurationManager.ReplaceConfiguration(messageFlow, xrm);
+            configManager.ReplaceConfiguration(messageFlow, xrm);
         }
 
-        [Fact]
-        public void ValidateExampleDoc()
+        #region IDisposable Members
+
+        public void Dispose()
         {
-            var xSch = XDocument.Load(@"Data\Common\Config\XRM\RestaurantMenu_schematron.xml");
-            var xIn = XDocument.Load(@"Data\Test1\Input\RestaurantMenu_instance.xml");
-            SchemaTron.Validator validator = SchemaTron.Validator.Create(xSch);
-            SchemaTron.ValidatorResults results = validator.Validate(xIn, true);
-            Console.WriteLine(results.IsValid ? "valid" : "invalid");
-            Console.WriteLine(string.Join("\n", results.ViolatedAssertions.Select((info) => info.ToString())));
+            xrouterManager.Dispose();
         }
 
-        [Fact]
-        public void ProvideInputFileAndCheckResults()
-        {
-            string source = Path.Combine(OriginalsPath, @"Test1\Input\RestaurantMenu_instance.xml");
-            string dest = Path.Combine(WorkingPath, @"In\RestaurantMenu_instance.xml");
-            // let the XRouter process the file
-            File.Copy(source, dest);
-
-            // TODO: find out how to correctly wait for XRouter until it
-            // processes the provided messages
-            Thread.Sleep(50);
-
-            // verify that the file was processes well
-            bool ok = XmlDirectoryComparer.Equals(
-                Path.Combine(OriginalsPath, @"Test1\ExpectedOutput\OutA"),
-                Path.Combine(WorkingPath, @"OutA"), true);
-            Assert.True(ok);
-
-            // tear down
-            File.Delete(Path.Combine(WorkingPath, @"OutA\RestaurantMenu_instance.xml"));
-        }
-
-        [Fact]
-        public void CreateFloodOfFiles()
-        {
-            int filesCount = 1000;
-            int paddingZeros = 1 + (int)Math.Floor(Math.Log10(filesCount));
-            string fileFormat = "input{0:" + new String('0', paddingZeros) + "}.xml";
-            string basePath = Path.Combine(OriginalsPath, @"Test1\Input");
-            TextGenerator gen = new TextGenerator()
-            {
-                MinMessageLength = 100,
-                MaxMessageLength = 1000
-            };
-            for (int i = 0; i < filesCount; i++)
-            {
-                string fileName = string.Format(fileFormat, i);
-                string filePath = Path.Combine(basePath, fileName);
-                using (TextWriter writer = File.CreateText(filePath))
-                {
-                    writer.WriteLine("<message>");
-                    writer.WriteLine("<a>");
-                    writer.WriteLine(gen.GenerateMessage());
-                    writer.WriteLine("</a>");
-                    writer.WriteLine("</message>");
-                }
-            }
-        }
-
-        [Fact]
-        public void RunXRouterInDebugMode()
-        {
-            var daemonNt = new ServiceCommands()
-            {
-                ConfigFile = @"..\..\..\ComponentHosting\Misc\DaemonNT_config.xml"
-            };
-            string serviceName = "xrouter";
-            // start the debug host in a new thread because it blocks while
-            // reading from the console
-            // TODO: this will go to the test class constructor
-            Task.Factory.StartNew(() => daemonNt.DebugStart(serviceName));
-            
-            // TODO: do some interesting stuff here
-            Thread.Sleep(2000);
-            
-            // TODO: this will go to the test class Dispose()
-            daemonNt.DebugStop(serviceName);
-        }
-
-        private class TextGenerator
-        {
-            /// <summary>
-            /// Minimum random message length (inclusive).
-            /// </summary>
-            public int MinMessageLength { get; set; }
-            /// <summary>
-            /// Maximum random message length (inclusive).
-            /// </summary>
-            public int MaxMessageLength { get; set; }
-
-            private Random random = new Random();
-            private StringBuilder stringBuilder = new StringBuilder();
-
-            public TextGenerator()
-            {
-                MinMessageLength = 10;
-                MaxMessageLength = 70;
-            }
-
-            public string GenerateMessage()
-            {
-                int length = random.Next(MinMessageLength, MaxMessageLength);
-                stringBuilder.Clear();
-                for (int i = 0; i < length; i++)
-                {
-                    int randomChar = random.Next(65, 90);
-                    stringBuilder.Append((char)randomChar);
-                }
-                string randomString = stringBuilder.ToString();
-                stringBuilder.Clear();
-                return randomString;
-            }
-        }
+        #endregion
     }
 }

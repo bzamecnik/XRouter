@@ -69,7 +69,7 @@ namespace XRouter.Test.Integration
             //File.Delete(signalFile);
         }
 
-        [Fact]
+        //[Fact]
         public void TestWhichHasNoNameAsOfYet()
         {
             prepareTest(MethodInfo.GetCurrentMethod().Name);
@@ -81,7 +81,7 @@ namespace XRouter.Test.Integration
             compareResults(MethodInfo.GetCurrentMethod().Name);
         }
 
-        [Fact]
+        //[Fact]
         public void TestMoreComplex()
         {
             prepareTest(MethodInfo.GetCurrentMethod().Name);

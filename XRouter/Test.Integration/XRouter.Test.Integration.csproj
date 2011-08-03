@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicXRouterPipelineTests.cs" />
+    <Compile Include="HandUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestScenarios.cs" />
   </ItemGroup>

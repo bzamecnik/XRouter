@@ -11,34 +11,35 @@ using wcf = System.ServiceModel;
 
 namespace XRouter.Test.Common
 {
+    /// <summary>
+    /// Provides a way for loading configuration for tests from data files
+    /// into an XRouter instance.
+    /// </summary>
+    /// <remarks>Configuration inludes message flows and XRM items.</remarks>
     public class ConfigurationManager
     {
+        /// <summary>
+        /// Path from which to load test-specific or shared configuration files.
+        /// </summary>
+        /// <remarks>Relative to the test working directory.</remarks>
         public string BasePath { get; set; }
 
-        public ConfigurationManager()
+        private IBrokerServiceForManagement broker;
+
+        public ConfigurationManager(IBrokerServiceForManagement broker)
         {
             BasePath = @"Data\";
-        }
-
-        public static IBrokerServiceForManagement GetBrokerServiceProxy()
-        {
-            // NOTE: code taken from XRouter.Gui.ConfigurationManager
-            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress("net.pipe://localhost/XRouter.ServiceForManagement");
-            var binding = new wcf.NetNamedPipeBinding(wcf.NetNamedPipeSecurityMode.None) { MaxReceivedMessageSize = int.MaxValue };
-            binding.ReaderQuotas = new XmlDictionaryReaderQuotas() { MaxBytesPerRead = int.MaxValue, MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue };
-            wcf.ChannelFactory<IBrokerServiceForManagement> channelFactory = new wcf.ChannelFactory<IBrokerServiceForManagement>(binding, endpointAddress);
-            return channelFactory.CreateChannel();
+            this.broker = broker;
         }
 
         /// <summary>
         /// Modifies the current XRouter configuration with a custom message
         /// flow and XML resource storage.
         /// </summary>
-        public static void ReplaceConfiguration(
+        public void ReplaceConfiguration(
             MessageFlowConfiguration messageFlow,
             XElement xrm)
         {
-            IBrokerServiceForManagement broker = GetBrokerServiceProxy();
             ReplaceConfiguration(broker, messageFlow, xrm);
         }
 
@@ -46,7 +47,7 @@ namespace XRouter.Test.Common
         /// Modifies the current XRouter configuration with a custom message
         /// flow and XML resource storage.
         /// </summary>
-        public static void ReplaceConfiguration(
+        public void ReplaceConfiguration(
             IBrokerServiceForManagement broker,
             MessageFlowConfiguration messageFlow,
             XElement xrm)
