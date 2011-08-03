@@ -4,9 +4,15 @@ using System.Xml.XPath;
 
 namespace XRouter.Common.MessageFlowConfig
 {
+    /// <summary>
+    /// XPath pattern to select a document from a token.
+    /// </summary>
     [DataContract]
     public class TokenSelection
     {
+        /// <summary>
+        /// XPath selection pattern.
+        /// </summary>
         [DataMember]
         public string SelectionPattern { get; set; }
 

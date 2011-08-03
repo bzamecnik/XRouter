@@ -5,6 +5,10 @@ using System.Runtime.Serialization;
 
 namespace XRouter.Common.MessageFlowConfig
 {
+    /// <summary>
+    /// Represent serializable configuration of a message flow.
+    /// </summary>
+    /// <see cref="XRouter.Processor.MessageFlowParts.MessageFlow"/>
     [DataContract]
     [KnownType(typeof(TerminatorNodeConfiguration))]
     [KnownType(typeof(CbrNodeConfiguration))]

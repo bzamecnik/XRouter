@@ -24,6 +24,10 @@ namespace XRouter.Processor.MessageFlowParts
     /// Resources referenced from Schematron schemas in validator to be
     /// included are searched for and obtained from the XRM.
     /// </para>
+    /// <para>
+    /// In case the validated document is not valid under none of the
+    /// validator the flow can continue to a node configured as default.
+    /// </para>
     /// </remarks>
     /// <see cref="XRouter.Common.MessageFlowConfig.CbrNodeConfiguration"/>
     class CbrNode : Node

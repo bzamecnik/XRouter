@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Runtime.Serialization;
 using System.Xml.Linq;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
-using System.Xml.Schema;
-using System.Xml;
 
 namespace XRouter.Common
 {
+    /// <summary>
+    /// Provides a wrapper over XDocument which can be (de)serialized using
+    /// the DataContractSerializer class.
+    /// </summary>
+    /// <see cref="System.Runtime.Serialization.DataContractSerializer"/>
+    /// <see cref="System.Xml.Linq.XDocument"/>
     [DataContract]
     public class SerializableXDocument
     {
         [DataMember]
-        private string XmlContent {
+        private string XmlContent
+        {
             get { return XDocument.ToString(); }
             set { XDocument = XDocument.Parse(value); }
         }
@@ -23,7 +23,8 @@ namespace XRouter.Common
 
         public static implicit operator XDocument(SerializableXDocument serializableXDocument)
         {
-            if (serializableXDocument == null) {
+            if (serializableXDocument == null)
+            {
                 return null;
             }
             return serializableXDocument.XDocument;
@@ -31,7 +32,8 @@ namespace XRouter.Common
 
         public SerializableXDocument(XDocument xdocument)
         {
-            if (xdocument == null) {
+            if (xdocument == null)
+            {
                 xdocument = new XDocument();
             }
             XDocument = xdocument;
