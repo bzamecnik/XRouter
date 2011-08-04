@@ -1,6 +1,6 @@
-﻿
-namespace XRouter.Common
+﻿namespace XRouter.Common
 {
+    // TODO: this interface is completely unused!
     public interface IComponentController
     {
         void StartComponent();

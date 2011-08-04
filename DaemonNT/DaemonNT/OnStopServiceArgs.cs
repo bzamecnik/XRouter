@@ -5,7 +5,7 @@ namespace DaemonNT
     /// <summary>
     /// Arguments for stopping the service with the Service.OnStop() method.
     /// </summary>
-    /// <see cref="Service"/>
+    /// <seealso cref="Service"/>
     public sealed class OnStopServiceArgs
     {
         /// <summary>

@@ -15,8 +15,8 @@ namespace XRouter.Processor.MessageFlowParts
     /// Actions to be performed in this node are implemented as action
     /// plugins and configured specifically for each action node.
     /// </remarks>
-    /// <see cref="XRouter.Processor.IActionPlugin"/>
-    /// <see cref="XRouter.Common.MessageFlowConfig.ActionNodeConfiguration"/>
+    /// <seealso cref="XRouter.Processor.IActionPlugin"/>
+    /// <seealso cref="XRouter.Common.MessageFlowConfig.ActionNodeConfiguration"/>
     class ActionNode : Node
     {
         private ActionNodeConfiguration Config { get; set; }

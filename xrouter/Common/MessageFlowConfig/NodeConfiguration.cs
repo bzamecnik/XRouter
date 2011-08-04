@@ -7,7 +7,7 @@ namespace XRouter.Common.MessageFlowConfig
     /// <summary>
     /// Represents a serializable configuration of a node in a message flow.
     /// </summary>
-    /// <see cref="XRouter.Processor.MessageFlowParts.Node"/>
+    /// <seealso cref="XRouter.Processor.MessageFlowParts.Node"/>
     [DataContract]
     public abstract class NodeConfiguration
     {

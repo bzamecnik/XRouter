@@ -4,6 +4,9 @@ using XRouter.Common;
 
 namespace XRouter.Broker
 {
+    /// <summary>
+    /// API of the broker component to be used by dispatcher.
+    /// </summary>
     internal interface IBrokerServiceForDispatcher
     {
         ApplicationConfiguration GetConfiguration();

@@ -7,8 +7,15 @@ namespace XRouter.Processor
     /// Represents a plugin which performs a message flow action with a token.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// Some built-in actions are avaiable in the XRouter.Processor.BuiltInActions
     /// namespace. New actions can be created by implementing this interface.
+    /// </para>
+    /// <para>
+    /// An action plugin may be annotated by the <see
+    /// cref="XRouter.Processor.ActionPluginAttribute"/> attribute for enhanced
+    /// GUI editing of the action.
+    /// </para>
     /// </remarks>
     public interface IActionPlugin : IDisposable
     {

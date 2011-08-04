@@ -12,7 +12,7 @@ namespace XRouter.Processor.MessageFlowParts
     /// The terminator node might return one of the messages in the token as
     /// an output message (if configured so).
     /// </remarks>
-    /// <see cref="XRouter.Common.MessageFlowConfig.TerminatorNodeConfiguration"/>
+    /// <seealso cref="XRouter.Common.MessageFlowConfig.TerminatorNodeConfiguration"/>
     class TerminatorNode : Node
     {
         private TerminatorNodeConfiguration Config { get; set; }

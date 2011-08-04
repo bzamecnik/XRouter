@@ -5,7 +5,7 @@ namespace DaemonNT.Configuration
     /// <summary>
     /// Represents settings of a trace logger storage.
     /// </summary>
-    /// <see cref="DaemonNT.TraceLoggerStorage"/>
+    /// <seealso cref="DaemonNT.TraceLoggerStorage"/>
     [Serializable]
     internal sealed class TraceLoggerStorageSettings
     {

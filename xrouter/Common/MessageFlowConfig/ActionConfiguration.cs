@@ -6,14 +6,14 @@ namespace XRouter.Common.MessageFlowConfig
     /// <summary>
     /// Represents a serializable configuration of an action plugin.
     /// </summary>
-    /// <see cref="XRouter.Processor.IActionPlugin"/>
+    /// <seealso cref="XRouter.Processor.IActionPlugin"/>
     [DataContract]
     public class ActionConfiguration
     {
         /// <summary>
         /// Full name of the action plugin type.
         /// </summary>
-        /// <see cref="System.Type"/>
+        /// <seealso cref="System.Type"/>
         [DataMember]
         public string PluginTypeFullName { get; set; }
 

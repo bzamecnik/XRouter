@@ -7,6 +7,7 @@ namespace XRouter.Common.Xrm
 {
     public class XmlResourceManager
     {
+        // TODO: unused!
         private Func<ApplicationConfiguration> GetConfiguration { get; set; }
 
         private IXmlStorage storage;

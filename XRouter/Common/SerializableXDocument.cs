@@ -7,8 +7,8 @@ namespace XRouter.Common
     /// Provides a wrapper over XDocument which can be (de)serialized using
     /// the DataContractSerializer class.
     /// </summary>
-    /// <see cref="System.Runtime.Serialization.DataContractSerializer"/>
-    /// <see cref="System.Xml.Linq.XDocument"/>
+    /// <seealso cref="System.Runtime.Serialization.DataContractSerializer"/>
+    /// <seealso cref="System.Xml.Linq.XDocument"/>
     [DataContract]
     public class SerializableXDocument
     {

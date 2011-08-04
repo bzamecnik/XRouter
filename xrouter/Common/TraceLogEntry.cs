@@ -5,18 +5,35 @@ using DaemonNT.Logging;
 
 namespace XRouter.Common
 {
+    /// <summary>
+    /// Represents a single serializable entry of the trace log.
+    /// The message can be structured XML.
+    /// </summary>
     [DataContract]
     public class TraceLogEntry
     {
+        /// <summary>
+        /// Date and time when the log entry was created.
+        /// </summary>
         [DataMember]
         public DateTime Created { get; private set; }
 
+        /// <summary>
+        /// Type or importance of the entry. See <see
+        /// cref="DaemonNT.Logging.LogType"/> for possible log types.
+        /// </summary>
         [DataMember]
         public LogType LogLevel { get; private set; }
 
+        /// <summary>
+        /// Identifier of the thread which the trace log entry originates from.
+        /// </summary>
         [DataMember]
         public int ThreadID { get; private set; }
 
+        /// <summary>
+        /// XML contents of the log entry.
+        /// </summary>
         [DataMember]
         public string XmlContent { get; private set; }
 

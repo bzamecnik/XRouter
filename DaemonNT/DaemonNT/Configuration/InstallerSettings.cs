@@ -47,7 +47,7 @@
         /// Valid values are: 'Automatic', 'Manual', 'Disabled'.
         /// Default value is 'Manual'.
         /// </remarks>
-        /// <see cref="ProjectInstaller.ServiceStartMode"/>
+        /// <seealso cref="ProjectInstaller.ServiceStartMode"/>
         public string StartMode { get; set; }
 
         /// <summary>
@@ -59,7 +59,7 @@
         /// If 'User' account is selected the user account detailed should be
         /// specified in User and Password properties.
         /// </remarks>
-        /// <see cref="System.ServiceProcess.ServiceAccount"/>
+        /// <seealso cref="System.ServiceProcess.ServiceAccount"/>
         public string Account { get; set; }
 
         /// <summary>

@@ -6,6 +6,9 @@ using DaemonNT.Logging;
 
 namespace XRouter.Common
 {
+    /// <summary>
+    /// Provides read access to previously logged event log entries.
+    /// </summary>
     public class EventLogReader
     {
         private static readonly string LogFilePattern = "*_xrouter.log";
@@ -65,7 +68,7 @@ namespace XRouter.Common
                 case LogType.Error:
                     return filter.HasFlag(LogLevelFilters.Error);
                 default:
-                    throw new ArgumentException("Unknoen log level", "logLevel");
+                    throw new ArgumentException("Unknown log level", "logLevel");
             }
         }
     }

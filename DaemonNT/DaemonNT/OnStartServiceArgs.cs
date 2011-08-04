@@ -4,7 +4,7 @@ namespace DaemonNT
     /// <summary>
     /// Arguments for starting the service with the Service.OnStart() method.
     /// </summary>
-    /// <see cref="Service"/>
+    /// <seealso cref="Service"/>
     public sealed class OnStartServiceArgs
     {
         /// <summary>

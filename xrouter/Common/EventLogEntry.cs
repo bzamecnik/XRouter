@@ -4,15 +4,29 @@ using DaemonNT.Logging;
 
 namespace XRouter.Common
 {
+    /// <summary>
+    /// Represents a single serializable event entry of the event log.
+    /// The message can be an unstructured text.
+    /// </summary>
     [DataContract]
     public class EventLogEntry
     {
+        /// <summary>
+        /// Date and time when the log entry was created.
+        /// </summary>
         [DataMember]
         public DateTime Created { get; private set; }
 
+        /// <summary>
+        /// Type or importance of the entry. See <see
+        /// cref="DaemonNT.Logging.LogType"/> for possible log types.
+        /// </summary>
         [DataMember]
         public LogType LogLevel { get; private set; }
 
+        /// <summary>
+        /// Text contents of the log entry.
+        /// </summary>
         [DataMember]
         public string Message { get; private set; }
 

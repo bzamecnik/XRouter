@@ -28,8 +28,8 @@ namespace ObjectConfigurator
     /// Item metadata can also be edited in a GUI editor.
     /// </para>
     /// </remarks>
-    /// <see cref="ConfigurationItemAttribute"/>
-    /// <see cref="ItemMetadata"/>
+    /// <seealso cref="ConfigurationItemAttribute"/>
+    /// <seealso cref="ItemMetadata"/>
     public static class Configurator
     {
         internal static readonly XName XName_RootElement = XName.Get("objectConfig");

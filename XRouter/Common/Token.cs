@@ -7,7 +7,8 @@ using System.Xml.XPath;
 namespace XRouter.Common
 {
     /// <summary>
-    /// Represents a message and its metadata as it is processed in XRouter
+    /// Tokens represents a serializable container for a message, its metadata
+    /// and transformed versions of the message as it is processed in XRouter
     /// pipeline. Access to is thread-safe and can be blocking. It is uniquely
     /// identified by a GUID.
     /// </summary>
@@ -20,7 +21,7 @@ namespace XRouter.Common
     public class Token
     {
         /// <summary>
-        /// A unique identified of a token.
+        /// A unique identifier of a token.
         /// </summary>
         [DataMember]
         public Guid Guid { get; private set; }

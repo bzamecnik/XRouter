@@ -10,7 +10,7 @@
     /// service settings themselves and settings of service installer
     /// and trace logger.
     /// </remarks>
-    /// <see cref="DaemonNT.Installation.ProjectInstaller"/>
+    /// <seealso cref="DaemonNT.Installation.ProjectInstaller"/>
     [Serializable]
     internal sealed class ServiceSettings
     {

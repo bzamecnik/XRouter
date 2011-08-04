@@ -25,7 +25,7 @@
         /// <exception cref="InvalidOperationException">
         /// If the instance cannot be created.
         /// </exception>
-        /// <see cref="DaemonNT.Service"/>
+        /// <seealso cref="DaemonNT.Service"/>
         public static Service CreateService(string typeClass, string typeAssembly)
         {
             object instance = CreateTypeInstance(typeClass, typeAssembly);
@@ -56,7 +56,7 @@
         /// <exception cref="InvalidOperationException">
         /// If the instance cannot be created.
         /// </exception>
-        /// <see cref="TraceLoggerStorage"/>
+        /// <seealso cref="TraceLoggerStorage"/>
         public static TraceLoggerStorage CreateTraceLoggerStorage(
             string typeClass,
             string typeAssembly)

@@ -29,7 +29,7 @@ namespace XRouter.Processor.MessageFlowParts
     /// validator the flow can continue to a node configured as default.
     /// </para>
     /// </remarks>
-    /// <see cref="XRouter.Common.MessageFlowConfig.CbrNodeConfiguration"/>
+    /// <seealso cref="XRouter.Common.MessageFlowConfig.CbrNodeConfiguration"/>
     class CbrNode : Node
     {
         private CbrNodeConfiguration Config { get; set; }
@@ -90,6 +90,7 @@ namespace XRouter.Processor.MessageFlowParts
         /// </summary>
         private class XrmInclusionResolver : IInclusionResolver
         {
+            // TODO: using IProcessorServiceForAction might be sufficient
             private ProcessorServiceForNode processorService;
 
             public XrmInclusionResolver(ProcessorServiceForNode processorService)

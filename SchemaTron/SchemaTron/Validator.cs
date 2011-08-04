@@ -15,9 +15,9 @@ namespace SchemaTron
     /// Validator instances can be created via Create() factory methods.
     /// Validation itself is done using the Validate() method.
     /// </remarks>
-    /// <see cref="Create(XDocument)"/>
-    /// <see cref="Create(XDocument, ValidatorSettings)"/>
-    /// <see cref="Validate(XDocument, Boolean)"/>
+    /// <seealso cref="Create(XDocument)"/>
+    /// <seealso cref="Create(XDocument, ValidatorSettings)"/>
+    /// <seealso cref="Validate(XDocument, Boolean)"/>
     public sealed class Validator
     {
         /// <summary>
@@ -47,7 +47,7 @@ namespace SchemaTron
         /// <exception cref="System.ArgumentException"/>
         /// <exception cref="System.ArgumentNullException"/>
         /// <exception cref="SyntaxException"/>
-        /// <see cref="System.Xml.Linq.XDocument"/>
+        /// <seealso cref="System.Xml.Linq.XDocument"/>
         public static Validator Create(XDocument xSchema)
         {
             return Create(xSchema, null);

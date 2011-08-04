@@ -8,7 +8,7 @@ namespace XRouter.Common.MessageFlowConfig
     /// Represents a serializable configuration of an content-based router
     /// node.
     /// </summary>
-    /// <see cref="XRouter.Processor.MessageFlowParts.CbrNode"/>
+    /// <seealso cref="XRouter.Processor.MessageFlowParts.CbrNode"/>
     [DataContract]
     [KnownType(typeof(TerminatorNodeConfiguration))]
     [KnownType(typeof(CbrNodeConfiguration))]

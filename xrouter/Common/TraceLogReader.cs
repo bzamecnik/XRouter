@@ -7,6 +7,9 @@ using DaemonNT.Logging;
 
 namespace XRouter.Common
 {
+    /// <summary>
+    /// Provides read access to previously logged trace log entries.
+    /// </summary>
     public class TraceLogReader
     {
         private static readonly string LogFilePattern = "*_xrouter.Trace.log";

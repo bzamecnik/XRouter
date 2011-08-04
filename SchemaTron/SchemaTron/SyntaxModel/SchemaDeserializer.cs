@@ -11,8 +11,8 @@ namespace SchemaTron.SyntaxModel
     /// Provides a facility for converting a schema from the XML form
     /// (XDocument) into the internal representation (Schema).
     /// </summary>
-    /// <see cref="XDocument"/>
-    /// <see cref="Schema"/>
+    /// <seealso cref="XDocument"/>
+    /// <seealso cref="Schema"/>
     internal static class SchemaDeserializer
     {
         /// <summary>

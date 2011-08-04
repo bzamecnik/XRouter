@@ -48,7 +48,7 @@ namespace SchemaTron
         /// in the constructor of the class.
         /// </summary>
         /// <returns>Results of the validation</returns>
-        /// <see cref="ValidatorResults"/>
+        /// <seealso cref="ValidatorResults"/>
         public ValidatorResults Evaluate()
         {
             foreach (Pattern pattern in this.schema.Patterns)

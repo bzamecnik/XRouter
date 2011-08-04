@@ -7,7 +7,7 @@ namespace XRouter.Common.MessageFlowConfig
     /// Represents a serializable configuration of an action node in a
     /// message flow.
     /// </summary>
-    /// <see cref="XRouter.Processor.MessageFlowParts.ActionNode"/>
+    /// <seealso cref="XRouter.Processor.MessageFlowParts.ActionNode"/>
     [DataContract]
     [KnownType(typeof(TerminatorNodeConfiguration))]
     [KnownType(typeof(CbrNodeConfiguration))]

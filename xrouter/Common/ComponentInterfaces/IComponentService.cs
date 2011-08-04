@@ -1,7 +1,7 @@
 ﻿namespace XRouter.Common.ComponentInterfaces
 {
     /// <summary>
-    /// API for an XRouter component.
+    /// Basic API of an XRouter component.
     /// </summary>
     /// <remarks>
     /// A component can be at least configured.

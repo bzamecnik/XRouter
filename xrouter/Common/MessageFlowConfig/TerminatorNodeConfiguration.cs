@@ -6,7 +6,7 @@ namespace XRouter.Common.MessageFlowConfig
     /// Represents a serializable configuration of a terminator node in a
     /// message flow.
     /// </summary>
-    /// <see cref="XRouter.Processor.MessageFlowParts.TerminatorNode"/>
+    /// <seealso cref="XRouter.Processor.MessageFlowParts.TerminatorNode"/>
     [DataContract]
     public class TerminatorNodeConfiguration : NodeConfiguration
     {
