@@ -52,7 +52,6 @@ namespace XRouter.Gateway
             set
             {
                 config = value;
-                System.Diagnostics.Debug.Assert(config != null);
                 ObjectConfigurator.Configurator.LoadConfiguration(this, config);
             }
         }

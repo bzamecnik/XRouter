@@ -190,11 +190,11 @@ namespace XRouter.Common
 
         public void SaveSourceMetadata(XDocument sourceMetadata)
         {
+            if (sourceMetadata == null)
+            {
+                return;
+            }
             lock (SyncLock) {
-                if (sourceMetadata == null) {
-                    return;
-                }
-
                 XElement sourceMetadataElement = Content.XDocument.XPathSelectElement("token/source-metadata");
                 sourceMetadataElement.Add(sourceMetadata.Root);
             }

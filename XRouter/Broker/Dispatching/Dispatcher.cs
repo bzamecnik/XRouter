@@ -124,36 +124,65 @@ namespace XRouter.Broker.Dispatching
         /// </summary>
         private void StartBackgroundCheckings()
         {
-            while (!isStopping) {
+            while (!isStopping)
+            {
                 Thread.Sleep(BackgroundCheckingInterval);
 
-                #region Check unresponsible processors
-                try {
+                try
+                {
+                    #region Check unresponsible processors
                     var config = brokerService.GetConfiguration();
-                    foreach (var processor in brokerService.GetProcessors()) {
-                        var tokens = brokerService.GetActiveTokensAssignedToProcessor(processor.ComponentName);
-                        DateTime lastResponseThreshold = DateTime.Now - config.GetNonRunningProcessorResponseTimeout();
-                        var tokensToRedispatch = tokens.Where(t => t.MessageFlowState.LastResponseFromProcessor < lastResponseThreshold);
-                        Func<ProcessorAccessor, bool> currentProcessorFilter = p => p.ComponentName != processor.ComponentName;
+                    // reassign:
+                    // - unassign tokens from unresponsible processor
+                    // - dispatch unassigned tokens again
+                    foreach (var processor in brokerService.GetProcessors())
+                    {
+                        try
+                        {
+                            var tokens = brokerService.GetActiveTokensAssignedToProcessor(processor.ComponentName);
+                            DateTime lastResponseThreshold = DateTime.Now -
+                                config.GetNonRunningProcessorResponseTimeout();
+                            var tokensToRedispatch = tokens.Where(
+                                t => t.MessageFlowState.LastResponseFromProcessor < lastResponseThreshold);
+                            Func<ProcessorAccessor, bool> currentProcessorFilter =
+                                p => p.ComponentName != processor.ComponentName;
 
-                        foreach (var tokenToRedispatch in tokensToRedispatch) {
-                            tokenToRedispatch.MessageFlowState.AssignedProcessor = null;
-                            brokerService.UpdateTokenAssignedProcessor(tokenToRedispatch.Guid, null);
-                            DispatchAsync(tokenToRedispatch.Guid, currentProcessorFilter);
+                            foreach (var tokenToRedispatch in tokensToRedispatch)
+                            {
+                                tokenToRedispatch.MessageFlowState.AssignedProcessor = null;
+                                brokerService.UpdateTokenAssignedProcessor(tokenToRedispatch.Guid, null);
+                                DispatchAsync(tokenToRedispatch.Guid, currentProcessorFilter);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // prevent termination of checking thread, just log the error
+                            TraceLog.Exception(ex);
                         }
                     }
-                } catch (Exception ex) { // Prevent termination of checking thread
-                }
-                #endregion
+                    #endregion
 
-                #region Dispatch undispatched tokens
-                try {
-                    foreach (Token token in brokerService.GetUndispatchedTokens()) {
-                        DispatchAsync(token.Guid);
+                    #region Dispatch undispatched tokens
+
+                    foreach (Token token in brokerService.GetUndispatchedTokens())
+                    {
+                        try
+                        {
+                            DispatchAsync(token.Guid);
+                        }
+                        catch (Exception ex)
+                        {
+                            // prevent termination of checking thread, just log the error
+                            TraceLog.Exception(ex);
+                        }
                     }
-                } catch (Exception ex) { // Prevent termination of checking thread
+                    #endregion
                 }
-                #endregion
+                catch (Exception ex)
+                {
+                    // prevent termination of checking thread, just log the error
+                    TraceLog.Exception(ex);
+                }
             }
         }
 
