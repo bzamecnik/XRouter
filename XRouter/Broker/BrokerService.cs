@@ -13,9 +13,15 @@ using wcf = System.ServiceModel;
 
 namespace XRouter.Broker
 {
+    /// <summary>
+    /// Implements the broker component which acts as a mediator among all
+    /// the other components. It also provides a web service for XRouter
+    /// management.
+    /// </summary>
     [wcf.ServiceBehavior(InstanceContextMode = wcf.InstanceContextMode.Single)]
     public class BrokerService : IBrokerService, IBrokerServiceForDispatcher
     {
+        // TODO: make the log directory/path configurable
         private static readonly string LogDirectory = "Logs";
 
         private PersistentStorage storage;
@@ -58,6 +64,7 @@ namespace XRouter.Broker
             dispatcher = new Dispatching.Dispatcher(this);
 
             #region Publish IBrokerServiceForManagement
+            // TODO: make the management service host:port configurable
             hostForManagemenet = new wcf.ServiceHost(this, new Uri("http://localhost:9090/XRouter.ServiceForManagement"));
             wcf.NetNamedPipeBinding binding = new wcf.NetNamedPipeBinding(wcf.NetNamedPipeSecurityMode.None) { MaxReceivedMessageSize = int.MaxValue };
             binding.ReaderQuotas = new XmlDictionaryReaderQuotas() { MaxBytesPerRead = int.MaxValue, MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue };
@@ -72,9 +79,11 @@ namespace XRouter.Broker
                     var sdb = (wcf.Description.ServiceDebugBehavior)b;
                     sdb.IncludeExceptionDetailInFaults = true;
                 }
-            }            
+            }
 
-            hostForManagemenet.AddServiceEndpoint(typeof(IBrokerServiceForManagement), binding, "net.pipe://localhost/XRouter.ServiceForManagement");
+            // TODO: make the management service net pipe address configurable
+            hostForManagemenet.AddServiceEndpoint(typeof(IBrokerServiceForManagement), binding,
+                "net.pipe://localhost/XRouter.ServiceForManagement");
 
             hostForManagemenet.Open();
             #endregion
@@ -82,7 +91,7 @@ namespace XRouter.Broker
 
         public void Stop()
         {
-            // Make sure that all operations are completed and no one will be running after this call
+            // Make sure that all operations are completed and none of them will be running after this call
             Monitor.Enter(syncLock);
             dispatcher.Stop();
             hostForManagemenet.Close();
@@ -106,6 +115,7 @@ namespace XRouter.Broker
         {
             storage.SaveApplicationConfiguration(config.Content);
 
+            // TODO: why not just iterate over componentsAccessors.Values?
             ComponentAccessor[] components = componentsAccessors.Values.ToArray();
             foreach (var component in components) {
                 var reducedConfig = config.GetReducedConfiguration(component.ConfigurationReduction);
@@ -262,7 +272,8 @@ namespace XRouter.Broker
                     return result;
                 }
             }
-            throw new ArgumentException("Cannot find target gateway.");
+            throw new ArgumentException(string.Format(
+                "Cannot find target gateway of endpoint address '{0}'.", address));
         }
 
         public SerializableXDocument GetXmlResource(XrmUri target)

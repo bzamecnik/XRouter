@@ -21,12 +21,13 @@ namespace XRouter.Common.ComponentInterfaces
         void ReceiveReturn(Guid tokenGuid, SerializableXDocument resultMessage, SerializableXDocument sourceMetadata);
 
         /// <summary>
-        /// Sends an output message to an output endpoint of an adapter.
+        /// Sends an output message to an output endpoint of an adapter with
+        /// an optional reply.
         /// </summary>
         /// <param name="address">endpoint address</param>
         /// <param name="message">output message</param>
         /// <param name="metadata">message metadata</param>
-        /// <returns></returns>
+        /// <returns>reply message if any; or null</returns>
         SerializableXDocument SendMessage(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata);
     }
 }

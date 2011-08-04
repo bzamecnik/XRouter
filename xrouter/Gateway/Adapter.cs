@@ -22,15 +22,27 @@ namespace XRouter.Gateway
     /// </remarks>
     public abstract class Adapter
     {
+        /// <summary>
+        /// Indicates that the adapter is running and can do its job.
+        /// </summary>
         protected bool IsRunning { get; private set; }
 
         private Task runTask;
 
+        /// <summary>
+        /// Gateway to which this adapter belongs.
+        /// </summary>
         internal Gateway Gateway { get; set; }
 
+        /// <summary>
+        /// Identifier of the adapter.
+        /// </summary>
         internal string AdapterName { get; set; }
 
         public XDocument config;
+        /// <summary>
+        /// Adapter configuration
+        /// </summary>
         public XDocument Config
         {
             get
@@ -47,14 +59,32 @@ namespace XRouter.Gateway
 
         public Adapter()
         {
+            // TODO: IsRunning should be set to true in the Start() method.
             IsRunning = true;
         }
 
+        #region Starting and stopping the adapter
+
+        /// <summary>
+        /// Starts the adapter asynchronously, in a new thread, via the Run()
+        /// method.
+        /// </summary>
         internal void Start()
         {
             runTask = Task.Factory.StartNew(Run, TaskCreationOptions.LongRunning);
         }
 
+        /// <summary>
+        /// Performs the adapter's job, usually in a loop of a long running task.
+        /// This method is indented to be redefined in a derived class. No action
+        /// is the default behavior.
+        /// </summary>
+        protected abstract void Run();
+
+        /// <summary>
+        /// Stops the adapter and calls OnTerminate() behavior of which can be
+        /// defined in a derived class.
+        /// </summary>
         internal void Stop()
         {
             IsRunning = false;
@@ -62,7 +92,48 @@ namespace XRouter.Gateway
             runTask.Wait();
         }
 
-        protected void ReceiveMessageData(string message, string endpointName, XDocument metadata, object context, MessageResultHandler resultHandler)
+        /// <summary>
+        /// Action to be performed just after the adapter has been stopped.
+        /// This method is indented to be redefined in a derived class. No
+        /// action is the default behavior.
+        /// </summary>
+        public virtual void OnTerminate()
+        {
+        }
+
+        #endregion
+
+        #region Message input/output
+
+        /// <summary>
+        /// Sends an output message to a given output endpoint with an
+        /// optional reply.
+        /// </summary>
+        /// <param name="endpointName">output endpoint name</param>
+        /// <param name="message">output message</param>
+        /// <param name="metadata">message metadata</param>
+        /// <returns>reply message if any; or null</returns>
+        public abstract XDocument SendMessage(
+            string endpointName,
+            XDocument message,
+            XDocument metadata);
+
+        /// <summary>
+        /// Receives an input message containing some plain-text data.
+        /// </summary>
+        /// <param name="message">plain-text message content</param>
+        /// <param name="endpointName">input endpoint name; can be null</param>
+        /// <param name="metadata">metadata about the input message; can be null</param>
+        /// <param name="context">arbitrary context which should be retained
+        /// until a possible reply; can be null</param>
+        /// <param name="resultHandler">action to be performed with the reply
+        /// message when the token processing has been finished</param>
+        protected void ReceiveMessageData(
+            string message,
+            string endpointName,
+            XDocument metadata,
+            object context,
+            MessageResultHandler resultHandler)
         {
             XDocument xDoc = new XDocument();
             xDoc.Add(new XElement(XName.Get("data"))
@@ -72,7 +143,22 @@ namespace XRouter.Gateway
             this.ReceiveMessageXml(xDoc, endpointName, metadata, context, resultHandler);
         }
 
-        protected void ReceiveMessageXml(string message, string endpointName, XDocument metadata, object context, MessageResultHandler resultHandler)
+        /// <summary>
+        /// Receives an input message containing XML data in a string.
+        /// </summary>
+        /// <param name="message">XML message content in a string</param>
+        /// <param name="endpointName">input endpoint name; can be null</param>
+        /// <param name="metadata">metadata about the input message; can be null</param>
+        /// <param name="context">arbitrary context which should be retained
+        /// until a possible reply; can be null</param>
+        /// <param name="resultHandler">action to be performed with the reply
+        /// message when the token processing has been finished</param>
+        protected void ReceiveMessageXml(
+            string message,
+            string endpointName,
+            XDocument metadata,
+            object context,
+            MessageResultHandler resultHandler)
         {
             try
             {
@@ -85,11 +171,26 @@ namespace XRouter.Gateway
             }            
         }
 
-        protected void ReceiveMessageXml(Stream stream, string endpointName, XDocument metadata, object context, MessageResultHandler resultHandler)
+        /// <summary>
+        /// Receives an input message containing XML data in a stream.
+        /// </summary>
+        /// <param name="message">XML message content in a stream</param>
+        /// <param name="endpointName">input endpoint name; can be null</param>
+        /// <param name="metadata">metadata about the input message; can be null</param>
+        /// <param name="context">arbitrary context which should be retained
+        /// until a possible reply; can be null</param>
+        /// <param name="resultHandler">action to be performed with the reply
+        /// message when the token processing has been finished</param>
+        protected void ReceiveMessageXml(
+            Stream messageStream,
+            string endpointName,
+            XDocument metadata,
+            object context,
+            MessageResultHandler resultHandler)
         {
             try
             {
-                XDocument xDoc = XDocument.Load(stream, LoadOptions.SetLineInfo);
+                XDocument xDoc = XDocument.Load(messageStream, LoadOptions.SetLineInfo);
                 this.ReceiveMessageXml(xDoc, endpointName, metadata, context, resultHandler);
             }
             catch (Exception e)
@@ -98,12 +199,37 @@ namespace XRouter.Gateway
             }
         }
 
-        protected void ReceiveMessageXml(XDocument message, string endpointName, XDocument metadata)
+        /// <summary>
+        /// Receives an input message containing XML data in an XDocument
+        /// with no reply handling.
+        /// </summary>
+        /// <param name="message">XML message content in an XDocument</param>
+        /// <param name="endpointName">input endpoint name; can be null</param>
+        /// <param name="metadata">metadata about the input message; can be null</param>
+        protected void ReceiveMessageXml(
+            XDocument message,
+            string endpointName,
+            XDocument metadata)
         {
             ReceiveMessageXml(message, endpointName, metadata, null, null);
         }
 
-        protected void ReceiveMessageXml(XDocument message, string endpointName, XDocument metadata, object context, MessageResultHandler resultHandler)
+        /// <summary>
+        /// Receives an input message containing XML data in an XDocument.
+        /// </summary>
+        /// <param name="message">XML message content in an XDocument</param>
+        /// <param name="endpointName">input endpoint name; can be null</param>
+        /// <param name="metadata">metadata about the input message; can be null</param>
+        /// <param name="context">arbitrary context which should be retained
+        /// until a possible reply; can be null</param>
+        /// <param name="resultHandler">action to be performed with the reply
+        /// message when the token processing has been finished</param>
+        protected void ReceiveMessageXml(
+            XDocument message,
+            string endpointName,
+            XDocument metadata,
+            object context,
+            MessageResultHandler resultHandler)
         {
             Token token = new Token();
 
@@ -114,12 +240,6 @@ namespace XRouter.Gateway
             Gateway.ReceiveToken(token, context, resultHandler);
         }
 
-        public virtual void OnTerminate()
-        {
-        }
-
-        protected abstract void Run();
-
-        public abstract XDocument SendMessage(string endpointName, XDocument message, XDocument metadata);
+        #endregion
     }
 }

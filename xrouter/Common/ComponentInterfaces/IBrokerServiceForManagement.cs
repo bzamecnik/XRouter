@@ -5,7 +5,7 @@ namespace XRouter.Common.ComponentInterfaces
 {
     /// <summary>
     /// API of a broker component to be used for management of the XRouter
-    /// application. It can be over over a WCF web service.
+    /// application. It can be used over a WCF web service.
     /// </summary>
     [ServiceContract]
     public interface IBrokerServiceForManagement

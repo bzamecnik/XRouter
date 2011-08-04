@@ -4,6 +4,11 @@ using XRouter.Common.ComponentInterfaces;
 
 namespace XRouter.Broker
 {
+    /// <summary>
+    /// A proxy for accessing a processor. It is able to cache some frequently
+    /// queried values such as its utilization.
+    /// </summary>
+    /// <seealso cref="XRouter.Common.ComponentInterfaces.IProcessorService"/>
     class ProcessorAccessor : ComponentAccessor
     {
         private double? utilizationCache;

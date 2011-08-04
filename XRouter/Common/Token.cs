@@ -184,7 +184,7 @@ namespace XRouter.Common
                 }
                 sourceAddressElement.SetAttributeValue("gateway", sourceAddress.GatewayName);
                 sourceAddressElement.SetAttributeValue("adapter", sourceAddress.AdapterName);
-                sourceAddressElement.SetAttributeValue("endpoint", sourceAddress.EndPointName);
+                sourceAddressElement.SetAttributeValue("endpoint", sourceAddress.EndpointName);
             }
         }
 

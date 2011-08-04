@@ -6,6 +6,18 @@ using XRouter.Common;
 
 namespace XRouter.Broker.Dispatching
 {
+    /// <summary>
+    /// Dispatcher is a part of the broker responsible for assigning tokens
+    /// to processors. Also it can reassign tokens from dead or too busy
+    /// processors and lost tokens which are not assigned for any reason.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Dispatcher can be used via the NotifyAboutNewToken() method. When no
+    /// longer needed it can be stopped via the Stop() method.</para>
+    /// <para>The periodical check for unresponsible processors and unassigned
+    /// tokens happens in a background thread.</para>
+    /// </remarks>
     internal class Dispatcher
     {
         private static readonly int MaxTokenDispatchingConcurrencyLevel = 10;
@@ -23,10 +35,18 @@ namespace XRouter.Broker.Dispatching
         {
             this.brokerService = brokerService;
 
-            tokenDispatchingTaskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(MaxTokenDispatchingConcurrencyLevel));
-            backgroundCheckings = Task.Factory.StartNew(StartBackgroundCheckings, TaskCreationOptions.LongRunning);
+            tokenDispatchingTaskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(
+                MaxTokenDispatchingConcurrencyLevel));
+            backgroundCheckings = Task.Factory.StartNew(StartBackgroundCheckings,
+                TaskCreationOptions.LongRunning);
         }
 
+        /// <summary>
+        /// Notifies the dispatcher that it should dispatch given token.
+        /// The actual dispatching happens asynchronously, so this method does
+        /// not wait until the token is dispatched.
+        /// </summary>
+        /// <param name="token"></param>
         public void NotifyAboutNewToken(Token token)
         {
             DispatchAsync(token.Guid);
@@ -34,7 +54,8 @@ namespace XRouter.Broker.Dispatching
 
         private void DispatchAsync(Guid tokenGuid, Func<ProcessorAccessor, bool> filter = null)
         {
-            tokenDispatchingTaskFactory.StartNew(delegate {
+            tokenDispatchingTaskFactory.StartNew(delegate
+            {
                 Dispatch(tokenGuid, filter);
             });
         }
@@ -42,35 +63,49 @@ namespace XRouter.Broker.Dispatching
         private void Dispatch(Guid tokenGuid, Func<ProcessorAccessor, bool> filter = null)
         {
             #region Determine processorsByUtilization
-            var processorsByUtilization = brokerService.GetProcessors().OrderBy(delegate(ProcessorAccessor p) {
+            var processorsByUtilization = brokerService.GetProcessors().OrderBy(delegate(ProcessorAccessor p)
+            {
                 double utilization = double.MaxValue;
-                try {
+                try
+                {
                     utilization = p.GetUtilization();
-                } catch { // Keep max utilization for inaccessible processor
+                }
+                catch
+                { // Keep max utilization for inaccessible processors
                 }
                 return utilization;
             });
             #endregion
 
             var config = brokerService.GetConfiguration();
-            foreach (var processor in processorsByUtilization) {
-                if ((filter == null) || (filter(processor))) {
-                    lock (tokenDispatchingLock) {
+            foreach (var processor in processorsByUtilization)
+            {
+                if ((filter == null) || (filter(processor)))
+                {
+                    lock (tokenDispatchingLock)
+                    {
                         Token token = brokerService.GetToken(tokenGuid);
-                        if (token.MessageFlowState.AssignedProcessor != null) {
+                        if (token.MessageFlowState.AssignedProcessor != null)
+                        {
                             return; // Token is already dispatched
                         }
 
-                        if (token.MessageFlowState.MessageFlowGuid == new Guid()) {
-                            // NOTE: compare to default GUID returned by the new Guid()
+                        // NOTE: it compares to default GUID returned by the new Guid()
+                        if (token.MessageFlowState.MessageFlowGuid == new Guid())
+                        {
                             Guid messageFlowGuid = config.GetCurrentMessageFlowGuid();
                             brokerService.UpdateTokenMessageFlow(tokenGuid, messageFlowGuid);
                             token.MessageFlowState.MessageFlowGuid = messageFlowGuid;
                         }
-                        try {
-                            TraceLog.Info(string.Format("Dispatcher assigning token '{0}' to processor '{1}'", token.Guid, processor.ComponentName));
+                        try
+                        {
+                            TraceLog.Info(string.Format(
+                                "Dispatcher assigning token '{0}' to processor '{1}'",
+                                token.Guid, processor.ComponentName));
                             processor.AddWork(token);
-                        } catch {
+                        }
+                        catch
+                        {
                             continue; // if adding token to processor fails, try next one
                         }
                         brokerService.UpdateTokenLastResponseFromProcessor(tokenGuid, DateTime.Now);
@@ -81,6 +116,12 @@ namespace XRouter.Broker.Dispatching
             }
         }
 
+        /// <summary>
+        /// Periodially check for processors which did not respond more than
+        /// some theshold time (unresponsible ones) and reassign their tokens
+        /// to other processors. Moreover, dispatch any unassigned tokens
+        /// again.
+        /// </summary>
         private void StartBackgroundCheckings()
         {
             while (!isStopping) {
@@ -116,9 +157,14 @@ namespace XRouter.Broker.Dispatching
             }
         }
 
+        /// <summary>
+        /// Stops the dispatcher. Once it is stopped it cannot be started
+        /// again.
+        /// </summary>
         public void Stop()
         {
             isStopping = true;
+            // NOTE: this finishes the StartBackgroundCheckings() thread
         }
     }
 }

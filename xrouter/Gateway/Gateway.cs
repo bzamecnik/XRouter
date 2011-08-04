@@ -29,8 +29,15 @@ namespace XRouter.Gateway
     /// </remarks>
     public class Gateway : IGatewayService
     {
+        /// <summary>
+        /// Identifier of the gateway component.
+        /// </summary>
         public string Name { get; private set; }
 
+        /// <summary>
+        /// Configuration reduction to get parts of configuration specific
+        /// to this gateway.
+        /// </summary>
         public XmlReduction ConfigurationReduction { get; private set; }
 
         internal ApplicationConfiguration Configuration { get; private set; }
@@ -99,7 +106,7 @@ namespace XRouter.Gateway
             }
 
             Adapter adapter = AdaptersByName[address.AdapterName];
-            XDocument result = adapter.SendMessage(address.EndPointName, message.XDocument, metadata.XDocument);
+            XDocument result = adapter.SendMessage(address.EndpointName, message.XDocument, metadata.XDocument);
             return new SerializableXDocument(result);
         }
 

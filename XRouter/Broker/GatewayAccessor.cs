@@ -4,6 +4,10 @@ using XRouter.Common.ComponentInterfaces;
 
 namespace XRouter.Broker
 {
+    /// <summary>
+    /// A proxy for accessing a gateway. It does not add any extra behavior.
+    /// </summary>
+    /// <seealso cref="XRouter.Common.ComponentInterfaces.IGatewayService"/>
     class GatewayAccessor : ComponentAccessor
     {
         private IGatewayService gateway;

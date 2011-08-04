@@ -8,17 +8,27 @@ namespace XRouter.Common
     /// </summary>
     public class EndpointAddress
     {
+        /// <summary>
+        /// Gateway name.
+        /// </summary>
         public string GatewayName { get; private set; }
 
+        /// <summary>
+        /// Adapter name.
+        /// </summary>
         public string AdapterName { get; private set; }
 
-        public string EndPointName { get; private set; }
+        /// <summary>
+        /// Adapter endpoint name.
+        /// </summary>
+        /// <remarks>Can be null.</remarks>
+        public string EndpointName { get; private set; }
 
         public EndpointAddress(string gatewayName, string adapterName, string endpointName)
         {
             GatewayName = gatewayName;
             AdapterName = adapterName;
-            EndPointName = endpointName;
+            EndpointName = endpointName;
         }
 
         public override int GetHashCode()
@@ -36,7 +46,7 @@ namespace XRouter.Common
 
         public override string ToString()
         {
-            return string.Format("{0}/{1}/{2}", GatewayName, AdapterName, EndPointName);
+            return string.Format("{0}/{1}/{2}", GatewayName, AdapterName, EndpointName);
         }
     }
 }
