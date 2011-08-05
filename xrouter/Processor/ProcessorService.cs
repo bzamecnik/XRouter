@@ -9,9 +9,11 @@ using XRouter.Common.ComponentInterfaces;
 namespace XRouter.Processor
 {
     /// <summary>
-    /// Multi-threaded processor of tokens. It manages several single-threaded
-    /// processors which do the actual processing.
+    /// Multi-threaded implementation of the processor component. It manages
+    /// several single-threaded processors which do the actual token
+    /// processing.
     /// </summary>
+    /// <seealso cref="XRouter.Processor.SingleThreadProcessor"/>
     public class ProcessorService : IProcessorService
     {
         public string Name { get; private set; }

@@ -90,7 +90,6 @@ namespace XRouter.Processor.MessageFlowParts
         /// </summary>
         private class XrmInclusionResolver : IInclusionResolver
         {
-            // TODO: using IProcessorServiceForAction might be sufficient
             private ProcessorServiceForNode processorService;
 
             public XrmInclusionResolver(ProcessorServiceForNode processorService)

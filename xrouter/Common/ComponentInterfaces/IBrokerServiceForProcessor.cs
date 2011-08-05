@@ -14,7 +14,8 @@ namespace XRouter.Common.ComponentInterfaces
         /// </summary>
         /// <param name="updatingProcessorName">name of the processor which
         /// updates the token</param>
-        /// <param name="tokenGuid">identifier of the token to be updated</param>
+        /// <param name="tokenGuid">identifier of the token to be updated
+        /// </param>
         /// <param name="messageFlowState">new state of the token's message
         /// flow</param>
         /// <seealso cref="XRouter.Common.MessageFlowState"/>
@@ -58,7 +59,6 @@ namespace XRouter.Common.ComponentInterfaces
             string message,
             string stackTrace);
 
-        // change token state, not messageFlow state
         /// <summary>
         /// Finishes the token processing. It changes only the token state, not
         /// the message flow. Also it might send a reply message back to the
@@ -66,8 +66,9 @@ namespace XRouter.Common.ComponentInterfaces
         /// </summary>
         /// <param name="updatingProcessorName">name of the processor which
         /// tries to finish the token</param>
-        /// <param name="tokenGuid">identifier of the token to be finished</param>
-        /// <param name="resultMessage">reply goin back the the original
+        /// <param name="tokenGuid">identifier of the token to be finished
+        /// </param>
+        /// <param name="resultMessage">reply going back the the original
         /// gateway</param>
         void FinishToken(
             string updatingProcessorName,

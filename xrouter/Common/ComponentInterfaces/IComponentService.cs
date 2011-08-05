@@ -8,6 +8,11 @@
     /// </remarks>
     public interface IComponentService
     {
+        /// <summary>
+        /// Replaces current configuration of the component with a new
+        /// application configuration.
+        /// </summary>
+        /// <param name="config">application configuration</param>
         void UpdateConfig(ApplicationConfiguration config);
     }
 }
