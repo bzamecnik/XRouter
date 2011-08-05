@@ -16,6 +16,9 @@ namespace XRouter.Processor
     /// <seealso cref="XRouter.Processor.SingleThreadProcessor"/>
     public class ProcessorService : IProcessorService
     {
+        /// <summary>
+        /// Identifier of the processor component instance.
+        /// </summary>
         public string Name { get; private set; }
 
         internal ApplicationConfiguration Configuration { get; private set; }
@@ -24,7 +27,17 @@ namespace XRouter.Processor
 
         private XmlReduction ConfigReduction { get; set; }
 
+        /// <summary>
+        /// A thread-safe collection of tokens to be processed shared by
+        /// producers and consumers of tokens. This processor component acts
+        /// as a producer.
+        /// </summary>
         private BlockingCollection<Token> tokensToProcess;
+
+        /// <summary>
+        /// References to single-thread processors managed by this processor
+        /// component instance.
+        /// </summary>
         private ConcurrentBag<SingleThreadProcessor> concurrentProcessors;
 
         private object addWorkLock = new object();
