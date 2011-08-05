@@ -34,7 +34,7 @@ namespace XRouter.Common.Xrm
             return result;
         }
 
-        public void SetXmlResource(Uri resourceUri, XDocument resourceContent)
+        public void SetXmlResource(XrmUri resourceUri, XDocument resourceContent)
         {
             throw new NotImplementedException();
         }
