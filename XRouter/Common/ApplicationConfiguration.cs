@@ -264,6 +264,12 @@ namespace XRouter.Common
         {
             var xAdapterType = System.Xml.XPath.Extensions.XPathSelectElement(Content,
                 string.Format("/configuration/adapter-types/adapter-type[@name='{0}']", name));
+
+            if (xAdapterType == null)
+            {
+                throw new ArgumentException(string.Format("Cannot find adapter named '{0}'.", name), "name");
+            }
+
             string assemblyAndClrType = xAdapterType.Attribute(XName.Get("clr-type")).Value;
             AdapterType adapterType = new AdapterType(name, assemblyAndClrType);
             return adapterType;
@@ -300,6 +306,12 @@ namespace XRouter.Common
         {
             var xAdapterType = System.Xml.XPath.Extensions.XPathSelectElement(Content,
                 string.Format("/configuration/adapter-types/adapter-type[@name='{0}']", name));
+
+            if (xAdapterType == null)
+            {
+                throw new ArgumentException(string.Format("Cannot find adapter named '{0}'.", name), "name");
+            }
+
             xAdapterType.Remove();
         }
 
@@ -317,6 +329,15 @@ namespace XRouter.Common
         {
             var xAdapters = System.Xml.XPath.Extensions.XPathSelectElements(Content,
                 string.Format("/configuration/components/gateway[@name='{0}']/adapters/adapter", gatewayName));
+
+            if (xAdapters == null)
+            {
+                // TODO: is xAdapters null iff there's no such a gateway
+                // or even if there are no adapters of an existing gateway?
+                throw new ArgumentException(string.Format(
+                    "Cannot find gateway named '{0}'.", gatewayName), "gatewayName");
+            }
+
             return xAdapters.ToArray();
         }
 
@@ -335,6 +356,14 @@ namespace XRouter.Common
             var xAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format(
                 "/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']",
                 gatewayName, adapterName));
+
+            if (xAdapter == null)
+            {
+                throw new ArgumentException(string.Format(
+                    "Cannot find gateway named '{0}' or its adapter named '{1}'.",
+                    gatewayName, adapterName));
+            }
+
             return xAdapter;
         }
 
@@ -362,6 +391,13 @@ namespace XRouter.Common
 
             var xAdapters = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format(
                 "/configuration/components/gateway[@name='{0}']/adapters", gatewayName));
+
+            if (xAdapters == null)
+            {
+                throw new ArgumentException(string.Format(
+                    "Cannot find gateway named '{0}'.", gatewayName), "gatewayName");
+            }
+
             xAdapters.Add(xAdapterConfiguration);
         }
 
@@ -379,6 +415,14 @@ namespace XRouter.Common
             var xAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format(
                 "/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']",
                 gatewayName, adapterName));
+
+            if (xAdapter == null)
+            {
+                throw new ArgumentException(string.Format(
+                    "Cannot find gateway named '{0}' or its adapter named '{1}'.",
+                    gatewayName, adapterName));
+            }
+
             xAdapter.Remove();
         }
 
@@ -393,9 +437,9 @@ namespace XRouter.Common
         /// <returns></returns>
         public TimeSpan GetNonRunningProcessorResponseTimeout()
         {
-            var element = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            var dispatcher = System.Xml.XPath.Extensions.XPathSelectElement(Content,
                 "/configuration/dispatcher");
-            string value = element.Attribute(XName.Get("nonrunning-processor-response-timeout")).Value;
+            string value = dispatcher.Attribute(XName.Get("nonrunning-processor-response-timeout")).Value;
             TimeSpan result = TimeSpan.FromSeconds(int.Parse(value));
             return result;
         }
@@ -474,11 +518,19 @@ namespace XRouter.Common
             string xpath = string.Format("/configuration/messageflows/messageflow[@guid='{0}']", guid);
             XElement xMessageFlow = Content.XDocument.XPathSelectElement(xpath);
 
-            System.Diagnostics.Debug.Assert(xMessageFlow != null);
+            // TODO: check for the solution of a situation when there is no
+            // message flow at all
+
+            //if (xMessageFlow == null)
+            //{
+            //    throw new ArgumentException(string.Format(
+            //        "Cannot find message flow with GUID '{0}'.", guid), "guid");
+            //}
 
             var result = XSerializer.Deserialize<MessageFlowConfiguration>(xMessageFlow);
             if (result == null)
             {
+                // the message was empty
                 System.Diagnostics.Debug.Assert(xMessageFlow.Attribute("name") != null);
                 System.Diagnostics.Debug.Assert(xMessageFlow.Attribute("version") != null);
 
