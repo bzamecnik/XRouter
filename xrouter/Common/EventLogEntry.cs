@@ -71,7 +71,8 @@ namespace XRouter.Common
             } else if (logLevelText == "E") {
                 return DaemonNT.Logging.LogType.Error;
             }
-            throw new ArgumentException("Cannot parse log type.", "logLevelText");
+            throw new ArgumentException(string.Format(
+                "Cannot parse log level '{0}'.", logLevelText), "logLevelText");
         }
     }
 }

@@ -102,7 +102,9 @@ namespace XRouter.Gateway
         public SerializableXDocument SendMessage(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata)
         {
             if (!AdaptersByName.ContainsKey(address.AdapterName)) {
-                throw new ArgumentException("Incorrect adapter name.", "address");
+                throw new ArgumentException(string.Format(
+                    "There is no adapter named '{0}' in gateway '{1}'.",
+                    address.AdapterName, Name), "address");
             }
 
             Adapter adapter = AdaptersByName[address.AdapterName];

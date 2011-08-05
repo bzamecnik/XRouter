@@ -57,7 +57,8 @@ namespace XRouter.Processor.MessageFlowParts
                 }
                 else
                 {
-                    throw new InvalidOperationException("Unknown node type");
+                    throw new InvalidOperationException(string.Format(
+                        "Cannot create a node named '{0}' of unknown node type.", nodeCfg.Name));
                 }
 
                 node.Initialize(nodeCfg, Processor);

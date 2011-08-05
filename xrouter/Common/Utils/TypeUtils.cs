@@ -64,14 +64,15 @@ namespace XRouter.Common.Utils
             catch (Exception ex)
             {
                 throw new InvalidOperationException(string.Format(
-                    "Cannot create instance of type '{0}' using default constructor.", type.FullName), ex);
+                    "Cannot create an instance of type '{0}' using the default constructor.",
+                    type.FullName), ex);
             }
             #endregion
 
             if (!(instance is T))
             {
                 throw new InvalidOperationException(string.Format(
-                    "Type '{0}' does not implement/extend '{1}'.", type.FullName, typeof(T).FullName));
+                    "Type '{0}' must implement or extend '{1}'.", type.FullName, typeof(T).FullName));
             }
 
             return (T)instance;
@@ -110,7 +111,7 @@ namespace XRouter.Common.Utils
             else
             {
                 throw new InvalidOperationException(string.Format(
-                    "Invalid type identification: '{0}'", typeAndAssembly));
+                    "Invalid type identification '{0}'", typeAndAssembly));
             }
 
             return GetType(typeFullName, assemblyPath);

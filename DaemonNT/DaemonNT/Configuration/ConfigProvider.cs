@@ -325,6 +325,8 @@
             //   <type class="FooType" assembly="FooAssembly.dll" />
             // </service>
 
+            // TODO: this is duplicate code with XRouter.Common.Utils.TypeUtils.GetType()
+
             // resolve type value
             string[] tokens = type.Split(',');
             if (tokens.Length == 2)
@@ -339,7 +341,8 @@
             }
             else
             {
-                throw new InvalidOperationException(string.Format("Attribute '{0}' is invalid.", type));
+                throw new InvalidOperationException(string.Format(
+                    "Invalid type identification '{0}'", type));
             }
         }
 

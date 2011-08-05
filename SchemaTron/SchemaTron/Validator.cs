@@ -155,7 +155,7 @@ namespace SchemaTron
                 }
                 else
                 {
-                    throw new ArgumentException("schema.@defaultPhase is not specified.", "Phase");
+                    throw new ArgumentException("schema.@defaultPhase is not specified.", "phase");
                 }
             }
             else if (xRoot.XPathSelectElement(String.Format("/sch:schema/sch:phase[@id='{0}']", phase), nsManager) != null)

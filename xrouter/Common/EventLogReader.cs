@@ -68,7 +68,8 @@ namespace XRouter.Common
                 case LogType.Error:
                     return filter.HasFlag(LogLevelFilters.Error);
                 default:
-                    throw new ArgumentException("Unknown log level", "logLevel");
+                    throw new ArgumentException(string.Format(
+                        "Unknown log level '{0}'.", logLevel), "logLevel");
             }
         }
     }

@@ -96,7 +96,9 @@ namespace XRouter.Processor
             {
                 if (isStopping)
                 {
-                    throw new InvalidOperationException("Cannot add token because processor is stopping.");
+                    throw new InvalidOperationException(string.Format(
+                        "Cannot add token with GUID '{0}' the a processor because it is just stopping.",
+                        token.Guid));
                 }
                 if (token.State != TokenState.Finished)
                 {

@@ -52,7 +52,7 @@
                     logTypeStr = "E";
                     break;
                 default:
-                    throw new ArgumentException(String.Format("Unsupported log type: {0}", logTypeStr));
+                    throw new ArgumentException(String.Format("Unsupported log type '{0}'", logTypeStr));
             }
 
             sb.Append("<log");

@@ -48,7 +48,7 @@ namespace DaemonNT.Logging
                     logTypeStr = "E";
                     break;
                 default:
-                    throw new ArgumentException(String.Format("Unsupported log type: {0}", logTypeStr));
+                    throw new ArgumentException(String.Format("Unsupported log type '{0}'", logTypeStr));
             }
 
             return string.Format("{0}\t{1}\t{2}", dateTimeStr, logTypeStr, this.Message);

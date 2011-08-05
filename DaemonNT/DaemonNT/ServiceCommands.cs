@@ -116,7 +116,8 @@ namespace DaemonNT
         public void DebugStop(string serviceName)
         {
             if (!serviceHosts.ContainsKey(serviceName)) {
-                throw new ArgumentException("serviceName");
+                throw new ArgumentException(string.Format(
+                    "Service '{0}' is not running.", serviceName), "serviceName");
             }
             serviceHosts[serviceName].Stop();
             serviceHosts.Remove(serviceName);

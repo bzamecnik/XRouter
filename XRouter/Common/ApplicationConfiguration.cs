@@ -9,6 +9,9 @@ using XRouter.Common.Utils;
 
 namespace XRouter.Common
 {
+    // TODO: why System.Xml.XPath.Extensions.XPathSelectElement() is referenced
+    // by its canonical name instead of using namespace System.Xml.XPath?
+
     /// <summary>
     /// Represents a complete configuration of the whole XRouter application
     /// in a single XML document and also provides a set of operations to
@@ -117,7 +120,9 @@ namespace XRouter.Common
 
                     break;
                 default:
-                    throw new ArgumentException("Unknown component type", "componentType");
+                    throw new ArgumentException(string.Format(
+                        "Cannot add component named '{0}', unknown component type {1}.",
+                        name, componentType.ToString()), "componentType");
             }
             var xComponents = System.Xml.XPath.Extensions.XPathSelectElement(Content,
                 "/configuration/components");
@@ -164,7 +169,8 @@ namespace XRouter.Common
             {
                 return ComponentType.Processor;
             }
-            throw new ArgumentException("Cannot find component with give name.");
+            throw new ArgumentException(string.Format(
+                "Cannot find component named '{0}'.", componentName), "componentName");
         }
 
         #endregion
@@ -279,7 +285,8 @@ namespace XRouter.Common
                 string.Format("/configuration/components/processor[@name='{0}']", componentName));
             if (result != null) { return result; }
 
-            throw new ArgumentException("Cannot find component with give name.");
+            throw new ArgumentException(string.Format(
+                "Cannot find component named '{0}'.", componentName), "componentName");
         }
 
         public int GetConcurrentThreadsCountForProcessor(string componentName)

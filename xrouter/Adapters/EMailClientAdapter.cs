@@ -91,14 +91,13 @@ namespace XRouter.Adapters
         private static Attachment CreateAttachment(XDocument message, XDocument metadata)
         {
             string attachmentName = null;
-            if (metadata != null)
+            if (metadata == null)
             {
-                attachmentName = metadata.Root.Value;
+                // TODO: use ArgumentNullException instead
+                throw new InvalidOperationException("Metadata argument must not be null.");
             }
-            else
-            {
-                throw new InvalidOperationException();
-            }
+
+            attachmentName = metadata.Root.Value;
 
             Encoding attachmentEncoding = Encoding.UTF8;
             if (message.Declaration != null)
