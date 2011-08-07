@@ -46,8 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationManager.cs" />
+    <Compile Include="DaemonNtDebugXRouterRunner.cs" />
+    <Compile Include="IXRouterRunner.cs" />
+    <Compile Include="ProcessXRouterRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextGenerator.cs" />
+    <Compile Include="ThreadXRouterRunner.cs" />
     <Compile Include="XmlDirectoryComparer.cs" />
     <Compile Include="XRouterManager.cs" />
   </ItemGroup>

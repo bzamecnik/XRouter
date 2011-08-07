@@ -16,28 +16,18 @@ namespace XRouter.Test.Common
     /// and stopped in Dispose() method.</remarks>
     public class XRouterManager : IDisposable
     {
-        private static readonly string DefaultDaemonNtConfigFile = @"..\..\..\ComponentHosting\Misc\DaemonNT_config.xml";
-
-        /// <summary>
-        /// DaemonNT configuration file containing the XRouter service.
-        /// </summary>
-        public string DaemonNtConfigFile { get; private set; }
-
-        private static readonly string DefaultServiceName = "xrouter";
-
-        /// <summary>
-        /// XRouter service name as configured in the DaemonNT configuration
-        /// file.
-        /// </summary>
-        public string ServiceName { get; private set; }
-
         /// <summary>
         /// Proxy to broker component which allows to communite with a running
         /// XRouter instance.
         /// </summary>
         public IBrokerServiceForManagement BrokerProxy { get; private set; }
 
-        private ServiceCommands daemonNt;
+        private static readonly string DefaultDaemonNtConfigFile =
+            @"..\..\..\ComponentHosting\Misc\DaemonNT_config.xml";
+
+        private static readonly string DefaultServiceName = "xrouter";
+
+        private IXRouterRunner runner;
 
         public XRouterManager()
             : this(DefaultDaemonNtConfigFile, DefaultServiceName)
@@ -46,9 +36,7 @@ namespace XRouter.Test.Common
 
         public XRouterManager(string daemonNtConfigFile, string serviceName)
         {
-            ServiceName = serviceName;
-            DaemonNtConfigFile = daemonNtConfigFile;
-            daemonNt = new ServiceCommands() { ConfigFile = daemonNtConfigFile };
+            runner = new ProcessXRouterRunner(daemonNtConfigFile, serviceName);
             Start();
             BrokerProxy = GetBrokerServiceProxy();
         }
@@ -75,23 +63,13 @@ namespace XRouter.Test.Common
         private void Start()
         {
             Console.WriteLine("Starting XRouter service in debug mode.");
-            // start the debug host in a new thread because it blocks while
-            // reading from the console
-            // TODO: this will go to the test class constructor
-            Task.Factory.StartNew(() => daemonNt.DebugStart(ServiceName));
-
-            // TODO: let the service start
-            Thread.Sleep(1000);
+            runner.Start();
         }
 
         private void Stop()
         {
-            if (daemonNt != null)
-            {
-                // TODO: this will go to the test class Dispose()
-                daemonNt.DebugStop(ServiceName);
-                Console.WriteLine("XRouter service stopped.");
-            }
+            runner.Stop();
+            Console.WriteLine("XRouter service stopped.");
         }
     }
 }
