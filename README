@@ -1,0 +1,59 @@
+XRouter project
+===============
+
+XRouter can integrate various systems which communicate via XML messages. It is
+a simple, easy-to-use, configurable, light-weight, efficient alternative to
+complex enterprise service bus (ESB) solutions. It is released as open-source
+software.
+
+The XRouter project consists of several subprojects:
+- XRouter - XML router itself
+- SchemaTron - ISO Schematron validator implemented in native C#
+- DaemonNT - Windows service hosting made easy
+
+Homepage
+--------
+
+XRouter project is hosted at Assembla.
+
+http://www.assembla.com/spaces/xrouter
+
+Source code
+-----------
+
+Source code of XRouter is available in Git repository hosted at Assembla.
+Browse code: http://www.assembla.com/code/xrouter/git/nodes
+Git repository clone URL (read-only): git://git.assembla.com/xrouter.git
+
+Downloads
+---------
+
+Binary installer packages, documentation and other files can be downloaded
+from: http://www.assembla.com/spaces/xrouter/documents/tag/release
+
+Requirements
+------------
+
+Microsoft .NET Framework 4.0
+
+Installation
+------------
+
+For details of installation please see the INSTALL file or consult the full
+documentation.
+
+License
+-------
+
+XRouter is released under the MIT license. See the LICENSE and AUTHORS files
+for details.
+
+Acknowledgements
+----------------
+
+The XRouter project was realized as a Software Project at Mathematical-Physical
+Faculty of Charles University in Prague, Czech Republic.
+
+Many thanks to Mgr. Martin Nečaský, Ph.D. for supervising the Software Project.
+
+Thanks to Assembla for providing us open-source project hosting free of charge.
