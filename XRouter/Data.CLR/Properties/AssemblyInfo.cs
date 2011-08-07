@@ -6,12 +6,12 @@ using System.Data.Sql;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("XRouterCLR")]
+[assembly: AssemblyTitle("XRouter.Clr")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("JBS")]
-[assembly: AssemblyProduct("XRouterCLR")]
-[assembly: AssemblyCopyright("Copyright © JBS 2011")]
+[assembly: AssemblyCompany("The XRouter Team")]
+[assembly: AssemblyProduct("XRouter")]
+[assembly: AssemblyCopyright("Copyright © The XRouter Team 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
