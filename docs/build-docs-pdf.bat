@@ -1,7 +1,7 @@
 rem --- convert LaTeX files to PDF ---
 rem assumes installed LaTeX, eg. in TeXLive
 
-cd docs\DaemonNT\latex
+cd DaemonNT\latex
 pdflatex refman.tex
 makeindex refman.idx
 pdflatex refman.tex
@@ -22,3 +22,5 @@ makeindex refman.idx
 pdflatex refman.tex
 pdflatex refman.tex
 cp refman.pdf ..\XRouter-API-docs.pdf
+
+cd ..\..

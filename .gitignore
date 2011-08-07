@@ -33,4 +33,6 @@ _ReSharper*/
 StyleCop.Cache
 *.orig
 *.vsp
-docs/*
+docs/XRouter/*
+docs/SchemaTron/*
+docs/DaemonNT/*
