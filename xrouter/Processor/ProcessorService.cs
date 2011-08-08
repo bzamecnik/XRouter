@@ -68,7 +68,7 @@ namespace XRouter.Processor
                 Task.Factory.StartNew(delegate {
                     SingleThreadProcessor processor = new SingleThreadProcessor(tokensToProcess, this);
                     concurrentProcessors.Add(processor);
-                    processor.Run();
+                    TraceLog.RunWithExceptionLogging(processor.Run);
                 }, TaskCreationOptions.LongRunning);
             }
             #endregion

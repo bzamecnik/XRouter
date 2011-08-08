@@ -38,5 +38,21 @@ namespace XRouter.Common
         {
             daemonNTLogger.Trace.LogException(exception);
         }
+
+        public static Action WrapWithExceptionLogging(Action action)
+        {
+            return delegate {
+                RunWithExceptionLogging(action);
+            };
+        }
+
+        public static void RunWithExceptionLogging(Action action)
+        {
+            try {
+                action();
+            } catch (Exception ex) {
+                Exception(ex);
+            }
+        }
     }
 }

@@ -70,7 +70,7 @@ namespace XRouter.Gateway
         /// </summary>
         internal void Start()
         {
-            runTask = Task.Factory.StartNew(Run, TaskCreationOptions.LongRunning);
+            runTask = Task.Factory.StartNew(TraceLog.WrapWithExceptionLogging(Run), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
