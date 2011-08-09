@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C11BCFD6-9026-462E-A7CA-64037DFA974B}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SimpleDiagrammer</RootNamespace>
     <AssemblyName>SimpleDiagrammer</AssemblyName>
@@ -54,10 +54,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <None Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </ApplicationDefinition>
+    </None>
     <Compile Include="Support\MathUtils.cs" />
     <Compile Include="Tests\Test1\Edge.cs" />
     <Compile Include="Tests\Test1\MainControl.xaml.cs">
