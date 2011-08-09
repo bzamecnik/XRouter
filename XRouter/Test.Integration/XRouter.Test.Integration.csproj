@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -52,25 +52,32 @@
     <ProjectReference Include="..\..\DaemonNT\DaemonNT\DaemonNT.csproj">
       <Project>{3CF25136-3BF3-4213-9FDC-1E80F2C75171}</Project>
       <Name>DaemonNT</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\SchemaTron\SchemaTron\SchemaTron.csproj">
       <Project>{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}</Project>
       <Name>SchemaTron</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Common\XRouter.Common.csproj">
       <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
       <Name>XRouter.Common</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Processor\XRouter.Processor.csproj">
       <Project>{69C0BC8F-EEF4-4DA8-B220-2B35AA20F273}</Project>
       <Name>XRouter.Processor</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Test.Common\XRouter.Test.Common.csproj">
       <Project>{36110949-7E99-41E5-BCB3-B84275CD7505}</Project>
       <Name>XRouter.Test.Common</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
