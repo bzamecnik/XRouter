@@ -190,12 +190,17 @@ namespace ObjectConfigurator
 
         public object GetValue(object target)
         {
+            BindingFlags instanceMemberBindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             switch (MemberKind) {
                 case ItemMemberKind.Field:
-                    FieldInfo field = Owner.GetClrType().GetField(Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    FieldInfo field = Owner.GetClrType().GetField(Name, instanceMemberBindingFlags);
                     return field.GetValue(target);
                 case ItemMemberKind.Property:
-                    PropertyInfo property = Owner.GetClrType().GetProperty(Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    PropertyInfo property = Owner.GetClrType().GetProperty(Name, instanceMemberBindingFlags);
+                    // If an accessor is private, then it is unavailable when property is acquired from derived type
+                    if (Owner.GetClrType() != property.DeclaringType) {
+                        property = property.DeclaringType.GetProperty(Name, instanceMemberBindingFlags);
+                    }
                     return property.GetValue(target, null);
                 default:
                     throw new InvalidOperationException("Unknown member kind.");
@@ -210,13 +215,18 @@ namespace ObjectConfigurator
                 throw new ArgumentException(string.Format("Value does not pass one or more validators. {0}", errorDescription), "value");
             }
 
+            BindingFlags instanceMemberBindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             switch (MemberKind) {
                 case ItemMemberKind.Field:
-                    FieldInfo field = Owner.GetClrType().GetField(Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    FieldInfo field = Owner.GetClrType().GetField(Name, instanceMemberBindingFlags);
                     field.SetValue(target, value);
                     break;
                 case ItemMemberKind.Property:
-                    PropertyInfo property = Owner.GetClrType().GetProperty(Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    PropertyInfo property = Owner.GetClrType().GetProperty(Name, instanceMemberBindingFlags);
+                    // If an accessor is private, then it is unavailable when property is acquired from derived type
+                    if (Owner.GetClrType() != property.DeclaringType) {
+                        property = property.DeclaringType.GetProperty(Name, instanceMemberBindingFlags);
+                    }
                     property.SetValue(target, value, null);
                     break;
                 default:

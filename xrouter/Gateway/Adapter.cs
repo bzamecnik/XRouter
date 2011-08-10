@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using XRouter.Common;
+using ObjectConfigurator;
 
 namespace XRouter.Gateway
 {
@@ -26,6 +27,9 @@ namespace XRouter.Gateway
         /// Indicates that the adapter is running and can do its job.
         /// </summary>
         protected bool IsRunning { get; private set; }
+
+        [ConfigurationItem("Persist input tokens", "If checked, tokens created from this adapter will be persistently stored in database after each action in messageflow.", false)]
+        public bool AreInputTokensPersistent { get; private set; }
 
         private Task runTask;
 
@@ -241,6 +245,7 @@ namespace XRouter.Gateway
         {
             Token token = new Token();
 
+            token.IsPersistent = AreInputTokensPersistent;
             token.SaveSourceAddress(new EndpointAddress(Gateway.Name, AdapterName, endpointName));
             token.SaveSourceMetadata(metadata);
             token.AddMessage(Constants.InputMessageName, message);

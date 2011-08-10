@@ -95,10 +95,12 @@ namespace XRouter.Processor.MessageFlowParts
 
             string nextNodeName = currentNode.Evaluate(token);
 
-            // TODO ulozit pokud je persistentni akce
-
             token.MessageFlowState.NextNodeName = nextNodeName;
             token.SaveMessageFlowState();
+
+            if (token.IsPersistent) {
+                Processor.BrokerService.UpdateTokenMessageFlowState(Processor.Name, token.Guid, token.MessageFlowState); 
+            }
 
             bool shouldContinue = nextNodeName != null;
             return shouldContinue;

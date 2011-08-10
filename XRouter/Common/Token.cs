@@ -89,6 +89,19 @@ namespace XRouter.Common
             }
         }
 
+        public bool IsPersistent {
+            get {
+                lock (SyncLock) {
+                    return bool.Parse(GetTokenAttribute("is-persistent"));
+                }
+            }
+            set {
+                lock (SyncLock) {
+                    SetTokenAttribute("is-persistent", value.ToString());
+                }
+            }
+        }
+
         public DateTime Timeout {
             get {
                 lock (SyncLock) {
@@ -128,7 +141,7 @@ namespace XRouter.Common
         {
             Guid = Guid.NewGuid();
             Content = new SerializableXDocument(XDocument.Parse(@"
-<token>
+<token is-persistent='false'>
     <source-address>
     </source-address>
     <source-metadata>
