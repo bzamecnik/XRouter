@@ -18,6 +18,8 @@ using SimpleDiagrammer;
 using System.Threading.Tasks;
 using System.Threading;
 using XRouter.Gui.Utils;
+using Microsoft.Win32;
+using System.IO;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow
 {
@@ -126,6 +128,38 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
 
         public void Clear()
         {
+        }
+
+        private void uiImport_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Messageflow configuration|*.xmf";
+            dialog.DefaultExt = ".xmf";
+            dialog.CheckFileExists = true;
+            if (dialog.ShowDialog() == true) {
+                using (var fs = new FileStream(dialog.FileName, FileMode.Open)) {
+                    Messageflow = MessageFlowConfiguration.Read(fs);
+                }
+                NodeSelectionManager = new NodeSelectionManager(uiNodePropertiesContainer);
+                uiNodePropertiesContainer.Child = null;
+                MessageflowGraphPresenter = new MessageflowGraphPresenter(Messageflow, NodeSelectionManager);
+                NodeSelectionManager.MessageflowGraphPresenter = MessageflowGraphPresenter;
+                graphCanvas = MessageflowGraphPresenter.CreateGraphCanvas();
+                uiDesignerContainer.Child = graphCanvas;
+            }
+        }
+
+        private void uiExport_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "Messageflow configuration|*.xmf";
+            dialog.DefaultExt = ".xmf";
+            dialog.OverwritePrompt = true;
+            if (dialog.ShowDialog() == true) {
+                using (var fs = new FileStream(dialog.FileName, FileMode.Create)) {
+                    Messageflow.Write(fs);
+                }
+            }
         }
     }
 }

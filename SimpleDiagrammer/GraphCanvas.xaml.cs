@@ -33,6 +33,8 @@ namespace SimpleDiagrammer
 
         public Vector CanvasLocationOffset { get; private set; }
 
+        private DispatcherTimer layoutUpdateTimer;
+
         internal GraphCanvas(IInternalGraphPresenter graphPresenter)
         {
             InitializeComponent();
@@ -44,6 +46,7 @@ namespace SimpleDiagrammer
             Edges = new List<Edge>();
             GraphPresenter = graphPresenter;
             Loaded += GraphCanvas_Loaded;
+            Unloaded += GraphCanvas_Unloaded;
         }
 
         private void GraphCanvas_Loaded(object sender, RoutedEventArgs e)
@@ -51,9 +54,14 @@ namespace SimpleDiagrammer
             GraphPresenter.GraphChanged += GraphPresenter_GraphChanged;
             UpdateDiagram();
 
-            DispatcherTimer layoutUpdateTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(50), DispatcherPriority.Normal, delegate {
+            layoutUpdateTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(50), DispatcherPriority.ApplicationIdle, delegate {
                 UpdateDiagramLayout();
             }, Dispatcher);
+        }
+
+        private void GraphCanvas_Unloaded(object sender, RoutedEventArgs e)
+        {
+            layoutUpdateTimer.Stop();
         }
 
         private void UpdateDiagram()

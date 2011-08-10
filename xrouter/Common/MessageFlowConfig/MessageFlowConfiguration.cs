@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.IO;
+using XRouter.Common.Utils;
+using System.Xml.Linq;
 
 namespace XRouter.Common.MessageFlowConfig
 {
@@ -69,6 +72,22 @@ namespace XRouter.Common.MessageFlowConfig
                     }
                 }
             }
+        }
+
+        public static MessageFlowConfiguration Read(Stream stream)
+        {
+            XDocument xDoc = XDocument.Load(stream);
+            MessageFlowConfiguration result = XSerializer.Deserialize<MessageFlowConfiguration>(xDoc.Root);
+            return result;
+        }
+
+        public void Write(Stream stream)
+        {
+            XDocument xDoc = new XDocument();
+            XElement xRoot = new XElement(XName.Get("messageflow"));
+            xDoc.Add(xRoot);
+            XSerializer.Serializer(this, xRoot);
+            xDoc.Save(stream);
         }
     }
 }

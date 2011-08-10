@@ -40,7 +40,7 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
             }
             foreach (Node node in nodes) {
                 if (!nodeToLayoutInfo.ContainsKey(node)) {
-                    NodeLayoutInfo layoutInfo = new NodeLayoutInfo(node, new Vector(), new Point());
+                    NodeLayoutInfo layoutInfo = new NodeLayoutInfo(node, new Vector(), node.Location);
                     nodeToLayoutInfo.Add(node, layoutInfo);
                 }
             }
