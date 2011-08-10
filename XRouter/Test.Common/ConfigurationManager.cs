@@ -26,7 +26,7 @@ namespace XRouter.Test.Common
 
         public ConfigurationManager(IBrokerServiceForManagement broker)
         {
-            BasePath = @"Data\";
+            BasePath = @"XRouter\Test.Integration\Data\";
             this.broker = broker;
         }
 

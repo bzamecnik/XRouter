@@ -13,7 +13,7 @@ namespace XRouter.Test.Common
         Process daemonProcess;
 
         public static readonly string DefaultExecutablePath =
-            @"..\..\..\ComponentHosting\bin\debug\DaemonNT.exe";
+            @"Debug\DaemonNT.exe";
 
         public string ExecutablePath { get; set; }
 

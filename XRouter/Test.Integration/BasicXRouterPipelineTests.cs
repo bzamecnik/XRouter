@@ -13,7 +13,7 @@ namespace XRouter.Test.Integration
         /// <summary>
         /// Path to original files - test configurations and data.
         /// </summary>
-        private static readonly string OriginalsPath = @"..\..\Data\";
+        private static readonly string OriginalsPath = @"..\XRouter\Test.Integration\Data\";
         /// <summary>
         /// Path to a directory managed by a directory adapter of a live XRouter service.
         /// </summary>

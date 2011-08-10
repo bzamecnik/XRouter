@@ -23,7 +23,7 @@ namespace XRouter.Test.Common
         public IBrokerServiceForManagement BrokerProxy { get; private set; }
 
         private static readonly string DefaultDaemonNtConfigFile =
-            @"..\..\..\ComponentHosting\Misc\DaemonNT_config.xml";
+            @"DaemonNT.xml";
 
         private static readonly string DefaultServiceName = "xrouter";
 
