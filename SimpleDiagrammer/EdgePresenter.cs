@@ -11,6 +11,10 @@ namespace SimpleDiagrammer
         public TNode Source { get; private set; }
         public TNode Target { get; private set; }
 
+        public virtual int ZIndex {
+            get { return 0; }
+        }
+
         protected EdgePresenter(TEdge edge, TNode source, TNode target)
         {
             Edge = edge;
@@ -21,5 +25,9 @@ namespace SimpleDiagrammer
         object IInternalEdgePresenter.Edge { get { return Edge; } }
         object IInternalEdgePresenter.Source { get { return Source; } }
         object IInternalEdgePresenter.Target { get { return Target; } }
+
+        int IInternalEdgePresenter.ZIndex {
+            get { return ZIndex; }
+        }
     }
 }

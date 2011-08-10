@@ -13,6 +13,7 @@ namespace SimpleDiagrammer
     class Edge
     {
         public object EdgeObject { get; private set; }
+        public IInternalEdgePresenter Presenter { get; private set; }
         public Node Source { get; private set; }
         public Node Target { get; private set; }
 
@@ -26,8 +27,9 @@ namespace SimpleDiagrammer
         public FrameworkElement CenterDecoration { get; private set; }
         public Line LinkInnerLine { get; private set; }
 
-        public Edge(object edgeObject, Node source, Node target, FrameworkElement endDecoration = null, FrameworkElement centerDecoration = null, FrameworkElement startDecoration = null)
+        public Edge(IInternalEdgePresenter presenter, object edgeObject, Node source, Node target, FrameworkElement endDecoration = null, FrameworkElement centerDecoration = null, FrameworkElement startDecoration = null)
         {
+            Presenter = presenter;
             EdgeObject = edgeObject;
             Source = source;
             Target = target;
@@ -87,6 +89,7 @@ namespace SimpleDiagrammer
             #endregion
 
             UILink = linkGrid;
+            Canvas.SetZIndex(UILink, Presenter.ZIndex);
         }
 
         public void UpdatePosition()

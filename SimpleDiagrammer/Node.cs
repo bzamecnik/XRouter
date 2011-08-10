@@ -41,7 +41,7 @@ namespace SimpleDiagrammer
             border.Content = Presenter.Content;
 
             UIFrame = border;
-            Canvas.SetZIndex(UIFrame, 1);
+            Canvas.SetZIndex(UIFrame, Presenter.ZIndex);
 
             #region Prepare dragging
             dragArea = Presenter.DragArea;

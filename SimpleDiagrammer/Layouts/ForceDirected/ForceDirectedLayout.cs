@@ -16,7 +16,7 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
         private const double REPULSION_CONSTANT = 5000;	// charge constant
 
         private const double DEFAULT_DAMPING = 0.5;
-        private const int DEFAULT_SPRING_LENGTH = 120;
+        private const int DEFAULT_SPRING_LENGTH = 180; //120;
 
         private Dictionary<Node, NodeLayoutInfo> nodeToLayoutInfo = new Dictionary<Node, NodeLayoutInfo>();
 

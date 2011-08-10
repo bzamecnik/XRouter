@@ -10,5 +10,7 @@ namespace SimpleDiagrammer
         object Edge { get; }
         object Source { get; }
         object Target { get; }
+
+        int ZIndex { get; }
     }
 }

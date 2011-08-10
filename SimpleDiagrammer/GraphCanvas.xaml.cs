@@ -80,7 +80,7 @@ namespace SimpleDiagrammer
                     var edgePresenter = GraphPresenter.CreateEdgePresenter(edgeObject);
                     Node sourceNode = GetNodeByObject(edgePresenter.Source);
                     Node targetNode = GetNodeByObject(edgePresenter.Target);
-                    edge = new Edge(edgeObject, sourceNode, targetNode, Edge.CreateEndArrow());
+                    edge = new Edge(edgePresenter, edgeObject, sourceNode, targetNode, Edge.CreateEndArrow());
                 }
                 Edges.Add(edge);
             }

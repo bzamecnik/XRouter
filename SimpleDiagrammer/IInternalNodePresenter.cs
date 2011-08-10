@@ -15,5 +15,7 @@ namespace SimpleDiagrammer
         object Content { get; }
 
         FrameworkElement DragArea { get; }
+
+        int ZIndex { get; }
     }
 }

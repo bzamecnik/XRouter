@@ -18,15 +18,22 @@ namespace SimpleDiagrammer
             get { return null; } 
         }
 
+        public virtual int ZIndex { 
+            get { return 1; }
+        }
+
         protected NodePresenter(TNode node)
         {
             Node = node;
             Content = (object)node ?? "<null>";
         }
 
-        object IInternalNodePresenter.Node
-        {
+        object IInternalNodePresenter.Node {
             get { return Node; }
+        }
+
+        int IInternalNodePresenter.ZIndex {
+            get { return ZIndex; }
         }
     }
 }
