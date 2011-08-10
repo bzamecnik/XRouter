@@ -16,6 +16,7 @@ using ObjectConfigurator;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
 using XRouter.Gui.CommonControls;
+using XRouter.Common;
 
 namespace XRouter.Gui
 {
@@ -33,6 +34,7 @@ namespace XRouter.Gui
         {
             Configurator.CustomItemTypes.Add(new TokenSelectionConfigurationItemType(() => new TokenSelectionEditor()));
             Configurator.CustomItemTypes.Add(new XrmUriConfigurationItemType(() => new XrmUriEditor()));
+            Configurator.CustomItemTypes.Add(new UriConfigurationItemType(() => new UriEditor()));
 
             #region Run xrouter server
 

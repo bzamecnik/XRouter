@@ -82,6 +82,7 @@
     <Compile Include="MessageFlowState.cs" />
     <Compile Include="TraceLogEntry.cs" />
     <Compile Include="TraceLogReader.cs" />
+    <Compile Include="UriConfigurationItemType.cs" />
     <Compile Include="Utils\TypeUtils.cs" />
     <Compile Include="Utils\XSerializer.cs" />
     <Compile Include="XmlReduction.cs" />

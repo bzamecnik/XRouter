@@ -12,6 +12,7 @@ namespace XRouter.Processor.MessageFlowBuilding
         static MessageFlowBuilder() {
             Configurator.CustomItemTypes.Add(new TokenSelectionConfigurationItemType());
             Configurator.CustomItemTypes.Add(new XrmUriConfigurationItemType());
+            Configurator.CustomItemTypes.Add(new UriConfigurationItemType());
         }
 
         public static TerminatorNodeConfiguration CreateTerminator(string name)

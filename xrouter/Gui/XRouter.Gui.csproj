@@ -64,6 +64,9 @@
     <Compile Include="CommonControls\TokenSelectionEditor.xaml.cs">
       <DependentUpon>TokenSelectionEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CommonControls\UriEditor.xaml.cs">
+      <DependentUpon>UriEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CommonControls\XrmUriEditor.xaml.cs">
       <DependentUpon>XrmUriEditor.xaml</DependentUpon>
     </Compile>
@@ -101,6 +104,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CommonControls\TokenSelectionEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CommonControls\UriEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

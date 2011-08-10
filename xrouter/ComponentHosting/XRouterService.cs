@@ -30,6 +30,7 @@ namespace XRouter.ComponentHosting
 
             ObjectConfigurator.Configurator.CustomItemTypes.Add(new TokenSelectionConfigurationItemType());
             ObjectConfigurator.Configurator.CustomItemTypes.Add(new XrmUriConfigurationItemType());
+            ObjectConfigurator.Configurator.CustomItemTypes.Add(new UriConfigurationItemType());
 
             broker = new XRouter.Broker.BrokerService();
             processor = new XRouter.Processor.ProcessorService();
