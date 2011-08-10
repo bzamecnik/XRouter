@@ -1,4 +1,7 @@
-﻿//inspiration from http://kentb.blogspot.com/2007/04/resizer-wpf-control.html
+﻿// Based on software by Kent Boogaart released under the terms of the MIT
+// License.
+// Copyright (C) 2007 Kent Boogaart.
+// http://kentb.blogspot.com/2007/04/resizer-wpf-control.html
 
 using System.Collections.Generic;
 using System.Diagnostics;
