@@ -98,8 +98,8 @@ namespace XRouter.Processor.MessageFlowParts
             token.MessageFlowState.NextNodeName = nextNodeName;
             token.SaveMessageFlowState();
 
-            if (token.IsPersistent) {
-                Processor.BrokerService.UpdateTokenMessageFlowState(Processor.Name, token.Guid, token.MessageFlowState); 
+            if ((token.IsPersistent) && (!(currentNode is CbrNode))) {
+                Processor.BrokerService.UpdateTokenMessageFlowState(Processor.Name, token.Guid, token.MessageFlowState);
             }
 
             bool shouldContinue = nextNodeName != null;
