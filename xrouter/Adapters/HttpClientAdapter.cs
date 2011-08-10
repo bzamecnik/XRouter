@@ -74,6 +74,7 @@ namespace XRouter.Adapters
             streamRequest.Close();
 
             // ziskani odpovedi
+            // NOTE: this is synchronous and can wait some time
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             XDocument xResponse = XDocument.Load(response.GetResponseStream(), LoadOptions.SetLineInfo);
 

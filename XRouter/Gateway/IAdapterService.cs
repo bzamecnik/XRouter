@@ -3,6 +3,8 @@ using System.Xml.Linq;
 
 namespace XRouter.Gateway
 {
+    // TODO: move to Gateway.cs or a separate file MessageResultHandler.cs
+
     /// <summary>
     /// A delegate which is performed when the token is being finished and
     /// there is a reply message to the original message.

@@ -108,6 +108,10 @@ namespace XRouter.Gateway
         /// Sends an output message to a given output endpoint with an
         /// optional reply.
         /// </summary>
+        /// <remarks>
+        /// This method is synchronous, so that it can wait for a reply if
+        /// there is any.
+        /// </remarks>
         /// <param name="endpointName">output endpoint name</param>
         /// <param name="message">output message</param>
         /// <param name="metadata">message metadata</param>
@@ -216,6 +220,11 @@ namespace XRouter.Gateway
         /// <summary>
         /// Receives an input message containing XML data in an XDocument.
         /// </summary>
+        /// <remarks>
+        /// This method is asynchronous and can simulate synchronous
+        /// communication. The reply is send back from within a given result
+        /// handler and a context is preseved.
+        /// </remarks>
         /// <param name="message">XML message content in an XDocument</param>
         /// <param name="endpointName">input endpoint name; can be null</param>
         /// <param name="metadata">metadata about the input message; can be null</param>
