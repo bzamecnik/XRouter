@@ -130,9 +130,7 @@ namespace XRouter.Gateway
                 ResultHandlingInfo resultHandlingInfo = new ResultHandlingInfo(token.Guid, resultHandler, context);
                 waitingResultMessageHandlers.AddOrUpdate(token.Guid, resultHandlingInfo, (key, oldValue) => resultHandlingInfo);
             }
-            Task.Factory.StartNew(TraceLog.WrapWithExceptionLogging(delegate {
-                Broker.ReceiveToken(token);
-            }));
+            Broker.ReceiveToken(token);
         }
 
         private Adapter CreateAdapter(string typeFullNameAndAssembly, XElement adapterConfig, string adapterName)
