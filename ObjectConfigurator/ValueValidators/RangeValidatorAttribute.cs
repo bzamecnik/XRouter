@@ -121,6 +121,12 @@ namespace ObjectConfigurator.ValueValidators
                 return false;
             }
 
+            bool isCollection;
+            bool areElementsValid = AreElementsValidIfIsCollection(value, out errorDescription, out isCollection);
+            if (isCollection) {
+                return areElementsValid;
+            }
+
             if ((value is float) || (value is double)) {
                 double valueInDouble = Convert.ToDouble(value);
                 if ((Min is float) || (Min is double)) {

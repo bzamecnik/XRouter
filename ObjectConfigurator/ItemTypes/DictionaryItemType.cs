@@ -83,7 +83,7 @@ namespace ObjectConfigurator.ItemTypes
             addMethod.Invoke(dictionary, new object[] { key, value });
         }
 
-        internal void ExtractKeyAndValueFromPair(object pair, out object key, out object value)
+        internal static void ExtractKeyAndValueFromPair(object pair, out object key, out object value)
         {
             Type pairType = pair.GetType();
             PropertyInfo keyProperty = pairType.GetProperty("Key");

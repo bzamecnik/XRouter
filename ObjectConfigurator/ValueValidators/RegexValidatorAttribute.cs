@@ -1,5 +1,8 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using ObjectConfigurator.ItemTypes;
 
 namespace ObjectConfigurator.ValueValidators
 {
@@ -29,6 +32,12 @@ namespace ObjectConfigurator.ValueValidators
         {
             if (value == null) {
                 errorDescription = string.Format(ErrorDescription, "(null)", RegularExpression);
+            }
+
+            bool isCollection;
+            bool areElementsValid = AreElementsValidIfIsCollection(value, out errorDescription, out isCollection);
+            if (isCollection) {
+                return areElementsValid;
             }
 
             string str = value.ToString();
