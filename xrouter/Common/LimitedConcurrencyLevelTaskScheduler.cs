@@ -1,4 +1,20 @@
-﻿using System;
+﻿//--------------------------------------------------------------------------
+// 
+//  Copyright (c) Microsoft Corporation.  All rights reserved. 
+// 
+//  File: LimitedConcurrencyTaskScheduler.cs
+//
+// This class originates from:
+// Samples for Parallel Programming with the .NET Framework
+// (http://code.msdn.microsoft.com/ParExtSamples)
+// which is distributed under the term of the Apache License, Version 2.0
+//
+// Article describing the class:
+// How to: Create a Task Scheduler That Limits the Degree of Concurrency
+// http://msdn.microsoft.com/en-us/library/ee789351.aspx
+//--------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -6,9 +22,6 @@ using System.Threading.Tasks;
 
 namespace XRouter.Common
 {
-    // This class is taken from http://msdn.microsoft.com/en-us/library/ee789351.aspx 
-    // (Samples for Parallel Programming - http://archive.msdn.microsoft.com/ParExtSamples)
-
     /// <summary>
     /// Provides a task scheduler that ensures a maximum concurrency level while
     /// running on top of the ThreadPool.

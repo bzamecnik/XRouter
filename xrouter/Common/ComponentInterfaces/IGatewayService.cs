@@ -23,6 +23,8 @@ namespace XRouter.Common.ComponentInterfaces
         /// </summary>
         void Stop();
 
+        // TODO: can be optionally renamed to ReceiveReply() for consistence with docs
+
         /// <summary>
         /// Returns a message which is a reply to a token received by an
         /// adapter back to the original adapter after the token has been
