@@ -9,7 +9,7 @@ namespace XRouter.Data
     /// persistent data storage, such as a database. In general it contains
     /// methods for working with tokens, component configuration and logs.
     /// </summary>
-    public interface IDataAccess
+    public interface IDataAccess_Old
     {
         #region Messages / Tokens
 

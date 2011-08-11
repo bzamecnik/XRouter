@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace XRouter.Common
 {
@@ -6,7 +7,7 @@ namespace XRouter.Common
     /// Represents the state of the message flow while processing a single
     /// token. Used to store the state between steps of the processing.
     /// </summary>
-    [Serializable]
+    [DataContract]
     public class MessageFlowState
     {
         /// <summary>
@@ -17,6 +18,7 @@ namespace XRouter.Common
         /// processing a token and this identifies the original message flow
         /// which was active when the token's processing started.
         /// </remarks>
+        [DataMember]
         public Guid MessageFlowGuid { get; set; }
 
         /// <summary>
@@ -25,6 +27,7 @@ namespace XRouter.Common
         /// </summary>
         /// <remarks>Can be null initially which means the traversal should
         /// start at the root node.</remarks>
+        [DataMember]
         public string NextNodeName { get; set; }
 
         /// <summary>
@@ -37,6 +40,7 @@ namespace XRouter.Common
         /// when the assigned processor was lost and the token need to be
         /// redispatched to another processor.
         /// </remarks>
+        [DataMember]
         public string AssignedProcessor { get; set; }
 
         /// <summary>
@@ -44,6 +48,7 @@ namespace XRouter.Common
         /// </summary>
         /// <remarks>This can be useful to track unresponsible processor.
         /// </remarks>
+        [DataMember]
         public DateTime LastResponseFromProcessor { get; set; }
 
         public MessageFlowState()

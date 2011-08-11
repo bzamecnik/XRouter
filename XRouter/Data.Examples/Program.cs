@@ -11,7 +11,7 @@ namespace DataAccessExample
     {
         static void Main(string[] args)
         {
-            IDataAccess dataAccess = new MsSqlDataAccess();
+            IDataAccess_Old dataAccess = new MsSqlDataAccess();
 
             /* all messages retrieval test */
             Console.WriteLine("Stored messages:");

@@ -10,11 +10,6 @@ namespace XRouter.Common.Xrm
     public interface IXmlStorage
     {
         /// <summary>
-        /// Fired when the stored XML document has changed.
-        /// </summary>
-        event Action XmlChanged;
-
-        /// <summary>
         /// Stores the provided XML document into the storage replacing the
         /// possible existing one.
         /// </summary>

@@ -72,7 +72,7 @@ namespace XRouter.Processor
         /// <returns></returns>
         private MessageFlow GetMessageFlowForToken(Token token)
         {
-            Guid messageFlowGuid = token.MessageFlowState.MessageFlowGuid;
+            Guid messageFlowGuid = token.GetMessageFlowState().MessageFlowGuid;
 
             if (messageFlowsByGuid.ContainsKey(messageFlowGuid)) {
                 return messageFlowsByGuid[messageFlowGuid];

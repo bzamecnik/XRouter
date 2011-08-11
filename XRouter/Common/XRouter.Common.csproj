@@ -65,6 +65,7 @@
     <Compile Include="LogLevelFilters.cs" />
     <Compile Include="MessageFlowConfig\CbrNodeConfiguration.cs" />
     <Compile Include="MessageFlowConfig\TokenSelectionConfigurationItemType.cs" />
+    <Compile Include="Persistence\MemoryDataAccess.cs" />
     <Compile Include="Persistence\PersistentStorage.cs" />
     <Compile Include="ProcessorProvider.cs" />
     <Compile Include="TraceLog.cs" />
@@ -99,6 +100,10 @@
     <ProjectReference Include="..\..\ObjectConfigurator\ObjectConfigurator.csproj">
       <Project>{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}</Project>
       <Name>ObjectConfigurator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data\XRouter.Data.csproj">
+      <Project>{873A6405-E524-4D55-B0F0-B125DE17655B}</Project>
+      <Name>XRouter.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

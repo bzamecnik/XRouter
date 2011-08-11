@@ -41,7 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MsSqlDataAccess.cs" />
-    <Compile Include="IDataAccess.cs" />
+    <Compile Include="IDataAccess_New.cs" />
+    <Compile Include="IDataAccess_Old.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

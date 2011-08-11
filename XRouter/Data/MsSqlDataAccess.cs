@@ -12,7 +12,7 @@ namespace XRouter.Data
     /// An implementation of data access API using a Microsft SQL Server
     /// database.
     /// </summary>
-    public class MsSqlDataAccess : IDataAccess
+    public class MsSqlDataAccess : IDataAccess_Old
     {
         private string IPAddress;
         private string instance;

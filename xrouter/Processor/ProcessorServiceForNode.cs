@@ -101,7 +101,7 @@ namespace XRouter.Processor
         /// <seealso cref="XRouter.Common.MessageFlowState"/>
         public void MakeMessageFlowStatePersistent(Token token)
         {
-            BrokerService.UpdateTokenMessageFlowState(ProcessorName, token.Guid, token.MessageFlowState);
+            BrokerService.UpdateTokenMessageFlowState(ProcessorName, token.Guid, token.GetMessageFlowState());
         }
 
         /// <summary>

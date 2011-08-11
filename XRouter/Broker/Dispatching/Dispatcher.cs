@@ -85,17 +85,17 @@ namespace XRouter.Broker.Dispatching
                     lock (tokenDispatchingLock)
                     {
                         Token token = brokerService.GetToken(tokenGuid);
-                        if (token.MessageFlowState.AssignedProcessor != null)
-                        {
+                        MessageFlowState messageflowState = token.GetMessageFlowState();
+                        if (messageflowState.AssignedProcessor != null) {
                             return; // Token is already dispatched
                         }
 
                         // NOTE: it compares to default GUID returned by the new Guid()
-                        if (token.MessageFlowState.MessageFlowGuid == new Guid())
+                        if (messageflowState.MessageFlowGuid == new Guid())
                         {
                             Guid messageFlowGuid = config.GetCurrentMessageFlowGuid();
                             brokerService.UpdateTokenMessageFlow(tokenGuid, messageFlowGuid);
-                            token.MessageFlowState.MessageFlowGuid = messageFlowGuid;
+                            token.UpdateMessageFlowState(mfs => { mfs.MessageFlowGuid = messageFlowGuid; });
                         }
                         try
                         {
@@ -143,13 +143,13 @@ namespace XRouter.Broker.Dispatching
                             DateTime lastResponseThreshold = DateTime.Now -
                                 config.GetNonRunningProcessorResponseTimeout();
                             var tokensToRedispatch = tokens.Where(
-                                t => t.MessageFlowState.LastResponseFromProcessor < lastResponseThreshold);
+                                t => t.GetMessageFlowState().LastResponseFromProcessor < lastResponseThreshold);
                             Func<ProcessorAccessor, bool> currentProcessorFilter =
                                 p => p.ComponentName != processor.ComponentName;
 
                             foreach (var tokenToRedispatch in tokensToRedispatch)
                             {
-                                tokenToRedispatch.MessageFlowState.AssignedProcessor = null;
+                                tokenToRedispatch.UpdateMessageFlowState(mfs => { mfs.AssignedProcessor = null; });
                                 brokerService.UpdateTokenAssignedProcessor(tokenToRedispatch.Guid, null);
                                 DispatchAsync(tokenToRedispatch.Guid, currentProcessorFilter);
                             }

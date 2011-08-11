@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using XRouter.Common.Utils;
 
 namespace XRouter.Common
 {
@@ -41,36 +42,6 @@ namespace XRouter.Common
         /// </summary>
         [DataMember]
         public SerializableXDocument Content { get; private set; }
-
-        private MessageFlowState _messageFlowState;
-        /// <summary>
-        /// State of the message flow while processing the token.
-        /// </summary>
-        public MessageFlowState MessageFlowState {
-            get {
-                lock (SyncLock) {
-                    if (_messageFlowState == null) {
-                        _messageFlowState = new MessageFlowState();
-                        //XElement workFlowStateElement = Content.XDocument.XPathSelectElement("token/messageflow-state");
-                        //XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowState));
-                        //XmlReader xmlReader = workFlowStateElement.CreateReader();
-                        //_messageFlowState = (MessageFlowState)serializer.Deserialize(xmlReader);
-                    }
-                    return _messageFlowState;
-                }
-
-                //var workFlowStateElement = Content.XDocument.XPathSelectElement("token/messageflow-state");
-                //if (workFlowStateElement == null) {
-                //    return null;
-                //}
-                //MessageFlowState workflowState = new MessageFlowState();
-                //workflowState.MessageFlowGuid = Guid.Parse(workFlowStateElement.Attribute(XName.Get("messageflow-guid")).Value);
-                //workflowState.AssignedProcessor = workFlowStateElement.Attribute(XName.Get("assigned-processor")).Value;
-                //workflowState.LastResponseFromProcessor = DateTime.Parse(workFlowStateElement.Attribute(XName.Get("last-response-from-processor")).Value);
-                //workflowState.NextNodeName = workFlowStateElement.Attribute(XName.Get("next-node-name")).Value;
-                //return workflowState;
-            }
-        }
 
         /// <summary>
         /// State of the token processing.
@@ -114,34 +85,9 @@ namespace XRouter.Common
             }
         }
 
-        private EndpointAddress _sourceAddress;
-        /// <summary>
-        /// Identifies the adapter endpoint from which the message originates.
-        /// </summary>
-        public EndpointAddress SourceAddress {
-            get {
-                lock (SyncLock) {
-                    if (_sourceAddress == null) {
-                        var sourceAddressElement = Content.XDocument.XPathSelectElement("token/source-address");
-                        if (sourceAddressElement != null) {
-                            string gateway = sourceAddressElement.Attribute(XName.Get("gateway")).Value;
-                            string adapter = sourceAddressElement.Attribute(XName.Get("adapter")).Value;
-                            string endpoint = sourceAddressElement.Attribute(XName.Get("endpoint")).Value;
-                            _sourceAddress = new EndpointAddress(gateway, adapter, endpoint);
-                        } else {
-                            _sourceAddress = new EndpointAddress(string.Empty, string.Empty, string.Empty);
-                        }
-                    }
-                    return _sourceAddress;
-                }
-            }
-        }
-
         public Token()
-        {
-            Guid = Guid.NewGuid();
-            Content = new SerializableXDocument(XDocument.Parse(@"
-<token is-persistent='false'>
+            : this(Guid.NewGuid(), @"
+<token guid='' is-persistent='false'>
     <source-address>
     </source-address>
     <source-metadata>
@@ -153,7 +99,21 @@ namespace XRouter.Common
     <exceptions>
     </exceptions>
 </token>
-"));
+")
+        {
+        }
+
+        public Token(string contentXml)
+        {
+            Content = new SerializableXDocument(XDocument.Parse(contentXml));
+            Guid = Guid.Parse(Content.XDocument.Root.Attribute(XName.Get("guid")).Value);
+        }
+
+        public Token(Guid guid, string contentXml)
+        {
+            Guid = guid;
+            Content = new SerializableXDocument(XDocument.Parse(contentXml));
+            Content.XDocument.Root.SetAttributeValue(XName.Get("guid"), guid.ToString());
         }
 
         public Token Clone()
@@ -166,45 +126,62 @@ namespace XRouter.Common
             }
         }
 
-        public void SaveMessageFlowState()
-        {
-            SaveMessageFlowState(MessageFlowState);
-        }
-
-        public void SaveMessageFlowState(MessageFlowState messageFlowState)
-        {
-            //lock (syncLock) {
-            //    XElement workFlowStateElement = Content.XDocument.XPathSelectElement("token/messageflow-state");
-            //    XmlSerializer serializer = new XmlSerializer(typeof(MessageFlowState));
-            //    XmlWriter xmlWriter = workFlowStateElement.CreateWriter();
-            //    serializer.Serialize(xmlWriter, messageFlowState);
-            //}
-            _messageFlowState = messageFlowState;
-        }
-
-        public void SaveSourceAddress()
-        {
-            SaveSourceAddress(SourceAddress);
-        }
-
-        public void SaveSourceAddress(EndpointAddress sourceAddress)
+        public EndpointAddress GetSourceAddress()
         {
             lock (SyncLock) {
-                var sourceAddressElement = Content.XDocument.XPathSelectElement("token/source-address");
-                if (sourceAddressElement == null) {
-                    sourceAddressElement = new XElement("source-address");
-                    Content.XDocument.XPathSelectElement("token").Add(sourceAddressElement);
+                var xSourceAddress = Content.XDocument.XPathSelectElement("token/source-address");
+                if (xSourceAddress != null) {
+                    string gateway = xSourceAddress.Attribute(XName.Get("gateway")).Value;
+                    string adapter = xSourceAddress.Attribute(XName.Get("adapter")).Value;
+                    string endpoint = xSourceAddress.Attribute(XName.Get("endpoint")).Value;
+                    return new EndpointAddress(gateway, adapter, endpoint);
+                } else {
+                    return null;
                 }
-                sourceAddressElement.SetAttributeValue("gateway", sourceAddress.GatewayName);
-                sourceAddressElement.SetAttributeValue("adapter", sourceAddress.AdapterName);
-                sourceAddressElement.SetAttributeValue("endpoint", sourceAddress.EndpointName);
+            }
+        }
+
+        public void SetSourceAddress(EndpointAddress sourceAddress)
+        {
+            lock (SyncLock) {
+                var xSourceAddress = Content.XDocument.XPathSelectElement("token/source-address");
+                if (xSourceAddress == null) {
+                    xSourceAddress = new XElement("source-address");
+                    Content.XDocument.XPathSelectElement("token").Add(xSourceAddress);
+                }
+                xSourceAddress.SetAttributeValue("gateway", sourceAddress.GatewayName);
+                xSourceAddress.SetAttributeValue("adapter", sourceAddress.AdapterName);
+                xSourceAddress.SetAttributeValue("endpoint", sourceAddress.EndpointName);
+            }
+        }
+
+        public MessageFlowState GetMessageFlowState()
+        {
+            lock (SyncLock) {
+                XElement xWorkFlowState = Content.XDocument.XPathSelectElement("token/messageflow-state");
+                MessageFlowState result = XSerializer.Deserialize<MessageFlowState>(xWorkFlowState);
+                return result;
+            }
+        }
+
+        public void UpdateMessageFlowState(Action<MessageFlowState> updater)
+        {
+            MessageFlowState messageFlowState = GetMessageFlowState();
+            updater(messageFlowState);
+            SetMessageFlowState(messageFlowState);
+        }
+
+        public void SetMessageFlowState(MessageFlowState messageFlowState)
+        {
+            lock (SyncLock) {
+                XElement xWorkFlowState = Content.XDocument.XPathSelectElement("token/messageflow-state");
+                XSerializer.Serializer(messageFlowState, xWorkFlowState);
             }
         }
 
         public void SaveSourceMetadata(XDocument sourceMetadata)
         {
-            if (sourceMetadata == null)
-            {
+            if (sourceMetadata == null) {
                 return;
             }
             lock (SyncLock) {

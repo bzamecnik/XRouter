@@ -83,23 +83,23 @@ namespace XRouter.Processor.MessageFlowParts
         {
             #region Determine currentNode
             Node currentNode;
-            if (token.MessageFlowState.NextNodeName != null)
-            {
-                currentNode = nodesByName[token.MessageFlowState.NextNodeName];
+            string currentNodeName = token.GetMessageFlowState().NextNodeName;
+            if (currentNodeName != null) {
+                currentNode = nodesByName[currentNodeName];
             }
-            else
-            {
+            else {
                 currentNode = rootNode;
             }
             #endregion
 
             string nextNodeName = currentNode.Evaluate(token);
 
-            token.MessageFlowState.NextNodeName = nextNodeName;
-            token.SaveMessageFlowState();
+            MessageFlowState messageflowState = token.GetMessageFlowState();
+            messageflowState.NextNodeName = nextNodeName;
+            token.SetMessageFlowState(messageflowState);
 
             if ((token.IsPersistent) && (!(currentNode is CbrNode))) {
-                Processor.BrokerService.UpdateTokenMessageFlowState(Processor.Name, token.Guid, token.MessageFlowState);
+                Processor.BrokerService.UpdateTokenMessageFlowState(Processor.Name, token.Guid, messageflowState);
             }
 
             bool shouldContinue = nextNodeName != null;

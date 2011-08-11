@@ -246,7 +246,7 @@ namespace XRouter.Gateway
             Token token = new Token();
 
             token.IsPersistent = AreInputTokensPersistent;
-            token.SaveSourceAddress(new EndpointAddress(Gateway.Name, AdapterName, endpointName));
+            token.SetSourceAddress(new EndpointAddress(Gateway.Name, AdapterName, endpointName));
             token.SaveSourceMetadata(metadata);
             token.AddMessage(Constants.InputMessageName, message);
             TraceLog.Info("Created token with GUID " + token.Guid);
