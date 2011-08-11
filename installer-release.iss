@@ -42,6 +42,7 @@ Source: "bin\Release\XRouter.Processor.dll"; DestDir: "{app}"; Flags: ignorevers
 Source: "bin\Release\XRouter.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\DaemonNT.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\XRouter.Adapters.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\XRouter.Manager.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\SimpleDiagrammer.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\XRouter.Gui.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
