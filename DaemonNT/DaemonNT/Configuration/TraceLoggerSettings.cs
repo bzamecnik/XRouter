@@ -4,6 +4,8 @@ namespace DaemonNT.Configuration
 {
     using System;
 
+    // TODO: rename to TraceLoggerConfig to avoid confusion with Settings
+
     /// <summary>
     /// Represents settings of a trace logger.
     /// </summary>

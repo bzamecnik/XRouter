@@ -32,6 +32,7 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.newConfigToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.openConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.validateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -40,6 +41,7 @@
             this.newServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.configFileToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.objectModelTabPage = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -61,6 +63,8 @@
             this.settingsGroupBox = new System.Windows.Forms.GroupBox();
             this.editServiceSettingsButton = new System.Windows.Forms.Button();
             this.installerGroupBox = new System.Windows.Forms.GroupBox();
+            this.removeRequiredServiceButton = new System.Windows.Forms.Button();
+            this.addRequiredServiceButton = new System.Windows.Forms.Button();
             this.installerRequiredServicesListBox = new System.Windows.Forms.ListBox();
             this.installerAccountComboBox = new System.Windows.Forms.ComboBox();
             this.accountLabel = new System.Windows.Forms.Label();
@@ -83,10 +87,6 @@
             this.xmlSourceTextBox = new System.Windows.Forms.TextBox();
             this.openConfigFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveConfigFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.addRequiredServiceButton = new System.Windows.Forms.Button();
-            this.removeRequiredServiceButton = new System.Windows.Forms.Button();
-            this.validateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.configFileToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -145,6 +145,13 @@
             this.openConfigToolStripMenuItem.Text = "&Open";
             this.openConfigToolStripMenuItem.Click += new System.EventHandler(this.openConfigToolStripMenuItem_Click);
             // 
+            // validateToolStripMenuItem
+            // 
+            this.validateToolStripMenuItem.Name = "validateToolStripMenuItem";
+            this.validateToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.validateToolStripMenuItem.Text = "&Validate";
+            this.validateToolStripMenuItem.Click += new System.EventHandler(this.validateToolStripMenuItem_Click);
+            // 
             // saveConfigToolStripMenuItem
             // 
             this.saveConfigToolStripMenuItem.Name = "saveConfigToolStripMenuItem";
@@ -186,14 +193,14 @@
             // newServiceToolStripMenuItem
             // 
             this.newServiceToolStripMenuItem.Name = "newServiceToolStripMenuItem";
-            this.newServiceToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newServiceToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.newServiceToolStripMenuItem.Text = "&New";
             this.newServiceToolStripMenuItem.Click += new System.EventHandler(this.newServiceToolStripMenuItem_Click);
             // 
             // removeServiceToolStripMenuItem
             // 
             this.removeServiceToolStripMenuItem.Name = "removeServiceToolStripMenuItem";
-            this.removeServiceToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeServiceToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.removeServiceToolStripMenuItem.Text = "&Remove";
             this.removeServiceToolStripMenuItem.Click += new System.EventHandler(this.removeServiceToolStripMenuItem_Click);
             // 
@@ -206,6 +213,12 @@
             this.statusStrip1.Size = new System.Drawing.Size(753, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // configFileToolStripStatusLabel
+            // 
+            this.configFileToolStripStatusLabel.Name = "configFileToolStripStatusLabel";
+            this.configFileToolStripStatusLabel.Size = new System.Drawing.Size(31, 17);
+            this.configFileToolStripStatusLabel.Text = "File: ";
             // 
             // tabControl1
             // 
@@ -405,6 +418,7 @@
             this.traceLoggerBufferSizeNumeric.Name = "traceLoggerBufferSizeNumeric";
             this.traceLoggerBufferSizeNumeric.Size = new System.Drawing.Size(121, 20);
             this.traceLoggerBufferSizeNumeric.TabIndex = 2;
+            this.traceLoggerBufferSizeNumeric.ValueChanged += new System.EventHandler(this.traceLoggerBufferSizeNumeric_ValueChanged);
             // 
             // label10
             // 
@@ -462,6 +476,24 @@
             this.installerGroupBox.TabStop = false;
             this.installerGroupBox.Text = "Installer";
             // 
+            // removeRequiredServiceButton
+            // 
+            this.removeRequiredServiceButton.Location = new System.Drawing.Point(470, 93);
+            this.removeRequiredServiceButton.Name = "removeRequiredServiceButton";
+            this.removeRequiredServiceButton.Size = new System.Drawing.Size(22, 23);
+            this.removeRequiredServiceButton.TabIndex = 4;
+            this.removeRequiredServiceButton.Text = "-";
+            this.removeRequiredServiceButton.UseVisualStyleBackColor = true;
+            // 
+            // addRequiredServiceButton
+            // 
+            this.addRequiredServiceButton.Location = new System.Drawing.Point(470, 64);
+            this.addRequiredServiceButton.Name = "addRequiredServiceButton";
+            this.addRequiredServiceButton.Size = new System.Drawing.Size(22, 23);
+            this.addRequiredServiceButton.TabIndex = 4;
+            this.addRequiredServiceButton.Text = "+";
+            this.addRequiredServiceButton.UseVisualStyleBackColor = true;
+            // 
             // installerRequiredServicesListBox
             // 
             this.installerRequiredServicesListBox.FormattingEnabled = true;
@@ -480,6 +512,7 @@
             this.installerAccountComboBox.Name = "installerAccountComboBox";
             this.installerAccountComboBox.Size = new System.Drawing.Size(121, 21);
             this.installerAccountComboBox.TabIndex = 2;
+            this.installerAccountComboBox.SelectedIndexChanged += new System.EventHandler(this.installerAccountComboBox_SelectedIndexChanged);
             // 
             // accountLabel
             // 
@@ -498,6 +531,7 @@
             this.installerStartTypeComboBox.Name = "installerStartTypeComboBox";
             this.installerStartTypeComboBox.Size = new System.Drawing.Size(121, 21);
             this.installerStartTypeComboBox.TabIndex = 2;
+            this.installerStartTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.installerStartTypeComboBox_SelectedIndexChanged);
             // 
             // startTypeLabel
             // 
@@ -515,6 +549,7 @@
             this.installerPasswordTextBox.PasswordChar = '*';
             this.installerPasswordTextBox.Size = new System.Drawing.Size(121, 20);
             this.installerPasswordTextBox.TabIndex = 1;
+            this.installerPasswordTextBox.TextChanged += new System.EventHandler(this.installerPasswordTextBox_TextChanged);
             // 
             // passwordLabel
             // 
@@ -540,6 +575,7 @@
             this.installerUsernameTextBox.Name = "installerUsernameTextBox";
             this.installerUsernameTextBox.Size = new System.Drawing.Size(121, 20);
             this.installerUsernameTextBox.TabIndex = 1;
+            this.installerUsernameTextBox.TextChanged += new System.EventHandler(this.installerUsernameTextBox_TextChanged);
             // 
             // usernameLabel
             // 
@@ -558,6 +594,7 @@
             this.installerDescriptionTextBox.Name = "installerDescriptionTextBox";
             this.installerDescriptionTextBox.Size = new System.Drawing.Size(473, 20);
             this.installerDescriptionTextBox.TabIndex = 1;
+            this.installerDescriptionTextBox.TextChanged += new System.EventHandler(this.installerDescriptionTextBox_TextChanged);
             // 
             // descriptionLabel
             // 
@@ -576,6 +613,7 @@
             this.serviceTypeAssemblyTextBox.Name = "serviceTypeAssemblyTextBox";
             this.serviceTypeAssemblyTextBox.Size = new System.Drawing.Size(479, 20);
             this.serviceTypeAssemblyTextBox.TabIndex = 5;
+            this.serviceTypeAssemblyTextBox.TextChanged += new System.EventHandler(this.serviceTypeAssemblyTextBox_TextChanged);
             // 
             // serviceTypeClassTextBox
             // 
@@ -585,6 +623,7 @@
             this.serviceTypeClassTextBox.Name = "serviceTypeClassTextBox";
             this.serviceTypeClassTextBox.Size = new System.Drawing.Size(479, 20);
             this.serviceTypeClassTextBox.TabIndex = 4;
+            this.serviceTypeClassTextBox.TextChanged += new System.EventHandler(this.serviceTypeClassTextBox_TextChanged);
             // 
             // label3
             // 
@@ -654,37 +693,6 @@
             // 
             this.saveConfigFileDialog.Filter = "XML files|*.xml|All files|*.*";
             this.saveConfigFileDialog.Title = "Save configuration file";
-            // 
-            // addRequiredServiceButton
-            // 
-            this.addRequiredServiceButton.Location = new System.Drawing.Point(470, 64);
-            this.addRequiredServiceButton.Name = "addRequiredServiceButton";
-            this.addRequiredServiceButton.Size = new System.Drawing.Size(22, 23);
-            this.addRequiredServiceButton.TabIndex = 4;
-            this.addRequiredServiceButton.Text = "+";
-            this.addRequiredServiceButton.UseVisualStyleBackColor = true;
-            // 
-            // removeRequiredServiceButton
-            // 
-            this.removeRequiredServiceButton.Location = new System.Drawing.Point(470, 93);
-            this.removeRequiredServiceButton.Name = "removeRequiredServiceButton";
-            this.removeRequiredServiceButton.Size = new System.Drawing.Size(22, 23);
-            this.removeRequiredServiceButton.TabIndex = 4;
-            this.removeRequiredServiceButton.Text = "-";
-            this.removeRequiredServiceButton.UseVisualStyleBackColor = true;
-            // 
-            // validateToolStripMenuItem
-            // 
-            this.validateToolStripMenuItem.Name = "validateToolStripMenuItem";
-            this.validateToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.validateToolStripMenuItem.Text = "&Validate";
-            this.validateToolStripMenuItem.Click += new System.EventHandler(this.validateToolStripMenuItem_Click);
-            // 
-            // configFileToolStripStatusLabel
-            // 
-            this.configFileToolStripStatusLabel.Name = "configFileToolStripStatusLabel";
-            this.configFileToolStripStatusLabel.Size = new System.Drawing.Size(31, 17);
-            this.configFileToolStripStatusLabel.Text = "File: ";
             // 
             // ConfigEditorForm
             // 

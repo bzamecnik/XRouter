@@ -1,6 +1,9 @@
 ﻿namespace DaemonNT.Configuration
 {
     using System;
+
+    // TODO: rename to ServiceConfig to avoid confusion with Settings
+
     /// <summary>
     /// Represents the information and settings of a service and its
     /// facilities.
@@ -16,6 +19,9 @@
     {
         public ServiceSettings()
         {
+            Settings = new Settings();
+            InstallerSettings = new InstallerSettings();
+            TraceLoggerSettings = new TraceLoggerSettings();
         }
 
         /// <summary>

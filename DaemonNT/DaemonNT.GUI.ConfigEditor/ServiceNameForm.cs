@@ -24,6 +24,7 @@ namespace DaemonNT.GUI.ConfigEditor
         {
             serviceNameTextBox.Text = ServiceName;
             serviceNameTextBox.Focus();
+            EnableOkButtonOnGoodServiceName();
         }
 
         private void serviceNameForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -36,7 +37,14 @@ namespace DaemonNT.GUI.ConfigEditor
 
         private void serviceNameTextBox_TextChanged(object sender, EventArgs e)
         {
-            okButton.Enabled = !ExistingNames.Contains(serviceNameTextBox.Text);
+            EnableOkButtonOnGoodServiceName();
+        }
+
+        private void EnableOkButtonOnGoodServiceName()
+        {
+            okButton.Enabled =
+                !string.IsNullOrWhiteSpace(serviceNameTextBox.Text) &&
+                !ExistingNames.Contains(serviceNameTextBox.Text);
         }
     }
 }

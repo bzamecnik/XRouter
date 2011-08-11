@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
 
+    // TODO: rename to InstallerConfig to avoid confusion with Settings
+
     /// <summary>
     /// Represents settings of a service installer.
     /// </summary>

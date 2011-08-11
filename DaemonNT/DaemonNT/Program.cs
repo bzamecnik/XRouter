@@ -9,8 +9,12 @@
     /// Provides a console program to run various DaemonNT commands.
     /// </summary>
     /// <remarks>
-    /// The available commands are: <c>run</c>, <c>debug</c>, <c>install</c>,
-    /// <c>uninstall</c>.
+    /// The program can be ran with the following available arguments:
+    /// <code>
+    /// DaemonNT.exe [options] {command} [service-name]
+    /// {command} ::= debug | run | install | uninstall | start | stop
+    ///     | restart | status | list
+    /// </code>
     /// </remarks>
     internal class Program
     {

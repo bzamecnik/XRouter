@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Xml.Linq;
     using System.Xml.XPath;
@@ -424,32 +425,40 @@
                 return xInstaller;
             }
 
+            if(!string.IsNullOrEmpty(installer.Description))
             {
                 XElement xDescription = new XElement("description");
                 xDescription.Value = installer.Description;
                 xInstaller.Add(xDescription);
             }
 
+            if(!string.IsNullOrEmpty(installer.StartMode) &&
+                installer.StartMode != InstallerSettings.DefaultStartModeValue)
             {
                 XElement xStartType = new XElement("start-type");
                 xStartType.SetAttributeValue("value", installer.StartMode);
                 xInstaller.Add(xStartType);
             }
 
-            XElement xAccount = new XElement("account");
-            xAccount.SetAttributeValue("value", installer.Account);
-            if (installer.Account == "User")
+            if (!string.IsNullOrEmpty(installer.Account) &&
+                installer.Account != InstallerSettings.DefaultAccountValue)
             {
-                XElement xUserName = new XElement("username");
-                xUserName.Value = installer.User;
-                xAccount.Add(xUserName);
+                XElement xAccount = new XElement("account");
+                xAccount.SetAttributeValue("value", installer.Account);
+                if (installer.Account == "User")
+                {
+                    XElement xUserName = new XElement("username");
+                    xUserName.Value = installer.User;
+                    xAccount.Add(xUserName);
 
-                XElement xPassword = new XElement("password");
-                xPassword.Value = installer.Password;
-                xAccount.Add(xPassword);
+                    XElement xPassword = new XElement("password");
+                    xPassword.Value = installer.Password;
+                    xAccount.Add(xPassword);
+                }
+                xInstaller.Add(xAccount);
             }
-            xInstaller.Add(xAccount);
 
+            if (installer.RequiredServices.Count() > 0)
             {
                 XElement xDependedOn = new XElement("depended-on");
                 xDependedOn.Value = string.Join(",", installer.RequiredServices);

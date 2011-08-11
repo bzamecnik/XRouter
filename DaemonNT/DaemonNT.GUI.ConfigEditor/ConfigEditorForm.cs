@@ -283,8 +283,9 @@ namespace DaemonNT.GUI.ConfigEditor
         private void servicesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentServiceName = GetSelectedServiceName();
-            currentService = GetSelectedServiceSettings();
+            currentService = null;
             ClearForm();
+            currentService = GetSelectedServiceSettings();
             if (currentService != null)
             {
                 FillServiceToGUI(currentService);
@@ -511,6 +512,70 @@ namespace DaemonNT.GUI.ConfigEditor
             serviceNames[index] = currentServiceName;
             RefreshListBox(servicesListBox);
             return true;
+        }
+
+        private void serviceTypeClassTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (currentService != null)
+            {
+                currentService.TypeClass = serviceTypeClassTextBox.Text;
+            }
+        }
+
+        private void serviceTypeAssemblyTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (currentService != null)
+            {
+                currentService.TypeAssembly = serviceTypeAssemblyTextBox.Text;
+            }
+        }
+
+        private void installerDescriptionTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (currentService != null)
+            {
+                currentService.InstallerSettings.Description = installerDescriptionTextBox.Text;
+            }
+        }
+
+        private void installerStartTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (currentService != null)
+            {
+                currentService.InstallerSettings.StartMode = installerStartTypeComboBox.Text;
+            }
+        }
+
+        private void installerAccountComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (currentService != null)
+            {
+                currentService.InstallerSettings.Account = installerAccountComboBox.Text;
+            }
+        }
+
+        private void installerUsernameTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (currentService != null)
+            {
+                currentService.InstallerSettings.User = installerUsernameTextBox.Text;
+            }
+        }
+
+        private void installerPasswordTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (currentService != null)
+            {
+                currentService.InstallerSettings.Password = installerPasswordTextBox.Text;
+            }
+        }
+
+        private void traceLoggerBufferSizeNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            if (currentService != null)
+            {
+                currentService.TraceLoggerSettings.BufferSize = (int)traceLoggerBufferSizeNumeric.Value;
+            }
         }
     }
 }
