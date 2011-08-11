@@ -160,6 +160,9 @@ namespace XRouter.Common
             lock (SyncLock) {
                 XElement xWorkFlowState = Content.XDocument.XPathSelectElement("token/messageflow-state");
                 MessageFlowState result = XSerializer.Deserialize<MessageFlowState>(xWorkFlowState);
+                if (result == null) {
+                    result = new MessageFlowState();
+                }
                 return result;
             }
         }
