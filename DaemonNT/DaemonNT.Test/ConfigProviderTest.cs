@@ -91,7 +91,7 @@ namespace DaemonNT.Test
             #endregion
         }
 
-        [Fact]
+        [Fact(Skip="No default file currently distributed.")]
         public void LoadGoodFullConfigFromDefaultFile()
         {
             // load from DaemonNT.xml
