@@ -32,16 +32,17 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
 Source: "bin\Debug\DaemonNT.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\Debug\ObjectConfigurator.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Debug\ObjectConfigurator.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Debug\SchemaTron.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Debug\XRouter.Broker.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Debug\XRouter.Common.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Debug\XRouter.ComponentHosting.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Debug\XRouter.Gateway.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Debug\XRouter.Processor.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Debug\XRouter.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Debug\DaemonNT.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Debug\XRouter.Adapters.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\Debug\SimpleDiagrammer.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Debug\SimpleDiagrammer.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Debug\XRouter.Gui.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
