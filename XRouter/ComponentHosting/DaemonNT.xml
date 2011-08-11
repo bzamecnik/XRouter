@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <config>
-  <service type="XRouter.ComponentHosting.XRouterService,..\..\..\..\xrouter\ComponentHosting\bin\debug\XRouter.ComponentHosting.dll" name="xrouter">
+  <service type="XRouter.ComponentHosting.XRouterService,XRouter.ComponentHosting.dll" name="xrouter">
     <settings>
       <section name="broker">
         <param name="connection-string"></param>
