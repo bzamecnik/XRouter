@@ -32,10 +32,8 @@ namespace XRouter.Processor.MessageFlowBuilding
 
             return new ActionNodeConfiguration() {
                 Name = name, NextNode = nextNode, Actions = {
-                    new ActionConfiguration() {
-                        PluginTypeFullName = typeof(SendMessageAction).FullName,
-                        Configuration = new SerializableXDocument(configuration),
-                        ConfigurationMetadata = new ClassMetadata(typeof(SendMessageAction))
+                    new ActionConfiguration("Message sender") {
+                        Configuration = new SerializableXDocument(configuration)
                     }
                 }
             };
@@ -54,10 +52,8 @@ namespace XRouter.Processor.MessageFlowBuilding
 
             return new ActionNodeConfiguration() {
                 Name = name, NextNode = nextNode, Actions = { 
-                    new ActionConfiguration() { 
-                        PluginTypeFullName = typeof(XsltTransformationAction).FullName,
-                        Configuration = new SerializableXDocument(configuration),
-                        ConfigurationMetadata = new ClassMetadata(typeof(XsltTransformationAction))
+                    new ActionConfiguration("Xslt transformer") { 
+                        Configuration = new SerializableXDocument(configuration)
                     }
                 }
             };

@@ -74,13 +74,11 @@ namespace XRouter.Gateway
 
             #region Create adapters and AdapterServices
             AdaptersByName = new Dictionary<string, Adapter>();
-            var xAdaptersConfig = Configuration.GetAdapterConfigurations(Name);
-            foreach (var xAdapterConfig in xAdaptersConfig) {
-                string adapterName = xAdapterConfig.Attribute(XName.Get("name")).Value;
-                string adapterTypeName = xAdapterConfig.Attribute(XName.Get("type")).Value;
-                AdapterType adapterType = Configuration.GetAdapterType(adapterTypeName);
-                Adapter adapter = CreateAdapter(adapterType.AssemblyAndClrType, xAdapterConfig, adapterName);
-                AdaptersByName.Add(adapterName, adapter);
+            var adaptersConfig = Configuration.GetAdapterConfigurations(Name);
+            foreach (AdapterConfiguration adapterConfig in adaptersConfig) {
+                AdapterType adapterType = Configuration.GetAdapterType(adapterConfig.AdapterTypeName);
+                Adapter adapter = CreateAdapter(adapterType.AssemblyAndClrType, adapterConfig.Configuration.XDocument.Root, adapterConfig.AdapterName);
+                AdaptersByName.Add(adapterConfig.AdapterName, adapter);
             }
             #endregion
 
@@ -138,7 +136,7 @@ namespace XRouter.Gateway
             var adapter = TypeUtils.CreateTypeInstance<Adapter>(typeFullNameAndAssembly);
             adapter.Gateway = this;
             adapter.AdapterName = adapterName;
-            adapter.Config = new XDocument(adapterConfig.XPathSelectElement("objectConfig"));
+            adapter.Config = new XDocument(adapterConfig);
             return adapter;
         }
 

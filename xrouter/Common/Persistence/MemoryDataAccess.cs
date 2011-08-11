@@ -24,10 +24,6 @@ namespace XRouter.Common.Persistence
     <components>
         <gateway name='gateway1'>
             <adapters>
-                <adapter name='directoryAdapter' type='directoryAdapter'>
-                    <objectConfig>
-                    </objectConfig>
-                </adapter>
             </adapters>
         </gateway>
         <processor name='processor1' concurrent-threads='4'>
@@ -36,8 +32,10 @@ namespace XRouter.Common.Persistence
     <dispatcher nonrunning-processor-response-timeout='60'>
     </dispatcher>
     <adapter-types>
-        <adapter-type name='directoryAdapter' clr-type='XRouter.Adapters.DirectoryAdapter,XRouter.Adapters.dll' />
+        <adapter-type name='Directory I/O adapter' clr-type='XRouter.Adapters.DirectoryAdapter,XRouter.Adapters.dll' />
     </adapter-types>
+    <action-types>
+    </action-types>
     <messageflows current='bcf9e0dd-818d-492c-84b6-4c27ca668221'>
         <messageflow guid='bcf9e0dd-818d-492c-84b6-4c27ca668221' name='abc' version='1'>
         </messageflow>

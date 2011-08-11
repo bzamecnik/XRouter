@@ -43,6 +43,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdapterConfiguration.cs" />
     <Compile Include="AdapterType.cs" />
     <Compile Include="ApplicationConfiguration.cs" />
     <Compile Include="ComponentInterfaces\IBrokerService.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="ComponentInterfaces\IComponentService.cs" />
     <Compile Include="ComponentInterfaces\IProcessorService.cs" />
     <Compile Include="LogLevelFilters.cs" />
+    <Compile Include="MessageFlowConfig\ActionType.cs" />
     <Compile Include="MessageFlowConfig\CbrNodeConfiguration.cs" />
     <Compile Include="MessageFlowConfig\TokenSelectionConfigurationItemType.cs" />
     <Compile Include="Persistence\MemoryDataAccess.cs" />

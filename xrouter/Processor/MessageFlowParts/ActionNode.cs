@@ -34,8 +34,8 @@ namespace XRouter.Processor.MessageFlowParts
 
             foreach (ActionConfiguration actionConfig in Config.Actions)
             {
-                IActionPlugin action = TypeUtils.CreateTypeInstance<IActionPlugin>(
-                    actionConfig.PluginTypeFullName);
+                ActionType actionType = ProcessorService.Configuration.GetActionType(actionConfig.ActionTypeName);
+                IActionPlugin action = TypeUtils.CreateTypeInstance<IActionPlugin>(actionType.ClrTypeAndAssembly);
 
                 ObjectConfigurator.Configurator.LoadConfiguration(action, actionConfig.Configuration);
 

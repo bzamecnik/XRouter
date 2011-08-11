@@ -11,11 +11,10 @@ namespace XRouter.Common.MessageFlowConfig
     public class ActionConfiguration
     {
         /// <summary>
-        /// Full name of the action plugin type.
+        /// Symbolic name of the action plugin type.
         /// </summary>
-        /// <seealso cref="System.Type"/>
         [DataMember]
-        public string PluginTypeFullName { get; set; }
+        public string ActionTypeName { get; set; }
 
         /// <summary>
         /// XML configuration of the action plugin.
@@ -23,10 +22,9 @@ namespace XRouter.Common.MessageFlowConfig
         [DataMember]
         public SerializableXDocument Configuration { get; set; }
 
-        /// <summary>
-        /// Metadata about the action plugin class.
-        /// </summary>
-        [DataMember]
-        public ClassMetadata ConfigurationMetadata { get; set; }
+        public ActionConfiguration(string actionTypeName)
+        {
+            ActionTypeName = actionTypeName;
+        }
     }
 }

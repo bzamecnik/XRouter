@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Utils;
+using ObjectConfigurator;
 
 namespace XRouter.Common
 {
@@ -325,20 +326,23 @@ namespace XRouter.Common
         /// </summary>
         /// <param name="gatewayName">name of the gateway</param>
         /// <returns></returns>
-        public XElement[] GetAdapterConfigurations(string gatewayName)
+        public AdapterConfiguration[] GetAdapterConfigurations(string gatewayName)
         {
-            var xAdapters = System.Xml.XPath.Extensions.XPathSelectElements(Content,
-                string.Format("/configuration/components/gateway[@name='{0}']/adapters/adapter", gatewayName));
-
-            if (xAdapters == null)
-            {
-                // TODO: is xAdapters null iff there's no such a gateway
-                // or even if there are no adapters of an existing gateway?
+            var xGateway = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+                string.Format("/configuration/components/gateway[@name='{0}']", gatewayName));
+            if (xGateway == null) {
                 throw new ArgumentException(string.Format(
                     "Cannot find gateway named '{0}'.", gatewayName), "gatewayName");
             }
 
-            return xAdapters.ToArray();
+            var xAdapters = xGateway.Element(XName.Get("adapters")).Elements(XName.Get("adapter"));
+
+            List<AdapterConfiguration> result = new List<AdapterConfiguration>();
+            foreach (XElement xAdapter in xAdapters) {
+                AdapterConfiguration adapterConfig = XSerializer.Deserialize<AdapterConfiguration>(xAdapter);
+                result.Add(adapterConfig);
+            }
+            return result.ToArray();
         }
 
         /// <summary>
@@ -351,7 +355,7 @@ namespace XRouter.Common
         /// with a specified name or its adapter with a specified name
         /// </exception>
         /// <returns></returns>
-        public XElement GetAdapterConfiguration(string gatewayName, string adapterName)
+        public AdapterConfiguration GetAdapterConfiguration(string gatewayName, string adapterName)
         {
             var xAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format(
                 "/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']",
@@ -364,7 +368,8 @@ namespace XRouter.Common
                     gatewayName, adapterName));
             }
 
-            return xAdapter;
+            AdapterConfiguration result = XSerializer.Deserialize<AdapterConfiguration>(xAdapter);
+            return result;
         }
 
         /// <summary>
@@ -378,12 +383,11 @@ namespace XRouter.Common
         /// </remarks>
         /// <param name="gatewayName">name of the gateway</param>
         /// <param name="xAdapterConfiguration">new adapter configuration</param>
-        public void SaveAdapterConfiguration(string gatewayName, XElement xAdapterConfiguration)
+        public void SaveAdapterConfiguration(string gatewayName, AdapterConfiguration adapterConfiguration)
         {
-            string adapterName = xAdapterConfiguration.Attribute(XName.Get("name")).Value;
             var xOldAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format(
                 "/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']",
-                gatewayName, adapterName));
+                gatewayName, adapterConfiguration.AdapterName));
             if (xOldAdapter != null)
             {
                 xOldAdapter.Remove();
@@ -398,7 +402,11 @@ namespace XRouter.Common
                     "Cannot find gateway named '{0}'.", gatewayName), "gatewayName");
             }
 
-            xAdapters.Add(xAdapterConfiguration);
+            XElement xAdapter = new XElement(XName.Get("adapter"));
+            xAdapter.SetAttributeValue(XName.Get("name"), adapterConfiguration.AdapterName);
+            XSerializer.Serializer(adapterConfiguration, xAdapter);
+
+            xAdapters.Add(xAdapter);
         }
 
         /// <summary>
@@ -424,6 +432,97 @@ namespace XRouter.Common
             }
 
             xAdapter.Remove();
+        }
+
+        #endregion
+
+        #region Action types
+
+        /// <summary>
+        /// Get the information about types of all action types.
+        /// </summary>
+        /// <returns></returns>
+        public ActionType[] GetActionTypes()
+        {
+            var xActionTypes = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+                "/configuration/action-types");
+            List<ActionType> result = new List<ActionType>();
+            foreach (XElement xActionType in xActionTypes.Elements()) {
+                string name = xActionType.Attribute(XName.Get("name")).Value;
+                string assemblyAndClrType = xActionType.Attribute(XName.Get("clr-type")).Value;
+                XElement xConfigurationMetadata = xActionType.Element(XName.Get("class-metadata"));
+                ClassMetadata configurationMetadata = XSerializer.Deserialize<ClassMetadata>(xConfigurationMetadata);
+                ActionType actionType = new ActionType(name, assemblyAndClrType, configurationMetadata);
+                result.Add(actionType);
+            }
+            return result.ToArray();
+        }
+
+        /// <summary>
+        /// Gets the information about the type of an anction specified by its
+        /// name.
+        /// </summary>
+        /// <param name="name">name of the action</param>
+        /// <exception cref="System.ArgumentException">if there is no action
+        /// with such a name</exception>
+        /// <returns></returns>
+        public ActionType GetActionType(string name)
+        {
+            var xActionType = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+                string.Format("/configuration/action-types/action-type[@name='{0}']", name));
+
+            if (xActionType == null) {
+                throw new ArgumentException(string.Format("Cannot find action type named '{0}'.", name), "name");
+            }
+
+            string assemblyAndClrType = xActionType.Attribute(XName.Get("clr-type")).Value;
+            XElement xConfigurationMetadata = xActionType.Element(XName.Get("class-metadata"));
+            ClassMetadata configurationMetadata = XSerializer.Deserialize<ClassMetadata>(xConfigurationMetadata);
+            ActionType actionType = new ActionType(name, assemblyAndClrType, configurationMetadata);
+            return actionType;
+        }
+
+        /// <summary>
+        /// Adds a new type of action.
+        /// </summary>
+        /// <param name="actionType">information about action type</param>
+        public void AddActionType(ActionType actionType)
+        {
+            XElement xActionType = new XElement(XName.Get("action-type"));
+            xActionType.SetAttributeValue(XName.Get("name"), actionType.Name);
+            xActionType.SetAttributeValue(XName.Get("clr-type"), actionType.ClrTypeAndAssembly);
+
+            XElement xConfigurationMetadata = new XElement(XName.Get("class-metadata"));
+            XSerializer.Serializer(actionType.ConfigurationMetadata, xConfigurationMetadata);
+            xActionType.Add(xConfigurationMetadata);
+
+            var xActionTypes = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+                "/configuration/action-types");
+
+            // TODO: what if there is already an action with the same name?
+            // - throw an exception?
+            // - replace the CLR type quietly?
+
+            xActionTypes.Add(xActionType);
+        }
+
+        /// <summary>
+        /// Removes an existing information about an anction type with
+        /// specified by its name.
+        /// </summary>
+        /// <param name="name">name of the action type to be removed</param>
+        /// <exception cref="System.ArgumentException">if there is no action
+        /// with such a name</exception>
+        public void RemoveActionType(string name)
+        {
+            var xActionType = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+                string.Format("/configuration/action-types/action-type[@name='{0}']", name));
+
+            if (xActionType == null) {
+                throw new ArgumentException(string.Format("Cannot find action type named '{0}'.", name), "name");
+            }
+
+            xActionType.Remove();
         }
 
         #endregion

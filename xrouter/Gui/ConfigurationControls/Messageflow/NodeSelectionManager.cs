@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Controls;
 using XRouter.Common.MessageFlowConfig;
+using XRouter.Common;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow
 {
@@ -43,11 +44,14 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
 
         internal MessageflowGraphPresenter MessageflowGraphPresenter { get; set; }
 
+        internal ApplicationConfiguration AppConfig { get; private set; }
+
         private Border propertiesContainer;
 
-        public NodeSelectionManager(Border propertiesContainer)
+        public NodeSelectionManager(Border propertiesContainer, ApplicationConfiguration appConfig)
         {
             this.propertiesContainer = propertiesContainer;
+            AppConfig = appConfig;
         }
 
         public void SelectNode(NodeConfiguration selectedNode)

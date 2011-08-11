@@ -52,6 +52,10 @@
       <Project>{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}</Project>
       <Name>ObjectConfigurator</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Adapters\XRouter.Adapters.csproj">
+      <Project>{22D3C3BC-6341-4909-A5C1-CA8BE1455770}</Project>
+      <Name>XRouter.Adapters</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Broker\XRouter.Broker.csproj">
       <Project>{AF28F3BF-7340-408E-B9AC-C9CE0F17A599}</Project>
       <Name>XRouter.Broker</Name>

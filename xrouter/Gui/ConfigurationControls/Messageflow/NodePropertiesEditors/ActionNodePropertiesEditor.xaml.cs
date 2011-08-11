@@ -84,11 +84,10 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
 
         private FrameworkElement AddAction()
         {
-            ActionConfiguration action = new ActionConfiguration();
+            ActionType actionType = nodeSelectionManager.AppConfig.GetActionTypes().First();
+            ActionConfiguration action = new ActionConfiguration(actionType.Name);
             action.Configuration = new SerializableXDocument(new XDocument());
             action.Configuration.XDocument.Add(new XElement(XName.Get("objectConfig")));
-            action.PluginTypeFullName = typeof(XRouter.Processor.BuiltInActions.SendMessageAction).FullName;
-            action.ConfigurationMetadata = new ClassMetadata(typeof(XRouter.Processor.BuiltInActions.SendMessageAction));
             node.Actions.Add(action);
 
             FrameworkElement actionRepresentation = CreateActionRepresentation(action);
@@ -97,10 +96,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
 
         private FrameworkElement CreateActionRepresentation(ActionConfiguration action)
         {
-            string[] actionTypeNames = new string[] { 
-                typeof(XRouter.Processor.BuiltInActions.SendMessageAction).FullName,
-                typeof(XRouter.Processor.BuiltInActions.XsltTransformationAction).FullName
-            };
+            string[] actionTypeNames = nodeSelectionManager.AppConfig.GetActionTypes().Select(at => at.Name).ToArray();
             ComboBox uiActionType = new ComboBox {
                 Tag = action,
                 Margin = new Thickness(10, 3, 5, 3),
@@ -113,11 +109,10 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
                     Content = actionTypeName.Substring(actionTypeName.LastIndexOf('.') + 1)
                 });
             }
-            uiActionType.SelectedIndex = actionTypeNames.ToList().IndexOf(action.PluginTypeFullName);
+            uiActionType.SelectedIndex = actionTypeNames.ToList().IndexOf(action.ActionTypeName);
             uiActionType.SelectionChanged += delegate {
                 string selectedActionTypeName = (string)(((ComboBoxItem)uiActionType.SelectedItem).Tag);
-                action.PluginTypeFullName = selectedActionTypeName;
-                action.ConfigurationMetadata = new ClassMetadata(TypeUtils.GetType(selectedActionTypeName, "XRouter.Processor.dll"));
+                action.ActionTypeName = selectedActionTypeName;
                 SetActiveAction(uiActionType);
             };
             Grid.SetColumn(uiActionType, 1);
@@ -154,11 +149,12 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
                 uiActionConfigurationRegion.Visibility = Visibility.Collapsed;
                 return;
             }
-            
+
             activeAction = (ActionConfiguration)uiAction.Tag;
             uiActionConfigurationRegion.Visibility = Visibility.Visible;
 
-            activeConfigurationEditor = Configurator.CreateEditor(activeAction.ConfigurationMetadata);
+            ActionType activeActionType = nodeSelectionManager.AppConfig.GetActionType(activeAction.ActionTypeName);
+            activeConfigurationEditor = Configurator.CreateEditor(activeActionType.ConfigurationMetadata);
             activeConfigurationEditor.LoadConfiguration(activeAction.Configuration.XDocument);
             activeConfigurationEditor.ConfigurationChanged += delegate {
                 activeAction.Configuration = new SerializableXDocument(activeConfigurationEditor.SaveConfiguration());
