@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.MessageFlowConfig;
+using XRouter.Manager;
 
 namespace XRouter.Test.Common
 {
@@ -22,12 +23,12 @@ namespace XRouter.Test.Common
         /// <remarks>Relative to the test working directory.</remarks>
         public string BasePath { get; set; }
 
-        private IBrokerServiceForManagement broker;
+        private IConsoleServer consoleServer;
 
-        public ConfigurationManager(IBrokerServiceForManagement broker)
+        public ConfigurationManager(IConsoleServer consoleServer)
         {
             BasePath = @"XRouter\Test.Integration\Data\";
-            this.broker = broker;
+            this.consoleServer = consoleServer;
         }
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace XRouter.Test.Common
             MessageFlowConfiguration messageFlow,
             XElement xrm)
         {
-            ReplaceConfiguration(broker, messageFlow, xrm);
+            ReplaceConfiguration(consoleServer, messageFlow, xrm);
         }
 
         /// <summary>
@@ -46,12 +47,12 @@ namespace XRouter.Test.Common
         /// flow and XML resource storage.
         /// </summary>
         public void ReplaceConfiguration(
-            IBrokerServiceForManagement broker,
+            IConsoleServer consoleServer,
             MessageFlowConfiguration messageFlow,
             XElement xrm)
         {
             // load current configuration
-            var configuration = broker.GetConfiguration();
+            var configuration = consoleServer.GetConfiguration();
             var xConfig = configuration.Content.XDocument;
 
             // remove all message flows
@@ -68,7 +69,7 @@ namespace XRouter.Test.Common
             configuration.SaveXrmContent(xrm);
 
             // update the configuration
-            broker.ChangeConfiguration(configuration);
+            consoleServer.ChangeConfiguration(configuration);
         }
 
         /// <summary>

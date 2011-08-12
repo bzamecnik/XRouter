@@ -32,7 +32,7 @@ namespace XRouter.Test.Integration
         public BasicXRouterPipelineTests()
         {
             xrouterManager = new XRouterManager();
-            configManager = new ConfigurationManager(xrouterManager.BrokerProxy) {
+            configManager = new ConfigurationManager(xrouterManager.ConsoleServerProxy) {
                 BasePath = OriginalsPath
             };
         }

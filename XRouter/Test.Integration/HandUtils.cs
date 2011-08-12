@@ -30,7 +30,7 @@ namespace XRouter.Test.Integration
         public HandUtils()
         {
             xrouterManager = new XRouterManager();
-            configManager = new ConfigurationManager(xrouterManager.BrokerProxy)
+            configManager = new ConfigurationManager(xrouterManager.ConsoleServerProxy)
             {
                 BasePath = OriginalsPath
             };
@@ -42,7 +42,7 @@ namespace XRouter.Test.Integration
         //[Fact]
         public void LoadCurrentConfiguration()
         {
-            var configuration = xrouterManager.BrokerProxy.GetConfiguration();
+            var configuration = xrouterManager.ConsoleServerProxy.GetConfiguration();
             Console.WriteLine(configuration.Content.XDocument.ToString());
         }
 

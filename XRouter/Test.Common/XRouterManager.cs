@@ -5,6 +5,7 @@ using System.Xml;
 using DaemonNT;
 using XRouter.Common.ComponentInterfaces;
 using wcf = System.ServiceModel;
+using XRouter.Manager;
 
 namespace XRouter.Test.Common
 {
@@ -20,7 +21,7 @@ namespace XRouter.Test.Common
         /// Proxy to broker component which allows to communite with a running
         /// XRouter instance.
         /// </summary>
-        public IBrokerServiceForManagement BrokerProxy { get; private set; }
+        public IConsoleServer ConsoleServerProxy { get; private set; }
 
         private static readonly string DefaultDaemonNtConfigFile =
             @"DaemonNT.xml";
@@ -38,7 +39,7 @@ namespace XRouter.Test.Common
         {
             runner = new ProcessXRouterRunner(daemonNtConfigFile, serviceName);
             Start();
-            BrokerProxy = GetBrokerServiceProxy();
+            ConsoleServerProxy = GetConsoleServerProxy();
         }
 
         #region IDisposable Members
@@ -50,13 +51,18 @@ namespace XRouter.Test.Common
 
         #endregion
 
-        private IBrokerServiceForManagement GetBrokerServiceProxy()
+        private IConsoleServer GetConsoleServerProxy()
         {
             // NOTE: code taken from XRouter.Gui.ConfigurationManager
-            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress("net.pipe://localhost/XRouter.ServiceForManagement");
-            var binding = new wcf.NetNamedPipeBinding(wcf.NetNamedPipeSecurityMode.None) { MaxReceivedMessageSize = int.MaxValue };
-            binding.ReaderQuotas = new XmlDictionaryReaderQuotas() { MaxBytesPerRead = int.MaxValue, MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue };
-            wcf.ChannelFactory<IBrokerServiceForManagement> channelFactory = new wcf.ChannelFactory<IBrokerServiceForManagement>(binding, endpointAddress);
+            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress("http://localhost:9090/ConsoleService/ConsoleServer");
+            // set binding (WebService - SOAP/HTTP)
+            wcf.WSHttpBinding binding = new wcf.WSHttpBinding();
+            binding.MaxReceivedMessageSize = int.MaxValue;
+            binding.ReaderQuotas = new XmlDictionaryReaderQuotas() {
+                MaxBytesPerRead = int.MaxValue,
+                MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue
+            };
+            wcf.ChannelFactory<IConsoleServer> channelFactory = new wcf.ChannelFactory<IConsoleServer>(binding, endpointAddress);
             return channelFactory.CreateChannel();
         }
 
