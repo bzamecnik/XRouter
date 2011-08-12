@@ -112,19 +112,21 @@ namespace SimpleDiagrammer
             #endregion
 
             #region Compute location on canvas from logical location
-            double minX = Nodes.Min(n => n.Location.X);
-            double minY = Nodes.Min(n => n.Location.Y);
-            double maxX = Nodes.Max(n => n.Location.X + n.Size.Width);
-            double maxY = Nodes.Max(n => n.Location.Y + n.Size.Height);
-            double maxAbsX = Math.Max(Math.Abs(minX), Math.Abs(maxX));
-            double maxAbsY = Math.Max(Math.Abs(minY), Math.Abs(maxY));
-            uiCanvas.Width = maxAbsX * 2;
-            uiCanvas.Height = maxAbsY * 2;
-            CanvasLocationOffset = new Vector(maxAbsX, maxAbsY);
-            foreach (Node node in Nodes) {
-                Point canvasLocation = node.Location + CanvasLocationOffset;
-                Canvas.SetLeft(node.UIFrame, canvasLocation.X);
-                Canvas.SetTop(node.UIFrame, canvasLocation.Y);
+            if (Nodes.Count > 0) {
+                double minX = Nodes.Min(n => n.Location.X);
+                double minY = Nodes.Min(n => n.Location.Y);
+                double maxX = Nodes.Max(n => n.Location.X + n.Size.Width);
+                double maxY = Nodes.Max(n => n.Location.Y + n.Size.Height);
+                double maxAbsX = Math.Max(Math.Abs(minX), Math.Abs(maxX));
+                double maxAbsY = Math.Max(Math.Abs(minY), Math.Abs(maxY));
+                uiCanvas.Width = maxAbsX * 2;
+                uiCanvas.Height = maxAbsY * 2;
+                CanvasLocationOffset = new Vector(maxAbsX, maxAbsY);
+                foreach (Node node in Nodes) {
+                    Point canvasLocation = node.Location + CanvasLocationOffset;
+                    Canvas.SetLeft(node.UIFrame, canvasLocation.X);
+                    Canvas.SetTop(node.UIFrame, canvasLocation.Y);
+                }
             }
             #endregion
 
