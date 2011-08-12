@@ -6,7 +6,7 @@ using System.Threading;
 using System.ServiceProcess;
 using DaemonNT.Logging;
 
-namespace XRouterManager
+namespace XRouter.Manager
 {
     /// <summary>
     /// Reprezentuje jednoduchy service watcher, ktery pravidelne sleduje status sluzby. 

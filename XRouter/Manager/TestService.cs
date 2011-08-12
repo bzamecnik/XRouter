@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using DaemonNT;
 
-namespace XRouterManager
+namespace XRouter.Manager
 {
     /// <summary>
     /// Tohle tady je jen pro testovani...

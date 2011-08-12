@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace XRouterManager
+namespace XRouter.Manager
 {
     /// <summary>
     /// Objekt obsahuje informace potrebne pro pristup k persistentnim zdrojum. 

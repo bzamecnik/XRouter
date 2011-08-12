@@ -6,7 +6,7 @@ using System.Threading;
 using DaemonNT.Logging;
 using XRouter.Common;
 
-namespace XRouterManager
+namespace XRouter.Manager
 {
     /// <summary>
     /// Reprezentuje jednoduchy server, ktery posila e-mailove reporty. Report je odeslan 

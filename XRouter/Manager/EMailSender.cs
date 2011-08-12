@@ -5,7 +5,7 @@ using System.Text;
 using System.Net.Mail;
 using DaemonNT.Logging;
 
-namespace XRouterManager
+namespace XRouter.Manager
 {
     /// <summary>
     /// Reprezentuje odesilatko SMTP e-mailu.

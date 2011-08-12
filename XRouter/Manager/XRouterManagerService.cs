@@ -5,7 +5,7 @@ using System.Text;
 using DaemonNT;
 using DaemonNT.Logging;
 
-namespace XRouterManager
+namespace XRouter.Manager
 {
     /// <summary>
     /// Reprezentace sluzby XRouterManager, ktera poskytuje podpurne servery pro monitoring a management 

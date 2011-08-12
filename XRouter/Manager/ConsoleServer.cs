@@ -12,7 +12,7 @@ using System.Xml.Linq;
 using XRouter.Common;
 using XRouter.Common.Persistence;
 
-namespace XRouterManager
+namespace XRouter.Manager
 {
     /// <summary>
     /// Specfikace rozhrani WCF, ktera poskytuje sluzby XRouter console (GUI).
