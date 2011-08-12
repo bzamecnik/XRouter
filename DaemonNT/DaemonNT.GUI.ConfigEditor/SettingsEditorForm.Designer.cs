@@ -49,7 +49,6 @@
             this.cancelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addSectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addSubsectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editSectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeSectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.parameterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -265,7 +264,6 @@
             // 
             this.sectionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addSectionToolStripMenuItem,
-            this.addSubsectionToolStripMenuItem,
             this.editSectionToolStripMenuItem,
             this.removeSectionToolStripMenuItem});
             this.sectionToolStripMenuItem.Name = "sectionToolStripMenuItem";
@@ -275,25 +273,21 @@
             // addSectionToolStripMenuItem
             // 
             this.addSectionToolStripMenuItem.Name = "addSectionToolStripMenuItem";
-            this.addSectionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.addSectionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.addSectionToolStripMenuItem.Text = "&Add section";
-            // 
-            // addSubsectionToolStripMenuItem
-            // 
-            this.addSubsectionToolStripMenuItem.Name = "addSubsectionToolStripMenuItem";
-            this.addSubsectionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.addSubsectionToolStripMenuItem.Text = "Add &sub-section";
+            this.addSectionToolStripMenuItem.Click += new System.EventHandler(this.addSectionToolStripMenuItem_Click);
             // 
             // editSectionToolStripMenuItem
             // 
             this.editSectionToolStripMenuItem.Name = "editSectionToolStripMenuItem";
-            this.editSectionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.editSectionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.editSectionToolStripMenuItem.Text = "&Edit";
+            this.editSectionToolStripMenuItem.Click += new System.EventHandler(this.editSectionToolStripMenuItem_Click);
             // 
             // removeSectionToolStripMenuItem
             // 
             this.removeSectionToolStripMenuItem.Name = "removeSectionToolStripMenuItem";
-            this.removeSectionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.removeSectionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.removeSectionToolStripMenuItem.Text = "&Remove";
             this.removeSectionToolStripMenuItem.Click += new System.EventHandler(this.removeSectionToolStripMenuItem_Click);
             // 
@@ -317,7 +311,7 @@
             // editParamToolStripMenuItem
             // 
             this.editParamToolStripMenuItem.Name = "editParamToolStripMenuItem";
-            this.editParamToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.editParamToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.editParamToolStripMenuItem.Text = "&Edit";
             this.editParamToolStripMenuItem.Click += new System.EventHandler(this.editParamToolStripMenuItem_Click);
             // 
@@ -326,6 +320,7 @@
             this.removeParamToolStripMenuItem.Name = "removeParamToolStripMenuItem";
             this.removeParamToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.removeParamToolStripMenuItem.Text = "&Remove";
+            this.removeParamToolStripMenuItem.Click += new System.EventHandler(this.removeParamToolStripMenuItem_Click);
             // 
             // SettingsEditorForm
             // 
@@ -341,7 +336,6 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "SettingsEditorForm";
             this.Text = "Settings";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingsEditorForm_FormClosing);
             this.Load += new System.EventHandler(this.SettingsEditorForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -387,6 +381,5 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox sectionNameTextBox;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ToolStripMenuItem addSubsectionToolStripMenuItem;
     }
 }

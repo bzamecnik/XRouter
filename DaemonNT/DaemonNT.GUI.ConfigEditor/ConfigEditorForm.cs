@@ -66,7 +66,7 @@ namespace DaemonNT.GUI.ConfigEditor
         private void editServiceSettingsButton_Click(object sender, EventArgs e)
         {
             settingsEditorForm.Settings = DeepClone(currentService.Settings);
-            if (settingsEditorForm.ShowDialog() != DialogResult.OK)
+            if (settingsEditorForm.ShowDialog() == DialogResult.OK)
             {
                 currentService.Settings = DeepClone(settingsEditorForm.Settings);
             }
@@ -75,7 +75,7 @@ namespace DaemonNT.GUI.ConfigEditor
         private void editStorageSettingsButton_Click(object sender, EventArgs e)
         {
             settingsEditorForm.Settings = DeepClone(currentTraceLoggerStorage.Settings);
-            if (settingsEditorForm.ShowDialog() != DialogResult.OK)
+            if (settingsEditorForm.ShowDialog() == DialogResult.OK)
             {
                 currentTraceLoggerStorage.Settings = DeepClone(settingsEditorForm.Settings);
             }
@@ -149,13 +149,11 @@ namespace DaemonNT.GUI.ConfigEditor
 
             currentServiceName = null;
             currentService = new ServiceSettings();
+            servicesListBox.SelectedIndex = -1;
             if (configuration.Services.Count > 0)
             {
                 // NOTE: this fills the service settings panel
-                //servicesListBox.SelectedIndex = 0;
-                currentServiceName = serviceNames[0];
-                currentService = configuration.Services[0];
-                FillServiceToGUI(currentService);
+                servicesListBox.SelectedIndex = 0;
             }
 
             xmlSourceTextBox.Text = xmlConfiguration.ToString();
@@ -195,11 +193,6 @@ namespace DaemonNT.GUI.ConfigEditor
                 {
                     // NOTE: this fills the service settings panel
                     traceLoggerStoragesListBox.SelectedIndex = 0;
-
-                    //currentTraceLoggerStorageName = traceLoggerStorageNames[0];
-                    //currentTraceLoggerStorage = traceLogger.Storages[0];
-                    //RefreshTraceLogStorage();
-                    //FillTraceLoggerStorageToGUI(currentTraceLoggerStorage);
                 }
                 currentTraceLoggerStorageName = (string)traceLoggerStoragesListBox.SelectedItem;
             }
@@ -476,6 +469,10 @@ namespace DaemonNT.GUI.ConfigEditor
             currentServiceName = string.Empty;
 
             servicesListBox.SelectedIndex = -1;
+            if (serviceNames.Count() > 0)
+            {
+                servicesListBox.SelectedIndex = 0;
+            }
             serviceGroupBox.Enabled = false;
         }
 

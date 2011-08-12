@@ -47,12 +47,15 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.servicesListBox = new System.Windows.Forms.ListBox();
             this.serviceGroupBox = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.editServiceSettingsButton = new System.Windows.Forms.Button();
             this.traceLoggerGroupBox = new System.Windows.Forms.GroupBox();
             this.editTraceLoggerStorageButton = new System.Windows.Forms.Button();
             this.removeTraceLoggerStorageButton = new System.Windows.Forms.Button();
             this.addTraceLoggerStorageButton = new System.Windows.Forms.Button();
             this.traceLoggerStoragesListBox = new System.Windows.Forms.ListBox();
             this.traceLoggerStorageGroupBox = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.editStorageSettingsButton = new System.Windows.Forms.Button();
             this.traceLoggerStorageClassTextBox = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
@@ -63,8 +66,6 @@
             this.label11 = new System.Windows.Forms.Label();
             this.traceLoggerBufferSizeNumeric = new System.Windows.Forms.NumericUpDown();
             this.label10 = new System.Windows.Forms.Label();
-            this.settingsGroupBox = new System.Windows.Forms.GroupBox();
-            this.editServiceSettingsButton = new System.Windows.Forms.Button();
             this.installerGroupBox = new System.Windows.Forms.GroupBox();
             this.editRequiredServiceButton = new System.Windows.Forms.Button();
             this.removeRequiredServiceButton = new System.Windows.Forms.Button();
@@ -103,7 +104,6 @@
             this.traceLoggerGroupBox.SuspendLayout();
             this.traceLoggerStorageGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.traceLoggerBufferSizeNumeric)).BeginInit();
-            this.settingsGroupBox.SuspendLayout();
             this.installerGroupBox.SuspendLayout();
             this.xmlTabPage.SuspendLayout();
             this.SuspendLayout();
@@ -279,8 +279,9 @@
             this.serviceGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.serviceGroupBox.Controls.Add(this.label5);
+            this.serviceGroupBox.Controls.Add(this.editServiceSettingsButton);
             this.serviceGroupBox.Controls.Add(this.traceLoggerGroupBox);
-            this.serviceGroupBox.Controls.Add(this.settingsGroupBox);
             this.serviceGroupBox.Controls.Add(this.installerGroupBox);
             this.serviceGroupBox.Controls.Add(this.serviceTypeAssemblyTextBox);
             this.serviceGroupBox.Controls.Add(this.serviceTypeClassTextBox);
@@ -296,6 +297,25 @@
             this.serviceGroupBox.TabStop = false;
             this.serviceGroupBox.Text = "Service";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 102);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(48, 13);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "Settings:";
+            // 
+            // editServiceSettingsButton
+            // 
+            this.editServiceSettingsButton.Location = new System.Drawing.Point(88, 97);
+            this.editServiceSettingsButton.Name = "editServiceSettingsButton";
+            this.editServiceSettingsButton.Size = new System.Drawing.Size(112, 23);
+            this.editServiceSettingsButton.TabIndex = 9;
+            this.editServiceSettingsButton.Text = "Edit service settings";
+            this.editServiceSettingsButton.UseVisualStyleBackColor = true;
+            this.editServiceSettingsButton.Click += new System.EventHandler(this.editServiceSettingsButton_Click);
+            // 
             // traceLoggerGroupBox
             // 
             this.traceLoggerGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -308,16 +328,16 @@
             this.traceLoggerGroupBox.Controls.Add(this.label11);
             this.traceLoggerGroupBox.Controls.Add(this.traceLoggerBufferSizeNumeric);
             this.traceLoggerGroupBox.Controls.Add(this.label10);
-            this.traceLoggerGroupBox.Location = new System.Drawing.Point(6, 313);
+            this.traceLoggerGroupBox.Location = new System.Drawing.Point(6, 295);
             this.traceLoggerGroupBox.Name = "traceLoggerGroupBox";
-            this.traceLoggerGroupBox.Size = new System.Drawing.Size(567, 160);
+            this.traceLoggerGroupBox.Size = new System.Drawing.Size(567, 169);
             this.traceLoggerGroupBox.TabIndex = 8;
             this.traceLoggerGroupBox.TabStop = false;
             this.traceLoggerGroupBox.Text = "Trace logger";
             // 
             // editTraceLoggerStorageButton
             // 
-            this.editTraceLoggerStorageButton.Location = new System.Drawing.Point(6, 93);
+            this.editTraceLoggerStorageButton.Location = new System.Drawing.Point(6, 95);
             this.editTraceLoggerStorageButton.Name = "editTraceLoggerStorageButton";
             this.editTraceLoggerStorageButton.Size = new System.Drawing.Size(59, 23);
             this.editTraceLoggerStorageButton.TabIndex = 8;
@@ -327,7 +347,7 @@
             // 
             // removeTraceLoggerStorageButton
             // 
-            this.removeTraceLoggerStorageButton.Location = new System.Drawing.Point(6, 122);
+            this.removeTraceLoggerStorageButton.Location = new System.Drawing.Point(6, 124);
             this.removeTraceLoggerStorageButton.Name = "removeTraceLoggerStorageButton";
             this.removeTraceLoggerStorageButton.Size = new System.Drawing.Size(59, 23);
             this.removeTraceLoggerStorageButton.TabIndex = 7;
@@ -350,7 +370,7 @@
             this.traceLoggerStoragesListBox.FormattingEnabled = true;
             this.traceLoggerStoragesListBox.Location = new System.Drawing.Point(71, 50);
             this.traceLoggerStoragesListBox.Name = "traceLoggerStoragesListBox";
-            this.traceLoggerStoragesListBox.Size = new System.Drawing.Size(172, 95);
+            this.traceLoggerStoragesListBox.Size = new System.Drawing.Size(172, 108);
             this.traceLoggerStoragesListBox.TabIndex = 5;
             this.traceLoggerStoragesListBox.SelectedIndexChanged += new System.EventHandler(this.traceLoggerStoragesListBox_SelectedIndexChanged);
             // 
@@ -358,6 +378,7 @@
             // 
             this.traceLoggerStorageGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.traceLoggerStorageGroupBox.Controls.Add(this.label4);
             this.traceLoggerStorageGroupBox.Controls.Add(this.editStorageSettingsButton);
             this.traceLoggerStorageGroupBox.Controls.Add(this.traceLoggerStorageClassTextBox);
             this.traceLoggerStorageGroupBox.Controls.Add(this.label12);
@@ -368,14 +389,23 @@
             this.traceLoggerStorageGroupBox.Enabled = false;
             this.traceLoggerStorageGroupBox.Location = new System.Drawing.Point(249, 19);
             this.traceLoggerStorageGroupBox.Name = "traceLoggerStorageGroupBox";
-            this.traceLoggerStorageGroupBox.Size = new System.Drawing.Size(312, 135);
+            this.traceLoggerStorageGroupBox.Size = new System.Drawing.Size(312, 139);
             this.traceLoggerStorageGroupBox.TabIndex = 4;
             this.traceLoggerStorageGroupBox.TabStop = false;
             this.traceLoggerStorageGroupBox.Text = "Storage";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(10, 102);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(48, 13);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Settings:";
+            // 
             // editStorageSettingsButton
             // 
-            this.editStorageSettingsButton.Location = new System.Drawing.Point(6, 97);
+            this.editStorageSettingsButton.Location = new System.Drawing.Point(72, 97);
             this.editStorageSettingsButton.Name = "editStorageSettingsButton";
             this.editStorageSettingsButton.Size = new System.Drawing.Size(112, 23);
             this.editStorageSettingsButton.TabIndex = 0;
@@ -471,28 +501,6 @@
             this.label10.TabIndex = 1;
             this.label10.Text = "Buffer size:";
             // 
-            // settingsGroupBox
-            // 
-            this.settingsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.settingsGroupBox.Controls.Add(this.editServiceSettingsButton);
-            this.settingsGroupBox.Location = new System.Drawing.Point(6, 252);
-            this.settingsGroupBox.Name = "settingsGroupBox";
-            this.settingsGroupBox.Size = new System.Drawing.Size(567, 55);
-            this.settingsGroupBox.TabIndex = 7;
-            this.settingsGroupBox.TabStop = false;
-            this.settingsGroupBox.Text = "Settings";
-            // 
-            // editServiceSettingsButton
-            // 
-            this.editServiceSettingsButton.Location = new System.Drawing.Point(9, 19);
-            this.editServiceSettingsButton.Name = "editServiceSettingsButton";
-            this.editServiceSettingsButton.Size = new System.Drawing.Size(112, 23);
-            this.editServiceSettingsButton.TabIndex = 0;
-            this.editServiceSettingsButton.Text = "Edit service settings";
-            this.editServiceSettingsButton.UseVisualStyleBackColor = true;
-            this.editServiceSettingsButton.Click += new System.EventHandler(this.editServiceSettingsButton_Click);
-            // 
             // installerGroupBox
             // 
             this.installerGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -512,18 +520,18 @@
             this.installerGroupBox.Controls.Add(this.usernameLabel);
             this.installerGroupBox.Controls.Add(this.installerDescriptionTextBox);
             this.installerGroupBox.Controls.Add(this.descriptionLabel);
-            this.installerGroupBox.Location = new System.Drawing.Point(7, 97);
+            this.installerGroupBox.Location = new System.Drawing.Point(7, 126);
             this.installerGroupBox.Name = "installerGroupBox";
-            this.installerGroupBox.Size = new System.Drawing.Size(566, 148);
+            this.installerGroupBox.Size = new System.Drawing.Size(566, 163);
             this.installerGroupBox.TabIndex = 6;
             this.installerGroupBox.TabStop = false;
             this.installerGroupBox.Text = "Installer";
             // 
             // editRequiredServiceButton
             // 
-            this.editRequiredServiceButton.Location = new System.Drawing.Point(514, 64);
+            this.editRequiredServiceButton.Location = new System.Drawing.Point(233, 91);
             this.editRequiredServiceButton.Name = "editRequiredServiceButton";
-            this.editRequiredServiceButton.Size = new System.Drawing.Size(38, 23);
+            this.editRequiredServiceButton.Size = new System.Drawing.Size(61, 23);
             this.editRequiredServiceButton.TabIndex = 5;
             this.editRequiredServiceButton.Text = "Edit";
             this.editRequiredServiceButton.UseVisualStyleBackColor = true;
@@ -531,9 +539,9 @@
             // 
             // removeRequiredServiceButton
             // 
-            this.removeRequiredServiceButton.Location = new System.Drawing.Point(470, 90);
+            this.removeRequiredServiceButton.Location = new System.Drawing.Point(233, 123);
             this.removeRequiredServiceButton.Name = "removeRequiredServiceButton";
-            this.removeRequiredServiceButton.Size = new System.Drawing.Size(82, 23);
+            this.removeRequiredServiceButton.Size = new System.Drawing.Size(61, 23);
             this.removeRequiredServiceButton.TabIndex = 4;
             this.removeRequiredServiceButton.Text = "Remove";
             this.removeRequiredServiceButton.UseVisualStyleBackColor = true;
@@ -541,9 +549,9 @@
             // 
             // addRequiredServiceButton
             // 
-            this.addRequiredServiceButton.Location = new System.Drawing.Point(470, 64);
+            this.addRequiredServiceButton.Location = new System.Drawing.Point(233, 60);
             this.addRequiredServiceButton.Name = "addRequiredServiceButton";
-            this.addRequiredServiceButton.Size = new System.Drawing.Size(38, 23);
+            this.addRequiredServiceButton.Size = new System.Drawing.Size(61, 23);
             this.addRequiredServiceButton.TabIndex = 4;
             this.addRequiredServiceButton.Text = "Add";
             this.addRequiredServiceButton.UseVisualStyleBackColor = true;
@@ -552,9 +560,9 @@
             // installerRequiredServicesListBox
             // 
             this.installerRequiredServicesListBox.FormattingEnabled = true;
-            this.installerRequiredServicesListBox.Location = new System.Drawing.Point(237, 65);
+            this.installerRequiredServicesListBox.Location = new System.Drawing.Point(300, 58);
             this.installerRequiredServicesListBox.Name = "installerRequiredServicesListBox";
-            this.installerRequiredServicesListBox.Size = new System.Drawing.Size(227, 69);
+            this.installerRequiredServicesListBox.Size = new System.Drawing.Size(260, 95);
             this.installerRequiredServicesListBox.Sorted = true;
             this.installerRequiredServicesListBox.TabIndex = 3;
             this.installerRequiredServicesListBox.DoubleClick += new System.EventHandler(this.installerRequiredServicesListBox_DoubleClick);
@@ -777,7 +785,6 @@
             this.traceLoggerStorageGroupBox.ResumeLayout(false);
             this.traceLoggerStorageGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.traceLoggerBufferSizeNumeric)).EndInit();
-            this.settingsGroupBox.ResumeLayout(false);
             this.installerGroupBox.ResumeLayout(false);
             this.installerGroupBox.PerformLayout();
             this.xmlTabPage.ResumeLayout(false);
@@ -808,7 +815,6 @@
         private System.Windows.Forms.GroupBox installerGroupBox;
         private System.Windows.Forms.TextBox serviceTypeAssemblyTextBox;
         private System.Windows.Forms.TextBox serviceTypeClassTextBox;
-        private System.Windows.Forms.GroupBox settingsGroupBox;
         private System.Windows.Forms.ComboBox installerAccountComboBox;
         private System.Windows.Forms.Label accountLabel;
         private System.Windows.Forms.ComboBox installerStartTypeComboBox;
@@ -824,7 +830,6 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.NumericUpDown traceLoggerBufferSizeNumeric;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Button editServiceSettingsButton;
         private System.Windows.Forms.GroupBox traceLoggerStorageGroupBox;
         private System.Windows.Forms.Button editStorageSettingsButton;
         private System.Windows.Forms.TextBox traceLoggerStorageClassTextBox;
@@ -852,6 +857,9 @@
         private System.Windows.Forms.Button editTraceLoggerStorageButton;
         private System.Windows.Forms.Button removeTraceLoggerStorageButton;
         private System.Windows.Forms.Button addTraceLoggerStorageButton;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button editServiceSettingsButton;
+        private System.Windows.Forms.Label label4;
     }
 }
 
