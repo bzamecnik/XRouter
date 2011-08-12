@@ -20,6 +20,7 @@ using System.Threading;
 using XRouter.Gui.Utils;
 using Microsoft.Win32;
 using System.IO;
+using XRouter.Manager;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow
 {
@@ -33,7 +34,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             get { throw new NotImplementedException(); }
         }
 
-        private IBrokerServiceForManagement brokerService;
+        private IConsoleServer consoleServer;
         private ConfigurationTree configTreeNode;
         private ApplicationConfiguration appConfig;
 
@@ -48,10 +49,10 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             InitializeComponent();
         }
 
-        public void Initialize(ApplicationConfiguration appConfig, IBrokerServiceForManagement brokerService, ConfigurationTree configTreeNode)
+        public void Initialize(ApplicationConfiguration appConfig, IConsoleServer consoleServer, ConfigurationTree configTreeNode)
         {
             this.appConfig = appConfig;
-            this.brokerService = brokerService;
+            this.consoleServer = consoleServer;
             this.configTreeNode = configTreeNode;
 
             NodeSelectionManager = new NodeSelectionManager(uiNodePropertiesContainer, appConfig);

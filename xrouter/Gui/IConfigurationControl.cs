@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml.Linq;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common;
+using XRouter.Manager;
 
 namespace XRouter.Gui
 {
@@ -12,7 +13,7 @@ namespace XRouter.Gui
 	{
         bool IsDirty { get; }
 
-		void Initialize(ApplicationConfiguration appConfig, IBrokerServiceForManagement brokerService, ConfigurationTree configTreeNode);
+        void Initialize(ApplicationConfiguration appConfig, IConsoleServer consoleServer, ConfigurationTree configTreeNode);
 
         void Save();
 		void Clear();

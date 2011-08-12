@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Xml.Linq;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common;
+using XRouter.Manager;
 
 namespace XRouter.Gui.ConfigurationControls.Dispatcher
 {
@@ -25,7 +26,7 @@ namespace XRouter.Gui.ConfigurationControls.Dispatcher
 		private bool isdirty = false;
         private XElement oldConfiguration;
 
-        private IBrokerServiceForManagement brokerService;
+        private IConsoleServer consoleServer;
         private ConfigurationTree configTreeNode;
         private ApplicationConfiguration appConfig;
 
@@ -41,10 +42,10 @@ namespace XRouter.Gui.ConfigurationControls.Dispatcher
 			get { return isdirty; }
 		}
 
-        public void Initialize(ApplicationConfiguration appConfig, IBrokerServiceForManagement brokerService, ConfigurationTree configTreeNode)
+        public void Initialize(ApplicationConfiguration appConfig, IConsoleServer consoleServer, ConfigurationTree configTreeNode)
 		{
             this.appConfig = appConfig;
-            this.brokerService = brokerService;
+            this.consoleServer = consoleServer;
             this.configTreeNode = configTreeNode;
             this.oldConfiguration = configTreeNode.XContent;
             this.DataContext = configTreeNode.XContent;

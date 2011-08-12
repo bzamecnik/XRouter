@@ -16,6 +16,7 @@ using XRouter.Common.Utils;
 using ObjectConfigurator;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common;
+using XRouter.Manager;
 
 namespace XRouter.Gui.ConfigurationControls.Adapter
 {
@@ -34,7 +35,7 @@ namespace XRouter.Gui.ConfigurationControls.Adapter
         private XDocument originalObjectConfig;
         private string adapterName;
 
-        private IBrokerServiceForManagement brokerService;
+        private IConsoleServer consoleServer;
         private ConfigurationTree configTreeNode;
         private ApplicationConfiguration appConfig;
 
@@ -43,10 +44,10 @@ namespace XRouter.Gui.ConfigurationControls.Adapter
             InitializeComponent();
         }
 
-        public void Initialize(ApplicationConfiguration appConfig, IBrokerServiceForManagement brokerService, ConfigurationTree configTreeNode)
+        public void Initialize(ApplicationConfiguration appConfig, IConsoleServer consoleServer, ConfigurationTree configTreeNode)
 		{
             this.appConfig = appConfig;
-            this.brokerService = brokerService;
+            this.consoleServer = consoleServer;
             this.configTreeNode = configTreeNode;
             this.originalConfig = configTreeNode.XContent;
 

@@ -7,6 +7,7 @@ using XRouter.Common.ComponentInterfaces;
 using System.Xml.Linq;
 using wcf = System.ServiceModel;
 using System.Xml;
+using XRouter.Manager;
 
 namespace XRouter.Gui
 {
@@ -33,20 +34,27 @@ namespace XRouter.Gui
 	public static class ConfigurationManager
 	{
         public static ApplicationConfiguration ApplicationConfiguration { get; private set; }
-        public static IBrokerServiceForManagement BrokerService { get; private set; }
+        public static IConsoleServer ConsoleServer { get; private set; }
 
 		public static ConfigurationTree LoadConfigurationTree()
         {
             #region Get proxy for remote BrokerService
-            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress("net.pipe://localhost/XRouter.ServiceForManagement");
-            var binding = new wcf.NetNamedPipeBinding(wcf.NetNamedPipeSecurityMode.None) { MaxReceivedMessageSize = int.MaxValue };
-            binding.ReaderQuotas = new XmlDictionaryReaderQuotas() { MaxBytesPerRead = int.MaxValue, MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue };
-            wcf.ChannelFactory<IBrokerServiceForManagement> channelFactory = new wcf.ChannelFactory<IBrokerServiceForManagement>(binding, endpointAddress);
-            BrokerService = channelFactory.CreateChannel();
+            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress("http://localhost:9090/ConsoleService/ConsoleServer");
+
+            // set binding (WebService - SOAP/HTTP)
+            wcf.WSHttpBinding binding = new wcf.WSHttpBinding();
+            binding.MaxReceivedMessageSize = int.MaxValue;
+            binding.ReaderQuotas = new XmlDictionaryReaderQuotas() {
+                MaxBytesPerRead = int.MaxValue,
+                MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue
+            };
+
+            wcf.ChannelFactory<IConsoleServer> channelFactory = new wcf.ChannelFactory<IConsoleServer>(binding, endpointAddress);
+            ConsoleServer = channelFactory.CreateChannel();
             #endregion
 
 
-            ApplicationConfiguration = BrokerService.GetConfiguration();
+            ApplicationConfiguration = ConsoleServer.GetConfiguration();
             var gws = ApplicationConfiguration.GetComponentElements(Common.ComponentType.Gateway);
 
 			IConfigurationControl adaptercontrol = (IConfigurationControl)ConfigurationControlManager.LoadUserControlFormFile("XRouter.Gui.exe", "XRouter.Gui.ConfigurationControls.Adapter.AdapterConfigurationControl");

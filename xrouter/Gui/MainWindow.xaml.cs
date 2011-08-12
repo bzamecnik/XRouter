@@ -43,7 +43,7 @@ namespace XRouter.Gui
             {
                 string binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                 string daemonNTPath = System.IO.Path.Combine(binPath, @"DaemonNT.exe");
-                var serverProcesss = new System.Diagnostics.ProcessStartInfo(daemonNTPath, "debug xrouter");
+                var serverProcesss = new System.Diagnostics.ProcessStartInfo(daemonNTPath, "debug xroutermanager");
                 serverProcesss.WorkingDirectory = System.IO.Path.GetDirectoryName(daemonNTPath);
                 System.Diagnostics.Process.Start(serverProcesss);
                 System.Threading.Thread.Sleep(2000);
@@ -69,7 +69,7 @@ namespace XRouter.Gui
 				currentConfigurationControl = treeViewItem.Control;
 				panelConfiguration.Children.Add(currentConfigurationControl as UserControl);
 				// Tady se preda aktualni konfigurace v XML
-                currentConfigurationControl.Initialize(ConfigurationManager.ApplicationConfiguration, ConfigurationManager.BrokerService, treeViewItem);
+                currentConfigurationControl.Initialize(ConfigurationManager.ApplicationConfiguration, ConfigurationManager.ConsoleServer, treeViewItem);
 			}
 		}
 
@@ -77,7 +77,7 @@ namespace XRouter.Gui
 		{
             // TODO: fix a NullReferenceException
 			currentConfigurationControl.Save();
-            ConfigurationManager.BrokerService.ChangeConfiguration(ConfigurationManager.ApplicationConfiguration);
+            ConfigurationManager.ConsoleServer.ChangeConfiguration(ConfigurationManager.ApplicationConfiguration);
 		}
 
 
