@@ -32,14 +32,15 @@ namespace DaemonNT.GUI.ConfigEditor
         string currentServiceName = string.Empty;
         ServiceSettings currentService = new ServiceSettings();
         string currentTraceLoggerStorageName = string.Empty;
-        TraceLoggerStorageSettings currentTraceLoggerStorage = new TraceLoggerStorageSettings();
+        TraceLoggerStorageSettings currentTraceLoggerStorage = null;
 
         List<string> serviceNames = new List<string>();
         List<string> installerRequiredServiceNames = new List<string>();
         List<string> traceLoggerStorageNames = new List<string>();
 
         SettingsEditorForm settingsEditorForm = new SettingsEditorForm();
-        ServiceNameForm serviceNameForm = new ServiceNameForm();
+        UniqueNameForm serviceNameForm = new UniqueNameForm("Service name", "Enter service name (must be unique):");
+        UniqueNameForm storageNameForm = new UniqueNameForm("Storage name", "Enter storage name (must be unique):");
 
         public ConfigEditorForm()
         {
@@ -181,20 +182,24 @@ namespace DaemonNT.GUI.ConfigEditor
 
             TraceLoggerSettings traceLogger = service.TraceLoggerSettings;
             currentTraceLoggerStorageName = null;
-            currentTraceLoggerStorage = new TraceLoggerStorageSettings();
+            currentTraceLoggerStorage = null;
             if (traceLogger != null)
             {
                 traceLoggerBufferSizeNumeric.Value = traceLogger.BufferSize;
                 traceLoggerStorageNames.Clear();
                 traceLoggerStorageNames.AddRange(traceLogger.Storages.Select((storage) => storage.Name));
                 RefreshListBox(traceLoggerStoragesListBox);
+                traceLoggerStoragesListBox.SelectedIndex = -1;
+                traceLoggerStorageGroupBox.Enabled = false;
                 if (traceLogger.Storages.Count > 0)
                 {
                     // NOTE: this fills the service settings panel
-                    //traceLoggerStoragesListBox.SelectedIndex = 0;
-                    currentTraceLoggerStorageName = traceLoggerStorageNames[0];
-                    currentTraceLoggerStorage = traceLogger.Storages[0];
-                    RefreshTraceLogStorage();
+                    traceLoggerStoragesListBox.SelectedIndex = 0;
+
+                    //currentTraceLoggerStorageName = traceLoggerStorageNames[0];
+                    //currentTraceLoggerStorage = traceLogger.Storages[0];
+                    //RefreshTraceLogStorage();
+                    //FillTraceLoggerStorageToGUI(currentTraceLoggerStorage);
                 }
                 currentTraceLoggerStorageName = (string)traceLoggerStoragesListBox.SelectedItem;
             }
@@ -243,6 +248,11 @@ namespace DaemonNT.GUI.ConfigEditor
 
         private void FillTraceLoggerStorageToGUI(TraceLoggerStorageSettings storage)
         {
+            traceLoggerStorageGroupBox.Enabled = storage != null;
+            if (storage == null)
+            {
+                storage = new TraceLoggerStorageSettings();
+            }
             traceLoggerStorageNameTextBox.Text = storage.Name;
             traceLoggerStorageClassTextBox.Text = storage.TypeClass;
             traceLoggerStorageAssemblyTextBox.Text = storage.TypeAssembly;
@@ -250,9 +260,12 @@ namespace DaemonNT.GUI.ConfigEditor
 
         private void FillTraceLoggerStorageFromGUI()
         {
-            currentTraceLoggerStorage.Name = traceLoggerStorageNameTextBox.Text;
-            currentTraceLoggerStorage.TypeClass = traceLoggerStorageClassTextBox.Text;
-            currentTraceLoggerStorage.TypeAssembly = traceLoggerStorageAssemblyTextBox.Text;
+            if (currentTraceLoggerStorage != null)
+            {
+                currentTraceLoggerStorage.Name = traceLoggerStorageNameTextBox.Text;
+                currentTraceLoggerStorage.TypeClass = traceLoggerStorageClassTextBox.Text;
+                currentTraceLoggerStorage.TypeAssembly = traceLoggerStorageAssemblyTextBox.Text;
+            }
         }
 
 
@@ -268,7 +281,8 @@ namespace DaemonNT.GUI.ConfigEditor
             installerUsernameTextBox.Text = string.Empty;
             installerPasswordTextBox.Text = string.Empty;
 
-            FillTraceLoggerStorageToGUI(new TraceLoggerStorageSettings());
+            currentTraceLoggerStorage = null;
+            FillTraceLoggerStorageToGUI(currentTraceLoggerStorage);
 
             traceLoggerBufferSizeNumeric.Value = TraceLoggerSettings.DefaultBufferSize;
 
@@ -289,6 +303,7 @@ namespace DaemonNT.GUI.ConfigEditor
             if (currentService != null)
             {
                 FillServiceToGUI(currentService);
+                serviceGroupBox.Enabled = true;
             }
         }
 
@@ -334,8 +349,8 @@ namespace DaemonNT.GUI.ConfigEditor
 
         private void traceLoggerStoragesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillTraceLoggerStorageFromGUI();
             RefreshTraceLogStorage();
+            FillTraceLoggerStorageToGUI(currentTraceLoggerStorage);
         }
 
         private void RefreshTraceLogStorage()
@@ -344,20 +359,14 @@ namespace DaemonNT.GUI.ConfigEditor
 
             if (selectedStorageName == null)
             {
-                FillTraceLoggerStorageToGUI(new TraceLoggerStorageSettings());
+                currentTraceLoggerStorage = null;
+                FillTraceLoggerStorageToGUI(null);
                 return;
             }
 
             currentTraceLoggerStorage =
                 currentService.TraceLoggerSettings.Storages.FirstOrDefault(
                 (storage) => storage.Name == selectedStorageName);
-
-            if (currentTraceLoggerStorage == null)
-            {
-                currentTraceLoggerStorage = new TraceLoggerStorageSettings();
-            }
-
-            FillTraceLoggerStorageToGUI(currentTraceLoggerStorage);
         }
 
         private void saveConfigToolStripMenuItem_Click(object sender, EventArgs e)
@@ -386,7 +395,7 @@ namespace DaemonNT.GUI.ConfigEditor
             xmlSourceTextBox.Text = string.Empty;
             configuration = new Configuration.Configuration();
             currentService = new ServiceSettings();
-            currentTraceLoggerStorage = new TraceLoggerStorageSettings();
+            currentTraceLoggerStorage = null;
             currentServiceName = string.Empty;
             currentTraceLoggerStorageName = string.Empty;
             serviceNames.Clear();
@@ -422,29 +431,52 @@ namespace DaemonNT.GUI.ConfigEditor
 
         private void newServiceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            serviceNameForm.ServiceName = string.Empty;
-            serviceNameForm.ExistingNames = serviceNames;
-            if (serviceNameForm.ShowDialog() != DialogResult.OK)
+            string serviceName;
+            if (!EditNameInForm(serviceNameForm, string.Empty, serviceNames, out serviceName))
             {
                 return;
             }
-            string serviceName = serviceNameForm.ServiceName;
             configuration.Services.Add(new ServiceSettings() { Name = serviceName });
             serviceNames.Add(serviceName);
             RefreshListBox(servicesListBox);
             // fill the service panel
+            servicesListBox.SelectedIndex = -1;
             servicesListBox.SelectedIndex = serviceNames.IndexOf(serviceName);
+        }
+
+        private bool EditNameInForm(UniqueNameForm form, string defaultName,
+            IList<string> existingNames, out string name)
+        {
+            form.EditedName = defaultName;
+            form.ExistingNames = existingNames;
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                name = form.EditedName;
+                return true;
+            }
+            else
+            {
+                name = null;
+                return false;
+            }
         }
 
         private void removeServiceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int selectedServiceIndex = servicesListBox.SelectedIndex;
+            if (selectedServiceIndex < 0)
+            {
+                return;
+            }
             serviceNames.RemoveAt(selectedServiceIndex);
             RefreshListBox(servicesListBox);
             ClearForm();
             configuration.Services.RemoveAt(selectedServiceIndex);
             currentService = new ServiceSettings();
             currentServiceName = string.Empty;
+
+            servicesListBox.SelectedIndex = -1;
+            serviceGroupBox.Enabled = false;
         }
 
         private void RefreshListBox(ListBox listBox)
@@ -487,14 +519,8 @@ namespace DaemonNT.GUI.ConfigEditor
 
         private void serviceNameTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (!RenameService(serviceNameTextBox.Text))
-            {
-                serviceNameTextBox.BackColor = Color.IndianRed;
-            }
-            else
-            {
-                serviceNameTextBox.BackColor = Color.White;
-            }
+            bool renamed = RenameService(serviceNameTextBox.Text);
+            serviceNameTextBox.BackColor = renamed ? Color.White : Color.IndianRed;
         }
 
         private bool RenameService(string newServiceName)
@@ -576,6 +602,154 @@ namespace DaemonNT.GUI.ConfigEditor
             {
                 currentService.TraceLoggerSettings.BufferSize = (int)traceLoggerBufferSizeNumeric.Value;
             }
+        }
+
+        private void addRequiredServiceButton_Click(object sender, EventArgs e)
+        {
+            string serviceName;
+            if (!EditNameInForm(serviceNameForm, string.Empty, installerRequiredServiceNames, out serviceName))
+            {
+                return;
+            }
+            installerRequiredServiceNames.Add(serviceName);
+
+            UpdateInstallerRequiredServices();
+        }
+
+        private void removeRequiredServiceButton_Click(object sender, EventArgs e)
+        {
+            if (installerRequiredServiceNames.Count() <= 0)
+            {
+                return;
+            }
+            string selectedName = (string)installerRequiredServicesListBox.SelectedItem;
+            installerRequiredServiceNames.Remove(selectedName);
+
+            UpdateInstallerRequiredServices();
+        }
+
+        private void editRequiredServiceButton_Click(object sender, EventArgs e)
+        {
+            if (installerRequiredServiceNames.Count() <= 0)
+            {
+                return;
+            }
+            string selectedName = (string)installerRequiredServicesListBox.SelectedItem;
+
+            string newServiceName;
+            if (!EditNameInForm(serviceNameForm, selectedName, installerRequiredServiceNames, out newServiceName))
+            {
+                return;
+            }
+            installerRequiredServiceNames.Remove(selectedName);
+            installerRequiredServiceNames.Add(newServiceName);
+
+            UpdateInstallerRequiredServices();
+        }
+
+        private void UpdateInstallerRequiredServices()
+        {
+            installerRequiredServiceNames.Sort();
+            RefreshListBox(installerRequiredServicesListBox);
+            if (currentService != null)
+            {
+                currentService.InstallerSettings.RequiredServices = installerRequiredServiceNames.ToArray();
+            }
+        }
+
+        private void UpdateTraceLoggerStorages()
+        {
+            traceLoggerStorageNames.Sort();
+            RefreshListBox(traceLoggerStoragesListBox);
+        }
+
+        private void addTraceLoggerStorageButton_Click(object sender, EventArgs e)
+        {
+            string name;
+            if (!EditNameInForm(storageNameForm, string.Empty, traceLoggerStorageNames, out name))
+            {
+                return;
+            }
+            traceLoggerStorageNames.Add(name);
+
+            UpdateTraceLoggerStorages();
+
+            traceLoggerStoragesListBox.SelectedIndex = -1;
+            if (currentService != null)
+            {
+                currentTraceLoggerStorage = new TraceLoggerStorageSettings() { Name = name };
+                currentService.TraceLoggerSettings.Storages.Add(currentTraceLoggerStorage);
+                traceLoggerStoragesListBox.SelectedIndex =
+                    traceLoggerStorageNames.IndexOf(name);
+            }
+        }
+
+        private void removeTraceLoggerStorageButton_Click(object sender, EventArgs e)
+        {
+            if (traceLoggerStorageNames.Count() <= 0)
+            {
+                return;
+            }
+            string selectedName = (string)traceLoggerStoragesListBox.SelectedItem;
+            traceLoggerStorageNames.Remove(selectedName);
+
+            UpdateTraceLoggerStorages();
+
+            if (traceLoggerStorageNames.Count() <= 0)
+            {
+                traceLoggerStorageGroupBox.Enabled = false;
+            }
+
+            if (currentService != null)
+            {
+                currentService.TraceLoggerSettings.Storages.RemoveAll(
+                    storage => storage.Name == selectedName);
+            }
+
+            traceLoggerStoragesListBox.SelectedIndex = -1;
+            currentTraceLoggerStorage = null;
+            FillTraceLoggerStorageToGUI(null);
+            traceLoggerStorageGroupBox.Enabled = false;
+        }
+
+        private void traceLoggerStorageClassTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (currentTraceLoggerStorage != null)
+            {
+                currentTraceLoggerStorage.TypeClass = traceLoggerStorageClassTextBox.Text;
+            }
+        }
+
+        private void traceLoggerStorageAssemblyTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (currentTraceLoggerStorage != null)
+            {
+                currentTraceLoggerStorage.TypeAssembly = traceLoggerStorageAssemblyTextBox.Text;
+            }
+        }
+
+        private void editTraceLoggerStorageButton_Click(object sender, EventArgs e)
+        {
+            if (traceLoggerStorageNames.Count() <= 0)
+            {
+                return;
+            }
+            string selectedName = (string)traceLoggerStoragesListBox.SelectedItem;
+
+            string newServiceName;
+            if (!EditNameInForm(storageNameForm, selectedName, traceLoggerStorageNames, out newServiceName))
+            {
+                return;
+            }
+            traceLoggerStorageNames.Remove(selectedName);
+            traceLoggerStorageNames.Add(newServiceName);
+            currentTraceLoggerStorageName = newServiceName;
+            currentTraceLoggerStorage.Name = newServiceName;
+
+            UpdateTraceLoggerStorages();
+            traceLoggerStoragesListBox.SelectedIndex = -1;
+            traceLoggerStoragesListBox.SelectedIndex =
+                traceLoggerStorageNames.IndexOf(currentTraceLoggerStorageName);
         }
     }
 }
