@@ -32,11 +32,6 @@ namespace XRouter.Broker
 
         private object syncLock = new object();
 
-        private wcf.ServiceHost hostForManagemenet;
-
-        private EventLogReader eventLogReader;
-        private TraceLogReader traceLogReader;
-
         public BrokerService()
         {
         }
@@ -57,36 +52,8 @@ namespace XRouter.Broker
             }
             #endregion
 
-            eventLogReader = new EventLogReader(LogDirectory);
-            traceLogReader = new TraceLogReader(LogDirectory);
-
             xmlResourceManager = new XmlResourceManager(storage);
             dispatcher = new Dispatching.Dispatcher(this);
-
-            #region Publish IBrokerServiceForManagement
-            // TODO: make the management service host:port configurable
-            hostForManagemenet = new wcf.ServiceHost(this, new Uri("http://localhost:9090/XRouter.ServiceForManagement"));
-            wcf.NetNamedPipeBinding binding = new wcf.NetNamedPipeBinding(wcf.NetNamedPipeSecurityMode.None) { MaxReceivedMessageSize = int.MaxValue };
-            binding.ReaderQuotas = new XmlDictionaryReaderQuotas() { MaxBytesPerRead = int.MaxValue, MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue };
-
-            wcf.Description.ServiceMetadataBehavior smb = new wcf.Description.ServiceMetadataBehavior();
-            smb.HttpGetEnabled = true;
-            smb.HttpGetUrl = new Uri("http://localhost:9091/XRouter.ServiceForManagement");
-            hostForManagemenet.Description.Behaviors.Add(smb);
-
-            foreach (var b in hostForManagemenet.Description.Behaviors) {
-                if (b is wcf.Description.ServiceDebugBehavior) {
-                    var sdb = (wcf.Description.ServiceDebugBehavior)b;
-                    sdb.IncludeExceptionDetailInFaults = true;
-                }
-            }
-
-            // TODO: make the management service net pipe address configurable
-            hostForManagemenet.AddServiceEndpoint(typeof(IBrokerServiceForManagement), binding,
-                "net.pipe://localhost/XRouter.ServiceForManagement");
-
-            hostForManagemenet.Open();
-            #endregion
         }
 
         public void Stop()
@@ -94,7 +61,6 @@ namespace XRouter.Broker
             // Make sure that all operations are completed and none of them will be running after this call
             Monitor.Enter(syncLock);
             dispatcher.Stop();
-            hostForManagemenet.Close();
         }
 
         public ApplicationConfiguration GetConfiguration(XmlReduction reduction)
@@ -111,7 +77,7 @@ namespace XRouter.Broker
             return result;
         }
 
-        public void ChangeConfiguration(ApplicationConfiguration config)
+        public void UpdateConfiguration(ApplicationConfiguration config)
         {
             storage.SaveApplicationConfiguration(config.Content);
 
@@ -121,21 +87,6 @@ namespace XRouter.Broker
                 var reducedConfig = config.GetReducedConfiguration(component.ConfigurationReduction);
                 component.UpdateConfig(reducedConfig);
             }
-        }
-
-        public EventLogEntry[] GetEventLogEntries(DateTime minDate, DateTime maxDate, LogLevelFilters logLevelFilter, int pageSize, int pageNumber)
-        {
-            return eventLogReader.GetEntries(minDate, maxDate, logLevelFilter, pageSize, pageNumber);
-        }
-
-        public TraceLogEntry[] GetTraceLogEntries(DateTime minDate, DateTime maxDate, LogLevelFilters logLevelFilter, int pageSize, int pageNumber)
-        {
-            return traceLogReader.GetEntries(minDate, maxDate, logLevelFilter, pageSize, pageNumber);
-        }
-
-        public Token[] GetTokens(int pageSize, int pageNumber)
-        {
-            return storage.GetTokens(pageSize, pageNumber);
         }
 
         IEnumerable<ProcessorAccessor> IBrokerServiceForDispatcher.GetProcessors()

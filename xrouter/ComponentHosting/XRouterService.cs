@@ -120,7 +120,7 @@ namespace XRouter.ComponentHosting
 
             config.AddMessageFlow(messageFlowConfig);
             config.SetCurrentMessageFlowGuid(messageFlowConfig.Guid);
-            broker.ChangeConfiguration(config);
+            broker.UpdateConfiguration(config);
 
             processor.Start(processorName, broker);
             gateway.Start(gatewayName, broker);

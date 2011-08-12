@@ -50,7 +50,6 @@
     <Compile Include="ComponentInterfaces\IBrokerServiceForComponent.cs" />
     <Compile Include="ComponentInterfaces\IBrokerServiceForGateway.cs" />
     <Compile Include="ComponentInterfaces\IBrokerServiceForHost.cs" />
-    <Compile Include="ComponentInterfaces\IBrokerServiceForManagement.cs" />
     <Compile Include="ComponentInterfaces\IBrokerServiceForProcessor.cs" />
     <Compile Include="ComponentInterfaces\IGatewayService.cs" />
     <Compile Include="ComponentType.cs" />
