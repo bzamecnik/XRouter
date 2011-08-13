@@ -54,7 +54,7 @@ namespace XRouter.Test.Common
         private IConsoleServer GetConsoleServerProxy()
         {
             // NOTE: code taken from XRouter.Gui.ConfigurationManager
-            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress("http://localhost:9090/ConsoleService/ConsoleServer");
+            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress("http://localhost:9090/XRouter.ConsoleService/ConsoleServer");
             // set binding (WebService - SOAP/HTTP)
             wcf.WSHttpBinding binding = new wcf.WSHttpBinding();
             binding.MaxReceivedMessageSize = int.MaxValue;

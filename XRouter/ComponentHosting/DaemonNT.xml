@@ -29,8 +29,8 @@
         <param name="throwup">True</param>
       </section>
       <section name="console">
-        <param name="uri">http://localhost:9090/ConsoleService</param>
-        <param name="metadatauri">http://localhost:9090/ConsoleService.Metadata</param>
+        <param name="uri">http://localhost:9090/XRouter.ConsoleService</param>
+        <param name="metadatauri">http://localhost:9090/XRouter.ConsoleService.Metadata</param>
       </section>
       <section name="reporter">
         <param name="time">01:00:00</param>

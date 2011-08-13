@@ -11,8 +11,6 @@ using XRouter.Manager;
 
 namespace XRouter.Gui
 {
-	
-
 	public class ConfigurationTree
 	{
 		public string Name { get; private set; }
@@ -33,13 +31,16 @@ namespace XRouter.Gui
 
 	public static class ConfigurationManager
 	{
+        // TODO: this should be configurable!
+        private static readonly string ConsoleServerUri = "http://localhost:9090/XRouter.ConsoleService/ConsoleServer";
+    
         public static ApplicationConfiguration ApplicationConfiguration { get; private set; }
         public static IConsoleServer ConsoleServer { get; private set; }
 
 		public static ConfigurationTree LoadConfigurationTree()
         {
             #region Get proxy for remote BrokerService
-            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress("http://localhost:9090/ConsoleService/ConsoleServer");
+            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress(ConsoleServerUri);
 
             // set binding (WebService - SOAP/HTTP)
             wcf.WSHttpBinding binding = new wcf.WSHttpBinding();
@@ -52,7 +53,6 @@ namespace XRouter.Gui
             wcf.ChannelFactory<IConsoleServer> channelFactory = new wcf.ChannelFactory<IConsoleServer>(binding, endpointAddress);
             ConsoleServer = channelFactory.CreateChannel();
             #endregion
-
 
             ApplicationConfiguration = ConsoleServer.GetConfiguration();
             var gws = ApplicationConfiguration.GetComponentElements(Common.ComponentType.Gateway);
