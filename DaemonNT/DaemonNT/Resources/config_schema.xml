@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<schema xmlns="http://purl.oclc.org/dsdl/schematron">
+  <title>Specification of the DaemonNT configuration file (DaemonNT.xml) schema.</title>
+
+  <pattern id="root">
+    <rule context="/">
+      <assert test="config">Only 'config' can be used as the root element.</assert>
+    </rule>
+  </pattern>
+
+  <pattern id="config">
+    <let name="context" value="/config"/>
+    <rule context="$context">
+      <assert test="count(service)>0">
+        The '<name/>' element must contain at least one 'service' element.
+      </assert>
+    </rule>
+    <rule context="$context/service">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'config' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="service">
+    <let name="context" value="/config/service"/>
+    <rule context="$context">
+      <assert test="count(@type)=1">
+        The '<name/>' element must contain the 'type' attribute.
+      </assert>
+      <assert test="count(@name)=1">
+        The '<name/>' element must contain the 'name' attribute.
+      </assert>
+      <assert test="count(settings)=0 or count(settings)=1">
+        The '<name/>' element must contain at most one 'settings' element.
+      </assert>
+      <assert test="count(installer)=0 or count(installer)=1">
+        The '<name/>' element must contain at most one 'installer' element.
+      </assert>
+      <assert test="count(trace-logger)=0 or count(trace-logger)=1">
+        The '<name/>' element must contain at most one 'trace-logger' element.
+      </assert>
+    </rule>
+    <rule context="$context/@type">
+      <assert test="string-length(normalize-space(.))>0">
+        The '<name/>' attribute must contain a non-empty string.
+      </assert>
+    </rule>
+    <rule context="$context/@name">
+      <assert test="string-length(normalize-space(.))>0">
+        The '<name/>' attribute must contain a non-empty string.
+      </assert>
+      <assert test="not(normalize-space(.)=normalize-space(../preceding-sibling::service/@name))">
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
+      </assert>
+    </rule>
+    <rule context="$context/settings">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/installer">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/trace-logger">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'service' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="trace-logger">
+    <let name="context" value="/config/service/trace-logger"/>
+    <rule context="$context/@buffer-size">
+      <let name="val" value="number(normalize-space(.))"/>
+      <assert test="floor(number($val))=ceiling(number($val))">
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be an integer.
+      </assert>
+      <assert test="$val>0">
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be greater than zero.
+      </assert>
+      <assert test="2147483648>$val">
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be lower than 2147483648.
+      </assert>
+    </rule>
+    <rule context="$context/storage">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'trace-logger' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="trace-logger-storage">
+    <let name="context" value="/config/service/trace-logger/storage"/>
+    <rule context="$context">
+      <assert test="count(@type)=1">
+        The '<name/>' element must contain the 'type' attribute.
+      </assert>
+      <assert test="count(@name)=1">
+        The '<name/>' element must contain the 'name' attribute.
+      </assert>
+      <assert test="count(settings)=0 or count(settings)=1">
+        The '<name/>' element must contain at most one 'settings' element.
+      </assert>
+    </rule>
+    <rule context="$context/@type">
+      <assert test="string-length(normalize-space(.))>0">
+        The '<name/>' attribute must contain a non-empty string.
+      </assert>
+    </rule>
+    <rule context="$context/@name">
+      <assert test="string-length(normalize-space(.))>0">
+        The '<name/>' attribute must contain a non-empty string.
+      </assert>
+      <assert test="not(normalize-space(.)=normalize-space(../preceding-sibling::storage/@name))">
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
+      </assert>
+    </rule>
+    <rule context="$context/settings">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'storage' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="installer">
+    <let name="context" value="/config/service/installer"/>
+    <rule context="$context">
+      <assert test="count(description)=0 or count(description)=1">
+        The '<name/>' element must contain at most one 'description' element.
+      </assert>
+      <assert test="count(start-type)=0 or count(start-type)=1">
+        The '<name/>' element must contain at most one 'start-type' element.
+      </assert>
+      <assert test="count(account)=0 or count(account)=1">
+        The '<name/>' element must contain at most one 'account' element.
+      </assert>
+      <assert test="count(depended-on)=0 or count(depended-on)=1">
+        The '<name/>' element must contain at most one 'depended-on' element.
+      </assert>
+    </rule>
+    <rule context="$context/description">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/start-type">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/account">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/depended-on">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'installer' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="description">
+    <let name="context" value="/config/service/installer/description"/>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'description' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="start-type">
+    <let name="context" value="/config/service/installer/start-type"/>
+    <rule context="$context">
+      <assert test="count(@value)=1">
+        The '<name/>' element must contain the 'value' attribute.
+      </assert>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'start-type' element.
+      </assert>
+    </rule>
+    <rule context="$context/@value">
+      <let name="value" value="normalize-space(.)"/>
+      <assert test="$value='Manual' or $value='Automatic' or $value='Disabled'">
+        The value of the '<name/>' attribute ('<value-of select="."/>') is not valid.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="account">
+    <let name="context" value="/config/service/installer/account"/>
+    <rule context="$context">
+      <assert test="count(@value)=1">
+        The '<name/>' element must contain the 'value' attribute.
+      </assert>
+    </rule>
+    <rule context="$context/@value">
+      <let name="value" value="normalize-space(.)"/>
+      <assert test="$value='LocalSystem' or $value='LocalService' or $value='NetworkService' or $value='User'">
+        The value of the '<name/>' attribute ('<value-of select="."/>') is not valid.
+      </assert>
+    </rule>
+    <rule context="$context[normalize-space(@value)='User']/username">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context[normalize-space(@value)='User']/password">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'account' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="account_username_and_password">
+    <let name="context" value="/config/service/installer/account[normalize-space(@value)='User']"/>
+    <rule context="$context">
+      <assert test="count(username)=1">
+        The '<name/>' element must contain the 'username' element.
+      </assert>
+      <assert test="count(password)=1">
+        The '<name/>' element must contain the 'password' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="username">
+    <let name="context" value="/config/service/installer/account/username"/>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'username' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="password">
+    <let name="context" value="/config/service/installer/account/password"/>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'password' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="depended-on">
+    <let name="context" value="/config/service/installer/depended-on"/>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'depended-on' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="settings">
+    <let name="context" value="settings"/>
+    <rule context="$context/section">
+      <assert test="following-sibling::*[1][self::section or self::param] or not(following-sibling::*)">
+        The '<name/>' element may be followed only by 'section', 'param', or no element.
+      </assert>
+    </rule>
+    <rule context="$context/param">
+      <assert test="following-sibling::*[1][self::param] or not(following-sibling::*)">
+        The '<name/>' element may be followed only by 'param', or no element.
+      </assert>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'settings' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="section">
+    <let name="context" value="section"/>
+    <rule context="$context">
+      <assert test="count(@name)=1">
+        The '<name/>' element must contain the 'name' attribute.
+      </assert>
+    </rule>
+    <rule context="$context/@name">
+      <assert test="string-length(normalize-space(.))>0">
+        The '<name/>' attribute must contain a non-empty string.
+      </assert>
+      <assert test="not(normalize-space(.)=../preceding-sibling::section/@name)">
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
+      </assert>
+    </rule>
+    <rule context="$context/section">
+      <assert test="following-sibling::*[1][self::section or self::param] or not(following-sibling::*)">
+        The '<name/>' element may be followed only by 'section', 'param', or no element.
+      </assert>
+    </rule>
+    <rule context="$context/param">
+      <assert test="following-sibling::*[1][self::param] or not(following-sibling::*)">
+        The '<name/>' element may be followed only by 'param', or no element.
+      </assert>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'section' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="param">
+    <let name="context" value="param"/>
+    <rule context="$context">
+      <assert test="count(@name)=1">
+        The '<name/>' element must contain the 'name' attribute.
+      </assert>
+    </rule>
+    <rule context="$context/@name">
+      <assert test="string-length(normalize-space(.))>0">
+        The '<name/>' attribute must contain a non-empty string.
+      </assert>
+      <assert test="not(normalize-space(.)=normalize-space(../preceding-sibling::param/@name))">
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
+      </assert>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'param' element.
+      </assert>
+    </rule>
+  </pattern>
+
+</schema>

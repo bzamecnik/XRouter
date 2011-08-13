@@ -1,0 +1,45 @@
+﻿XRouter is released under the terms of the MIT License:
+
+-----------------------------------------------------------------------------
+
+Copyright (C) 2011 by The XRouter Team (Soběslav Benda, Miroslav Cicko, Tomáš
+Kroupa, Petr Sobotka, Bohumír Zámečník).
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+-----------------------------------------------------------------------------
+
+XRouter contains some open-source third-party portion covered by other licenses:
+
+XRouter\Common\LimitedConcurrencyLevelTaskScheduler.cs
+
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+
+    This class originates from:
+    Samples for Parallel Programming with the .NET Framework
+    (http://code.msdn.microsoft.com/ParExtSamples)
+    which is distributed under the term of the Apache License, Version 2.0
+    http://www.apache.org/licenses/LICENSE-2.0
+
+XRouter\Gui\CommonControls\Resizer.cs
+
+    Copyright (C) 2007 Kent Boogaart.
+
+    Based on software by Kent Boogaart released under the terms of the MIT
+    License. http://kentb.blogspot.com/2007/04/resizer-wpf-control.html

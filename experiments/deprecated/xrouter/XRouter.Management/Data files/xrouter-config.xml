@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xrouter>
+  <components>
+    
+    <gateway name="Gateway1" targetDispatcher="Dispatcher1">
+      <endpointsPlugins>
+        
+        <endpointsPlugin name="EndpointTestInput1" type="..\..\..\XRouter.EndpointsPlugins\Bin\Debug\XRouter.EndpointsPlugins.exe; XRouter.EndpointsPlugins.TestingPlugins.ManualSendPlugin">          
+        </endpointsPlugin>
+        
+        <endpointsPlugin name="EndpointTestOutput1" type="..\..\..\XRouter.EndpointsPlugins\Bin\Debug\XRouter.EndpointsPlugins.exe; XRouter.EndpointsPlugins.TestingPlugins.DisplayOutputPlugin">
+        </endpointsPlugin>
+        
+        <endpointsPlugin name="EndpointTestOutput2" type="..\..\..\XRouter.EndpointsPlugins\Bin\Debug\XRouter.EndpointsPlugins.exe; XRouter.EndpointsPlugins.TestingPlugins.DisplayOutputPlugin">
+        </endpointsPlugin>
+      
+      </endpointsPlugins>      
+    </gateway>
+    
+    <dispatcher name="Dispatcher1">
+      <targetProcessors>
+        <processor name="Processor1" />
+      </targetProcessors>
+    </dispatcher>
+
+    <processor name="Processor1">
+      <processingProvider name="Broadcaster1" />
+    </processor>
+
+    <processingProvider name="Broadcaster1">
+
+    </processingProvider>
+    
+  </components>
+</xrouter>

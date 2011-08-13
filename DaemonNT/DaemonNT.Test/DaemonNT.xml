@@ -1,0 +1,52 @@
+<config>
+
+  <service type="DaemonNT.Test.TickingService, DaemonNT.Test.dll" name="MyServer">
+
+    <installer>
+      <description>Tady je nejaky popisek tehle sluzby...</description>
+      <start-type value="Automatic"/>
+      <account value="LocalSystem"></account>
+    </installer>
+
+    <settings>
+      <!-- specifikace nastaveni timeru, interval je cele cislo v milisekundach -->
+      <section name="timer">
+        <param name="interval">1000</param>
+      </section>
+    </settings>
+
+  </service>
+
+  <service type="DaemonNT.Test.ExampleService, DaemonNT.Test.dll" name="ExampleServer">
+
+    <installer>
+      <description>Responds to requests from console.</description>
+      <start-type value="Automatic"/>
+      <account value="LocalSystem"></account>
+    </installer>
+
+    <settings>
+      <section name="section">
+        <param name="response">42</param>
+      </section>
+    </settings>
+
+  </service>
+
+  <service type="DaemonNT.Test.HeavilyLoggingService, DaemonNT.Test.dll" name="HeavilyLoggingService">
+
+    <installer>
+      <description>Log a given number of trace log record as fast as possible
+      and measure the performance.</description>
+      <start-type value="Automatic"/>
+      <account value="LocalSystem"></account>
+    </installer>
+
+    <settings>
+      <param name="messageCount">100000</param>
+      <param name="messageLength">128</param>
+    </settings>
+
+  </service>
+
+</config>

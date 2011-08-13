@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<workflow version="1">
+  <node id="1" type="cbr" name="CBR_root">    
+    <predicate test="..\..\Schematron\p1.xml"/>
+    <predicate test="..\..\Schematron\p2.xml"/>
+    <predicate test="..\..\Schematron\p3.xml"/>    
+    <predicate test="default"/>  
+  </node>
+  <node id="2" type="terminator" name="A">
+    <sync value="true" xpath="/message"/>
+  </node>
+  <node id="3" type="XRouter.Prototype.Processor.Transform" name="Transformace">
+    
+  </node>
+  <node id="4" type="terminator" name="C">
+    <sync value="false"/>
+  </node>
+  <node id="5" type="terminator" name="D">
+    <sync value="false"/>
+  </node>
+  <node id="6" type="terminator" name="E">
+    <sync value="false"/>
+  </node>
+  <edge id="1" from="1" to="2"/>
+  <edge id="2" from="1" to="3"/>
+  <edge id="3" from="1" to="4"/>
+  <edge id="4" from="1" to="5"/>
+  <edge id="5" from="3" to="6"/>
+</workflow>

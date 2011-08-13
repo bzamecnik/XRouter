@@ -1,0 +1,37 @@
+<messageflow guid="988f5af9-6566-432e-867d-d10caa2b54e8">
+  <MessageFlowConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" z:Id="1" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig">
+    <Guid>988f5af9-6566-432e-867d-d10caa2b54e8</Guid>
+    <Name z:Id="2">sendToA</Name>
+    <Nodes z:Id="3" z:Size="2">
+      <NodeConfiguration z:Id="4" i:type="ActionNodeConfiguration">
+        <Location xmlns:d4p1="http://schemas.datacontract.org/2004/07/System.Windows">
+          <d4p1:_x>0</d4p1:_x>
+          <d4p1:_y>0</d4p1:_y>
+        </Location>
+        <_name z:Ref="2" i:nil="true" />
+        <Actions z:Id="5" z:Size="1">
+          <ActionConfiguration z:Id="6">
+            <PluginConfiguration xmlns:d6p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="7">
+              <d6p1:XmlContent z:Id="8">&lt;config input="input" output="OutA" /&gt;</d6p1:XmlContent>
+            </PluginConfiguration>
+            <PluginTypeFullName z:Id="9">XRouter.Processor.BuiltInActions.SendMessageAction</PluginTypeFullName>
+          </ActionConfiguration>
+        </Actions>
+        <NextNode z:Id="10" i:type="TerminatorNodeConfiguration">
+          <Location xmlns:d5p1="http://schemas.datacontract.org/2004/07/System.Windows">
+            <d5p1:_x>0</d5p1:_x>
+            <d5p1:_y>0</d5p1:_y>
+          </Location>
+          <_name z:Id="11">termination</_name>
+          <IsReturningOutput>false</IsReturningOutput>
+          <ResultMessageSelection z:Id="12">
+            <SelectionPattern z:Id="13"></SelectionPattern>
+          </ResultMessageSelection>
+        </NextNode>
+      </NodeConfiguration>
+      <NodeConfiguration z:Ref="10" i:nil="true" />
+    </Nodes>
+    <RootNode z:Ref="4" i:nil="true" />
+    <Version>1</Version>
+  </MessageFlowConfiguration>
+</messageflow>

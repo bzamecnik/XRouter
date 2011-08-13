@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schema xmlns="http://purl.oclc.org/dsdl/schematron">
+
+  <!--
+  TODO:
+  - use abstract patterns for foods/drinks -> consumables and food/drink -> consumable
+  -->
+  
+  <pattern id="root">
+    <rule context="/">
+      <assert test="menu">Only 'menu' can be used as the root element.</assert>
+    </rule>
+  </pattern>
+
+  <pattern id="menu">
+    <rule context="/menu/foods">
+      <assert test="true()"/>
+    </rule>
+    <rule context="/menu/drinks">
+      <assert test="true()"/>
+    </rule>
+    <rule context="/menu/validSinceDate">
+      <assert test="true()"/>
+    </rule>
+    <rule context="/menu/currency">
+      <assert test="true()"/>
+    </rule>
+    <rule context="/menu/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'menu' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="foods">
+    <rule context="/menu/foods/food">
+      <assert test="true()"/>
+    </rule>
+    <rule context="/menu/foods/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'foods' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="drinks">
+    <rule context="/menu/drinks/drink">
+      <assert test="true()"/>
+    </rule>
+    <rule context="/menu/drinks/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'drinks' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="food">
+    <let name="context" value="/menu/foods/food"/>
+    <rule context="$context">
+      <assert test="count(@id)=1">
+        The '<name/>' element must contain the 'id' attribute.
+      </assert>
+    </rule>
+    <rule context="$context/@id">
+      <assert test="string-length(normalize-space(.))>0">
+        The '<name/>' attribute must contain a non-empty string.
+      </assert>
+      <assert test="not(normalize-space(.)=normalize-space(../preceding-sibling::service/@name))">
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
+      </assert>
+    </rule>
+    <rule context="$context/name">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/description">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/price">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/amount">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'foods' element.
+      </assert>
+    </rule>
+  </pattern>
+
+  <pattern id="drink">
+    <let name="context" value="/menu/drinks/drink"/>
+    <rule context="$context">
+      <assert test="count(@id)=1">
+        The '<name/>' element must contain the 'id' attribute.
+      </assert>
+    </rule>
+    <rule context="$context/@id">
+      <assert test="string-length(normalize-space(.))>0">
+        The '<name/>' attribute must contain a non-empty string.
+      </assert>
+      <assert test="not(normalize-space(.)=normalize-space(../preceding-sibling::service/@name))">
+        The value of the '<name/>' attribute ('<value-of select="."/>') must be unique.
+      </assert>
+    </rule>
+    <!-- NOTE: this rule is extra compared to common rules of food and drink-->
+    <rule context="$context/@alcoholic">
+      <assert test=".='true' or .='false'">
+        The value of the '<name/>' attribute ('<value-of select="."/>') is not valid.
+      </assert>
+    </rule>
+    <rule context="$context/name">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/description">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/price">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/amount">
+      <assert test="true()"/>
+    </rule>
+    <rule context="$context/*">
+      <assert test="false()">
+        The '<name/>' element is not allowed inside the 'drinks' element.
+      </assert>
+    </rule>
+  </pattern>
+
+</schema>

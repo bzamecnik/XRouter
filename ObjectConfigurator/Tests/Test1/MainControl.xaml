@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="ObjectConfigurator.Tests.Test1.MainControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <StackPanel>
+        <Border Name="uiEditorContainer" />
+        <Button Name="uiLoad" Margin="5" Width="100" HorizontalAlignment="Left" Click="uiLoad_Click">Load</Button>
+        <Button Name="uiSave" Margin="5" Width="100" HorizontalAlignment="Left" Click="uiSave_Click">Save</Button>
+    </StackPanel>
+</UserControl>

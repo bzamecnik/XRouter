@@ -1,0 +1,3 @@
+<config>
+  <service name="FooService" type="FooService, FooService.dll" />
+</config>
