@@ -44,7 +44,7 @@ namespace XRouter.Adapters
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(this.Uri);
             request.Timeout = this.TimeOut * 1000;
 
-            // konfigurace requestu SOAP nad HTTP
+            // configuring a SOAP request over HTTP
             request.Method = "Post";
             request.ContentType = this.ContentType;
             if (this.SOAPAction != null)
@@ -52,7 +52,7 @@ namespace XRouter.Adapters
                 request.Headers.Add("SOAPAction", this.SOAPAction);
             }
 
-            // nastaveni kodovani
+            // encoding
             Encoding encoding = Encoding.UTF8;
             if (message.Declaration != null)
             {
@@ -65,7 +65,7 @@ namespace XRouter.Adapters
 
             string strRequest = message.ToString();
 
-            // odeslani zpravy serveru        
+            // send the message to the server
             byte[] bufferRequest = encoding.GetBytes(strRequest);
             request.ContentLength = bufferRequest.Length;
 
@@ -73,8 +73,7 @@ namespace XRouter.Adapters
             streamRequest.Write(bufferRequest, 0, bufferRequest.Length);
             streamRequest.Close();
 
-            // ziskani odpovedi
-            // NOTE: this is synchronous and can wait some time
+            // wait for the response - synchronously
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             XDocument xResponse = XDocument.Load(response.GetResponseStream(), LoadOptions.SetLineInfo);
 

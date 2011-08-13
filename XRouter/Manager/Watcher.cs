@@ -6,78 +6,113 @@ using DaemonNT.Logging;
 namespace XRouter.Manager
 {
     /// <summary>
-    /// Reprezentuje jednoduchy service watcher, ktery pravidelne sleduje status sluzby. 
-    /// Posledne ziskany status lze ziskat z vlastnosti ServiceStatus. Pokud je hodnota 
-    /// throwUpService nastavena na true a sluzba je po urcity cas ce stavu stopped, pak 
-    /// ji nahodi. Nahazovani sluzby je mozno docasne zakazat metodou DisableServiceThrowUp()
-    /// a v takovem pripade se nahazovani opet povoli, jakmile sluzba prejde do stavu running. 
+    /// Periodically watches the status of a single managed Windows service
+    /// and can automatically try to restart the service if seems to be down
+    /// for some time.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// The automatical restarts can be enabled in the contructor via the
+    /// autoRestartEnabled parameter (usually taken from the manager service
+    /// configuration). Automatic restarting can be temporarily disabled using
+    /// the DisableServiceAutoRestart() method. As soon as the service is
+    /// started automatic restarting behaves again as configured.
+    /// </para>
+    /// <para>
+    /// On each automatic restart an optional e-mail notification is sent.
+    /// </para>
+    /// <para>
+    /// It is possible to get the last known state of the managed service via
+    /// the ServiceStatus property.
+    /// </para>
+    /// <para>
+    /// Currently, Watcher does not work when it is ran in DaemonNT debug mode.
+    /// </para>
+    /// </remarks>
     internal sealed class Watcher
     {
         /// <summary>
-        /// Nazev instance asociovane XRouterService.
+        /// DaemonNT service name of the managed XRouterService.
         /// </summary>
         private string managedServiceName = null;
 
         /// <summary>
-        /// Urcuje, jestli je ServiceWatcher pouzit pouze v ladicim prostredi (ma vliv na jeho chovani).
+        /// Indicates whether this XRouterManager service is ran in the DaemonNT
+        /// debug mode.
         /// </summary>
+        /// <remarks>
+        /// When in debug mode the watcher does not work.
+        /// </remarks>
         private bool isDebugMode = false;
 
         /// <summary>
-        /// Odkaz na Daemon trace logger.
+        /// Reference to the DaemonNT trace logger (for writing).
         /// </summary>
         private TraceLogger logger = null;
 
         /// <summary>
-        /// Urcuje, jestli se ma sluzba nahazovat (urceno konfiguraci), pokud je po urcity cas ve stavu stopped.
+        /// Indicated whether to auto-restart the managed service if it seems
+        /// to be stopped for some time (as specified in configuration).
         /// </summary>
         private bool configAutoRestartEnabled = false;
 
         /// <summary>
-        /// Urcuje, jestli se ma sluzna nahazovat (meni se za behu).       
+        /// Indicated whether to auto-restart the managed service if it seems
+        /// to be stopped for some time (can change at run-time).
         /// </summary>
         private volatile bool runtimeAutoRestartEnabled = false;
 
         /// <summary>
-        /// Thread, ktery hostuje implementaci sledovani. 
+        /// Worker thread in which the watcher server runs.
         /// </summary>
         private Thread worker = null;
 
         /// <summary>
-        /// Urcuje, jestli stale sledovani bezi. 
+        /// Indicates whether the watcher is still running.
         /// </summary>
+        /// <remarks>
+        /// False means that the worker thread should finnish.
+        /// </remarks>
         private volatile bool isWorkerRunning = true;
-        
+
         /// <summary>
-        /// Pocet jednotek casu, po kterych je sluzba ve stavu stopped. 
+        /// The number of subseqent queries for status of the managed service
+        /// with negative result (stopped). If it exceeds a threshold the
+        /// managed service can be auto-restarted.
         /// </summary>
         private int stoppedTimes = 0;
 
         /// <summary>
-        /// Obsahuje aktualni (posledne zjisteny) status sluzby. 
+        /// The last known status of the managed service.
         /// </summary>
         private volatile ServiceControllerStatus lastServiceStatus = ServiceControllerStatus.Stopped;
 
         /// <summary>
-        /// Perioda sledovani (polling) sluzby v ms. 
-        /// Hodnota je urcena implementaci a nebude parametrizovana.
+        /// Period of polling (in milliseconds) for the status of the
+        /// managed service.
         /// </summary>
+        /// <remarks>
+        /// The value will not be configurable.
+        /// </remarks>
         private static readonly int Interval = 1000;
 
         /// <summary>
-        /// Pocet jenotek casu, po kterych muze byt sluzba nahozena. 
-        /// Hodnota je urcena implementaci a nebude parametrizovana. 
+        /// The maximum number of subseqent queries for status of the managed
+        /// service with negative result (stopped) after which the managed
+        /// service can be auto-restarted.
         /// </summary>
+        /// <remarks>
+        /// The value will not be configurable.
+        /// </remarks>
         private static readonly int MaxStoppedTimes = 10;
 
         /// <summary>
-        /// Odkaz na odesilac emailu. 
+        /// Reference to an e-mail sender.
         /// </summary>
         private EMailSender emailSender = null;
 
         /// <summary>
-        /// Vraci aktualni (posledne zjisteny) status sluzby.
+        /// The last known status of the managed service.
         /// </summary>
         public ServiceControllerStatus ServiceStatus
         {
@@ -85,7 +120,7 @@ namespace XRouter.Manager
         }
 
         /// <summary>
-        /// Umoznuje zakazat nahazovani sluzby. 
+        /// Disables restarting an unresponsible service automatically.
         /// </summary>
         public void DisableServiceAutoRestart()
         {
@@ -103,13 +138,13 @@ namespace XRouter.Manager
 
             if (isDebugMode)
             {
-                // TODO: this is quite meaningless
-                // watcher should be disabled if the watched XRouter service
-                // runs in debug mode, not this XRouter Manager service!!!
-                logger.LogWarning("Watcher is disabled on debug mode.");
+                logger.LogWarning("Watcher is disabled in debug mode.");
             }
         }
 
+        /// <summary>
+        /// Starts the watcher server in a new thread.
+        /// </summary>
         public void Start()
         {
             this.worker = new Thread(RunWatcher);

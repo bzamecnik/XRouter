@@ -12,63 +12,65 @@ using XRouter.Common.Persistence;
 namespace XRouter.Manager
 {
     /// <summary>
-    /// Implementace WCF sluzby, ktera poskytuje sluzby XRouter console (GUI). 
+    /// Implements a console server which provides services to the GUI (over a
+    /// WCF web service).
     /// </summary>
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, AddressFilterMode = AddressFilterMode.Any)]
     internal sealed class ConsoleServer : IConsoleServer
     {
         /// <summary>
-        /// Uri tohoto Web Serveru.
+        /// URI of the ConsoleServer web service which provides the main services.
         /// </summary>
         private string uri = null;
 
         /// <summary>
-        /// Uri tohoto Web Serveru, na kterem poskytuje metadata. 
+        /// URI of the ConsoleServer web service which provides metadata.
         /// </summary>
         private string metadataUri = null;
 
         /// <summary>
-        /// ServiceName instance XRouterService, se kterou je tato sluzba asociovana.
+        /// DaemonNT service name of the managed XRouterService.
         /// </summary>
         private string serviceName = null;
 
         /// <summary>
-        /// Hostovaci prostredi pro tuto WCF Web Service. 
+        /// WCF web service host.
         /// </summary>
         private ServiceHost wcfHost = null;
 
         /// <summary>
-        /// Odkaz na DaemonNT trace logger.
+        /// Reference to the DaemonNT trace logger (for writing).
         /// </summary>
         private TraceLogger logger = null;
 
         /// <summary>
-        /// Odkaz na service watcher.
+        /// Reference to a service watcher.
         /// </summary>
         private Watcher serviceWatcher = null;
 
         /// <summary>
-        /// Urcuje, jestli je instance teto sluzby spustena v Daemon debug modu. 
+        /// Indicates whether this XRouterManager service is ran in the DaemonNT
+        /// debug mode.
         /// </summary>
         private bool IsDebugMode = false;
 
         /// <summary>
-        /// Persistentni uloziste XRouter. 
+        /// XRouter's shared persistentni storage.
         /// </summary>
         private PersistentStorage storage;
 
         /// <summary>
-        /// Nastroj pro skenovani event logu.
+        /// A tool for scanning the event log of the managed service.
         /// </summary>
         private EventLogReader eventLogReader = null;
 
         /// <summary>
-        /// Nastroj pro skenovani trace logu. 
+        /// A tool for scanning the trace log of the managed service.
         /// </summary>
         private TraceLogReader traceLogReader = null;
 
         /// <summary>
-        /// Informace pro pristup k persistentnim zdrojum. 
+        /// Information for accessing persistent resources.
         /// </summary>
         private StoragesInfo storagesInfo = null;
 
@@ -84,6 +86,9 @@ namespace XRouter.Manager
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Starts the console server in a new thread.
+        /// </summary>
         public void Start()
         {
             // init DB storage
@@ -145,6 +150,9 @@ namespace XRouter.Manager
             }
         }
 
+        /// <summary>
+        /// Stops the console server thread.
+        /// </summary>
         public void Stop()
         {
             if (this.wcfHost != null)
@@ -153,22 +161,13 @@ namespace XRouter.Manager
             }
         }
 
-        /// <summary>
-        /// Vraci status sluzby XRouterService (running, stopped, ...). 
-        /// Pokud je metoda volana v Daemon debug modu, pak vraci pouze stav Stopped.
-        /// </summary>
-        /// <returns></returns>
+        #region IConsoleServer interface
+
         public string GetXRouterServiceStatus()
         {
             return this.serviceWatcher.ServiceStatus.ToString();
         }
 
-        /// <summary>
-        /// Spusti XRouterService. Metoda ceka na to, nez XRouterService prejde do stavu running.
-        /// Pokud behem daneho timeoutu neprejde sluzba do stavu running, pak je vyhozena vyjimka.
-        /// Metoda nema zadny efekt v Daemon debug modu.
-        /// </summary>
-        /// <param name="timeout"></param>
         public void StartXRouterService(int timeout)
         {
             // TODO: possibly use DaemonNT.ServiceCommands.Start() instead as it
@@ -185,16 +184,10 @@ namespace XRouter.Manager
                 // TODO: it is possible to use DaemonNT.ServiceCommands.DebugStart()
                 // or start a new process
 
-                this.logger.LogWarning("StartXRouterService() is not allowed on debug mode.");
+                this.logger.LogWarning("StartXRouterService() is not supported when XRouterManager is in debug mode.");
             }
         }
 
-        /// <summary>
-        /// Zastavi XRouterService. Metoda ceka na to, nez XRouterService prejde do stavu stopped.
-        /// Pokud behem daneho timeoutu neprejde sluzba do stavu stopped, pak je vyhozena vyjimka.
-        /// Metoda nema zadny efekt v Daemon debug modu. 
-        /// </summary>
-        /// <param name="timeout">Urcuje dobu cekani v sec na to, nez XRouterService prejde do stavu stopped.</param>
         public void StopXRouterService(int timeout)
         {
             if (!this.IsDebugMode)
@@ -206,14 +199,10 @@ namespace XRouter.Manager
             }
             else
             {
-                this.logger.LogWarning("StopXRouterService() is not allowed on debug mode.");
+                this.logger.LogWarning("StopXRouterService() is not supported when XRouterManager is in debug mode.");
             }
         }
 
-        /// <summary>
-        /// Vraci konfiguraci z persistentniho uloziste.
-        /// </summary>
-        /// <returns></returns>
         public ApplicationConfiguration GetConfiguration()
         {
             XDocument configXml = storage.GetApplicationConfiguration();
@@ -221,52 +210,26 @@ namespace XRouter.Manager
             return result;
         }
 
-        /// <summary>
-        /// Aktualizuje konfiguraci v persistentnim ulozisti. 
-        /// </summary>
-        /// <param name="config"></param>
         public void ChangeConfiguration(ApplicationConfiguration config)
         {
             this.storage.SaveApplicationConfiguration(config.Content);
         }
 
-        /// <summary>
-        /// Vybere a vrati event log zaznamy dle danych kriterii. 
-        /// </summary>
-        /// <param name="minDate"></param>
-        /// <param name="maxDate"></param>
-        /// <param name="logLevelFilter"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="pageNumber"></param>
-        /// <returns></returns>
         public EventLogEntry[] GetEventLogEntries(DateTime minDate, DateTime maxDate, LogLevelFilters logLevelFilter, int pageSize, int pageNumber)
         {
             return eventLogReader.GetEntries(minDate, maxDate, logLevelFilter, pageSize, pageNumber);
         }
 
-        /// <summary>
-        /// Vybere a vrati trace log zaznamy dle danych kriterii. 
-        /// </summary>
-        /// <param name="minDate"></param>
-        /// <param name="maxDate"></param>
-        /// <param name="logLevelFilter"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="pageNumber"></param>
-        /// <returns></returns>
         public TraceLogEntry[] GetTraceLogEntries(DateTime minDate, DateTime maxDate, LogLevelFilters logLevelFilter, int pageSize, int pageNumber)
         {
             return traceLogReader.GetEntries(minDate, maxDate, logLevelFilter, pageSize, pageNumber);
         }
 
-        /// <summary>
-        /// Vybere a vrati tokeny dle danych kriterii. 
-        /// </summary>
-        /// <param name="pageSize"></param>
-        /// <param name="pageNumber"></param>
-        /// <returns></returns>
         public Token[] GetTokens(int pageSize, int pageNumber)
         {
             return storage.GetTokens(pageSize, pageNumber);
         }
+
+        #endregion
     }
 }

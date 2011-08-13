@@ -7,66 +7,78 @@ using XRouter.Common;
 namespace XRouter.Manager
 {
     /// <summary>
-    /// Reprezentuje jednoduchy server, ktery posila e-mailove reporty. Report je odeslan 
-    /// jednou za den v nastaveny cas. V reportu jsou pocty errors a warnings v event a
-    /// trace logovych zaznamech a to poslednich 24 hodin k casu generovani reportu. 
+    /// Reporter is a simple server which periodically generates summary
+    /// reports about the manager XRouterService and sends them via e-mail.
     /// </summary>
+    /// <remarks>
+    /// A report e-mail is send once a day at a configured time. It contains
+    /// the number of errors, warning in event log and trace log entries within
+    /// the last 24 hours.
+    /// </remarks>
     internal sealed class Reporter
     {
         /// <summary>
-        /// Nazev instance asociovane XRouterService.
+        /// DaemonNT service name of the managed XRouterService.
         /// </summary>
         private string serviceName = null;
 
         /// <summary>
-        /// Informace pro pristup k persistentnim zdrojum. 
+        /// Information for accessing persistent resources.
         /// </summary>
         private StoragesInfo storagesInfo = null;
 
         /// <summary>
-        /// Odkaz na odesilac emailu. 
+        /// Reference to an e-mail sender.
         /// </summary>
         private EMailSender sender = null;
 
         /// <summary>
-        /// Odkaz na Daemon trace logger.
+        /// Reference to the DaemonNT trace logger (for writing).
         /// </summary>
         private TraceLogger logger = null;
 
         /// <summary>
-        /// Urcuje, jestli stale reportovani bezi. 
+        /// Indicates whether the reporter is still running.
         /// </summary>
+        /// <remarks>
+        /// False means that the worker thread should finnish.
+        /// </remarks>
         private volatile bool isWorkerRunning = true;
 
         /// <summary>
-        /// Thread, ktery hostuje implementaci reportingu. 
+        /// Worker thread in which the reporter server runs.
         /// </summary>
         private Thread worker = null;
 
         /// <summary>
-        /// Perioda sledovani (polling) case v ms. 
-        /// Hodnota je urcena implementaci a nebude parametrizovana.
+        /// Period (in milliseconds) for polling the changes in the logs.
         /// </summary>
+        /// <remarks>
+        /// The value will not be configurable.
+        /// </remarks>
         private static readonly int Interval = 1000;
 
         /// <summary>
-        /// DateTime posledniho generovani reportu. 
+        /// Date and time when the last report was generated.
         /// </summary>
         private DateTime LastReporting = DateTime.MinValue;
 
         /// <summary>
-        /// Nastroj pro skenovani event logu.
+        /// A tool for scanning the event log of the managed service.
         /// </summary>
         private EventLogReader eventLogReader = null;
 
         /// <summary>
-        /// Nastroj pro skenovani trace logu. 
+        /// A tool for scanning the trace log of the managed service.
         /// </summary>
         private TraceLogReader traceLogReader = null;
 
         /// <summary>
-        /// Cas generovani reportu. 
+        /// Time withing a day when a report should be generated.
         /// </summary>
+        /// <remarks>
+        /// Reports will be generated each day at this specified time.
+        /// </remarks>
         private TimeSpan time;
 
         public Reporter(string serviceName, StoragesInfo storagesInfo, EMailSender sender, TraceLogger logger, TimeSpan time)
@@ -78,6 +90,9 @@ namespace XRouter.Manager
             this.time = time;
         }
 
+        /// <summary>
+        /// Starts the reporter server in a new thread.
+        /// </summary>
         public void Start()
         {
             // init log readers
@@ -123,6 +138,15 @@ namespace XRouter.Manager
             this.worker.Start();
         }
 
+        /// <summary>
+        /// Stops the reporter server thread.
+        /// </summary>
+        public void Stop()
+        {
+            this.isWorkerRunning = false;
+            this.worker.Join();
+        }
+
         private string CreateReport(DateTime min, DateTime max)
         {
             EventLogEntry[] errorEventLogs = this.eventLogReader.GetEntries(min, max, LogLevelFilters.Error, int.MaxValue, 1);
@@ -145,12 +169,6 @@ namespace XRouter.Manager
             sb.AppendLine();
 
             return sb.ToString();
-        }
-
-        public void Stop()
-        {
-            this.isWorkerRunning = false;
-            this.worker.Join();
         }
     }
 }

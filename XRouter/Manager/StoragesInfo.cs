@@ -13,7 +13,7 @@
         public string DbConnectionString { private set; get; }
 
         /// <summary>
-        /// Directory where DaemonNT should storage logs.
+        /// Directory where DaemonNT should store log files.
         /// </summary>
         public string LogsDirectory { set; get; }
 

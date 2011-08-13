@@ -11,6 +11,9 @@ namespace XRouter.Common
     /// </summary>
     public class EventLogReader
     {
+        /// <summary>
+        /// TODO: the managed service name should be configurable!
+        /// </summary>
         private static readonly string LogFilePattern = "*_xrouter.log";
 
         private string LogFilesDirectory { get; set; }

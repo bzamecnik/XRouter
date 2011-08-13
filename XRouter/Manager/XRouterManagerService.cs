@@ -5,15 +5,15 @@ using DaemonNT.Logging;
 namespace XRouter.Manager
 {
     /// <summary>
-    /// A DaemonNT service runnings the XRouter manager - a collection of
+    /// A DaemonNT service running the XRouter manager - a collection of
     /// services for monitoring and management of a single XRouter service
     /// instance.
     /// </summary>
     /// <remarks>
     /// The services contained in an XRouter manager are: ConsoleServer for
-    /// management of an XRouter service, Watcher monitoring an XRouter
-    /// service and possibly restarting it, and Reporter which send some
-    /// summary reports via e-mail to an administrator.
+    /// management of an XRouter service, Watcher monitoring and automatic
+    /// restarting an XRouter service and possibly restarting it, and Reporter
+    /// which send some summary reports via e-mail to an administrator.
     /// </remarks>
     public class XRouterManagerService : Service
     {
@@ -69,11 +69,11 @@ namespace XRouter.Manager
         }
 
         /// <summary>
-        /// Podpurna metoda pro vytvoreni a inicializaci instance EMailSender. 
+        /// Create and initialize an e-mail sender.
         /// </summary>
-        /// <param name="args"></param>
-        /// <param name="logger"></param>
-        /// <returns></returns>
+        /// <param name="args">service arguments with settings</param>
+        /// <param name="logger">trace logger</param>
+        /// <returns>EMailSender instance</returns>
         private static EMailSender CreateEmailSender(OnStartServiceArgs args, TraceLogger logger)
         {
             // SMTP host
@@ -111,10 +111,10 @@ namespace XRouter.Manager
         }
 
         /// <summary>
-        /// Podpurna metoda pro vytvoreni a inicializaci instance StoragesInfo. 
+        /// Creates and initializes a storage information provider.
         /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
+        /// <param name="args">service arguments with settings</param>
+        /// <returns>StoragesInfo instance</returns>
         private static StoragesInfo CreateStoragesInfo(OnStartServiceArgs args)
         {
             if (args.Settings["storages"] == null)
@@ -136,9 +136,10 @@ namespace XRouter.Manager
         }
 
         /// <summary>
-        /// Podpurna metoda pro vytvoreni a inicializaci instance Reporteru. 
+        /// Creates and initializes a reporter.
         /// </summary>
         /// <param name="serviceName"></param>
+        /// <param name="args"></param>
         /// <param name="storagesInfo"></param>
         /// <param name="sender"></param>
         /// <param name="logger"></param>
@@ -162,7 +163,7 @@ namespace XRouter.Manager
         }
 
         /// <summary>
-        /// Podpurna metoda pro vytvoreni a inicializaci instance ServiceWatcher. 
+        /// Creates and initializes a service watcher.
         /// </summary>
         /// <param name="serviceName"></param>
         /// <param name="args"></param>
@@ -189,12 +190,13 @@ namespace XRouter.Manager
         }
 
         /// <summary>
-        /// Podpurna metoda pro vytvoreni a inicializaci instance ConsoleServer. 
+        /// Creates and initializes a console server.
         /// </summary>
         /// <param name="serviceName"></param>
         /// <param name="args"></param>
         /// <param name="watcher"></param>
-        /// <param name="connectionString"></param>
+        /// <param name="storagesInfo"></param>
+        /// <param name="logger"></param>
         /// <returns></returns>
         private static ConsoleServer CreateConsoleServer(string serviceName, OnStartServiceArgs args, Watcher watcher,
             StoragesInfo storagesInfo, TraceLogger logger)

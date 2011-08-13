@@ -5,32 +5,37 @@ using DaemonNT.Logging;
 namespace XRouter.Manager
 {
     /// <summary>
-    /// Reprezentuje odesilatko SMTP e-mailu.
+    /// Provides a sender of e-mails to a pre-defined address via SMTP.
     /// </summary>
+    /// <remarks>
+    /// Support a plain unencrypted SMTP.
+    /// </remarks>
     internal sealed class EMailSender
     {
         /// <summary>
-        /// Hostname nebo IP adresa SMTP serveru. 
+        /// SMTP server hostname or IP address.
         /// </summary>
         private string smtpHost = null;
 
         /// <summary>
-        /// Port na kterem posloucha SMTP server.
+        /// SMTP server port. Can be null. 
         /// </summary>
+        /// <remarks>If null value is specified a default port (usually 25)
+        /// is used.</remarks>
         private int? smtpPort = null;
 
         /// <summary>
-        /// Adresa odesilate e-mailu. 
+        /// E-mail address of the sender (a program).
         /// </summary>
         private MailAddress from = null;
 
         /// <summary>
-        /// Adresa prijemce e-mailu. 
+        /// E-mail address of the recipient (typically an administrator).
         /// </summary>
         private MailAddress to = null;
 
         /// <summary>
-        /// Odkaz na Daemon trace logger. 
+        /// A reference to the trace logger.
         /// </summary>
         private TraceLogger logger = null;
 
@@ -45,10 +50,13 @@ namespace XRouter.Manager
         }
 
         /// <summary>
-        /// Odesle e-mailovou notifikaci, ktera je nastavena dle konfiguraci. V parametrech
-        /// metody je mozno nastavit subject a body. Metoda nevyhazuje vyjimky, tj. pokud 
-        /// dojde k vyjimecne udalosti, pak je pouze zalogovana. 
-        /// </summary>     
+        /// Sends an e-mail notification to the pre-defined recipient.
+        /// </summary>
+        /// <remarks>
+        /// Only subject and body can be given, the rest is pre-configured.
+        /// In case of a problem, it is only logged, no exceptions are thrown
+        /// outside this method.
+        /// </remarks>
         public void Send(string subject, string body)
         {
             try
