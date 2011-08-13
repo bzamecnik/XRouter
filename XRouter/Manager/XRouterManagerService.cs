@@ -25,11 +25,11 @@ namespace XRouter.Manager
 
         protected override void OnStart(OnStartServiceArgs args)
         {
-            // XRouterServiceName (required)   
-            string serviceName = args.Settings.Parameters["xrouterservice"];
+            // managedService (required)   
+            string serviceName = args.Settings.Parameters["managedServiceName"];
             if (serviceName == null)
             {
-                throw new ArgumentNullException("xrouterservice");
+                throw new ArgumentNullException("managedServiceName");
             }
 
             // E-MailSender (optional) 
@@ -76,15 +76,15 @@ namespace XRouter.Manager
         /// <returns></returns>
         private static EMailSender CreateEmailSender(OnStartServiceArgs args, TraceLogger logger)
         {
-            // SmtpHost
-            string smtpHost = args.Settings["email"].Parameters["smtphost"];
+            // SMTP host
+            string smtpHost = args.Settings["email"].Parameters["smtpHost"];
             if (smtpHost == null)
             {
-                throw new ArgumentNullException("smtphost");
+                throw new ArgumentNullException("smtpHost");
             }
 
-            // SmtpPort (optional)
-            string smtpPort = args.Settings["email"].Parameters["smtpport"];
+            // SMTP port (optional)
+            string smtpPort = args.Settings["email"].Parameters["smtpPort"];
             int? port = null;
             if (smtpPort != null)
             {
@@ -123,10 +123,10 @@ namespace XRouter.Manager
             }
 
             // Connection String
-            string connectionString = args.Settings["storages"].Parameters["connectionstring"];
+            string connectionString = args.Settings["storages"].Parameters["connectionString"];
             if (connectionString == null)
             {
-                throw new ArgumentNullException("connectionstring");
+                throw new ArgumentNullException("connectionString");
             }
 
             // Logs
@@ -177,15 +177,15 @@ namespace XRouter.Manager
                 throw new ArgumentNullException("watcher");
             }
 
-            // ThrowUp (required)
-            string throwUp = args.Settings["watcher"].Parameters["throwup"];
-            if (throwUp == null)
+            // Auto-restart enabled (required)
+            string autoRestartEnabledStr = args.Settings["watcher"].Parameters["autoRestartEnabled"];
+            if (autoRestartEnabledStr == null)
             {
-                throw new ArgumentNullException("throwup");
+                throw new ArgumentNullException("autoRestartEnabled");
             }
-            bool throwUpService = Convert.ToBoolean(throwUp);
+            bool autoRestartEnabled = Convert.ToBoolean(autoRestartEnabledStr);
 
-            return new Watcher(serviceName, args.IsDebugMode, throwUpService, logger, sender);
+            return new Watcher(serviceName, args.IsDebugMode, autoRestartEnabled, logger, sender);
         }
 
         /// <summary>
@@ -204,18 +204,18 @@ namespace XRouter.Manager
                 throw new ArgumentNullException("console");
             }
 
-            // Uri (required)
+            // Web service URI (required)
             string uri = args.Settings["console"].Parameters["uri"];
             if (uri == null)
             {
                 throw new ArgumentNullException("uri");
             }
 
-            // Metadata-Uri (required)
-            string metadataUri = args.Settings["console"].Parameters["metadatauri"];
+            // Metadata web service URI (required)
+            string metadataUri = args.Settings["console"].Parameters["metadataUri"];
             if (uri == null)
             {
-                throw new ArgumentNullException("metadatauri");
+                throw new ArgumentNullException("metadataUri");
             }
 
             return new ConsoleServer(serviceName, args.IsDebugMode, uri, metadataUri, storagesInfo, watcher, logger);

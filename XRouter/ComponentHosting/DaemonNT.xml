@@ -16,26 +16,26 @@
   <service type="XRouter.Manager.XRouterManagerService,XRouter.Manager.dll" name="xroutermanager">
     <settings>
       <section name="email">
-        <param name="smtphost">localhost</param>
-        <param name="smtpport">25</param>
+        <param name="smtpHost">localhost</param>
+        <param name="smtpPort">25</param>
         <param name="from">xrouter-manager@localhost</param>
         <param name="to">xrouter-admin@localhost</param>
       </section>
       <section name="storages">
-        <param name="connectionstring">mssqlserverconnectionstring</param>
+        <param name="connectionString">mssqlserverconnectionstring</param>
         <param name="logs">Logs</param>
       </section>
       <section name="watcher">
-        <param name="throwup">True</param>
+        <param name="autoRestartEnabled">True</param>
       </section>
       <section name="console">
         <param name="uri">http://localhost:9090/XRouter.ConsoleService</param>
-        <param name="metadatauri">http://localhost:9090/XRouter.ConsoleService.Metadata</param>
+        <param name="metadataUri">http://localhost:9090/XRouter.ConsoleService.Metadata</param>
       </section>
       <section name="reporter">
         <param name="time">01:00:00</param>
       </section>
-      <param name="xrouterservice">xrouter</param>
+      <param name="managedServiceName">xrouter</param>
     </settings>
   </service>
 </config>
