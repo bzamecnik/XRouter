@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -459,7 +459,7 @@ namespace XRouter.Common
         }
 
         /// <summary>
-        /// Gets the information about the type of an anction specified by its
+        /// Gets the information about the type of an action specified by its
         /// name.
         /// </summary>
         /// <param name="name">name of the action</param>
@@ -507,7 +507,7 @@ namespace XRouter.Common
         }
 
         /// <summary>
-        /// Removes an existing information about an anction type with
+        /// Removes an existing information about an action type with
         /// specified by its name.
         /// </summary>
         /// <param name="name">name of the action type to be removed</param>

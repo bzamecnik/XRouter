@@ -18,7 +18,7 @@
       <section name="email">
         <param name="smtphost">localhost</param>
         <param name="smtpport">25</param>
-        <param name="from">xroutermanager@localhost</param>
+        <param name="from">xrouter-manager@localhost</param>
         <param name="to">xrouter-admin@localhost</param>
       </section>
       <section name="storages">

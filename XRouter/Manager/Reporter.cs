@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using DaemonNT.Logging;
@@ -99,8 +97,8 @@ namespace XRouter.Manager
                             LastReporting = dt;
                             try
                             {
-                                DateTime max = new DateTime(dt.Year, dt.Month, dt.Day, time.Hours, time.Minutes, 0);                                
-                                DateTime min = max.AddDays(-1);                                
+                                DateTime max = new DateTime(dt.Year, dt.Month, dt.Day, time.Hours, time.Minutes, 0);
+                                DateTime min = max.AddDays(-1);
                                 string report = this.CreateReport(min, max);
 
                                 // send report

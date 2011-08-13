@@ -8,6 +8,10 @@ using Xunit;
 
 namespace XRouter.Test.Integration
 {
+    // TODO: as changing configuration at run-time was disabled it is needed
+    // to run change the code to start/stop XRouter for EACH test method.
+    // It is needed to provide configuration before running XRouter.
+
     public class BasicXRouterPipelineTests : IDisposable
     {
         /// <summary>

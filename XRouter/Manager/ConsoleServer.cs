@@ -1,50 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DaemonNT.Logging;
-using System.Threading;
-using System.ServiceProcess;
 using System.ServiceModel;
 using System.ServiceModel.Description;
+using System.ServiceProcess;
+using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
+using DaemonNT.Logging;
 using XRouter.Common;
 using XRouter.Common.Persistence;
 
 namespace XRouter.Manager
 {
-    /// <summary>
-    /// Specfikace rozhrani WCF, ktera poskytuje sluzby XRouter console (GUI).
-    /// </summary>
-    [ServiceContract]
-    public interface IConsoleServer
-    {
-        [OperationContract]
-        string GetXRouterServiceStatus();
-       
-        [OperationContract]
-        void StartXRouterService(int timeout);
-        
-        [OperationContract]
-        void StopXRouterService(int timeout);
-
-        [OperationContract]
-        ApplicationConfiguration GetConfiguration();
-
-        [OperationContract]
-        void ChangeConfiguration(ApplicationConfiguration config);
-
-        [OperationContract]
-        EventLogEntry[] GetEventLogEntries(DateTime minDate, DateTime maxDate, LogLevelFilters logLevelFilter, int pageSize, int pageNumber);
-
-        [OperationContract]
-        TraceLogEntry[] GetTraceLogEntries(DateTime minDate, DateTime maxDate, LogLevelFilters logLevelFilter, int pageSize, int pageNumber);
-
-        [OperationContract]
-        Token[] GetTokens(int pageSize, int pageNumber);
-    }
-
     /// <summary>
     /// Implementace WCF sluzby, ktera poskytuje sluzby XRouter console (GUI). 
     /// </summary>
@@ -70,7 +36,7 @@ namespace XRouter.Manager
         /// Hostovaci prostredi pro tuto WCF Web Service. 
         /// </summary>
         private ServiceHost wcfHost = null;
-        
+
         /// <summary>
         /// Odkaz na DaemonNT trace logger.
         /// </summary>
@@ -90,7 +56,7 @@ namespace XRouter.Manager
         /// Persistentni uloziste XRouter. 
         /// </summary>
         private PersistentStorage storage;
-        
+
         /// <summary>
         /// Nastroj pro skenovani event logu.
         /// </summary>
@@ -106,18 +72,18 @@ namespace XRouter.Manager
         /// </summary>
         private StoragesInfo storagesInfo = null;
 
-        public ConsoleServer(string serviceName, bool isDebugMode, string uri, string metadataUri, 
+        public ConsoleServer(string serviceName, bool isDebugMode, string uri, string metadataUri,
             StoragesInfo storagesInfo, Watcher watcher, TraceLogger logger)
         {
             this.serviceName = serviceName;
             this.IsDebugMode = isDebugMode;
-            this.uri = uri;           
+            this.uri = uri;
             this.metadataUri = metadataUri;
             this.storagesInfo = storagesInfo;
             this.serviceWatcher = watcher;
-            this.logger = logger;                      
+            this.logger = logger;
         }
-      
+
         public void Start()
         {
             // init DB storage
@@ -126,40 +92,44 @@ namespace XRouter.Manager
             // init log readers
             this.eventLogReader = new EventLogReader(this.storagesInfo.LogsDirectory);
             this.traceLogReader = new TraceLogReader(this.storagesInfo.LogsDirectory);
-            
+
             // create WCF service on a new thread
             Exception exception = null;
             Thread wcfHostThread = new Thread(delegate(object data)
             {
                 try
-                {                                       
+                {
                     this.wcfHost = new ServiceHost(this, new Uri(this.uri));
-                    
+
                     // set binding (WebService - SOAP/HTTP)
                     WSHttpBinding binding = new WSHttpBinding();
-                    binding.MaxReceivedMessageSize = int.MaxValue;                                  
-                    binding.ReaderQuotas = new XmlDictionaryReaderQuotas() { MaxBytesPerRead = int.MaxValue, 
-                        MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue };                    
-                               
+                    binding.MaxReceivedMessageSize = int.MaxValue;
+                    binding.ReaderQuotas = new XmlDictionaryReaderQuotas()
+                    {
+                        MaxBytesPerRead = int.MaxValue,
+                        MaxArrayLength = int.MaxValue,
+                        MaxStringContentLength = int.MaxValue
+                    };
+
                     // set endpoint
                     this.wcfHost.AddServiceEndpoint(typeof(IConsoleServer), binding, "ConsoleServer");
 
                     // set metadata behavior
                     ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
                     smb.HttpGetEnabled = true;
-                    smb.HttpGetUrl = new Uri(this.metadataUri);         
-                    this.wcfHost.Description.Behaviors.Add(smb);                    
+                    smb.HttpGetUrl = new Uri(this.metadataUri);
+                    this.wcfHost.Description.Behaviors.Add(smb);
                     foreach (var b in this.wcfHost.Description.Behaviors)
-                    {                        
+                    {
                         if (b is System.ServiceModel.Description.ServiceDebugBehavior)
                         {
                             var sdb = (System.ServiceModel.Description.ServiceDebugBehavior)b;
                             sdb.IncludeExceptionDetailInFaults = true;
                         }
-                    } 
+                    }
 
                     // open connection
-                    this.wcfHost.Open();                    
+                    this.wcfHost.Open();
                 }
                 catch (Exception e)
                 {
@@ -170,11 +140,11 @@ namespace XRouter.Manager
             wcfHostThread.Join();
 
             if (exception != null)
-            {                
+            {
                 throw exception;
             }
         }
-        
+
         public void Stop()
         {
             if (this.wcfHost != null)
@@ -201,6 +171,9 @@ namespace XRouter.Manager
         /// <param name="timeout"></param>
         public void StartXRouterService(int timeout)
         {
+            // TODO: possibly use DaemonNT.ServiceCommands.Start() instead as it
+            // handles some special cases better
+
             if (!this.IsDebugMode)
             {
                 ServiceController sc = new ServiceController(this.serviceName);
@@ -209,6 +182,9 @@ namespace XRouter.Manager
             }
             else
             {
+                // TODO: it is possible to use DaemonNT.ServiceCommands.DebugStart()
+                // or start a new process
+
                 this.logger.LogWarning("StartXRouterService() is not allowed on debug mode.");
             }
         }
@@ -242,7 +218,7 @@ namespace XRouter.Manager
         {
             XDocument configXml = storage.GetApplicationConfiguration();
             var result = new ApplicationConfiguration(configXml);
-            return result;            
+            return result;
         }
 
         /// <summary>

@@ -8,8 +8,8 @@ using XRouter.Processor.MessageFlowBuilding;
 namespace XRouter.ComponentHosting
 {
     /// <summary>
-    /// A DaemonNT service which runs all the XRouter components within a
-    /// single process (in multiple threads).
+    /// A DaemonNT service which runs all the XRouter service components
+    /// within a single process (in multiple threads).
     /// </summary>
     class XRouterService : Service
     {

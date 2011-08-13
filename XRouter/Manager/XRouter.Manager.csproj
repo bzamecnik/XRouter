@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="ConsoleServer.cs" />
     <Compile Include="EMailSender.cs" />
+    <Compile Include="IConsoleServer.cs" />
     <Compile Include="Reporter.cs" />
     <Compile Include="Watcher.cs" />
     <Compile Include="StoragesInfo.cs" />

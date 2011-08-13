@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace XRouter.Manager
+﻿namespace XRouter.Manager
 {
     /// <summary>
-    /// Objekt obsahuje informace potrebne pro pristup k persistentnim zdrojum. 
+    /// Represents information needed for accessing various persistent
+    /// resources.
     /// </summary>
     internal sealed class StoragesInfo
     {
         /// <summary>
-        /// ConnectionString k databazi XRouter. 
+        /// XRouter database connection string. The format is dependent on
+        /// the concrete database used.
         /// </summary>
         public string DbConnectionString { private set; get; }
 
         /// <summary>
-        /// DaemonNT Logs directory. 
+        /// Directory where DaemonNT should storage logs.
         /// </summary>
         public string LogsDirectory { set; get; }
+
+        public static readonly string DefaultLogsDirectory = "Logs";
 
         public StoragesInfo(string dbConnectionString, string logsDirectory)
         {
@@ -26,7 +25,7 @@ namespace XRouter.Manager
             this.LogsDirectory = logsDirectory;
             if (this.LogsDirectory == null)
             {
-                this.LogsDirectory = "Logs";
+                this.LogsDirectory = DefaultLogsDirectory;
             }
         }
     }

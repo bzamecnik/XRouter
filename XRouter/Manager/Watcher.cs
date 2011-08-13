@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.ServiceProcess;
+using System.Threading;
 using DaemonNT.Logging;
 
 namespace XRouter.Manager
@@ -106,6 +103,9 @@ namespace XRouter.Manager
 
             if (isDebugMode)
             {
+                // TODO: this is quite meaningless
+                // watcher should be disabled if the watched XRouter service
+                // runs in debug mode, not this XRouter Manager service!!!
                 logger.LogWarning("Watcher is disabled on debug mode.");
             }
         }

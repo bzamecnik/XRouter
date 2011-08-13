@@ -1,24 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using DaemonNT;
 using DaemonNT.Logging;
 
 namespace XRouter.Manager
 {
     /// <summary>
-    /// Reprezentace sluzby XRouterManager, ktera poskytuje podpurne servery pro monitoring a management 
-    /// sluzby XRouterService.
+    /// A DaemonNT service runnings the XRouter manager - a collection of
+    /// services for monitoring and management of a single XRouter service
+    /// instance.
     /// </summary>
+    /// <remarks>
+    /// The services contained in an XRouter manager are: ConsoleServer for
+    /// management of an XRouter service, Watcher monitoring an XRouter
+    /// service and possibly restarting it, and Reporter which send some
+    /// summary reports via e-mail to an administrator.
+    /// </remarks>
     public class XRouterManagerService : Service
     {
-        private Reporter reporter = null;
+        private Reporter reporter;
 
-        private Watcher watcher = null;
+        private Watcher watcher;
 
-        private ConsoleServer consoleServer = null;
-                      
+        private ConsoleServer consoleServer;
+
         protected override void OnStart(OnStartServiceArgs args)
         {
             // XRouterServiceName (required)   
@@ -32,39 +36,46 @@ namespace XRouter.Manager
             EMailSender emailSender = null;
             if (args.Settings["email"] != null)
             {
-                emailSender = CreateEmailSender(args, this.Logger.Trace);                               
+                emailSender = CreateEmailSender(args, this.Logger.Trace);
             }
             else
             {
-                this.Logger.Trace.LogWarning("E-mail notification sender is not initialized.");
+                this.Logger.Trace.LogWarning("E-mail notification sender has not been initialized.");
             }
-            
+
             // Storages (required)
             StoragesInfo storagesInfo = CreateStoragesInfo(args);
 
             // Reporter (required)
             this.reporter = CreateReporter(serviceName, args, storagesInfo, emailSender, this.Logger.Trace);
-                 
+
             // ServiceWatcher (required)
             this.watcher = CreateServiceWatcher(serviceName, args, emailSender, this.Logger.Trace);
 
             // ConsoleServer (required)
             this.consoleServer = CreateConsoleServer(serviceName, args, this.watcher, storagesInfo, this.Logger.Trace);
-                               
+
             // start servers            
             this.watcher.Start();
             this.consoleServer.Start();
             this.reporter.Start();
         }
 
+        protected override void OnStop(OnStopServiceArgs args)
+        {
+            this.consoleServer.Stop();
+            this.watcher.Stop();
+            this.reporter.Stop();
+        }
+
         /// <summary>
-        /// Podpurna metoda pro vytvoreni a inicializaci instance EMailNotificationSender. 
+        /// Podpurna metoda pro vytvoreni a inicializaci instance EMailSender. 
         /// </summary>
         /// <param name="args"></param>
         /// <param name="logger"></param>
         /// <returns></returns>
         private static EMailSender CreateEmailSender(OnStartServiceArgs args, TraceLogger logger)
-        {                  
+        {
             // SmtpHost
             string smtpHost = args.Settings["email"].Parameters["smtphost"];
             if (smtpHost == null)
@@ -95,7 +106,7 @@ namespace XRouter.Manager
                 throw new ArgumentNullException("to");
             }
             System.Net.Mail.MailAddress toAddress = new System.Net.Mail.MailAddress(to);
-            
+
             return new EMailSender(smtpHost, port, fromAddress, toAddress, logger);
         }
 
@@ -120,7 +131,7 @@ namespace XRouter.Manager
 
             // Logs
             string logs = args.Settings["storages"].Parameters["logs"];
-            
+
             return new StoragesInfo(connectionString, logs);
         }
 
@@ -158,7 +169,7 @@ namespace XRouter.Manager
         /// <param name="sender"></param>
         /// <param name="logger"></param>
         /// <returns></returns>
-        private static Watcher CreateServiceWatcher(string serviceName, OnStartServiceArgs args, EMailSender sender, 
+        private static Watcher CreateServiceWatcher(string serviceName, OnStartServiceArgs args, EMailSender sender,
             TraceLogger logger)
         {
             if (args.Settings["watcher"] == null)
@@ -174,7 +185,7 @@ namespace XRouter.Manager
             }
             bool throwUpService = Convert.ToBoolean(throwUp);
 
-            return new Watcher(serviceName, args.IsDebugMode, throwUpService, logger, sender); 
+            return new Watcher(serviceName, args.IsDebugMode, throwUpService, logger, sender);
         }
 
         /// <summary>
@@ -185,7 +196,7 @@ namespace XRouter.Manager
         /// <param name="watcher"></param>
         /// <param name="connectionString"></param>
         /// <returns></returns>
-        private static ConsoleServer CreateConsoleServer(string serviceName, OnStartServiceArgs args, Watcher watcher, 
+        private static ConsoleServer CreateConsoleServer(string serviceName, OnStartServiceArgs args, Watcher watcher,
             StoragesInfo storagesInfo, TraceLogger logger)
         {
             if (args.Settings["console"] == null)
@@ -207,14 +218,7 @@ namespace XRouter.Manager
                 throw new ArgumentNullException("metadatauri");
             }
 
-            return new ConsoleServer(serviceName, args.IsDebugMode, uri, metadataUri, storagesInfo,  watcher, logger);
-        }
-                
-        protected override void OnStop(OnStopServiceArgs args)
-        {            
-            this.consoleServer.Stop();
-            this.watcher.Stop();
-            this.reporter.Stop();
+            return new ConsoleServer(serviceName, args.IsDebugMode, uri, metadataUri, storagesInfo, watcher, logger);
         }
     }
 }

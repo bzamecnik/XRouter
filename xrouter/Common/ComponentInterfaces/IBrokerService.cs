@@ -6,7 +6,21 @@
     /// </summary>
     public interface IBrokerService : IBrokerServiceForGateway, IBrokerServiceForProcessor, IBrokerServiceForHost
     {
+        /// <summary>
+        /// Obtains the complete XRouter application configuration.
+        /// </summary>
+        /// <remarks>
+        /// NOTE: There should not be a single property instead of the methods
+        /// GetConfiguration() and ChangeConfiguration(). These methods can
+        /// execute slowly, non-locally and with side-effects.
+        /// </remarks>
+        /// <returns>current configuration</returns>
         ApplicationConfiguration GetConfiguration();
+
+        /// <summary>
+        /// Updates the XRouter application configuration.
+        /// </summary>
+        /// <param name="config">new application configuration</param>
         void UpdateConfiguration(ApplicationConfiguration configuration);
     }
 }

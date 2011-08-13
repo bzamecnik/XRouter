@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net.Mail;
 using DaemonNT.Logging;
 
@@ -31,13 +28,13 @@ namespace XRouter.Manager
         /// Adresa prijemce e-mailu. 
         /// </summary>
         private MailAddress to = null;
-        
+
         /// <summary>
         /// Odkaz na Daemon trace logger. 
         /// </summary>
         private TraceLogger logger = null;
 
-        public EMailSender(string smtpHost, int? smtpPort, MailAddress from, 
+        public EMailSender(string smtpHost, int? smtpPort, MailAddress from,
             MailAddress to, TraceLogger logger)
         {
             this.smtpHost = smtpHost;
@@ -53,10 +50,10 @@ namespace XRouter.Manager
         /// dojde k vyjimecne udalosti, pak je pouze zalogovana. 
         /// </summary>     
         public void Send(string subject, string body)
-        {            
+        {
             try
             {
-                this.logger.LogInfo(string.Format("Send e-mail: '{0}'", body));
+                this.logger.LogInfo(string.Format("Sending e-mail: '{0}'", body));
 
                 // create smtp client
                 SmtpClient smtp = new SmtpClient();
@@ -65,14 +62,14 @@ namespace XRouter.Manager
                 {
                     smtp.Port = this.smtpPort.Value;
                 }
-               
+
                 // create e-mail message
                 MailMessage mailMessage = new MailMessage();
-                mailMessage.From = this.from;               
+                mailMessage.From = this.from;
                 mailMessage.Subject = subject;
-                mailMessage.Body = body;               
-                mailMessage.To.Add(to);                
-                
+                mailMessage.Body = body;
+                mailMessage.To.Add(to);
+
                 // send e-mail message
                 smtp.Send(mailMessage);
             }
