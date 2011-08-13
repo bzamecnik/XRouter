@@ -59,7 +59,6 @@
     <Compile Include="EventLogEntry.cs" />
     <Compile Include="EventLogReader.cs" />
     <Compile Include="GatewayProvider.cs" />
-    <Compile Include="IComponentController.cs" />
     <Compile Include="ComponentInterfaces\IComponentService.cs" />
     <Compile Include="ComponentInterfaces\IProcessorService.cs" />
     <Compile Include="LogLevelFilters.cs" />
