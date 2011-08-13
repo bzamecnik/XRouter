@@ -1,4 +1,0 @@
-Receiver;410;77
-Sender;78;99
-Consument;414;106
-Producent;79;133
