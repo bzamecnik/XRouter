@@ -13,7 +13,7 @@ namespace XRouter.Manager
     /// <remarks>
     /// <para>
     /// The automatical restarts can be enabled in the contructor via the
-    /// autoRestartEnabled parameter (usually taken from the manager service
+    /// autoStartEnabled parameter (usually taken from the manager service
     /// configuration). Automatic restarting can be temporarily disabled using
     /// the DisableServiceAutoRestart() method. As soon as the service is
     /// started automatic restarting behaves again as configured.
@@ -122,17 +122,17 @@ namespace XRouter.Manager
         /// <summary>
         /// Disables restarting an unresponsible service automatically.
         /// </summary>
-        public void DisableServiceAutoRestart()
+        public void DisableServiceAutoStart()
         {
             this.runtimeAutoRestartEnabled = false;
         }
 
-        public Watcher(string serviceName, bool isDebugMode, bool autoRestartEnabled, TraceLogger logger, EMailSender sender)
+        public Watcher(string serviceName, bool isDebugMode, bool autoStartEnabled, TraceLogger logger, EMailSender sender)
         {
             this.managedServiceName = serviceName;
             this.isDebugMode = isDebugMode;
-            this.configAutoRestartEnabled = autoRestartEnabled;
-            this.runtimeAutoRestartEnabled = autoRestartEnabled;
+            this.configAutoRestartEnabled = autoStartEnabled;
+            this.runtimeAutoRestartEnabled = autoStartEnabled;
             this.logger = logger;
             this.emailSender = sender;
 

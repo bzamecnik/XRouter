@@ -26,7 +26,7 @@
         <param name="logs">Logs</param>
       </section>
       <section name="watcher">
-        <param name="autoRestartEnabled">True</param>
+        <param name="autoStartEnabled">True</param>
       </section>
       <section name="console">
         <param name="uri">http://localhost:9090/XRouter.ConsoleService</param>

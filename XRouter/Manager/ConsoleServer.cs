@@ -192,7 +192,7 @@ namespace XRouter.Manager
         {
             if (!this.IsDebugMode)
             {
-                this.serviceWatcher.DisableServiceAutoRestart();
+                this.serviceWatcher.DisableServiceAutoStart();
                 ServiceController sc = new ServiceController(this.serviceName);
                 sc.Stop();
                 sc.WaitForStatus(ServiceControllerStatus.Stopped, new TimeSpan(0, 0, timeout));

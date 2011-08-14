@@ -11,9 +11,9 @@ namespace XRouter.Manager
     /// </summary>
     /// <remarks>
     /// The services contained in an XRouter manager are: ConsoleServer for
-    /// management of an XRouter service, Watcher monitoring and automatic
-    /// restarting an XRouter service and possibly restarting it, and Reporter
-    /// which send some summary reports via e-mail to an administrator.
+    /// management of an XRouter service, Watcher monitoring an XRouter
+    /// service and possibly starting it again, and Reporter which send some
+    /// summary reports via e-mail to an administrator.
     /// </remarks>
     public class XRouterManagerService : Service
     {
@@ -179,14 +179,14 @@ namespace XRouter.Manager
             }
 
             // Auto-restart enabled (required)
-            string autoRestartEnabledStr = args.Settings["watcher"].Parameters["autoRestartEnabled"];
+            string autoRestartEnabledStr = args.Settings["watcher"].Parameters["autoStartEnabled"];
             if (autoRestartEnabledStr == null)
             {
-                throw new ArgumentNullException("autoRestartEnabled");
+                throw new ArgumentNullException("autoStartEnabled");
             }
-            bool autoRestartEnabled = Convert.ToBoolean(autoRestartEnabledStr);
+            bool autoStartEnabled = Convert.ToBoolean(autoRestartEnabledStr);
 
-            return new Watcher(serviceName, args.IsDebugMode, autoRestartEnabled, logger, sender);
+            return new Watcher(serviceName, args.IsDebugMode, autoStartEnabled, logger, sender);
         }
 
         /// <summary>
