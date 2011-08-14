@@ -12,7 +12,7 @@ namespace XRouter.Data
     /// An implementation of data access API using a Microsft SQL Server
     /// database.
     /// </summary>
-    public class MsSqlDataAccess : IDataAccess_Old
+    public class MsSqlDataAccess_Old : IDataAccess_Old
     {
         private string IPAddress;
         private string instance;
@@ -23,7 +23,7 @@ namespace XRouter.Data
 
         private string ConnectionString;
 
-        public MsSqlDataAccess
+        public MsSqlDataAccess_Old
         (
             string IPAddress = "localhost",
             string instance = "DOMA",
@@ -98,11 +98,6 @@ namespace XRouter.Data
         {
             List<string> interests = new List<string>();
 
-            string parameters = string.Format
-                (
-                    " @ComponentName='{0}'",
-                    componentName
-                );
             Response response = ExecuteProcedure("GetComponentConfigInterests",
                 new SqlParameter[]
                 {
