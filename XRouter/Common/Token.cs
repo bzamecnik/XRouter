@@ -126,6 +126,10 @@ namespace XRouter.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>may return null</returns>
         public EndpointAddress GetSourceAddress()
         {
             lock (SyncLock) {

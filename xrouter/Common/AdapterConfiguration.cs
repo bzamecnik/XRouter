@@ -25,5 +25,19 @@ namespace XRouter.Common
             AdapterTypeName = adapterTypeName;
             Configuration = new SerializableXDocument(XDocument.Parse("<objectConfig />"));
         }
+
+        public AdapterConfiguration(string adapterName, string adapterTypeName, XDocument config)
+        {
+            AdapterName = adapterName;
+            AdapterTypeName = adapterTypeName;
+            if (config == null)
+            {
+                throw new ArgumentNullException("config");
+            }
+            if (config.Root.Name != XName.Get("objectConfig")) {
+                throw new ArgumentException("config");
+            }
+            Configuration = new SerializableXDocument(config);
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace XRouter.Adapters
     /// service is returend.
     /// </remarks>
     [AdapterPlugin("HTTP client adapter", "Provides a HTTP client which can send messages to remote web services.")]
-    class HttpClientAdapter : Adapter
+    public class HttpClientAdapter : Adapter
     {
         [ConfigurationItem("Target URI", "URI of the target web service. Example: 'http://www.example.com:8080/path/'.", "http://localhost:8080/")]
         public string Uri { set; get; }

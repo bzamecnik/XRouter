@@ -111,13 +111,10 @@ namespace XRouter.Processor
         /// </summary>
         /// <param name="token">token to be finished</param>
         /// <param name="resultMessage">reply message going back the the original
-        /// gateway</param>
+        /// gateway; can be null</param>
         public void FinishToken(Token token, XDocument resultMessage)
         {
-            SerializableXDocument serializableResultMessage = null;
-            if (resultMessage != null) {
-                serializableResultMessage = new SerializableXDocument(resultMessage);
-            }
+            SerializableXDocument serializableResultMessage =  new SerializableXDocument(resultMessage);
             BrokerService.FinishToken(ProcessorName, token.Guid, serializableResultMessage);
         }
     }

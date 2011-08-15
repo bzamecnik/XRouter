@@ -26,9 +26,9 @@ namespace XRouter.Common
 
         public EndpointAddress(string gatewayName, string adapterName, string endpointName)
         {
-            GatewayName = gatewayName;
-            AdapterName = adapterName;
-            EndpointName = endpointName;
+            GatewayName = (gatewayName != null) ? gatewayName : string.Empty;
+            AdapterName = (adapterName != null) ? adapterName : string.Empty;
+            EndpointName = (endpointName != null) ? endpointName : string.Empty;
         }
 
         public override int GetHashCode()

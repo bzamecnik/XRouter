@@ -200,9 +200,13 @@ namespace XRouter.Broker
                     });
 
                     XDocument sourceMetadata = token.GetSourceMetadata();
-                    string sourceGatewayName = token.GetSourceAddress().GatewayName;
-                    GatewayAccessor sourceGateway = componentsAccessors.Values.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == sourceGatewayName);
-                    sourceGateway.ReceiveReturn(tokenGuid, resultMessage, new SerializableXDocument(sourceMetadata));
+                    var sourceAdress = token.GetSourceAddress();
+                    if (sourceAdress != null)
+                    {
+                        string sourceGatewayName = sourceAdress.GatewayName;
+                        GatewayAccessor sourceGateway = componentsAccessors.Values.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == sourceGatewayName);
+                        sourceGateway.ReceiveReturn(tokenGuid, resultMessage, new SerializableXDocument(sourceMetadata));
+                    }
 
                     storage.UpdateToken(tokenGuid, delegate(Token t) {
                         t.State = TokenState.Finished;
