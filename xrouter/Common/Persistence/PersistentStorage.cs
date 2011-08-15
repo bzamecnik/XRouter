@@ -14,13 +14,16 @@ namespace XRouter.Common.Persistence
 
         public PersistentStorage(string connectionString)
         {
-            dataAccess = new MemoryDataAccess();
+            dataAccess = new MsSqlDataAccess_New();
             dataAccess.Initialize(connectionString);
         }
 
         public XDocument GetApplicationConfiguration()
         {
             string configXml = dataAccess.LoadConfiguration();
+            if (configXml == null) {
+                configXml = ApplicationConfiguration.InitialContent;
+            }
             XDocument result = XDocument.Parse(configXml);
             return result;
         }

@@ -38,7 +38,7 @@ namespace XRouter.ComponentHosting
 
             string processorName = args.Settings[SectionKey_Processor].Parameters[SettingsKey_ComponentName];
             string gatewayName = args.Settings[SectionKey_Gateway].Parameters[SettingsKey_ComponentName];
-            string connectionString = args.Settings[SectionKey_Processor].Parameters[SettingsKey_ConnectionString];
+            string connectionString = args.Settings[SectionKey_Broker].Parameters[SettingsKey_ConnectionString];
 
             broker.Start(
                 connectionString,

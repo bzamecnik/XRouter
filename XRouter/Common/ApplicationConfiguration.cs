@@ -29,6 +29,50 @@ namespace XRouter.Common
     [DataContract]
     public class ApplicationConfiguration
     {
+        public static readonly string InitialContent = @"
+<configuration>
+    <components>
+        <gateway name='gateway'>
+            <adapters>
+            </adapters>
+        </gateway>
+        <processor name='processor' concurrent-threads='4'>
+        </processor>
+    </components>
+    <dispatcher nonrunning-processor-response-timeout='60'>
+    </dispatcher>
+    <adapter-types>
+    </adapter-types>
+    <action-types>
+    </action-types>
+    <messageflows current='d77b24b8-9333-457b-92e8-dd1624f3e9ce'>
+        <messageflow guid='d77b24b8-9333-457b-92e8-dd1624f3e9ce'>
+          <MessageFlowConfiguration xmlns:i='http://www.w3.org/2001/XMLSchema-instance' xmlns:z='http://schemas.microsoft.com/2003/10/Serialization/' xmlns='http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig' z:Id='1'>
+            <Guid>d77b24b8-9333-457b-92e8-dd1624f3e9ce</Guid>
+            <Name z:Id='2'>default</Name>
+            <Nodes z:Id='3' z:Size='1'>
+              <NodeConfiguration z:Id='4' i:type='TerminatorNodeConfiguration'>
+                <Location xmlns:d4p1='http://schemas.datacontract.org/2004/07/System.Windows'>
+                  <d4p1:_x>0</d4p1:_x>
+                  <d4p1:_y>0</d4p1:_y>
+                </Location>
+                <_name z:Id='5'>Terminator</_name>
+                <IsReturningOutput>false</IsReturningOutput>
+                <ResultMessageSelection z:Id='6'>
+                  <SelectionPattern z:Id='7' />
+                </ResultMessageSelection>
+              </NodeConfiguration>
+            </Nodes>
+            <RootNode i:nil='true' />
+            <Version>3</Version>
+          </MessageFlowConfiguration>
+        </messageflow>
+    </messageflows>
+    <xml-resource-storage>
+    </xml-resource-storage>
+</configuration>
+";
+
         /// <summary>
         /// The configuration represented as a XML document.
         /// </summary>

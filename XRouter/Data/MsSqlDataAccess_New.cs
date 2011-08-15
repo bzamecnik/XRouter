@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace XRouter.Data
 {
-    class MsSqlDataAccess_New : IDataAccess_New
+    public class MsSqlDataAccess_New : IDataAccess_New
     {
         private string connectionString;
 
