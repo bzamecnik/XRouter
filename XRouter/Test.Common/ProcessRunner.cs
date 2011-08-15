@@ -8,7 +8,7 @@ using System.IO;
 
 namespace XRouter.Test.Common
 {
-    class ProcessXRouterRunner : DaemonNtDebugXRouterRunner, IDisposable
+    class ProcessRunner : DaemonNtDebugRunner, IDisposable
     {
         Process daemonProcess;
 
@@ -17,7 +17,7 @@ namespace XRouter.Test.Common
 
         public string ExecutablePath { get; set; }
 
-        public ProcessXRouterRunner(string daemonNtConfigFile, string serviceName)
+        public ProcessRunner(string daemonNtConfigFile, string serviceName)
             : base(daemonNtConfigFile, serviceName)
         {
             ExecutablePath = DefaultExecutablePath;

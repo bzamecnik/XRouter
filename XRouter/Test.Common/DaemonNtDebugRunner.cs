@@ -6,7 +6,7 @@ using DaemonNT;
 
 namespace XRouter.Test.Common
 {
-    abstract class DaemonNtDebugXRouterRunner :IXRouterRunner 
+    abstract class DaemonNtDebugRunner :IServiceRunner 
     {        
         /// <summary>
         /// DaemonNT configuration file containing the XRouter service.
@@ -21,7 +21,7 @@ namespace XRouter.Test.Common
 
         protected ServiceCommands DaemonNt { get; set; }
 
-        public DaemonNtDebugXRouterRunner(string daemonNtConfigFile, string serviceName)
+        public DaemonNtDebugRunner(string daemonNtConfigFile, string serviceName)
         {
             ServiceName = serviceName;
             DaemonNtConfigFile = daemonNtConfigFile;

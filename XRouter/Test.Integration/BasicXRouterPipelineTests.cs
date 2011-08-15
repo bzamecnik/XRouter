@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using System.Xml.Linq;
+using XRouter.Common;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Processor.MessageFlowBuilding;
 using XRouter.Test.Common;
@@ -46,23 +48,32 @@ namespace XRouter.Test.Integration
         {
             LoadSingleCbrRestaurantMenu();
 
-            string source = Path.Combine(OriginalsPath, @"Test1\Input\RestaurantMenu_instance.xml");
-            string dest = Path.Combine(WorkingPath, @"In\RestaurantMenu_instance.xml");
-            // let the XRouter process the file
-            File.Copy(source, dest);
+            xrouterManager.StartXRouter();
 
-            WaitForProcessing();
-
-            // verify that the file was processed well
-            bool ok = XmlDirectoryComparer.Equals(
-                Path.Combine(OriginalsPath, @"Test1\ExpectedOutput\OutA"),
-                Path.Combine(WorkingPath, @"OutA"), true);
-            Assert.True(ok);
-
-            // tear down
-            if (DeleteOutputFiles)
+            try
             {
-                File.Delete(Path.Combine(WorkingPath, @"OutA\RestaurantMenu_instance.xml"));
+                string source = Path.Combine(OriginalsPath, @"Test1\Input\RestaurantMenu_instance.xml");
+                string dest = Path.Combine(WorkingPath, @"In\RestaurantMenu_instance.xml");
+                // let the XRouter process the file
+                File.Copy(source, dest);
+
+                WaitForProcessing();
+
+                // verify that the file was processed well
+                bool ok = XmlDirectoryComparer.Equals(
+                    Path.Combine(OriginalsPath, @"Test1\ExpectedOutput\OutA"),
+                    Path.Combine(WorkingPath, @"OutA"), true);
+                Assert.True(ok);
+
+                // tear down
+                if (DeleteOutputFiles)
+                {
+                    File.Delete(Path.Combine(WorkingPath, @"OutA\RestaurantMenu_instance.xml"));
+                }
+            }
+            finally
+            {
+                xrouterManager.StopXRouter();
             }
         }
 
@@ -93,7 +104,35 @@ namespace XRouter.Test.Integration
             var xrm = configManager.LoadXrmItems(
                 new[] { "RestaurantMenu_schematron" }, "Test1");
 
-            configManager.ReplaceConfiguration(messageFlow, xrm);
+            var adapters = new AdapterConfiguration[] {
+                new AdapterConfiguration("directoryAdapter", "directoryAdapter",
+                    XDocument.Parse(
+@"<objectConfig>
+  <item name='checkingIntervalInSeconds'>0.1</item>
+  <item name='inputEndpointToPathMap'>
+    <pair>
+      <key>In</key>
+      <value>C:\XRouterTest\In</value>
+    </pair>
+  </item>
+  <item name='outputEndpointToPathMap'>
+    <pair>
+      <key>OutB</key>
+      <value>C:\XRouterTest\OutB</value>
+    </pair>
+    <pair>
+      <key>OutA</key>
+      <value>C:\XRouterTest\OutA</value>
+    </pair>
+    <pair>
+      <key>OutC</key>
+      <value>C:\XRouterTest\OutC</value>
+    </pair>
+  </item>
+</objectConfig>"))
+            };
+
+            configManager.ReplaceConfiguration(messageFlow, xrm, adapters);
         }
 
         #region IDisposable Members

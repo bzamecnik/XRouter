@@ -5,7 +5,7 @@ using System.Text;
 
 namespace XRouter.Test.Common
 {
-    interface IXRouterRunner
+    interface IServiceRunner
     {
         void Start();
         void Stop();

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using XRouter.Common;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Manager;
@@ -27,7 +29,7 @@ namespace XRouter.Test.Common
 
         public ConfigurationManager(IConsoleServer consoleServer)
         {
-            BasePath = @"XRouter\Test.Integration\Data\";
+            BasePath = @"..\XRouter\Test.Integration\Data\";
             this.consoleServer = consoleServer;
         }
 
@@ -39,7 +41,15 @@ namespace XRouter.Test.Common
             MessageFlowConfiguration messageFlow,
             XElement xrm)
         {
-            ReplaceConfiguration(consoleServer, messageFlow, xrm);
+            ReplaceConfiguration(consoleServer, messageFlow, xrm, null);
+        }
+
+        public void ReplaceConfiguration(
+            MessageFlowConfiguration messageFlow,
+            XElement xrm,
+            AdapterConfiguration[] adapters)
+        {
+            ReplaceConfiguration(consoleServer, messageFlow, xrm, adapters);
         }
 
         /// <summary>
@@ -49,11 +59,28 @@ namespace XRouter.Test.Common
         public void ReplaceConfiguration(
             IConsoleServer consoleServer,
             MessageFlowConfiguration messageFlow,
-            XElement xrm)
+            XElement xrm,
+            AdapterConfiguration[] adapters)
         {
             // load current configuration
             var configuration = consoleServer.GetConfiguration();
             var xConfig = configuration.Content.XDocument;
+
+            if (adapters != null)
+            {
+                // remove all adapters
+                xConfig.XPathSelectElement("/configuration/components/gateway/adapters").RemoveNodes();
+
+                var gateway = xConfig.XPathSelectElements("/configuration/components/gateway").FirstOrDefault();
+                if (gateway != null)
+                {
+                    string gatewayName = gateway.Attribute("name").Value;
+                    foreach (var adapter in adapters)
+                    {
+                        configuration.SaveAdapterConfiguration(gatewayName, adapter);
+                    }
+                }
+            }
 
             // remove all message flows
             xConfig.XPathSelectElement("/configuration/messageflows").RemoveNodes();

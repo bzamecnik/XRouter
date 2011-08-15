@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace XRouter.Test.Common
 {
-    class ThreadXRouterRunner : DaemonNtDebugXRouterRunner
+    class ThreadXRouterRunner : DaemonNtDebugRunner
     {
         public ThreadXRouterRunner(string daemonNtConfigFile, string serviceName)
             : base(daemonNtConfigFile, serviceName)

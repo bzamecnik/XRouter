@@ -23,22 +23,24 @@ namespace XRouter.Test.Common
         /// </summary>
         public IConsoleServer ConsoleServerProxy { get; private set; }
 
-        private static readonly string DefaultDaemonNtConfigFile =
-            @"DaemonNT.xml";
+        private static readonly string DefaultDaemonNtConfigFile = @"DaemonNT.xml";
 
-        private static readonly string DefaultServiceName = "xrouter";
+        private static readonly string DefaultXRouterServiceName = "xrouter";
+        private static readonly string DefaultXRouterManagerServiceName = "xroutermanager";
 
-        private IXRouterRunner runner;
+        private IServiceRunner xRouterRunner;
+        private IServiceRunner xRouterManagerRunner;
 
         public XRouterManager()
-            : this(DefaultDaemonNtConfigFile, DefaultServiceName)
+            : this(DefaultDaemonNtConfigFile, DefaultXRouterServiceName, DefaultXRouterManagerServiceName)
         {
         }
 
-        public XRouterManager(string daemonNtConfigFile, string serviceName)
+        public XRouterManager(string daemonNtConfigFile, string xRouterServiceName, string xRouterManagerServiceName)
         {
-            runner = new ProcessXRouterRunner(daemonNtConfigFile, serviceName);
-            Start();
+            xRouterRunner = new ProcessRunner(daemonNtConfigFile, xRouterServiceName);
+            xRouterManagerRunner = new ProcessRunner(daemonNtConfigFile, xRouterManagerServiceName);
+            xRouterManagerRunner.Start();
             ConsoleServerProxy = GetConsoleServerProxy();
         }
 
@@ -46,7 +48,7 @@ namespace XRouter.Test.Common
 
         public void Dispose()
         {
-            Stop();
+            xRouterManagerRunner.Stop();
         }
 
         #endregion
@@ -66,15 +68,15 @@ namespace XRouter.Test.Common
             return channelFactory.CreateChannel();
         }
 
-        private void Start()
+        public void StartXRouter()
         {
             Console.WriteLine("Starting XRouter service in debug mode.");
-            runner.Start();
+            xRouterRunner.Start();
         }
 
-        private void Stop()
+        public void StopXRouter()
         {
-            runner.Stop();
+            xRouterRunner.Stop();
             Console.WriteLine("XRouter service stopped.");
         }
     }
