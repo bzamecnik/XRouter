@@ -10,11 +10,11 @@ namespace XRouter.Common.Persistence
 {
     public class PersistentStorage : IXmlStorage
     {
-        private IDataAccess_New dataAccess;
+        private IDataAccess dataAccess;
 
         public PersistentStorage(string connectionString)
         {
-            dataAccess = new MsSqlDataAccess_New();
+            dataAccess = new MsSqlDataAccess();
             dataAccess.Initialize(connectionString);
         }
 

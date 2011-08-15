@@ -40,9 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MsSqlDataAccess_New.cs" />
+    <Compile Include="MsSqlDataAccess.cs" />
     <Compile Include="MsSqlDataAccess_Old.cs" />
-    <Compile Include="IDataAccess_New.cs" />
+    <Compile Include="IDataAccess.cs" />
     <Compile Include="IDataAccess_Old.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

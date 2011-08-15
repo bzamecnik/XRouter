@@ -8,11 +8,11 @@ using System.Xml.Linq;
 
 namespace XRouter.Data
 {
-    public class MsSqlDataAccess_New : IDataAccess_New
+    public class MsSqlDataAccess : IDataAccess
     {
         private string connectionString;
 
-        public MsSqlDataAccess_New () {}
+        public MsSqlDataAccess () {}
 
         #region Public methods - interface IDataAccess
 

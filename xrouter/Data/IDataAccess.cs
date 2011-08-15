@@ -5,7 +5,7 @@ using System.Text;
 
 namespace XRouter.Data
 {
-    public interface IDataAccess_New
+    public interface IDataAccess
     {
         void Initialize(string connectionString);
 
