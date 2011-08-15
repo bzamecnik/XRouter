@@ -22,7 +22,7 @@ namespace XRouter.Adapters
     /// </para>
     /// </remarks>
     [AdapterPlugin("E-mail sender adapter", "It can send e-mails with a XML message attached.")]
-    class EMailClientAdapter : Adapter
+    public class EMailClientAdapter : Adapter
     {
         [ConfigurationItem("SMTP host", "Host-name or IP adress of the SMTP server.", "")]
         public string SmtpHost { set; get; }

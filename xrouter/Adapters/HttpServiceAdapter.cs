@@ -12,7 +12,7 @@ namespace XRouter.Adapters
     /// to them in RPC style. The XML content can be arbitrary (typically SOAP).
     /// </summary>
     [AdapterPlugin("HTTP service adapter", "Provides a simple web service listener which can receive messages.")]
-    class HttpServiceAdapter : Adapter
+    public class HttpServiceAdapter : Adapter
     {
         // nastavit jako povinny
         [ConfigurationItem("Listener URI prefix", "It is composed of a scheme (http), host name, (optional) port, and (optional) path. Example: 'http://www.example.com:8080/path/'.", "http://localhost:8080/")]
