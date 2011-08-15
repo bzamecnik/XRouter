@@ -80,7 +80,7 @@ namespace XRouter.Common
         public SerializableXDocument Content { get; private set; }
 
         public ApplicationConfiguration()
-            //:this(null)
+        //:this(null)
         {
             // TODO: Content should probably be initialized with an empty XDocument
             // (care must be taken with deserialization).
@@ -323,6 +323,10 @@ namespace XRouter.Common
         /// <summary>
         /// Adds a new type of adapter.
         /// </summary>
+        /// <remarks>
+        /// If there is any existing adapter type with this name it get replaced
+        /// with the given adapter type.
+        /// </remarks>
         /// <param name="adapterType">information about adapter type</param>
         public void AddAdapterType(AdapterType adapterType)
         {
@@ -333,9 +337,14 @@ namespace XRouter.Common
             var xAdapterTypes = System.Xml.XPath.Extensions.XPathSelectElement(Content,
                 "/configuration/adapter-types");
 
-            // TODO: what if there is already an adapter with the same name?
-            // - throw an exception?
-            // - replace the CLR type quietly?
+            // if there is already an adapter with the same name replace the CLR type quietly
+            // this maintains the uniqueness of the adapter types
+            var xExistingAdapterTypes = System.Xml.XPath.Extensions.XPathSelectElements(Content,
+                string.Format("/configuration/adapter-types/adapter-type[@name='{0}']", adapterType.Name));
+            foreach (var adapter in xExistingAdapterTypes)
+            {
+                adapter.Remove();
+            }
 
             xAdapterTypes.Add(xAdapterType);
         }
@@ -374,7 +383,8 @@ namespace XRouter.Common
         {
             var xGateway = System.Xml.XPath.Extensions.XPathSelectElement(Content,
                 string.Format("/configuration/components/gateway[@name='{0}']", gatewayName));
-            if (xGateway == null) {
+            if (xGateway == null)
+            {
                 throw new ArgumentException(string.Format(
                     "Cannot find gateway named '{0}'.", gatewayName), "gatewayName");
             }
@@ -382,7 +392,8 @@ namespace XRouter.Common
             var xAdapters = xGateway.Element(XName.Get("adapters")).Elements(XName.Get("adapter"));
 
             List<AdapterConfiguration> result = new List<AdapterConfiguration>();
-            foreach (XElement xAdapter in xAdapters) {
+            foreach (XElement xAdapter in xAdapters)
+            {
                 AdapterConfiguration adapterConfig = XSerializer.Deserialize<AdapterConfiguration>(xAdapter);
                 result.Add(adapterConfig);
             }
@@ -491,7 +502,8 @@ namespace XRouter.Common
             var xActionTypes = System.Xml.XPath.Extensions.XPathSelectElement(Content,
                 "/configuration/action-types");
             List<ActionType> result = new List<ActionType>();
-            foreach (XElement xActionType in xActionTypes.Elements()) {
+            foreach (XElement xActionType in xActionTypes.Elements())
+            {
                 string name = xActionType.Attribute(XName.Get("name")).Value;
                 string assemblyAndClrType = xActionType.Attribute(XName.Get("clr-type")).Value;
                 XElement xConfigurationMetadata = xActionType.Element(XName.Get("class-metadata"));
@@ -515,7 +527,8 @@ namespace XRouter.Common
             var xActionType = System.Xml.XPath.Extensions.XPathSelectElement(Content,
                 string.Format("/configuration/action-types/action-type[@name='{0}']", name));
 
-            if (xActionType == null) {
+            if (xActionType == null)
+            {
                 throw new ArgumentException(string.Format("Cannot find action type named '{0}'.", name), "name");
             }
 
@@ -529,6 +542,10 @@ namespace XRouter.Common
         /// <summary>
         /// Adds a new type of action.
         /// </summary>
+        /// <remarks>
+        /// If there is any existing action type with this name it get replaced
+        /// with the given action type.
+        /// </remarks>
         /// <param name="actionType">information about action type</param>
         public void AddActionType(ActionType actionType)
         {
@@ -543,9 +560,14 @@ namespace XRouter.Common
             var xActionTypes = System.Xml.XPath.Extensions.XPathSelectElement(Content,
                 "/configuration/action-types");
 
-            // TODO: what if there is already an action with the same name?
-            // - throw an exception?
-            // - replace the CLR type quietly?
+            // if there is already an action with the same name replace the CLR type quietly
+            // this maintains the uniqueness of the action types
+            var xExistingActionTypes = System.Xml.XPath.Extensions.XPathSelectElements(Content,
+                string.Format("/configuration/action-types/action-type[@name='{0}']", actionType.Name));
+            foreach (var action in xExistingActionTypes)
+            {
+                action.Remove();
+            }
 
             xActionTypes.Add(xActionType);
         }
@@ -562,7 +584,8 @@ namespace XRouter.Common
             var xActionType = System.Xml.XPath.Extensions.XPathSelectElement(Content,
                 string.Format("/configuration/action-types/action-type[@name='{0}']", name));
 
-            if (xActionType == null) {
+            if (xActionType == null)
+            {
                 throw new ArgumentException(string.Format("Cannot find action type named '{0}'.", name), "name");
             }
 
