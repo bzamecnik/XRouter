@@ -17,13 +17,21 @@ namespace XRouter.Common.Persistence
 
         private Dictionary<Guid, string> tokens = new Dictionary<Guid, string>();
 
-        private static readonly string ConfigFileName = @"app-config.xml";
-        private DateTime LastModified = DateTime.Now;
+        public static readonly string DefaultConfigFileName = @"app-config.xml";
+        
+        public string ConfigFileName { get; set; }
+
+        private DateTime FileLastModified = DateTime.Now;
+
+        public MemoryDataAccess()
+        {
+            ConfigFileName = DefaultConfigFileName;
+        }
 
         public void Initialize(string connectionString)
         {
             #region In memory configurationXml
-            LastModified = File.GetLastWriteTime(ConfigFileName);
+            FileLastModified = File.GetLastWriteTime(ConfigFileName);
             configurationXml = File.ReadAllText(ConfigFileName);
             #endregion
         }
@@ -33,14 +41,14 @@ namespace XRouter.Common.Persistence
             lock (storageLock) {
                 configurationXml = configXml;
                 File.WriteAllText(ConfigFileName, configurationXml);
-                LastModified = File.GetLastWriteTime(ConfigFileName);
+                FileLastModified = File.GetLastWriteTime(ConfigFileName);
             }
         }
 
         public string LoadConfiguration()
         {
             lock (storageLock) {
-                if (File.GetLastWriteTime(ConfigFileName) > LastModified)
+                if (File.GetLastWriteTime(ConfigFileName) > FileLastModified)
                 {
                     configurationXml = File.ReadAllText(ConfigFileName);
                 }
