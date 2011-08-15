@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using XRouter.Common;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Utils;
 using XRouter.Processor.MessageFlowBuilding;
@@ -29,11 +30,11 @@ namespace XRouter.Test.Integration
 
         public HandUtils()
         {
-            xrouterManager = new XRouterManager();
-            configManager = new ConfigurationManager(xrouterManager.ConsoleServerProxy)
-            {
-                BasePath = OriginalsPath
-            };
+            //xrouterManager = new XRouterManager();
+            //configManager = new ConfigurationManager(xrouterManager.ConsoleServerProxy)
+            //{
+            //    BasePath = OriginalsPath
+            //};
         }
 
         /// <summary>
@@ -131,6 +132,29 @@ namespace XRouter.Test.Integration
                     writer.WriteLine("</message>");
                 }
             }
+        }
+
+        public void ConfigureWebServiceAdapter()
+        {
+            var httpServiceAdapter = new XRouter.Adapters.HttpServiceAdapter()
+            {
+                Uri = "http://localhost:8123/FloodConsumerWebService"
+            };
+            XDocument webServiceConfig = ObjectConfigurator.Configurator.SaveConfiguration(httpServiceAdapter);
+//            XDocument webServiceConfig = XDocument.Parse(
+//@"
+//<objectConfig>
+//  <item name='Uri'>localhost:8123</item>
+//  <item name='AreInputTokensPersistent'>False</item>
+//</objectConfig>
+//");
+            var webService = new AdapterConfiguration(
+                "floodConsumerWebService", "httpServiceAdapter", webServiceConfig);
+            XDocument config = new XDocument();
+            config.Add(new XElement("config"));
+            XSerializer.Serializer<AdapterConfiguration>(webService, config.Root);
+
+            Console.WriteLine(config.ToString().Replace('"', '\''));
         }
     }
 }
