@@ -31,6 +31,8 @@ namespace XRouter.Processor
         /// </summary>
         private Dictionary<Guid, MessageFlow> messageFlowsByGuid = new Dictionary<Guid, MessageFlow>();
 
+        private MessageFlow messageFlow;
+
         /// <summary>
         /// Creates a new instance of the single-thread token processor with
         /// given shared collection of tokens.
@@ -43,6 +45,8 @@ namespace XRouter.Processor
         {
             this.tokensToProcess = tokensToProcess;
             this.Processor = processor;
+            this.messageFlow = GetCurrentMessageFlow();
+
         }
 
         /// <summary>
@@ -51,38 +55,26 @@ namespace XRouter.Processor
         /// </summary>
         public void Run()
         {
-            foreach (Token token in tokensToProcess.GetConsumingEnumerable()) {
-                MessageFlow messageFlow = GetMessageFlowForToken(token);
+            foreach (Token token in tokensToProcess.GetConsumingEnumerable())
+            {
                 bool canContinue = messageFlow.DoStep(token);
-                if (canContinue) {
+                if (canContinue)
+                {
                     tokensToProcess.Add(token);
-                } else {
+                }
+                else
+                {
                     Processor.DecrementTokensCount();
                     TraceLog.Info("Processor finished token with GUID " + token.Guid);
                 }
             }
         }
 
-        /// <summary>
-        /// Obtains a message flow using which given token should be processed.
-        /// It creates a message flow from its configuration and uses a cache
-        /// for recently used message flows.
-        /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        private MessageFlow GetMessageFlowForToken(Token token)
+        private MessageFlow GetCurrentMessageFlow()
         {
-            Guid messageFlowGuid = token.GetMessageFlowState().MessageFlowGuid;
-
-            if (messageFlowsByGuid.ContainsKey(messageFlowGuid)) {
-                return messageFlowsByGuid[messageFlowGuid];
-            } else {
-                MessageFlowConfiguration messageFlowConfiguration = Processor.Configuration.GetMessageFlow(messageFlowGuid);
-
-                MessageFlow messageFlow = new MessageFlow(messageFlowConfiguration, Processor);
-                messageFlowsByGuid.Add(messageFlowGuid, messageFlow);
-                return messageFlow;
-            }
+            Guid messageFlowId = Processor.Configuration.GetCurrentMessageFlowGuid();
+            var config = Processor.Configuration.GetMessageFlow(messageFlowId);
+            return new MessageFlow(config, Processor);
         }
     }
 }
