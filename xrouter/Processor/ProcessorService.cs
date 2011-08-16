@@ -65,11 +65,14 @@ namespace XRouter.Processor
             int concurrentThreadsCount = Configuration.GetConcurrentThreadsCountForProcessor(Name);
             concurrentProcessors = new ConcurrentBag<SingleThreadProcessor>();
             for (int i = 0; i < concurrentThreadsCount; i++) {
-                Task.Factory.StartNew(delegate {
-                    SingleThreadProcessor processor = new SingleThreadProcessor(tokensToProcess, this);
-                    concurrentProcessors.Add(processor);
-                    TraceLog.RunWithExceptionLogging(processor.Run);
-                }, TaskCreationOptions.LongRunning);
+                // initialize in the calling thread
+                // NOTE: an exception from there will stop the XRouter service
+                SingleThreadProcessor processor = new SingleThreadProcessor(tokensToProcess, this);
+                concurrentProcessors.Add(processor);
+                // run in a new thread
+                // NOTE: exceptions there do not stop the XRouter service
+                Task.Factory.StartNew(TraceLog.WrapWithExceptionLogging(processor.Run),
+                    TaskCreationOptions.LongRunning);
             }
             #endregion
         }
