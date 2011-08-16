@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
+using System.Xml;
 using System.Xml.Linq;
 using ObjectConfigurator;
 using XRouter.Common;
@@ -78,9 +79,6 @@ namespace XRouter.Adapters
                             {
                                 continue;
                             }
-                            // TODO: if the document is not a valid XML, send it
-                            // as raw data with ReceiveMessageData()
-                            XDocument message = XDocument.Parse(fileContent);
 
                             XDocument metadata = new XDocument();
                             XElement xMetadata = new XElement(XName.Get("file-metadata"));
@@ -90,7 +88,15 @@ namespace XRouter.Adapters
                             TraceLog.Info("Found input file " + Path.GetFileName(newFilePath));
                             try
                             {
-                                ReceiveMessageXml(message, enpointName, metadata);
+                                try
+                                {
+                                    XDocument message = XDocument.Parse(fileContent);
+                                    ReceiveMessageXml(message, enpointName, metadata);
+                                }
+                                catch (XmlException)
+                                {
+                                    ReceiveMessageData(fileContent, enpointName, metadata, null, null);
+                                }
                             }
                             catch (Exception ex)
                             {
@@ -138,6 +144,12 @@ namespace XRouter.Adapters
 
                 // tady musime zase osetrit to, aby se neprepisovaly zpravy, udelame to generovanim jednoznacnych nazvu souboru
                 File.WriteAllText(Path.Combine(targetPath, fileName), message.ToString());
+            }
+            else
+            {
+                TraceLog.Warning(string.Format(
+                    "Trying to write a file to a non-existent endpoint: {0}",
+                    endpointName));
             }
             return null;
         }
