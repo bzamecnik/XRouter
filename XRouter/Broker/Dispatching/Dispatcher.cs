@@ -29,7 +29,7 @@ namespace XRouter.Broker.Dispatching
         private object tokenDispatchingLock = new object();
 
         private Task backgroundCheckings;
-        private bool isStopping;
+        private volatile bool isStopping;
 
         internal Dispatcher(IBrokerServiceForDispatcher brokerService)
         {

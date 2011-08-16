@@ -23,10 +23,15 @@ namespace XRouter.Gateway
     /// </remarks>
     public abstract class Adapter
     {
+        private volatile bool isRunning;
         /// <summary>
         /// Indicates that the adapter is running and can do its job.
         /// </summary>
-        protected bool IsRunning { get; private set; }
+        protected bool IsRunning
+        {
+            get { return isRunning; }
+            private set { isRunning = value; }
+        }
 
         [ConfigurationItem("Persist input tokens", "If checked, tokens created from this adapter will be persistently stored in database after each action in messageflow.", false)]
         public bool AreInputTokensPersistent { get; private set; }
