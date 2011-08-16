@@ -14,7 +14,6 @@ namespace XRouter.Adapters
     [AdapterPlugin("HTTP service adapter", "Provides a simple web service listener which can receive messages.")]
     public class HttpServiceAdapter : Adapter
     {
-        // nastavit jako povinny
         [ConfigurationItem("Listener URI prefix", "It is composed of a scheme (http), host name, (optional) port, and (optional) path. Example: 'http://www.example.com:8080/path/'.", "http://localhost:8080/")]
         public string Uri { set; get; }
 
@@ -67,7 +66,10 @@ namespace XRouter.Adapters
 
         public override void OnTerminate()
         {
-            this.listener.Close();
+            if (this.listener != null)
+            {
+                this.listener.Close();
+            }
         }
 
         public override XDocument SendMessage(string endpointName, XDocument message, XDocument metadata)
