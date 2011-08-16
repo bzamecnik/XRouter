@@ -79,7 +79,7 @@ namespace XRouter.Gateway
         /// </summary>
         internal void Start()
         {
-            runTask = Task.Factory.StartNew(TraceLog.WrapWithExceptionLogging(Run), TaskCreationOptions.LongRunning);
+            runTask = Task.Factory.StartNew(RunWrapper, TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -89,15 +89,47 @@ namespace XRouter.Gateway
         /// </summary>
         protected abstract void Run();
 
+        private void RunWrapper()
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                TraceLog.Exception(ex);
+                TraceLog.Info(string.Format(
+                    "Adapter {0} at gateway {1} was shut down due to an error (see the trace log).",
+                    AdapterName, Gateway.Name));
+                IsRunning = false;
+                try
+                {
+                    // NOTE: even exceptions from OnTerminate() must not be lost
+                    OnTerminate();
+                }
+                catch (Exception terminateEx)
+                {
+                    TraceLog.Exception(terminateEx);
+                }
+            }
+        }
+
         /// <summary>
         /// Stops the adapter and calls OnTerminate() behavior of which can be
         /// defined in a derived class.
         /// </summary>
         internal void Stop()
         {
-            IsRunning = false;
-            OnTerminate();
-            runTask.Wait();
+            try
+            {
+                IsRunning = false;
+                OnTerminate();
+                runTask.Wait();
+            }
+            catch (Exception ex)
+            {
+                TraceLog.Exception(ex);
+            }
         }
 
         /// <summary>

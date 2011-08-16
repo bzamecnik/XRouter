@@ -37,6 +37,8 @@ namespace XRouter.Broker.Dispatching
 
             tokenDispatchingTaskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(
                 MaxTokenDispatchingConcurrencyLevel));
+            // NOTE: the thread must not die on and exceptions are handled inside
+            // so it's not wrapped using TraceLog.WrapWithExceptionLogging()
             backgroundCheckings = Task.Factory.StartNew(StartBackgroundCheckings,
                 TaskCreationOptions.LongRunning);
         }
@@ -54,10 +56,10 @@ namespace XRouter.Broker.Dispatching
 
         private void DispatchAsync(Guid tokenGuid, Func<ProcessorAccessor, bool> filter = null)
         {
-            tokenDispatchingTaskFactory.StartNew(delegate
-            {
-                Dispatch(tokenGuid, filter);
-            });
+            tokenDispatchingTaskFactory.StartNew(
+                TraceLog.WrapWithExceptionLogging(
+                    delegate { Dispatch(tokenGuid, filter); })
+            );
         }
 
         private void Dispatch(Guid tokenGuid, Func<ProcessorAccessor, bool> filter = null)

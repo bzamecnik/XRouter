@@ -54,10 +54,11 @@ namespace XRouter.Processor.BuiltInActions
             XDocument metadata = metadataSelection.GetSelectedDocument(token);
 
             XDocument outputMessage = null;
-            Task sendTask = Task.Factory.StartNew(delegate
-            {
-                outputMessage = processorService.SendMessage(targetEndpoint, message, metadata);
-            });
+            Task sendTask = Task.Factory.StartNew(
+                TraceLog.WrapWithExceptionLogging(delegate
+                {
+                    outputMessage = processorService.SendMessage(targetEndpoint, message, metadata);
+                }));
             bool isFinished = sendTask.Wait(TimeSpan.FromSeconds(timeoutInSeconds));
 
             if (isFinished)
