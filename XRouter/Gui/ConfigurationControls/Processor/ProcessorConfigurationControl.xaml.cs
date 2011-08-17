@@ -60,7 +60,7 @@ namespace XRouter.Gui.ConfigurationControls.Processor
             Config config = new Config();
             Configurator.LoadConfiguration(config, xConfig);
             ConfigManager.Configuration.SetConcurrentThreadsCountForProcessor(ProcessorName, config.ConcurrentProcessingThreads);
-            ConfigManager.SaveConfiguration();
+            ConfigManager.SaveConfigurationToServer();
 		}
 
         private class Config

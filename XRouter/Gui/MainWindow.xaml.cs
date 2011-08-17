@@ -1,64 +1,87 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Linq;
+using Microsoft.Win32;
 using ObjectConfigurator;
+using XRouter.Common;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
 using XRouter.Gui.CommonControls;
-using XRouter.Common;
 
 namespace XRouter.Gui
 {
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
-	public partial class MainWindow : Window
-	{
-        private ConfigurationManager ConfigManager { get; set; }
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        internal ConfigurationManager ConfigManager { get; set; }
 
         private ConfigurationTreeItem currentConfigurationTreeItem;
+
+        private const string DaemonNtExecutableName = "DaemonNT.exe";
+        private const string DaemonNtArguments = "debug xroutermanager";
+
         private IConfigurationControl currentConfigurationControl;
 
-		public MainWindow()
+        public MainWindow()
         {
             Configurator.CustomItemTypes.Add(new TokenSelectionConfigurationItemType(() => new TokenSelectionEditor()));
             Configurator.CustomItemTypes.Add(new XrmUriConfigurationItemType(() => new XrmUriEditor()));
             Configurator.CustomItemTypes.Add(new UriConfigurationItemType(() => new UriEditor()));
 
-            #region Run xrouter server
-
-            bool isXRouterRunning = System.Diagnostics.Process.GetProcessesByName("DaemonNT").Length > 0;
-            if (!isXRouterRunning)
+            ConfigManager = new ConfigurationManager();
+            #region Run XRouter Manager if it is not already available
+            try
             {
-                string binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                string daemonNTPath = System.IO.Path.Combine(binPath, @"DaemonNT.exe");
-                var serverProcesss = new System.Diagnostics.ProcessStartInfo(daemonNTPath, "debug xroutermanager");
-                serverProcesss.WorkingDirectory = System.IO.Path.GetDirectoryName(daemonNTPath);
-                System.Diagnostics.Process.Start(serverProcesss);
-                System.Threading.Thread.Sleep(2000);
+                ConfigManager.Connect();
+                // test the connection
+                ConfigManager.ConsoleServer.GetXRouterServiceStatus();
+            }
+            catch (Exception ex)
+            {
+                RunXRouterManager();
+                try
+                {
+                    ConfigManager.Connect();
+                    // test the connection
+                    ConfigManager.ConsoleServer.GetXRouterServiceStatus();
+                }
+                catch (Exception secondEx)
+                {
+                    MessageBox.Show(
+                        string.Format(
+@"It is not possible to connect to XRouter Manager server at:
+{0}.
+Details:
+{1}",
+                        ConfigManager.ConsoleServerUri, secondEx.Message),
+                        "Connection to XRouter Manager server");
+                }
+
             }
             #endregion
 
             InitializeComponent();
-		}
+        }
+
+        private static void RunXRouterManager()
+        {
+            string binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string daemonNTPath = System.IO.Path.Combine(binPath, DaemonNtExecutableName);
+            var serverProcesss = new System.Diagnostics.ProcessStartInfo(daemonNTPath, DaemonNtArguments);
+            serverProcesss.WorkingDirectory = System.IO.Path.GetDirectoryName(daemonNTPath);
+            System.Diagnostics.Process.Start(serverProcesss);
+            System.Threading.Thread.Sleep(2000);
+        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ConfigManager = new ConfigurationManager();
-
             ReloadConfigurationFromServer();
 
+            #region Load tokens and log records
             uiTokens.Initialize(ConfigManager);
             uiTraceLog.Initialize(delegate(DateTime minDate, DateTime maxDate, LogLevelFilters levelFilter, int pageNumber, int pageSize) {
                 var logs = ConfigManager.ConsoleServer.GetTraceLogEntries(minDate, maxDate, levelFilter, pageSize, pageNumber);
@@ -70,15 +93,18 @@ namespace XRouter.Gui
                 var rows = logs.Select(l => new LogViewControl.LogRow(l.Created, l.LogLevel, l.Message)).ToArray();
                 return rows;
             });
+            #endregion
         }
 
         private TreeViewItem CreateUIItem(ConfigurationTreeItem item)
         {
-            TreeViewItem uiItem = new TreeViewItem {
+            TreeViewItem uiItem = new TreeViewItem
+            {
                 Tag = item,
                 Header = item.Name
             };
-            foreach (var child in item.Children) {
+            foreach (var child in item.Children)
+            {
                 TreeViewItem uiChild = CreateUIItem(child);
                 uiItem.Items.Add(uiChild);
             }
@@ -89,7 +115,8 @@ namespace XRouter.Gui
         {
             uiConfigurationContainer.Content = null;
             currentConfigurationControl = null;
-            if (e.NewValue == null) {
+            if (e.NewValue == null)
+            {
                 return;
             }
 
@@ -104,13 +131,54 @@ namespace XRouter.Gui
         }
 
         private void SaveToServer_Click(object sender, RoutedEventArgs e)
-		{
+        {
+            SaveUiControls();
+            ConfigManager.SaveConfigurationToServer();
+        }
+
+        private void SaveUiControls()
+        {
             var items = uiConfigurationTree.Items.OfType<TreeViewItem>().Select(i => (ConfigurationTreeItem)i.Tag);
-            foreach (ConfigurationTreeItem item in items) {
+            foreach (ConfigurationTreeItem item in items)
+            {
                 item.SaveRecursively();
             }
-            ConfigManager.SaveConfiguration();
-		}
+        }
+
+        private void Import_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "XRouter configuration|*.xml";
+            dialog.DefaultExt = ".xml";
+            dialog.FileName = "config.xml";
+            dialog.CheckFileExists = true;
+            if (dialog.ShowDialog() == true)
+            {
+                XDocument xdoc = XDocument.Load(dialog.FileName);
+                if (xdoc.Root.Name.LocalName != "configuration")
+                {
+                    MessageBox.Show("The file to be imported is not an XRouter configuration!",
+                        "Import configuration");
+                    return;
+                }
+                ConfigManager.Configuration = new ApplicationConfiguration(xdoc);
+                ReloadConfigurationTree();
+            }
+        }
+
+        private void Export_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "XRouter configuration|*.xml";
+            dialog.DefaultExt = ".xml";
+            dialog.FileName = "config.xml";
+            dialog.OverwritePrompt = true;
+            if (dialog.ShowDialog() == true)
+            {
+                SaveUiControls();
+                ConfigManager.Configuration.Content.XDocument.Save(dialog.FileName);
+            }
+        }
 
         private void ReloadConfigurationFromServer()
         {
@@ -122,10 +190,11 @@ namespace XRouter.Gui
         {
             uiConfigurationTree.Items.Clear();
             ConfigurationTreeItem root = ConfigManager.CreateConfigurationTreeRoot();
-            foreach (var item in root.Children) {
+            foreach (var item in root.Children)
+            {
                 TreeViewItem uiItem = CreateUIItem(item);
                 uiConfigurationTree.Items.Add(uiItem);
             }
         }
-	}
+    }
 }
