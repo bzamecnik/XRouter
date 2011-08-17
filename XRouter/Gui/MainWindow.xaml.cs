@@ -58,6 +58,8 @@ namespace XRouter.Gui
             ConfigManager = new ConfigurationManager();
 
             ReloadConfigurationFromServer();
+
+            uiTokens.Initialize(ConfigManager);
         }
 
         private TreeViewItem CreateUIItem(ConfigurationTreeItem item)

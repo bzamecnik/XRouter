@@ -99,6 +99,9 @@
     <Compile Include="Themes\Properties\Resources.Designer.cs" />
     <Compile Include="Themes\Properties\Settings.Designer.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
+    <Compile Include="TokensViewControl.xaml.cs">
+      <DependentUpon>TokensViewControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\ThreadUtils.cs" />
     <Page Include="CommonControls\ListEditor.xaml">
       <SubType>Designer</SubType>
@@ -263,6 +266,10 @@
     <Page Include="Themes\WhistlerBlue\Theme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TokensViewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

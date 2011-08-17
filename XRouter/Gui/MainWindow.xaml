@@ -42,7 +42,7 @@
 
             </TabItem>
             <TabItem Header="Tokens">
-                
+                <local:TokensViewControl x:Name="uiTokens" />
             </TabItem>
             <TabItem Header="Logs">
                 
