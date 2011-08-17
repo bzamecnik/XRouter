@@ -85,7 +85,12 @@ namespace XRouter.Gui
 
         public static ApplicationConfiguration GetConfigurationFromServer()
         {
-            #region Get proxy for remote BrokerService
+            CreateConsoleServerProxy();
+            return ConsoleServer.GetConfiguration();
+        }
+
+        public static void CreateConsoleServerProxy()
+        {
             wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress(ConsoleServerUri);
 
             // set binding (WebService - SOAP/HTTP)
@@ -100,9 +105,6 @@ namespace XRouter.Gui
 
             wcf.ChannelFactory<IConsoleServer> channelFactory = new wcf.ChannelFactory<IConsoleServer>(binding, endpointAddress);
             ConsoleServer = channelFactory.CreateChannel();
-            #endregion
-
-            return ConsoleServer.GetConfiguration();
         }
 
 		public static void GetAllowedAdapters()

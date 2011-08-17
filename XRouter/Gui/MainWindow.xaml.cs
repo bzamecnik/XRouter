@@ -36,22 +36,30 @@ namespace XRouter.Gui
             Configurator.CustomItemTypes.Add(new XrmUriConfigurationItemType(() => new XrmUriEditor()));
             Configurator.CustomItemTypes.Add(new UriConfigurationItemType(() => new UriEditor()));
 
-            #region Run xrouter server
-
-            bool isXRouterRunning = System.Diagnostics.Process.GetProcessesByName("DaemonNT").Length > 0;
-            if (!isXRouterRunning)
+            #region Run XRouter Manager if it is not already available
+            try
             {
-                string binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                string daemonNTPath = System.IO.Path.Combine(binPath, @"DaemonNT.exe");
-                var serverProcesss = new System.Diagnostics.ProcessStartInfo(daemonNTPath, "debug xroutermanager");
-                serverProcesss.WorkingDirectory = System.IO.Path.GetDirectoryName(daemonNTPath);
-                System.Diagnostics.Process.Start(serverProcesss);
-                System.Threading.Thread.Sleep(2000);
+                ConfigurationManager.CreateConsoleServerProxy();
+                ConfigurationManager.ConsoleServer.GetXRouterServiceStatus();
+            }
+            catch (Exception ex)
+            {
+                RunXRouterManager();
             }
             #endregion
 
             InitializeComponent();
 		}
+
+        private static void RunXRouterManager()
+        {
+            string binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string daemonNTPath = System.IO.Path.Combine(binPath, @"DaemonNT.exe");
+            var serverProcesss = new System.Diagnostics.ProcessStartInfo(daemonNTPath, "debug xroutermanager");
+            serverProcesss.WorkingDirectory = System.IO.Path.GetDirectoryName(daemonNTPath);
+            System.Diagnostics.Process.Start(serverProcesss);
+            System.Threading.Thread.Sleep(2000);
+        }
 
 		private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
 		{
