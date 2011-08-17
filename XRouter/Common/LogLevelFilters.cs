@@ -11,8 +11,13 @@ namespace XRouter.Common
     [Flags]
     public enum LogLevelFilters
     {
-        Info,
-        Warning,
-        Error
+        [EnumMember]
+        None = 0,
+        [EnumMember]
+        Info = 1,
+        [EnumMember]
+        Warning = 2,
+        [EnumMember]
+        Error = 4
     }
 }

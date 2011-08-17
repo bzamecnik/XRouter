@@ -60,6 +60,16 @@ namespace XRouter.Gui
             ReloadConfigurationFromServer();
 
             uiTokens.Initialize(ConfigManager);
+            uiTraceLog.Initialize(delegate(DateTime minDate, DateTime maxDate, LogLevelFilters levelFilter, int pageNumber, int pageSize) {
+                var logs = ConfigManager.ConsoleServer.GetTraceLogEntries(minDate, maxDate, levelFilter, pageSize, pageNumber);
+                var rows = logs.Select(l => new LogViewControl.LogRow(l.Created, l.LogLevel, l.XmlContent)).ToArray();
+                return rows;
+            });
+            uiEventLog.Initialize(delegate(DateTime minDate, DateTime maxDate, LogLevelFilters levelFilter, int pageNumber, int pageSize) {
+                var logs = ConfigManager.ConsoleServer.GetEventLogEntries(minDate, maxDate, levelFilter, pageSize, pageNumber);
+                var rows = logs.Select(l => new LogViewControl.LogRow(l.Created, l.LogLevel, l.Message)).ToArray();
+                return rows;
+            });
         }
 
         private TreeViewItem CreateUIItem(ConfigurationTreeItem item)

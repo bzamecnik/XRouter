@@ -44,8 +44,11 @@
             <TabItem Header="Tokens">
                 <local:TokensViewControl x:Name="uiTokens" />
             </TabItem>
-            <TabItem Header="Logs">
-                
+            <TabItem Header="Trace logs">
+                <local:LogViewControl x:Name="uiTraceLog" />
+            </TabItem>
+            <TabItem Header="Event logs">
+                <local:LogViewControl x:Name="uiEventLog" />
             </TabItem>
         </TabControl>
     </Grid>

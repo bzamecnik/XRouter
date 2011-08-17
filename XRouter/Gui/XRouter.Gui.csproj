@@ -92,6 +92,9 @@
     </Compile>
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="ConfigurationTreeItem.cs" />
+    <Compile Include="LogViewControl.xaml.cs">
+      <DependentUpon>LogViewControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Themes\Generic.xaml.cs">
       <DependentUpon>Generic.xaml</DependentUpon>
     </Compile>
@@ -154,6 +157,10 @@
     <Page Include="ConfigurationControls\Processor\ProcessorConfigurationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="LogViewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\Generic.xaml">
       <SubType>Designer</SubType>
@@ -301,6 +308,10 @@
     <None Include="Themes\Properties\Settings.settings" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DaemonNT\DaemonNT\DaemonNT.csproj">
+      <Project>{3CF25136-3BF3-4213-9FDC-1E80F2C75171}</Project>
+      <Name>DaemonNT</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ObjectConfigurator\ObjectConfigurator.csproj">
       <Project>{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}</Project>
       <Name>ObjectConfigurator</Name>
