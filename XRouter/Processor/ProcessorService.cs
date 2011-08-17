@@ -81,11 +81,15 @@ namespace XRouter.Processor
 
             concurrentProcessors = new ConcurrentBag<SingleThreadProcessor>();
             for (int i = 0; i < concurrentThreadsCount; i++) {
+                // NOTE: it is essential to copy the index variable
+                // to prevent using a closure
+                int processorIndex = i;
                 // NOTE: exceptions there do not stop the XRouter service
                 Task.Factory.StartNew(TraceLog.WrapWithExceptionLogging(
                     delegate{
+                        TraceLog.Info("processor " + processorIndex);
                         SingleThreadProcessor processor = new SingleThreadProcessor(
-                            tokensToProcess, this, messageFlows[i]);
+                            tokensToProcess, this, messageFlows[processorIndex]);
                         concurrentProcessors.Add(processor);
                         processor.Run();
                     }),
