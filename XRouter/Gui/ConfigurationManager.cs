@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 using XRouter.Common;
 using XRouter.Common.ComponentInterfaces;
-using System.Xml.Linq;
-using wcf = System.ServiceModel;
-using System.Xml;
 using XRouter.Manager;
+using wcf = System.ServiceModel;
 
 namespace XRouter.Gui
 {
@@ -31,11 +31,14 @@ namespace XRouter.Gui
 
 	public static class ConfigurationManager
 	{
-        // TODO: this should be configurable!
-        private static readonly string ConsoleServerUri = "http://localhost:9090/XRouter.ConsoleService/ConsoleServer";
-    
+        public static string ConsoleServerUri { get; set; }
         public static ApplicationConfiguration ApplicationConfiguration { get; set; }
         public static IConsoleServer ConsoleServer { get; private set; }
+
+        static ConfigurationManager()
+        {
+            ConsoleServerUri = System.Configuration.ConfigurationManager.AppSettings.Get("consoleServerUri"); ;
+        }
 
 		public static ConfigurationTree GetConfigurationTree(ApplicationConfiguration config)
         {
