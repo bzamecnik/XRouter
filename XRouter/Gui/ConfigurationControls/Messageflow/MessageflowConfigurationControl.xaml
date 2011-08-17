@@ -41,7 +41,7 @@
                     <Button Name="uiExport" Click="uiExport_Click" Margin="5" Padding="5 1 10 1">
                         <StackPanel Orientation="Horizontal">
                             <Image Margin="0 0 5 0" Source="/XRouter.Gui;component/Resources/Actions-document-export-icon.png" Height="20" />
-                            <TextBlock VerticalAlignment="Center">export</TextBlock>
+                            <TextBlock VerticalAlignment="Center">Export</TextBlock>
                         </StackPanel>
                     </Button>
                 </StackPanel>
