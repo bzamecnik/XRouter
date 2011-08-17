@@ -31,13 +31,19 @@ namespace XRouter.Gui
 
 	public static class ConfigurationManager
 	{
+        public static readonly string DefaultConsoleServerUri =
+            "http://localhost:9090/XRouter.ConsoleService/ConsoleServer";
         public static string ConsoleServerUri { get; set; }
         public static ApplicationConfiguration ApplicationConfiguration { get; set; }
         public static IConsoleServer ConsoleServer { get; private set; }
 
         static ConfigurationManager()
         {
-            ConsoleServerUri = System.Configuration.ConfigurationManager.AppSettings.Get("consoleServerUri"); ;
+            string uri = System.Configuration.ConfigurationManager.AppSettings.Get("consoleServerUri");
+            if (uri  == null) {
+                uri = DefaultConsoleServerUri;
+            }
+            ConsoleServerUri = uri;
         }
 
 		public static ConfigurationTree GetConfigurationTree(ApplicationConfiguration config)
