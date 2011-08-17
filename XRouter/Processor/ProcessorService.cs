@@ -49,7 +49,7 @@ namespace XRouter.Processor
         private volatile bool isStopping;
         private int tokensCount;
         private ManualResetEvent tokensFinishedEvent;
-        private MessageFlow messageFlow;
+        private MessageFlow[] messageFlows;
 
         #region IProcessorService interface
 
@@ -62,9 +62,6 @@ namespace XRouter.Processor
 
             Configuration = BrokerService.GetConfiguration(ConfigReduction);
 
-            // NOTE: an exception from inicialization should stop the XRouter service
-            messageFlow = GetCurrentMessageFlow();
-
             tokensCount = 0;
             tokensFinishedEvent = new ManualResetEvent(true);
             tokensToProcess = new BlockingCollection<Token>(new ConcurrentQueue<Token>());
@@ -72,13 +69,23 @@ namespace XRouter.Processor
 
             #region Create and start concurrentProcessors
             int concurrentThreadsCount = Configuration.GetConcurrentThreadsCountForProcessor(Name);
+
+            // NOTE: an exception from inicialization should stop the XRouter service
+            // NOTE: each SingleThreadProcessor must have its own message flow instance
+            // since they might not be thread-safe
+            messageFlows = new MessageFlow[concurrentThreadsCount];
+            for (int i = 0; i < concurrentThreadsCount; i++)
+            {
+                messageFlows[i] = GetCurrentMessageFlow();
+            }
+
             concurrentProcessors = new ConcurrentBag<SingleThreadProcessor>();
             for (int i = 0; i < concurrentThreadsCount; i++) {
                 // NOTE: exceptions there do not stop the XRouter service
                 Task.Factory.StartNew(TraceLog.WrapWithExceptionLogging(
                     delegate{
                         SingleThreadProcessor processor = new SingleThreadProcessor(
-                            tokensToProcess, this, messageFlow);
+                            tokensToProcess, this, messageFlows[i]);
                         concurrentProcessors.Add(processor);
                         processor.Run();
                     }),

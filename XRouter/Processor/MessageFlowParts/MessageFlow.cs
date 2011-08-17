@@ -17,6 +17,11 @@ namespace XRouter.Processor.MessageFlowParts
     /// original message flow with which they were started.
     /// The graph can contain cycles.
     /// </para>
+    /// <para>
+    /// A message flow instance may not be thread-safe since it can contain
+    /// arbitratry actions, even non thread-safe ones. So that each processor
+    /// thread needs its own message flow instance.
+    /// </para>
     /// </remarks>
     class MessageFlow
     {
