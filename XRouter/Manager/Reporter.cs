@@ -99,42 +99,7 @@ namespace XRouter.Manager
             this.eventLogReader = new EventLogReader(this.storagesInfo.LogsDirectory, this.serviceName);
             this.traceLogReader = new TraceLogReader(this.storagesInfo.LogsDirectory, this.serviceName);
 
-            this.worker = new Thread(delegate(object data)
-            {
-                while (isWorkerRunning)
-                {
-                    Thread.Sleep(Interval);
-                    try
-                    {
-                        DateTime dt = DateTime.Now;
-                        if (LastReporting.Date != dt.Date && dt.Hour == time.Hours && dt.Minute == time.Minutes)
-                        {
-                            LastReporting = dt;
-                            try
-                            {
-                                DateTime max = new DateTime(dt.Year, dt.Month, dt.Day, time.Hours, time.Minutes, 0);
-                                DateTime min = max.AddDays(-1);
-                                string report = this.CreateReport(min, max);
-
-                                // send report
-                                if (this.sender != null)
-                                {
-                                    this.sender.Send("Report", report);
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                this.logger.LogException(e);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        this.logger.LogException(e);
-                    }
-                }
-            });
-
+            this.worker = new Thread(Run);
             this.worker.Start();
         }
 
@@ -145,6 +110,44 @@ namespace XRouter.Manager
         {
             this.isWorkerRunning = false;
             this.worker.Join();
+        }
+
+        private void Run()
+        {
+            while (isWorkerRunning)
+            {
+                Thread.Sleep(Interval);
+                try
+                {
+                    DateTime dt = DateTime.Now;
+                    if (LastReporting.Date != dt.Date && dt.Hour == time.Hours && dt.Minute == time.Minutes)
+                    {
+                        LastReporting = dt;
+                        try
+                        {
+                            DateTime max = new DateTime(dt.Year, dt.Month, dt.Day, time.Hours, time.Minutes, 0);
+                            DateTime min = max.AddDays(-1);
+                            this.logger.LogInfo(string.Format("Creating report from logs at {0}", dt));
+                            string report = this.CreateReport(min, max);
+
+                            // send report
+                            if (this.sender != null)
+                            {
+                                this.sender.Send("Report", report);
+                                this.logger.LogInfo("Report successfully sent.");
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            this.logger.LogException(e);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    this.logger.LogException(e);
+                }
+            }
         }
 
         private string CreateReport(DateTime min, DateTime max)
