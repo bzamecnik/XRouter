@@ -74,6 +74,10 @@
       <Name>XRouter.Common</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Data\XRouter.Data.csproj">
+      <Project>{873A6405-E524-4D55-B0F0-B125DE17655B}</Project>
+      <Name>XRouter.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Gateway\XRouter.Gateway.csproj">
       <Project>{67A83368-80F1-467D-950A-64DD5F1EAD6C}</Project>
       <Name>XRouter.Gateway</Name>
