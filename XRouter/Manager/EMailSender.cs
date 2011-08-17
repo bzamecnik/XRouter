@@ -61,7 +61,7 @@ namespace XRouter.Manager
         {
             try
             {
-                this.logger.LogInfo(string.Format("Sending e-mail:\nSubject: '{0}'\nBody'{1}'", subject, body));
+                this.logger.LogInfo(string.Format("Sending e-mail:\nSubject: '{0}'\nBody:\n{1}", subject, body));
 
                 // create an SMTP client
                 SmtpClient smtp = new SmtpClient();

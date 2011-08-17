@@ -53,7 +53,7 @@ namespace XRouter.Common.Xrm
         }
 
         /// <summary>
-        /// Set the contents of a XML resource specified by its 
+        /// Sets the contents of a XML resource specified by its 
         /// </summary>
         /// <param name="resourceUri">XRM URI of the resource to be stored
         /// </param>

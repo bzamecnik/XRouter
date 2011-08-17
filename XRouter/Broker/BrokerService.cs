@@ -59,7 +59,9 @@ namespace XRouter.Broker
         public void Stop()
         {
             // Make sure that all operations are completed and none of them will be running after this call
+            // TODO: this can potentially wait indefinitely, try cutting it
             Monitor.Enter(syncLock);
+            //Monitor.TryEnter(syncLock, new TimeSpan(0, 0, 0, 30));
             dispatcher.Stop();
         }
 
