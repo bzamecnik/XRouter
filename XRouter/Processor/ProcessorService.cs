@@ -71,13 +71,7 @@ namespace XRouter.Processor
             int concurrentThreadsCount = Configuration.GetConcurrentThreadsCountForProcessor(Name);
 
             // NOTE: an exception from inicialization should stop the XRouter service
-            // NOTE: each SingleThreadProcessor must have its own message flow instance
-            // since they might not be thread-safe
-            messageFlows = new MessageFlow[concurrentThreadsCount];
-            for (int i = 0; i < concurrentThreadsCount; i++)
-            {
-                messageFlows[i] = GetCurrentMessageFlow();
-            }
+            CreateMessageFlowInstances(concurrentThreadsCount);
 
             concurrentProcessors = new ConcurrentBag<SingleThreadProcessor>();
             for (int i = 0; i < concurrentThreadsCount; i++) {
@@ -87,7 +81,6 @@ namespace XRouter.Processor
                 // NOTE: exceptions there do not stop the XRouter service
                 Task.Factory.StartNew(TraceLog.WrapWithExceptionLogging(
                     delegate{
-                        TraceLog.Info("processor " + processorIndex);
                         SingleThreadProcessor processor = new SingleThreadProcessor(
                             tokensToProcess, this, messageFlows[processorIndex]);
                         concurrentProcessors.Add(processor);
@@ -96,6 +89,19 @@ namespace XRouter.Processor
                     TaskCreationOptions.LongRunning);
             }
             #endregion
+        }
+
+        private void CreateMessageFlowInstances(int concurrentThreadsCount)
+        {
+            // NOTE: each SingleThreadProcessor must have its own message flow instance
+            // since they might not be thread-safe
+            Guid messageFlowId = Configuration.GetCurrentMessageFlowGuid();
+            var config = Configuration.GetMessageFlow(messageFlowId);
+            messageFlows = new MessageFlow[concurrentThreadsCount];
+            for (int i = 0; i < concurrentThreadsCount; i++)
+            {
+                messageFlows[i] = new MessageFlow(config, this);
+            }
         }
 
         public void Stop()
@@ -150,13 +156,6 @@ namespace XRouter.Processor
             {
                 tokensFinishedEvent.Set();
             }
-        }
-
-        private MessageFlow GetCurrentMessageFlow()
-        {
-            Guid messageFlowId = Configuration.GetCurrentMessageFlowGuid();
-            var config = Configuration.GetMessageFlow(messageFlowId);
-            return new MessageFlow(config, this);
         }
     }
 }
