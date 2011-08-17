@@ -84,6 +84,10 @@ namespace XRouter.Gui
             if (dialog.ShowDialog() == true)
             {
                 XDocument xdoc = XDocument.Load(dialog.FileName);
+                if (xdoc.Root.Name.LocalName != "configuration") {
+                    MessageBox.Show("The file to be imported in not an XRouter configuration!", "Import configuration");
+                    return;
+                }
                 ConfigurationManager.ApplicationConfiguration = new ApplicationConfiguration(xdoc);
                 FillConfigurationToGui();
             }
