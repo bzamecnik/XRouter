@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,15 +14,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
+using SimpleDiagrammer;
 using XRouter.Common;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.MessageFlowConfig;
-using SimpleDiagrammer;
-using System.Threading.Tasks;
-using System.Threading;
 using XRouter.Gui.Utils;
-using Microsoft.Win32;
-using System.IO;
 using XRouter.Manager;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow

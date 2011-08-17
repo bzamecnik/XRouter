@@ -17,7 +17,7 @@
 
 
         <TabControl Grid.Row="0">
-            <TabItem  Header="Konfigurace">
+            <TabItem  Header="Configuration">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="25" />
@@ -28,8 +28,11 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <ToolBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-                        <Button Content="Save" Click="Save_Click" />
-                        <Button Content="Clear" Click="Clear_Click" />
+                        <Button Content="Save" Click="Save_Click" ToolTip="Save application configuration to XRouter server" />
+                        <Button Content="Load" Click="Load_Click" ToolTip="Load application configuration from XRouter server" />
+                        <Button Content="Import" Click="Import_Click" ToolTip="Import application configuration from a file" />
+                        <Button Content="Export" Click="Export_Click" ToolTip="Export application configuration to a file" />
+                        <Button Content="Clear" Click="Clear_Click" ToolTip="Clear the current panel"/>
                     </ToolBar>
                     <TreeView Grid.Row="1" Grid.Column="0" Margin="5" Padding="5" ItemsSource="{Binding Path=Children}" SelectedItemChanged="TreeView_SelectedItemChanged">
                         <TreeView.Resources>
@@ -45,13 +48,13 @@
                 </Grid>
 
             </TabItem>
-            <TabItem Header="XRM">
+            <TabItem Header="XML resources">
 
             </TabItem>
-            <TabItem Header="Tokeny">
+            <TabItem Header="Tokens">
 
             </TabItem>
-            <TabItem Header="Logovací záznamy">
+            <TabItem Header="Log records">
                 
             </TabItem>
         </TabControl>

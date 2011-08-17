@@ -34,27 +34,11 @@ namespace XRouter.Gui
         // TODO: this should be configurable!
         private static readonly string ConsoleServerUri = "http://localhost:9090/XRouter.ConsoleService/ConsoleServer";
     
-        public static ApplicationConfiguration ApplicationConfiguration { get; private set; }
+        public static ApplicationConfiguration ApplicationConfiguration { get; set; }
         public static IConsoleServer ConsoleServer { get; private set; }
 
-		public static ConfigurationTree LoadConfigurationTree()
+		public static ConfigurationTree GetConfigurationTree(ApplicationConfiguration config)
         {
-            #region Get proxy for remote BrokerService
-            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress(ConsoleServerUri);
-
-            // set binding (WebService - SOAP/HTTP)
-            wcf.WSHttpBinding binding = new wcf.WSHttpBinding();
-            binding.MaxReceivedMessageSize = int.MaxValue;
-            binding.ReaderQuotas = new XmlDictionaryReaderQuotas() {
-                MaxBytesPerRead = int.MaxValue,
-                MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue
-            };
-
-            wcf.ChannelFactory<IConsoleServer> channelFactory = new wcf.ChannelFactory<IConsoleServer>(binding, endpointAddress);
-            ConsoleServer = channelFactory.CreateChannel();
-            #endregion
-
-            ApplicationConfiguration = ConsoleServer.GetConfiguration();
             var gws = ApplicationConfiguration.GetComponentElements(Common.ComponentType.Gateway);
 
 			IConfigurationControl adaptercontrol = (IConfigurationControl)ConfigurationControlManager.LoadUserControlFormFile("XRouter.Gui.exe", "XRouter.Gui.ConfigurationControls.Adapter.AdapterConfigurationControl");
@@ -63,8 +47,7 @@ namespace XRouter.Gui
             IConfigurationControl messageflowcontrol = (IConfigurationControl)ConfigurationControlManager.LoadUserControlFormFile("XRouter.Gui.exe", "XRouter.Gui.ConfigurationControls.Messageflow.MessageflowConfigurationControl");
 			//ConfigurationControlManager.LoadUserControlFormFile("DirectoryAdapterConfigurationControl.dll", "DirectoryAdapterConfigurationControl.ConfigurationControl")
 
-
-			ConfigurationTree node_Root = new ConfigurationTree("Konfigurace", null, null, null);
+			ConfigurationTree node_Root = new ConfigurationTree("XRouter configuration", null, null, null);
 
             // Load Gateways
             ConfigurationTree node_Gateways = new ConfigurationTree("Gateways", null, node_Root, null);
@@ -82,25 +65,42 @@ namespace XRouter.Gui
                     node_Gateway.Children.Add(node_Adapter);
                 }
             }
-          
 
             ConfigurationTree dispatcher = new ConfigurationTree("Dispatcher 1", dispatchercontrol, node_Root, null);
 			
 			node_Root.Children.Add(dispatcher);
 
-            node_Root.Children.Add(new ConfigurationTree("MessageFlow", messageflowcontrol, node_Root, null));
-            node_Root.Children.Add(new ConfigurationTree("Seznam dostupných adaptérů", null, node_Root, null));
-
+            node_Root.Children.Add(new ConfigurationTree("Message flow", messageflowcontrol, node_Root, null));
+            node_Root.Children.Add(new ConfigurationTree("Available adapter types", null, node_Root, null));
 
 			// Nacteni Processor
 
 			// Nacteni Dispatcher
 
-
-
-
 			return node_Root;		
 		}
+
+        public static ApplicationConfiguration GetConfigurationFromServer()
+        {
+            #region Get proxy for remote BrokerService
+            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress(ConsoleServerUri);
+
+            // set binding (WebService - SOAP/HTTP)
+            wcf.WSHttpBinding binding = new wcf.WSHttpBinding();
+            binding.MaxReceivedMessageSize = int.MaxValue;
+            binding.ReaderQuotas = new XmlDictionaryReaderQuotas()
+            {
+                MaxBytesPerRead = int.MaxValue,
+                MaxArrayLength = int.MaxValue,
+                MaxStringContentLength = int.MaxValue
+            };
+
+            wcf.ChannelFactory<IConsoleServer> channelFactory = new wcf.ChannelFactory<IConsoleServer>(binding, endpointAddress);
+            ConsoleServer = channelFactory.CreateChannel();
+            #endregion
+
+            return ConsoleServer.GetConfiguration();
+        }
 
 		public static void GetAllowedAdapters()
 		{
