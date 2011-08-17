@@ -10,6 +10,7 @@ namespace XRouter.Processor
     /// <summary>
     /// Implements a processor of tokens in a single thread. It communicates
     /// with other threads via a shared queue where it acts as a consumer.
+    /// It has a single message flow according which to process the tokens.
     /// </summary>
     class SingleThreadProcessor
     {
@@ -27,10 +28,8 @@ namespace XRouter.Processor
         internal ProcessorService Processor { get; private set; }
 
         /// <summary>
-        /// A cache of recently used message flows.
+        /// Message flow - a plan for processing tokens.
         /// </summary>
-        private Dictionary<Guid, MessageFlow> messageFlowsByGuid = new Dictionary<Guid, MessageFlow>();
-
         private MessageFlow messageFlow;
 
         /// <summary>
@@ -41,11 +40,14 @@ namespace XRouter.Processor
         /// processed</param>
         /// <param name="processor">reference to a processor component
         /// </param>
-        public SingleThreadProcessor(BlockingCollection<Token> tokensToProcess, ProcessorService processor)
+        public SingleThreadProcessor(
+            BlockingCollection<Token> tokensToProcess,
+            ProcessorService processor,
+            MessageFlow messageFlow)
         {
             this.tokensToProcess = tokensToProcess;
             this.Processor = processor;
-            this.messageFlow = GetCurrentMessageFlow();
+            this.messageFlow = messageFlow;
 
         }
 
@@ -68,13 +70,6 @@ namespace XRouter.Processor
                     TraceLog.Info("Processor finished token with GUID " + token.Guid);
                 }
             }
-        }
-
-        private MessageFlow GetCurrentMessageFlow()
-        {
-            Guid messageFlowId = Processor.Configuration.GetCurrentMessageFlowGuid();
-            var config = Processor.Configuration.GetMessageFlow(messageFlowId);
-            return new MessageFlow(config, Processor);
         }
     }
 }

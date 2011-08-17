@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using XRouter.Broker;
 using XRouter.Common;
 using XRouter.Common.ComponentInterfaces;
+using XRouter.Common.MessageFlowConfig;
+using XRouter.Processor.MessageFlowParts;
 
 namespace XRouter.Processor
 {
@@ -13,6 +15,9 @@ namespace XRouter.Processor
     /// several single-threaded processors which do the actual token
     /// processing.
     /// </summary>
+    /// <remarks>
+    /// It has a single message flow according which to process the tokens.
+    /// </remarks>
     /// <seealso cref="XRouter.Processor.SingleThreadProcessor"/>
     public class ProcessorService : IProcessorService
     {
@@ -44,6 +49,7 @@ namespace XRouter.Processor
         private volatile bool isStopping;
         private int tokensCount;
         private ManualResetEvent tokensFinishedEvent;
+        private MessageFlow messageFlow;
 
         #region IProcessorService interface
 
@@ -56,6 +62,9 @@ namespace XRouter.Processor
 
             Configuration = BrokerService.GetConfiguration(ConfigReduction);
 
+            // NOTE: an exception from inicialization should stop the XRouter service
+            messageFlow = GetCurrentMessageFlow();
+
             tokensCount = 0;
             tokensFinishedEvent = new ManualResetEvent(true);
             tokensToProcess = new BlockingCollection<Token>(new ConcurrentQueue<Token>());
@@ -65,13 +74,14 @@ namespace XRouter.Processor
             int concurrentThreadsCount = Configuration.GetConcurrentThreadsCountForProcessor(Name);
             concurrentProcessors = new ConcurrentBag<SingleThreadProcessor>();
             for (int i = 0; i < concurrentThreadsCount; i++) {
-                // initialize in the calling thread
-                // NOTE: an exception from there will stop the XRouter service
-                SingleThreadProcessor processor = new SingleThreadProcessor(tokensToProcess, this);
-                concurrentProcessors.Add(processor);
-                // run in a new thread
                 // NOTE: exceptions there do not stop the XRouter service
-                Task.Factory.StartNew(TraceLog.WrapWithExceptionLogging(processor.Run),
+                Task.Factory.StartNew(TraceLog.WrapWithExceptionLogging(
+                    delegate{
+                        SingleThreadProcessor processor = new SingleThreadProcessor(
+                            tokensToProcess, this, messageFlow);
+                        concurrentProcessors.Add(processor);
+                        processor.Run();
+                    }),
                     TaskCreationOptions.LongRunning);
             }
             #endregion
@@ -129,6 +139,13 @@ namespace XRouter.Processor
             {
                 tokensFinishedEvent.Set();
             }
+        }
+
+        private MessageFlow GetCurrentMessageFlow()
+        {
+            Guid messageFlowId = Configuration.GetCurrentMessageFlowGuid();
+            var config = Configuration.GetMessageFlow(messageFlowId);
+            return new MessageFlow(config, this);
         }
     }
 }
