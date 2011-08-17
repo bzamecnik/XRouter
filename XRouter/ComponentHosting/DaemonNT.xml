@@ -3,7 +3,8 @@
   <service type="XRouter.ComponentHosting.XRouterService,XRouter.ComponentHosting.dll" name="xrouter">
     <settings>
       <section name="broker">
-        <param name="connection-string">Server=.\SQLEXPRESS;Database=XRouter;Trusted_Connection=True</param>
+        <!--param name="connection-string">Server=.\SQLEXPRESS;Database=XRouter;Trusted_Connection=True</param-->
+        <param name="connection-string">Server=192.168.10.1;Database=XRouter;User Id=XRouter_AccessDB;Password=XRouter;</param>
       </section>
       <section  name="gateway">
         <param name="component-name">gateway1</param>
@@ -22,7 +23,7 @@
         <param name="to">xrouter-admin@localhost</param>
       </section>
       <section name="storages">
-        <param name="connectionString">Server=.\SQLEXPRESS;Database=XRouter;Trusted_Connection=True</param>
+        <param name="connectionString">Server=192.168.10.1;Database=XRouter;User Id=XRouter_AccessDB;Password=XRouter;</param>
         <param name="logs">Logs</param>
       </section>
       <section name="watcher">

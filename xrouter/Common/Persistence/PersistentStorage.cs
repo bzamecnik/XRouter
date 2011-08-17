@@ -15,6 +15,7 @@ namespace XRouter.Common.Persistence
         public PersistentStorage(string connectionString)
         {
             dataAccess = new MsSqlDataAccess();
+            //dataAccess = new MemoryDataAccess();
             dataAccess.Initialize(connectionString);
         }
 
