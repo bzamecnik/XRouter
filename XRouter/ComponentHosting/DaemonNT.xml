@@ -17,10 +17,10 @@
   <service type="XRouter.Manager.XRouterManagerService,XRouter.Manager.dll" name="xroutermanager">
     <settings>
       <section name="email">
-        <param name="smtpHost">localhost</param>
+        <param name="smtpHost">192.168.10.1</param>
         <param name="smtpPort">25</param>
-        <param name="from">xrouter-manager@localhost</param>
-        <param name="to">xrouter-admin@localhost</param>
+        <param name="from">xrouter-manager@xrouter.dyndns.info</param>
+        <param name="to">xrouter-admin@xrouter.dyndns.info</param>
       </section>
       <section name="storages">
         <param name="connectionString">Server=192.168.10.1;Database=XRouter;User Id=XRouter_AccessDB;Password=XRouter;</param>
