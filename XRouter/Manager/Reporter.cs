@@ -96,8 +96,8 @@ namespace XRouter.Manager
         public void Start()
         {
             // init log readers
-            this.eventLogReader = new EventLogReader(this.storagesInfo.LogsDirectory);
-            this.traceLogReader = new TraceLogReader(this.storagesInfo.LogsDirectory);
+            this.eventLogReader = new EventLogReader(this.storagesInfo.LogsDirectory, this.serviceName);
+            this.traceLogReader = new TraceLogReader(this.storagesInfo.LogsDirectory, this.serviceName);
 
             this.worker = new Thread(delegate(object data)
             {

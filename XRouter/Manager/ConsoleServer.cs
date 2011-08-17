@@ -95,8 +95,8 @@ namespace XRouter.Manager
             this.storage = new PersistentStorage(this.storagesInfo.DbConnectionString);
 
             // init log readers
-            this.eventLogReader = new EventLogReader(this.storagesInfo.LogsDirectory);
-            this.traceLogReader = new TraceLogReader(this.storagesInfo.LogsDirectory);
+            this.eventLogReader = new EventLogReader(this.storagesInfo.LogsDirectory, this.serviceName);
+            this.traceLogReader = new TraceLogReader(this.storagesInfo.LogsDirectory, this.serviceName);
 
             // create WCF service on a new thread
             Exception exception = null;
