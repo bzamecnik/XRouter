@@ -13,7 +13,7 @@ namespace XRouter.Test.Integration
     /// <summary>
     /// Utilities for testing by hand. Each method is runnable separetely.
     /// </summary>
-    class HandUtils
+    class HandUtils : IDisposable
     {
         /// <summary>
         /// Path to original files - test configurations and data.
@@ -30,7 +30,7 @@ namespace XRouter.Test.Integration
 
         public HandUtils()
         {
-            //xrouterManager = new XRouterManager();
+            xrouterManager = new XRouterManager();
             //configManager = new ConfigurationManager(xrouterManager.ConsoleServerProxy)
             //{
             //    BasePath = OriginalsPath
@@ -141,13 +141,13 @@ namespace XRouter.Test.Integration
                 Uri = "http://localhost:8123/FloodConsumerWebService"
             };
             XDocument webServiceConfig = ObjectConfigurator.Configurator.SaveConfiguration(httpServiceAdapter);
-//            XDocument webServiceConfig = XDocument.Parse(
-//@"
-//<objectConfig>
-//  <item name='Uri'>localhost:8123</item>
-//  <item name='AreInputTokensPersistent'>False</item>
-//</objectConfig>
-//");
+            //            XDocument webServiceConfig = XDocument.Parse(
+            //@"
+            //<objectConfig>
+            //  <item name='Uri'>localhost:8123</item>
+            //  <item name='AreInputTokensPersistent'>False</item>
+            //</objectConfig>
+            //");
             var webService = new AdapterConfiguration(
                 "floodConsumerWebService", "gateway", "httpServiceAdapter", webServiceConfig);
             XDocument config = new XDocument();
@@ -156,5 +156,27 @@ namespace XRouter.Test.Integration
 
             Console.WriteLine(config.ToString().Replace('"', '\''));
         }
+
+        public void SaveConfig()
+        {
+            var dataAccess = new XRouter.Data.MsSqlDataAccess();
+            dataAccess.Initialize("Server=192.168.10.1;Database=XRouter;User Id=XRouter_AccessDB;Password=XRouter;");
+            string[] configLines = System.IO.File.ReadAllLines(@"Debug\config.xml");
+            if (configLines[0].StartsWith("<?xml"))
+            {
+                configLines[0] = "";
+            }
+            string config = string.Join("\n", configLines);
+            dataAccess.SaveConfiguration(config);
+        }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            xrouterManager.Dispose();
+        }
+
+        #endregion
     }
 }
