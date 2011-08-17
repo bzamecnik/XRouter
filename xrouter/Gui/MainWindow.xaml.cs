@@ -25,10 +25,10 @@ namespace XRouter.Gui
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+        private ConfigurationManager ConfigManager { get; set; }
 
-		public ConfigurationTree Configuration;
-
-		IConfigurationControl currentConfigurationControl;
+        private ConfigurationTreeItem currentConfigurationTreeItem;
+        private IConfigurationControl currentConfigurationControl;
 
 		public MainWindow()
         {
@@ -53,44 +53,67 @@ namespace XRouter.Gui
             InitializeComponent();
 		}
 
-		private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-		{
-			panelConfiguration.Children.Clear();
-			currentConfigurationControl = null;
-			ConfigurationTree treeViewItem = e.NewValue as ConfigurationTree;
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ConfigManager = new ConfigurationManager();
 
-			if (treeViewItem.Control == null)
-			{
-				// Neexistuje plugin pro editaci konfigurace				
-				panelConfiguration.Children.Add(new Label() { Content = "Nebyl nalezen odpovídající plugin pro editaci" });
-			}
-			else
-			{
-				currentConfigurationControl = treeViewItem.Control;
-				panelConfiguration.Children.Add(currentConfigurationControl as UserControl);
-				// Tady se preda aktualni konfigurace v XML
-                currentConfigurationControl.Initialize(ConfigurationManager.ApplicationConfiguration, ConfigurationManager.ConsoleServer, treeViewItem);
-			}
+            ReloadConfigurationFromServer();
+        }
+
+        private TreeViewItem CreateUIItem(ConfigurationTreeItem item)
+        {
+            TreeViewItem uiItem = new TreeViewItem {
+                Tag = item,
+                Header = item.Name
+            };
+            foreach (var child in item.Children) {
+                TreeViewItem uiChild = CreateUIItem(child);
+                uiItem.Items.Add(uiChild);
+            }
+            return uiItem;
+        }
+
+        private void uiConfigurationTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            uiConfigurationContainer.Content = null;
+            currentConfigurationControl = null;
+            if (e.NewValue == null) {
+                return;
+            }
+
+            currentConfigurationTreeItem = (ConfigurationTreeItem)((TreeViewItem)e.NewValue).Tag;
+            currentConfigurationControl = currentConfigurationTreeItem.ConfigurationControl;
+            uiConfigurationContainer.Content = currentConfigurationControl;
+        }
+
+        private void LoadFromServer_Click(object sender, RoutedEventArgs e)
+        {
+            ReloadConfigurationFromServer();
+        }
+
+        private void SaveToServer_Click(object sender, RoutedEventArgs e)
+		{
+            var items = uiConfigurationTree.Items.OfType<TreeViewItem>().Select(i => (ConfigurationTreeItem)i.Tag);
+            foreach (ConfigurationTreeItem item in items) {
+                item.SaveRecursively();
+            }
+            ConfigManager.SaveConfiguration();
 		}
 
-		private void Save_Click(object sender, RoutedEventArgs e)
-		{
-            // TODO: fix a NullReferenceException
-			currentConfigurationControl.Save();
-            ConfigurationManager.ConsoleServer.ChangeConfiguration(ConfigurationManager.ApplicationConfiguration);
-		}
+        private void ReloadConfigurationFromServer()
+        {
+            ConfigManager.LoadConfigurationFromServer();
+            ReloadConfigurationTree();
+        }
 
-
-
-		private void Clear_Click(object sender, RoutedEventArgs e)
-		{
-			currentConfigurationControl.Clear();
-		}
-
-		private void Window_Loaded(object sender, RoutedEventArgs e)
-		{
-			Configuration = ConfigurationManager.LoadConfigurationTree();
-			this.DataContext = Configuration;
-		}
+        private void ReloadConfigurationTree()
+        {
+            uiConfigurationTree.Items.Clear();
+            ConfigurationTreeItem root = ConfigManager.CreateConfigurationTreeRoot();
+            foreach (var item in root.Children) {
+                TreeViewItem uiItem = CreateUIItem(item);
+                uiConfigurationTree.Items.Add(uiItem);
+            }
+        }
 	}
 }

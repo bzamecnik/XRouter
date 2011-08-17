@@ -29,14 +29,10 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
     /// </summary>
     public partial class MessageflowConfigurationControl : UserControl, IConfigurationControl
     {
-        public bool IsDirty
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public event Action ConfigChanged = delegate { };
 
-        private IConsoleServer consoleServer;
-        private ConfigurationTree configTreeNode;
-        private ApplicationConfiguration appConfig;
+        private ConfigurationTreeItem ConfigTreeItem { get; set; }
+        private ConfigurationManager ConfigManager { get; set; }
 
         internal MessageFlowConfiguration Messageflow { get; private set; }
         internal NodeSelectionManager NodeSelectionManager { get; private set; }
@@ -49,15 +45,14 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             InitializeComponent();
         }
 
-        public void Initialize(ApplicationConfiguration appConfig, IConsoleServer consoleServer, ConfigurationTree configTreeNode)
+        void IConfigurationControl.Initialize(ConfigurationManager configManager, ConfigurationTreeItem configTreeItem)
         {
-            this.appConfig = appConfig;
-            this.consoleServer = consoleServer;
-            this.configTreeNode = configTreeNode;
+            ConfigManager = configManager;
+            ConfigTreeItem = configTreeItem;
 
-            NodeSelectionManager = new NodeSelectionManager(uiNodePropertiesContainer, appConfig);
+            NodeSelectionManager = new NodeSelectionManager(uiNodePropertiesContainer, ConfigManager.Configuration);
 
-            Messageflow = appConfig.GetMessageFlow(appConfig.GetCurrentMessageFlowGuid());
+            Messageflow = ConfigManager.Configuration.GetMessageFlow(ConfigManager.Configuration.GetCurrentMessageFlowGuid());
             MessageflowGraphPresenter = new MessageflowGraphPresenter(Messageflow, NodeSelectionManager);
             NodeSelectionManager.MessageflowGraphPresenter = MessageflowGraphPresenter;
             
@@ -120,15 +115,11 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             });
         }
 
-        public void Save()
+        void IConfigurationControl.Save()
         {
             Messageflow.PromoteToNewVersion();
-            appConfig.AddMessageFlow(Messageflow);
-            appConfig.SetCurrentMessageFlowGuid(Messageflow.Guid);
-        }
-
-        public void Clear()
-        {
+            ConfigManager.Configuration.AddMessageFlow(Messageflow);
+            ConfigManager.Configuration.SetCurrentMessageFlowGuid(Messageflow.Guid);
         }
 
         private void uiImport_Click(object sender, RoutedEventArgs e)
@@ -141,7 +132,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                 using (var fs = new FileStream(dialog.FileName, FileMode.Open)) {
                     Messageflow = MessageFlowConfiguration.Read(fs);
                 }
-                NodeSelectionManager = new NodeSelectionManager(uiNodePropertiesContainer, appConfig);
+                NodeSelectionManager = new NodeSelectionManager(uiNodePropertiesContainer, ConfigManager.Configuration);
                 uiNodePropertiesContainer.Child = null;
                 MessageflowGraphPresenter = new MessageflowGraphPresenter(Messageflow, NodeSelectionManager);
                 NodeSelectionManager.MessageflowGraphPresenter = MessageflowGraphPresenter;

@@ -14,21 +14,26 @@ namespace XRouter.Common
         public string AdapterName { get; set; }
 
         [DataMember]
-        public string AdapterTypeName { get; private set; }
+        public string GatewayName { get; private set; }
 
         [DataMember]
-        public SerializableXDocument Configuration { get; private set; }
+        public string AdapterTypeName { get; set; }
 
-        public AdapterConfiguration(string adapterName, string adapterTypeName)
+        [DataMember]
+        public SerializableXDocument Configuration { get; set; }
+
+        public AdapterConfiguration(string adapterName, string gatewayName, string adapterTypeName)
         {
             AdapterName = adapterName;
+            GatewayName = gatewayName;
             AdapterTypeName = adapterTypeName;
             Configuration = new SerializableXDocument(XDocument.Parse("<objectConfig />"));
         }
 
-        public AdapterConfiguration(string adapterName, string adapterTypeName, XDocument config)
+        public AdapterConfiguration(string adapterName, string gatewayName, string adapterTypeName, XDocument config)
         {
             AdapterName = adapterName;
+            GatewayName = gatewayName;
             AdapterTypeName = adapterTypeName;
             if (config == null)
             {

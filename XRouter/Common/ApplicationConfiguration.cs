@@ -291,7 +291,9 @@ namespace XRouter.Common
             {
                 string name = xAdapterType.Attribute(XName.Get("name")).Value;
                 string assemblyAndClrType = xAdapterType.Attribute(XName.Get("clr-type")).Value;
-                AdapterType adapterType = new AdapterType(name, assemblyAndClrType);
+                XElement xConfigurationMetadata = xAdapterType.Element(XName.Get("class-metadata"));
+                ClassMetadata configurationMetadata = XSerializer.Deserialize<ClassMetadata>(xConfigurationMetadata);
+                AdapterType adapterType = new AdapterType(name, assemblyAndClrType, configurationMetadata);
                 result.Add(adapterType);
             }
             return result.ToArray();
@@ -316,7 +318,9 @@ namespace XRouter.Common
             }
 
             string assemblyAndClrType = xAdapterType.Attribute(XName.Get("clr-type")).Value;
-            AdapterType adapterType = new AdapterType(name, assemblyAndClrType);
+            XElement xConfigurationMetadata = xAdapterType.Element(XName.Get("class-metadata"));
+            ClassMetadata configurationMetadata = XSerializer.Deserialize<ClassMetadata>(xConfigurationMetadata);
+            AdapterType adapterType = new AdapterType(name, assemblyAndClrType, configurationMetadata);
             return adapterType;
         }
 
@@ -333,6 +337,10 @@ namespace XRouter.Common
             XElement xAdapterType = new XElement(XName.Get("adapter-type"));
             xAdapterType.SetAttributeValue(XName.Get("name"), adapterType.Name);
             xAdapterType.SetAttributeValue(XName.Get("clr-type"), adapterType.AssemblyAndClrType);
+
+            XElement xConfigurationMetadata = new XElement(XName.Get("class-metadata"));
+            XSerializer.Serializer(adapterType.ConfigurationMetadata, xConfigurationMetadata);
+            xAdapterType.Add(xConfigurationMetadata);
 
             var xAdapterTypes = System.Xml.XPath.Extensions.XPathSelectElement(Content,
                 "/configuration/adapter-types");
@@ -438,23 +446,27 @@ namespace XRouter.Common
         /// </remarks>
         /// <param name="gatewayName">name of the gateway</param>
         /// <param name="xAdapterConfiguration">new adapter configuration</param>
-        public void SaveAdapterConfiguration(string gatewayName, AdapterConfiguration adapterConfiguration)
+        public void SaveAdapterConfiguration(AdapterConfiguration adapterConfiguration, string originalName = null)
         {
+            if (originalName == null) {
+                originalName = adapterConfiguration.AdapterName;
+            }
+
             var xOldAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format(
                 "/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']",
-                gatewayName, adapterConfiguration.AdapterName));
+                adapterConfiguration.GatewayName, originalName));
             if (xOldAdapter != null)
             {
                 xOldAdapter.Remove();
             }
 
             var xAdapters = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format(
-                "/configuration/components/gateway[@name='{0}']/adapters", gatewayName));
+                "/configuration/components/gateway[@name='{0}']/adapters", adapterConfiguration.GatewayName));
 
             if (xAdapters == null)
             {
                 throw new ArgumentException(string.Format(
-                    "Cannot find gateway named '{0}'.", gatewayName), "gatewayName");
+                    "Cannot find gateway named '{0}'.", adapterConfiguration.GatewayName), "gatewayName");
             }
 
             XElement xAdapter = new XElement(XName.Get("adapter"));
@@ -473,17 +485,17 @@ namespace XRouter.Common
         /// <exception cref="System.ArgumentException">if there is no gateway
         /// with a specified name or its adapter with a specified name
         /// </exception>
-        public void RemoveAdapterConfiguration(string gatewayName, string adapterName)
+        public void RemoveAdapterConfiguration(AdapterConfiguration adapterConfiguration)
         {
             var xAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format(
                 "/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']",
-                gatewayName, adapterName));
+                adapterConfiguration.GatewayName, adapterConfiguration.AdapterName));
 
             if (xAdapter == null)
             {
                 throw new ArgumentException(string.Format(
                     "Cannot find gateway named '{0}' or its adapter named '{1}'.",
-                    gatewayName, adapterName));
+                    adapterConfiguration.GatewayName, adapterConfiguration.AdapterName));
             }
 
             xAdapter.Remove();
@@ -645,6 +657,12 @@ namespace XRouter.Common
             XElement processor = GetComponentConfiguration(componentName);
             int result = int.Parse(processor.Attribute(XName.Get("concurrent-threads")).Value);
             return result;
+        }
+
+        public void SetConcurrentThreadsCountForProcessor(string componentName, int concurrentThreads)
+        {
+            XElement processor = GetComponentConfiguration(componentName);
+            processor.SetAttributeValue(XName.Get("concurrent-threads"), concurrentThreads);
         }
 
         #endregion

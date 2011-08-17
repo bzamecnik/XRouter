@@ -6,16 +6,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />            
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Label Grid.Row="0" Grid.Column="0" Margin="5" Content="Počet vláken:"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding XPath=directoryConfiguration/@name}" />
-        <Label Grid.Row="2" Grid.ColumnSpan="2" Margin="5" Content="Custom akce:"/>
+        <ContentControl Name="uiContent" />
     </Grid>
 </UserControl>

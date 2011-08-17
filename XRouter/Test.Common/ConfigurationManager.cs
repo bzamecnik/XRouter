@@ -77,7 +77,7 @@ namespace XRouter.Test.Common
                     string gatewayName = gateway.Attribute("name").Value;
                     foreach (var adapter in adapters)
                     {
-                        configuration.SaveAdapterConfiguration(gatewayName, adapter);
+                        configuration.SaveAdapterConfiguration(adapter);
                     }
                 }
             }

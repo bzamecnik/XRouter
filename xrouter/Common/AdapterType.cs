@@ -1,4 +1,5 @@
-﻿namespace XRouter.Common
+﻿using ObjectConfigurator;
+namespace XRouter.Common
 {
     /// <summary>
     /// Represents a type of an adapter - its symbolic name and an
@@ -17,10 +18,13 @@
         /// </summary>
         public string AssemblyAndClrType { get; private set; }
 
-        public AdapterType(string name, string assemblyAndClrType)
+        public ClassMetadata ConfigurationMetadata { get; private set; }
+
+        public AdapterType(string name, string assemblyAndClrType, ClassMetadata configurationMetadata)
         {
             Name = name;
             AssemblyAndClrType = assemblyAndClrType;
+            ConfigurationMetadata = configurationMetadata;
         }
     }
 }

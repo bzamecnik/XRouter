@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleServer.cs" />
+    <Compile Include="ConsoleServerProxyProvider.cs" />
     <Compile Include="EMailSender.cs" />
     <Compile Include="IConsoleServer.cs" />
     <Compile Include="Reporter.cs" />

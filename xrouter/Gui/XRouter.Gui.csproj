@@ -70,7 +70,6 @@
     <Compile Include="CommonControls\XrmUriEditor.xaml.cs">
       <DependentUpon>XrmUriEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ConfigurationControlManager.cs" />
     <Compile Include="ConfigurationControls\Messageflow\MessageflowConfigurationControl.xaml.cs">
       <DependentUpon>MessageflowConfigurationControl.xaml</DependentUpon>
     </Compile>
@@ -91,6 +90,7 @@
       <DependentUpon>TargetNodeSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="ConfigurationManager.cs" />
+    <Compile Include="ConfigurationTreeItem.cs" />
     <Compile Include="Themes\Generic.xaml.cs">
       <DependentUpon>Generic.xaml</DependentUpon>
     </Compile>
@@ -119,7 +119,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ConfigurationControls\Dispatcher\DispatcherConfigurationControl.xaml">
+    <Page Include="ConfigurationControls\General\GeneralConfigurationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -166,8 +166,8 @@
     <Compile Include="ConfigurationControls\Adapter\AdapterConfigurationControl.xaml.cs">
       <DependentUpon>AdapterConfigurationControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ConfigurationControls\Dispatcher\DispatcherConfigurationControl.xaml.cs">
-      <DependentUpon>DispatcherConfigurationControl.xaml</DependentUpon>
+    <Compile Include="ConfigurationControls\General\GeneralConfigurationControl.xaml.cs">
+      <DependentUpon>GeneralConfigurationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ConfigurationControls\Gateway\GatewayConfigurationControl.xaml.cs">
       <DependentUpon>GatewayConfigurationControl.xaml</DependentUpon>
@@ -300,9 +300,17 @@
       <Project>{C11BCFD6-9026-462E-A7CA-64037DFA974B}</Project>
       <Name>SimpleDiagrammer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Adapters\XRouter.Adapters.csproj">
+      <Project>{22D3C3BC-6341-4909-A5C1-CA8BE1455770}</Project>
+      <Name>XRouter.Adapters</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\XRouter.Common.csproj">
       <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
       <Name>XRouter.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gateway\XRouter.Gateway.csproj">
+      <Project>{67A83368-80F1-467D-950A-64DD5F1EAD6C}</Project>
+      <Name>XRouter.Gateway</Name>
     </ProjectReference>
     <ProjectReference Include="..\Manager\XRouter.Manager.csproj">
       <Project>{65687946-3002-4E95-8F35-A98EFDB615FD}</Project>

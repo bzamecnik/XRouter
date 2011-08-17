@@ -9,13 +9,12 @@ using XRouter.Manager;
 
 namespace XRouter.Gui
 {
-	public interface IConfigurationControl
+	interface IConfigurationControl
 	{
-        bool IsDirty { get; }
+        event Action ConfigChanged;
 
-        void Initialize(ApplicationConfiguration appConfig, IConsoleServer consoleServer, ConfigurationTree configTreeNode);
+        void Initialize(ConfigurationManager configManager, ConfigurationTreeItem configTreeItem);
 
         void Save();
-		void Clear();
 	}
 }

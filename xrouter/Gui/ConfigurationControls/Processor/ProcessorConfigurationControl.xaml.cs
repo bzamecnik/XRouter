@@ -15,6 +15,8 @@ using System.Xml.Linq;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common;
 using XRouter.Manager;
+using ObjectConfigurator;
+using ObjectConfigurator.ValueValidators;
 
 namespace XRouter.Gui.ConfigurationControls.Processor
 {
@@ -23,43 +25,49 @@ namespace XRouter.Gui.ConfigurationControls.Processor
 	/// </summary>
 	public partial class ProcessorConfigurationControl : UserControl, IConfigurationControl
 	{
-		private bool isdirty = false;
-        private XElement oldConfiguration;
+		public event Action ConfigChanged = delegate { };
 
-        private IConsoleServer consoleServer;
-        private ConfigurationTree configTreeNode;
-        private ApplicationConfiguration appConfig;
+        public string ProcessorName { get; private set; }
 
-        //public XElement Configuration;
+        private ConfigurationTreeItem ConfigTreeItem { get; set; }
+        private ConfigurationManager ConfigManager { get; set; }
 
-        public ProcessorConfigurationControl()
+        private ConfigurationEditor editor;
+
+        public ProcessorConfigurationControl(string processorName)
 		{
 			InitializeComponent();
+            ProcessorName = processorName;
 		}
 
-		public bool IsDirty
-		{
-			get { return isdirty; }
+        void IConfigurationControl.Initialize(ConfigurationManager configManager, ConfigurationTreeItem configTreeItem)
+        {
+            ConfigManager = configManager;
+            ConfigTreeItem = configTreeItem;
+
+            Config config = new Config {
+                ConcurrentProcessingThreads = ConfigManager.Configuration.GetConcurrentThreadsCountForProcessor(ProcessorName)
+            };
+            editor = Configurator.CreateEditor(typeof(Config));
+            XDocument xConfig = Configurator.SaveConfiguration(config);
+            editor.LoadConfiguration(xConfig);
+            uiContent.Content = editor;
 		}
 
-        public void Initialize(ApplicationConfiguration appConfig, IConsoleServer consoleServer, ConfigurationTree configTreeNode)
+        void IConfigurationControl.Save()
 		{
-            this.appConfig = appConfig;
-            this.consoleServer = consoleServer;
-            this.configTreeNode = configTreeNode;
-            this.oldConfiguration = configTreeNode.XContent;
-            this.DataContext = configTreeNode.XContent;
+            XDocument xConfig = editor.SaveConfiguration();
+            Config config = new Config();
+            Configurator.LoadConfiguration(config, xConfig);
+            ConfigManager.Configuration.SetConcurrentThreadsCountForProcessor(ProcessorName, config.ConcurrentProcessingThreads);
+            ConfigManager.SaveConfiguration();
 		}
 
-        public void Save()
-		{
-			isdirty = false;
-            //return this.DataContext as XElement;
-		}
-
-		public void Clear()
-		{
-			this.DataContext = this.oldConfiguration;
-		}
+        private class Config
+        {
+            [ConfigurationItem("Concurrent processing threads", null, 4)]
+            [RangeValidator(1, 100)]
+            public int ConcurrentProcessingThreads { get; set; }
+        }
 	}
 }

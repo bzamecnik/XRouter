@@ -105,7 +105,7 @@ namespace XRouter.Test.Integration
                 new[] { "RestaurantMenu_schematron" }, "Test1");
 
             var adapters = new AdapterConfiguration[] {
-                new AdapterConfiguration("directoryAdapter", "directoryAdapter",
+                new AdapterConfiguration("directoryAdapter", "gateway", "directoryAdapter",
                     XDocument.Parse(
 @"<objectConfig>
   <item name='checkingIntervalInSeconds'>0.1</item>

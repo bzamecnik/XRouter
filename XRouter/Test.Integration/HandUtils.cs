@@ -149,7 +149,7 @@ namespace XRouter.Test.Integration
 //</objectConfig>
 //");
             var webService = new AdapterConfiguration(
-                "floodConsumerWebService", "httpServiceAdapter", webServiceConfig);
+                "floodConsumerWebService", "gateway", "httpServiceAdapter", webServiceConfig);
             XDocument config = new XDocument();
             config.Add(new XElement("config"));
             XSerializer.Serializer<AdapterConfiguration>(webService, config.Root);

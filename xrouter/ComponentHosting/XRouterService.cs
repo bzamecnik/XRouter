@@ -61,9 +61,10 @@ namespace XRouter.ComponentHosting
 
             config.AddAdapterType(new AdapterType(
                 "Directory I/O adapter",
-                "XRouter.Adapters.DirectoryAdapter,XRouter.Adapters.dll"));
+                "XRouter.Adapters.DirectoryAdapter,XRouter.Adapters.dll",
+                new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.DirectoryAdapter))));
 
-            config.SaveAdapterConfiguration("gateway1", new AdapterConfiguration("directoryAdapter", "Directory I/O adapter"));
+            config.SaveAdapterConfiguration(new AdapterConfiguration("directoryAdapter", "gateway1", "Directory I/O adapter"));
             #endregion
 
             #region Create message flow
