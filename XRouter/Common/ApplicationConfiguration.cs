@@ -4,15 +4,12 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using ObjectConfigurator;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Utils;
-using ObjectConfigurator;
 
 namespace XRouter.Common
 {
-    // TODO: why System.Xml.XPath.Extensions.XPathSelectElement() is referenced
-    // by its canonical name instead of using namespace System.Xml.XPath?
-
     /// <summary>
     /// Represents a complete configuration of the whole XRouter application
     /// in a single XML document and also provides a set of operations to
@@ -116,7 +113,7 @@ namespace XRouter.Common
         public XElement GetComponentElements(ComponentType componentType)
         {
             string componentElementName = componentType.ToString().ToLower();
-            var xComponents = System.Xml.XPath.Extensions.XPathSelectElements(Content,
+            var xComponents = Content.XDocument.XPathSelectElements(
                 string.Format("/configuration/components/{0}", componentElementName));
             XElement xRoot = new XElement(XName.Get(componentElementName));
             // NOTE: sort elements in order to provide consistent result
@@ -138,15 +135,14 @@ namespace XRouter.Common
         public void SaveComponentElements(ComponentType componentType, XElement xNewComponents)
         {
             string componentElementName = componentType.ToString().ToLower();
-            var xOldComponents = System.Xml.XPath.Extensions.XPathSelectElements(Content,
+            var xOldComponents = Content.XDocument.XPathSelectElements(
                 string.Format("/configuration/components/{0}", componentElementName));
             foreach (var xComponent in xOldComponents)
             {
                 xComponent.Remove();
             }
 
-            var xComponents = System.Xml.XPath.Extensions.XPathSelectElement(Content,
-                "/configuration/components");
+            var xComponents = Content.XDocument.XPathSelectElement("/configuration/components");
             foreach (var xNewComponent in xNewComponents.Elements())
             {
                 xComponents.Add(xNewComponent);
@@ -163,15 +159,14 @@ namespace XRouter.Common
         {
             string componentElementName = componentType.ToString().ToLower();
             string name = xComponent.Attribute(XName.Get("name")).Value;
-            var xOldComponent = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            var xOldComponent = Content.XDocument.XPathSelectElement(
                 string.Format("/configuration/components/{0}[@name='{1}']", componentElementName, name));
             if (xOldComponent != null)
             {
                 xOldComponent.Remove();
             }
 
-            var xComponents = System.Xml.XPath.Extensions.XPathSelectElement(Content,
-                "/configuration/components");
+            var xComponents = Content.XDocument.XPathSelectElement("/configuration/components");
             xComponents.Add(xComponent);
         }
 
@@ -208,8 +203,7 @@ namespace XRouter.Common
                         "Cannot add a component named '{0}', unknown component type {1}.",
                         name, componentType.ToString()), "componentType");
             }
-            var xComponents = System.Xml.XPath.Extensions.XPathSelectElement(Content,
-                "/configuration/components");
+            var xComponents = Content.XDocument.XPathSelectElement("/configuration/components");
             xComponents.Add(xComponent);
         }
 
@@ -220,8 +214,7 @@ namespace XRouter.Common
         /// <param name="name">name of the component to be removed</param>
         public void RemoveComponent(string name)
         {
-            var xComponents = System.Xml.XPath.Extensions.XPathSelectElement(Content,
-                "/configuration/components");
+            var xComponents = Content.XDocument.XPathSelectElement("/configuration/components");
 
             // TODO: finding the component to be removed is a bit odd
             // Can't we just use XPath instead of iterating and finding manually?
@@ -243,9 +236,9 @@ namespace XRouter.Common
         /// <returns></returns>
         public string[] GetComponentNames()
         {
-            var gateway = System.Xml.XPath.Extensions.XPathSelectElements(Content,
+            var gateway = Content.XDocument.XPathSelectElements(
                 "/configuration/components/gateway");
-            var processor = System.Xml.XPath.Extensions.XPathSelectElements(Content,
+            var processor = Content.XDocument.XPathSelectElements(
                 "/configuration/components/processor");
             var componentsConfigs = gateway.Union(processor);
             var allComponentsNames = from cfg in componentsConfigs
@@ -263,13 +256,13 @@ namespace XRouter.Common
         /// <returns></returns>
         public ComponentType GetComponentType(string componentName)
         {
-            if (System.Xml.XPath.Extensions.XPathSelectElement(Content,
-                string.Format("/configuration/components/gateway[@name='{0}']", componentName)) != null)
+            if (Content.XDocument.XPathSelectElement(string.Format(
+                "/configuration/components/gateway[@name='{0}']", componentName)) != null)
             {
                 return ComponentType.Gateway;
             }
-            if (System.Xml.XPath.Extensions.XPathSelectElement(Content,
-                string.Format("/configuration/components/processor[@name='{0}']", componentName)) != null)
+            if (Content.XDocument.XPathSelectElement(string.Format(
+                "/configuration/components/processor[@name='{0}']", componentName)) != null)
             {
                 return ComponentType.Processor;
             }
@@ -287,7 +280,7 @@ namespace XRouter.Common
         /// <returns></returns>
         public AdapterType[] GetAdapterTypes()
         {
-            var xAdapterTypes = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            var xAdapterTypes = Content.XDocument.XPathSelectElement(
                 "/configuration/adapter-types");
             List<AdapterType> result = new List<AdapterType>();
             foreach (XElement xAdapterType in xAdapterTypes.Elements())
@@ -312,7 +305,7 @@ namespace XRouter.Common
         /// <returns></returns>
         public AdapterType GetAdapterType(string name)
         {
-            var xAdapterType = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            var xAdapterType = Content.XDocument.XPathSelectElement(
                 string.Format("/configuration/adapter-types/adapter-type[@name='{0}']", name));
 
             if (xAdapterType == null)
@@ -345,12 +338,12 @@ namespace XRouter.Common
             XSerializer.Serializer(adapterType.ConfigurationMetadata, xConfigurationMetadata);
             xAdapterType.Add(xConfigurationMetadata);
 
-            var xAdapterTypes = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            var xAdapterTypes = Content.XDocument.XPathSelectElement(
                 "/configuration/adapter-types");
 
             // if there is already an adapter with the same name replace the CLR type quietly
             // this maintains the uniqueness of the adapter types
-            var xExistingAdapterTypes = System.Xml.XPath.Extensions.XPathSelectElements(Content,
+            var xExistingAdapterTypes = Content.XDocument.XPathSelectElements(
                 string.Format("/configuration/adapter-types/adapter-type[@name='{0}']", adapterType.Name));
             foreach (var adapter in xExistingAdapterTypes)
             {
@@ -369,7 +362,7 @@ namespace XRouter.Common
         /// with such a name</exception>
         public void RemoveAdapterType(string name)
         {
-            var xAdapterType = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            var xAdapterType = Content.XDocument.XPathSelectElement(
                 string.Format("/configuration/adapter-types/adapter-type[@name='{0}']", name));
 
             if (xAdapterType == null)
@@ -392,7 +385,7 @@ namespace XRouter.Common
         /// <returns></returns>
         public AdapterConfiguration[] GetAdapterConfigurations(string gatewayName)
         {
-            var xGateway = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            var xGateway = Content.XDocument.XPathSelectElement(
                 string.Format("/configuration/components/gateway[@name='{0}']", gatewayName));
             if (xGateway == null)
             {
@@ -423,7 +416,7 @@ namespace XRouter.Common
         /// <returns></returns>
         public AdapterConfiguration GetAdapterConfiguration(string gatewayName, string adapterName)
         {
-            var xAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format(
+            var xAdapter = Content.XDocument.XPathSelectElement(string.Format(
                 "/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']",
                 gatewayName, adapterName));
 
@@ -451,11 +444,12 @@ namespace XRouter.Common
         /// <param name="xAdapterConfiguration">new adapter configuration</param>
         public void SaveAdapterConfiguration(AdapterConfiguration adapterConfiguration, string originalName = null)
         {
-            if (originalName == null) {
+            if (originalName == null)
+            {
                 originalName = adapterConfiguration.AdapterName;
             }
 
-            var xOldAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format(
+            var xOldAdapter = Content.XDocument.XPathSelectElement(string.Format(
                 "/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']",
                 adapterConfiguration.GatewayName, originalName));
             if (xOldAdapter != null)
@@ -463,7 +457,7 @@ namespace XRouter.Common
                 xOldAdapter.Remove();
             }
 
-            var xAdapters = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format(
+            var xAdapters = Content.XDocument.XPathSelectElement(string.Format(
                 "/configuration/components/gateway[@name='{0}']/adapters", adapterConfiguration.GatewayName));
 
             if (xAdapters == null)
@@ -490,7 +484,7 @@ namespace XRouter.Common
         /// </exception>
         public void RemoveAdapterConfiguration(AdapterConfiguration adapterConfiguration)
         {
-            var xAdapter = System.Xml.XPath.Extensions.XPathSelectElement(Content, string.Format(
+            var xAdapter = Content.XDocument.XPathSelectElement(string.Format(
                 "/configuration/components/gateway[@name='{0}']/adapters/adapter[@name='{1}']",
                 adapterConfiguration.GatewayName, adapterConfiguration.AdapterName));
 
@@ -514,7 +508,7 @@ namespace XRouter.Common
         /// <returns></returns>
         public ActionType[] GetActionTypes()
         {
-            var xActionTypes = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            var xActionTypes = Content.XDocument.XPathSelectElement(
                 "/configuration/action-types");
             List<ActionType> result = new List<ActionType>();
             foreach (XElement xActionType in xActionTypes.Elements())
@@ -539,7 +533,7 @@ namespace XRouter.Common
         /// <returns></returns>
         public ActionType GetActionType(string name)
         {
-            var xActionType = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            var xActionType = Content.XDocument.XPathSelectElement(
                 string.Format("/configuration/action-types/action-type[@name='{0}']", name));
 
             if (xActionType == null)
@@ -572,12 +566,12 @@ namespace XRouter.Common
             XSerializer.Serializer(actionType.ConfigurationMetadata, xConfigurationMetadata);
             xActionType.Add(xConfigurationMetadata);
 
-            var xActionTypes = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            var xActionTypes = Content.XDocument.XPathSelectElement(
                 "/configuration/action-types");
 
             // if there is already an action with the same name replace the CLR type quietly
             // this maintains the uniqueness of the action types
-            var xExistingActionTypes = System.Xml.XPath.Extensions.XPathSelectElements(Content,
+            var xExistingActionTypes = Content.XDocument.XPathSelectElements(
                 string.Format("/configuration/action-types/action-type[@name='{0}']", actionType.Name));
             foreach (var action in xExistingActionTypes)
             {
@@ -596,7 +590,7 @@ namespace XRouter.Common
         /// with such a name</exception>
         public void RemoveActionType(string name)
         {
-            var xActionType = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            var xActionType = Content.XDocument.XPathSelectElement(
                 string.Format("/configuration/action-types/action-type[@name='{0}']", name));
 
             if (xActionType == null)
@@ -618,7 +612,7 @@ namespace XRouter.Common
         /// <returns></returns>
         public TimeSpan GetNonRunningProcessorResponseTimeout()
         {
-            var dispatcher = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            var dispatcher = Content.XDocument.XPathSelectElement(
                 "/configuration/dispatcher");
             string value = dispatcher.Attribute(XName.Get("nonrunning-processor-response-timeout")).Value;
             TimeSpan result = TimeSpan.FromSeconds(int.Parse(value));
@@ -637,11 +631,11 @@ namespace XRouter.Common
         /// <returns></returns>
         public XElement GetComponentConfiguration(string componentName)
         {
-            XElement result = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            XElement result = Content.XDocument.XPathSelectElement(
                 string.Format("/configuration/components/gateway[@name='{0}']", componentName));
             if (result != null) { return result; }
 
-            result = System.Xml.XPath.Extensions.XPathSelectElement(Content,
+            result = Content.XDocument.XPathSelectElement(
                 string.Format("/configuration/components/processor[@name='{0}']", componentName));
             if (result != null) { return result; }
 
