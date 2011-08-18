@@ -25,6 +25,9 @@ namespace XRouter.Manager
 
         protected override void OnStart(OnStartServiceArgs args)
         {
+            XRouter.Common.TraceLog.Initialize(this.Logger);
+            XRouter.Common.EventLog.Initialize(this.Logger);
+
             // managedService (required)   
             string serviceName = args.Settings.Parameters["managedServiceName"];
             if (serviceName == null)

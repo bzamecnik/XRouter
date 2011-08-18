@@ -180,12 +180,12 @@
             StringBuilder sb = new StringBuilder();
 
             // type
-            sb.Append(String.Format("<exception type=\"{0}\">", exception.GetType().ToString()));
+            sb.Append(String.Format("\n<exception type=\"{0}\">", exception.GetType().ToString()));
 
             // message
             if (exception.Message != null)
             {
-                sb.Append(String.Format("<message>{0}</message>", exception.Message));
+                sb.Append(String.Format("<message>{0}</message>\n", exception.Message));
             }
 
             // data
@@ -198,11 +198,12 @@
                     String value = entry.Value.ToString();
                     sb.Append(String.Format("<entry key=\"{0}\" value=\"{1}\"/>", key, value));
                 }
-                sb.Append("</data>");
+                sb.Append("</data>\n");
             }
 
             // stack-trace
-            sb.Append(String.Format("<stack-trace>{0}</stack-trace>", exception.StackTrace));
+            sb.Append(String.Format("<stack-trace>{0}</stack-trace>",
+                System.Security.SecurityElement.Escape(exception.StackTrace)));
 
             // inner exception
             if (exception.InnerException != null)
@@ -210,7 +211,7 @@
                 sb.Append(String.Format("{0}", SerializeException(exception.InnerException)));
             }
 
-            sb.Append(String.Format("</exception>"));
+            sb.Append(String.Format("</exception>\n"));
 
             return sb.ToString();
         }

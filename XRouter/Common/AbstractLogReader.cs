@@ -34,10 +34,20 @@ namespace XRouter.Common
             {
                 string fileName = Path.GetFileName(logFilePath);
                 DateTime date = GetDateFromLogFileName(fileName);
+                // TODO: how about the inclusions regarding the intercal bounds?
+                // >=, <= (potentially problematic) or >=, < or >, <=
                 if ((date >= minDate) && (date <= maxDate))
                 {
-                    GetEntriesFromFile(logFilePath, date, minDate, maxDate,
-                        logLevelFilter, ref matchingEntries);
+                    try
+                    {
+                        GetEntriesFromFile(logFilePath, date, minDate, maxDate,
+                            logLevelFilter, ref matchingEntries);
+                    }
+                    catch (Exception ex)
+                    {
+                        TraceLog.Warning(string.Format("Cannot read log file: {0}", logFilePath));
+                        TraceLog.Exception(ex);
+                    }
                 }
             }
 

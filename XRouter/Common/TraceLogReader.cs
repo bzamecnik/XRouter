@@ -25,7 +25,7 @@ namespace XRouter.Common
             ref List<TraceLogEntry> matchingEntries)
         {
             string fileContent = File.ReadAllText(logFilePath);
-            string xmlContent = "<log>" + fileContent + "</log>";
+            string xmlContent = string.Format("<log>{0}</log>", fileContent);
             XDocument xLog = XDocument.Parse(xmlContent);
             foreach (XElement xEntry in xLog.Root.Elements())
             {

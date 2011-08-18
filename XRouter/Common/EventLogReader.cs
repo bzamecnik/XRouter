@@ -26,6 +26,11 @@ namespace XRouter.Common
             string[] lines = File.ReadAllLines(logFilePath);
             foreach (string line in lines)
             {
+                if (line.Trim().Length == 0)
+                {
+                    // ignore empty lines
+                    continue;
+                }
                 EventLogEntry entry = new EventLogEntry(line, date);
                 if ((entry.Created >= minDate) && (entry.Created <= maxDate) &&
                     IsMatchingLogLevelFilter(entry.LogLevel, logLevelFilter))
