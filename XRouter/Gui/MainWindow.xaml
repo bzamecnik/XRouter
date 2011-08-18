@@ -2,53 +2,52 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:XRouter.Gui"
+        xmlns:xrm="clr-namespace:XRouter.Gui.Xrm"
         WindowState="Maximized"
         Title="XRouter - Configuration manager" Height="750" Width="1000" MinWidth="400" MinHeight="200" Loaded="Window_Loaded" >
     <Grid>
-        <Grid.RowDefinitions>            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>           
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TabControl Grid.Row="0" Grid.Column="0">
+        <ToolBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+            <Button Click="LoadFromServer_Click" ToolTip="Load application configuration from XRouter server">Load</Button>
+            <Button Click="SaveToServer_Click" ToolTip="Save application configuration to XRouter server">Save</Button>
+            <Button Click="Import_Click" ToolTip="Import application configuration from a file">Import</Button>
+            <Button Click="Export_Click" ToolTip="Export application configuration to a file">Export</Button>
+        </ToolBar>
+        
+        <TabControl Grid.Row="1" Grid.Column="0">
+            
             <TabItem Header="Configuration">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="25" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="250" />
+                        <ColumnDefinition Width="150" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    
-                    <ToolBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-                        <Button Click="LoadFromServer_Click" ToolTip="Load application configuration from XRouter server">Load</Button>
-                        <Button Click="SaveToServer_Click" ToolTip="Save application configuration to XRouter server">Save</Button>
-                        <Button Click="Import_Click" ToolTip="Import application configuration from a file">Import</Button>
-                        <Button Click="Export_Click" ToolTip="Export application configuration to a file">Export</Button>
-                    </ToolBar>
-                    
-                    <TreeView Grid.Row="2" Grid.Column="0" Name="uiConfigurationTree" Margin="5" Padding="5" SelectedItemChanged="uiConfigurationTree_SelectedItemChanged" />
-
-                    <GridSplitter Grid.Row="1" Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns"/>
-                                  
-                    <ContentControl Name="uiConfigurationContainer" Grid.Row="1" Grid.Column="2" />
+                    <TreeView Grid.Row="0" Grid.Column="0" Name="uiConfigurationTree" Margin="5" Padding="5" SelectedItemChanged="uiConfigurationTree_SelectedItemChanged" />
+                    <GridSplitter Grid.Row="0" Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns"/>
+                    <ContentControl Name="uiConfigurationContainer" Grid.Row="0" Grid.Column="2" />
                 </Grid>
-
             </TabItem>
+            
             <TabItem Header="XML Resources">
-
+                <xrm:XrmEditor x:Name="uiXrmEditor" />
             </TabItem>
+            
             <TabItem Header="Tokens">
                 <local:TokensViewControl x:Name="uiTokens" />
             </TabItem>
+            
             <TabItem Header="Trace logs">
                 <local:LogViewControl x:Name="uiTraceLog" />
             </TabItem>
+            
             <TabItem Header="Event logs">
                 <local:LogViewControl x:Name="uiEventLog" />
             </TabItem>

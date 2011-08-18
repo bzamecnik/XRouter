@@ -109,6 +109,9 @@
       <DependentUpon>TokensViewControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\ThreadUtils.cs" />
+    <Compile Include="Xrm\XrmEditor.xaml.cs">
+      <DependentUpon>XrmEditor.xaml</DependentUpon>
+    </Compile>
     <Page Include="CommonControls\ListEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -278,6 +281,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="TokensViewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xrm\XrmEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

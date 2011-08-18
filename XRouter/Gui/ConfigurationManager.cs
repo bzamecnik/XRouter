@@ -52,8 +52,8 @@ namespace XRouter.Gui
             ConfigurationTreeItem rootItem = new ConfigurationTreeItem("Configuration", null, null, this);
 
             // TODO: the component names should NOT be hard-wired!
-            ConfigurationTreeItem gatewayItem = new ConfigurationTreeItem("Gateway", () => new ConfigurationControls.Gateway.GatewayConfigurationControl("gateway1"), rootItem, this);
-            ConfigurationTreeItem processorItem = new ConfigurationTreeItem("Processor", () => new ConfigurationControls.Processor.ProcessorConfigurationControl("processor1"), rootItem, this);
+            ConfigurationTreeItem gatewayItem = new ConfigurationTreeItem("Gateway", () => new ConfigurationControls.Gateway.GatewayConfigurationControl("gateway"), rootItem, this);
+            ConfigurationTreeItem processorItem = new ConfigurationTreeItem("Processor", () => new ConfigurationControls.Processor.ProcessorConfigurationControl("processor"), rootItem, this);
             ConfigurationTreeItem mesageflowItem = new ConfigurationTreeItem("Messageflow", () => new ConfigurationControls.Messageflow.MessageflowConfigurationControl(), rootItem, this);
 
             return rootItem;

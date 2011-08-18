@@ -79,7 +79,8 @@ Details:
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ReloadConfigurationFromServer();
+            ConfigManager.LoadConfigurationFromServer();
+            LoadConfiguration();
 
             #region Load tokens and log records
             uiTokens.Initialize(ConfigManager);
@@ -127,22 +128,14 @@ Details:
 
         private void LoadFromServer_Click(object sender, RoutedEventArgs e)
         {
-            ReloadConfigurationFromServer();
+            ConfigManager.LoadConfigurationFromServer();
+            LoadConfiguration();
         }
 
         private void SaveToServer_Click(object sender, RoutedEventArgs e)
         {
-            SaveUiControls();
+            SaveConfiguration();
             ConfigManager.SaveConfigurationToServer();
-        }
-
-        private void SaveUiControls()
-        {
-            var items = uiConfigurationTree.Items.OfType<TreeViewItem>().Select(i => (ConfigurationTreeItem)i.Tag);
-            foreach (ConfigurationTreeItem item in items)
-            {
-                item.SaveRecursively();
-            }
         }
 
         private void Import_Click(object sender, RoutedEventArgs e)
@@ -162,7 +155,7 @@ Details:
                     return;
                 }
                 ConfigManager.Configuration = new ApplicationConfiguration(xdoc);
-                ReloadConfigurationTree();
+                LoadConfiguration();
             }
         }
 
@@ -175,26 +168,35 @@ Details:
             dialog.OverwritePrompt = true;
             if (dialog.ShowDialog() == true)
             {
-                SaveUiControls();
+                SaveConfiguration();
                 ConfigManager.Configuration.Content.XDocument.Save(dialog.FileName);
             }
         }
 
-        private void ReloadConfigurationFromServer()
+        private void LoadConfiguration()
         {
-            ConfigManager.LoadConfigurationFromServer();
-            ReloadConfigurationTree();
-        }
-
-        private void ReloadConfigurationTree()
-        {
+            #region Update configuration tree
             uiConfigurationTree.Items.Clear();
             ConfigurationTreeItem root = ConfigManager.CreateConfigurationTreeRoot();
-            foreach (var item in root.Children)
-            {
+            foreach (var item in root.Children) {
                 TreeViewItem uiItem = CreateUIItem(item);
                 uiConfigurationTree.Items.Add(uiItem);
             }
+            #endregion
+
+            uiXrmEditor.LoadContent(ConfigManager.Configuration.GetXrmContent());
+        }
+
+        private void SaveConfiguration()
+        {
+            #region Save configuration tree items
+            var items = uiConfigurationTree.Items.OfType<TreeViewItem>().Select(i => (ConfigurationTreeItem)i.Tag);
+            foreach (ConfigurationTreeItem item in items) {
+                item.SaveRecursively();
+            }
+            #endregion
+
+            ConfigManager.Configuration.SaveXrmContent(uiXrmEditor.SaveContent().Root);
         }
     }
 }
