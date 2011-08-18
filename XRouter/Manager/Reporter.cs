@@ -121,13 +121,15 @@ namespace XRouter.Manager
                             DateTime max = new DateTime(dt.Year, dt.Month, dt.Day, time.Hours, time.Minutes, 0);
                             DateTime min = max.AddDays(-1);
                             TraceLog.Info(string.Format("Creating report from logs at {0}", dt));
-                            string report = this.CreateReport(min, max);
+                            string report = this.CreateReport(dt, min, max);
 
                             // send report
                             if (this.sender != null)
                             {
-                                this.sender.Send("Report", report);
-                                TraceLog.Info("Report successfully sent.");
+                                this.sender.Send(string.Format(
+                                    "Report for service '{0}' at {1}", serviceName, dt),
+                                    report);
+                                TraceLog.Info("Report was sent successfully.");
                             }
                         }
                         catch (Exception e)
@@ -143,7 +145,7 @@ namespace XRouter.Manager
             }
         }
 
-        private string CreateReport(DateTime min, DateTime max)
+        private string CreateReport(DateTime now, DateTime min, DateTime max)
         {
             EventLogEntry[] errorEventLogs = this.eventLogReader.GetEntries(min, max, LogLevelFilters.Error, int.MaxValue, 1);
             EventLogEntry[] warningEventLogs = this.eventLogReader.GetEntries(min, max, LogLevelFilters.Warning, int.MaxValue, 1);
@@ -151,19 +153,19 @@ namespace XRouter.Manager
             TraceLogEntry[] warningTraceLogs = this.traceLogReader.GetEntries(min, max, LogLevelFilters.Warning, int.MaxValue, 1);
 
             StringBuilder sb = new StringBuilder();
-            // TODO: use only AppendLine()
-            sb.Append("Event Logs:");
+            sb.AppendLine(string.Format(
+                "Summary of logs for service '{0}' between {1} and {2}:",
+                serviceName, min, max));
             sb.AppendLine();
-            sb.Append(string.Format("ERRORs: {0}", errorEventLogs.Length));
+            sb.AppendLine("Event Logs:");
+            sb.AppendLine(string.Format("  Errors: {0}", errorEventLogs.Length));
+            sb.AppendLine(string.Format("  Warnings: {0}", warningEventLogs.Length));
             sb.AppendLine();
-            sb.Append(string.Format("WARNINGs: {0}", warningEventLogs.Length));
+            sb.AppendLine("Trace Logs:");
+            sb.AppendLine(string.Format("  Errors: {0}", errorTraceLogs.Length));
+            sb.AppendLine(string.Format("  Warnings: {0}", warningTraceLogs.Length));
             sb.AppendLine();
-            sb.Append("Trace Logs:");
-            sb.AppendLine();
-            sb.Append(string.Format("ERRORs: {0}", errorTraceLogs.Length));
-            sb.AppendLine();
-            sb.Append(string.Format("WARNINGs: {0}", warningTraceLogs.Length));
-            sb.AppendLine();
+            sb.AppendLine(string.Format("Report was generated at {0}.", now));
 
             return sb.ToString();
         }
