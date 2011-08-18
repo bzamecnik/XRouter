@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
-using DaemonNT.Logging;
 using XRouter.Common;
 
 namespace XRouter.Manager
@@ -31,11 +30,6 @@ namespace XRouter.Manager
         /// Reference to an e-mail sender.
         /// </summary>
         private EMailSender sender = null;
-
-        /// <summary>
-        /// Reference to the DaemonNT trace logger (for writing).
-        /// </summary>
-        private TraceLogger logger = null;
 
         /// <summary>
         /// Indicates whether the reporter is still running.
@@ -81,12 +75,11 @@ namespace XRouter.Manager
         /// </remarks>
         private TimeSpan time;
 
-        public Reporter(string serviceName, StoragesInfo storagesInfo, EMailSender sender, TraceLogger logger, TimeSpan time)
+        public Reporter(string serviceName, StoragesInfo storagesInfo, EMailSender sender, TimeSpan time)
         {
             this.serviceName = serviceName;
             this.storagesInfo = storagesInfo;
             this.sender = sender;
-            this.logger = logger;
             this.time = time;
         }
 
@@ -127,25 +120,25 @@ namespace XRouter.Manager
                         {
                             DateTime max = new DateTime(dt.Year, dt.Month, dt.Day, time.Hours, time.Minutes, 0);
                             DateTime min = max.AddDays(-1);
-                            this.logger.LogInfo(string.Format("Creating report from logs at {0}", dt));
+                            TraceLog.Info(string.Format("Creating report from logs at {0}", dt));
                             string report = this.CreateReport(min, max);
 
                             // send report
                             if (this.sender != null)
                             {
                                 this.sender.Send("Report", report);
-                                this.logger.LogInfo("Report successfully sent.");
+                                TraceLog.Info("Report successfully sent.");
                             }
                         }
                         catch (Exception e)
                         {
-                            this.logger.LogException(e);
+                            TraceLog.Exception(e);
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    this.logger.LogException(e);
+                    TraceLog.Exception(e);
                 }
             }
         }
@@ -158,6 +151,7 @@ namespace XRouter.Manager
             TraceLogEntry[] warningTraceLogs = this.traceLogReader.GetEntries(min, max, LogLevelFilters.Warning, int.MaxValue, 1);
 
             StringBuilder sb = new StringBuilder();
+            // TODO: use only AppendLine()
             sb.Append("Event Logs:");
             sb.AppendLine();
             sb.Append(string.Format("ERRORs: {0}", errorEventLogs.Length));

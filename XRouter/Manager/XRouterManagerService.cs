@@ -39,7 +39,7 @@ namespace XRouter.Manager
             EMailSender emailSender = null;
             if (args.Settings["email"] != null)
             {
-                emailSender = CreateEmailSender(args, this.Logger.Trace);
+                emailSender = CreateEmailSender(args);
             }
             else
             {
@@ -50,13 +50,13 @@ namespace XRouter.Manager
             StoragesInfo storagesInfo = CreateStoragesInfo(args);
 
             // Reporter (required)
-            this.reporter = CreateReporter(serviceName, args, storagesInfo, emailSender, this.Logger.Trace);
+            this.reporter = CreateReporter(serviceName, args, storagesInfo, emailSender);
 
             // ServiceWatcher (required)
-            this.watcher = CreateServiceWatcher(serviceName, args, emailSender, this.Logger.Trace);
+            this.watcher = CreateServiceWatcher(serviceName, args, emailSender);
 
             // ConsoleServer (required)
-            this.consoleServer = CreateConsoleServer(serviceName, args, this.watcher, storagesInfo, this.Logger.Trace);
+            this.consoleServer = CreateConsoleServer(serviceName, args, this.watcher, storagesInfo);
 
             // start servers            
             this.watcher.Start();
@@ -75,9 +75,8 @@ namespace XRouter.Manager
         /// Create and initialize an e-mail sender.
         /// </summary>
         /// <param name="args">service arguments with settings</param>
-        /// <param name="logger">trace logger</param>
         /// <returns>EMailSender instance</returns>
-        private static EMailSender CreateEmailSender(OnStartServiceArgs args, TraceLogger logger)
+        private static EMailSender CreateEmailSender(OnStartServiceArgs args)
         {
             // SMTP host
             string smtpHost = args.Settings["email"].Parameters["smtpHost"];
@@ -110,7 +109,7 @@ namespace XRouter.Manager
             }
             System.Net.Mail.MailAddress toAddress = new System.Net.Mail.MailAddress(to);
 
-            return new EMailSender(smtpHost, port, fromAddress, toAddress, logger);
+            return new EMailSender(smtpHost, port, fromAddress, toAddress);
         }
 
         /// <summary>
@@ -145,9 +144,12 @@ namespace XRouter.Manager
         /// <param name="args"></param>
         /// <param name="storagesInfo"></param>
         /// <param name="sender"></param>
-        /// <param name="logger"></param>
         /// <returns></returns>
-        private static Reporter CreateReporter(string serviceName, OnStartServiceArgs args, StoragesInfo storagesInfo, EMailSender sender, TraceLogger logger)
+        private static Reporter CreateReporter(
+            string serviceName,
+            OnStartServiceArgs args,
+            StoragesInfo storagesInfo,
+            EMailSender sender)
         {
             if (args.Settings["reporter"] == null)
             {
@@ -162,7 +164,7 @@ namespace XRouter.Manager
             }
             TimeSpan timeSpan = TimeSpan.Parse(time);
 
-            return new Reporter(serviceName, storagesInfo, sender, logger, timeSpan);
+            return new Reporter(serviceName, storagesInfo, sender, timeSpan);
         }
 
         /// <summary>
@@ -171,10 +173,11 @@ namespace XRouter.Manager
         /// <param name="serviceName"></param>
         /// <param name="args"></param>
         /// <param name="sender"></param>
-        /// <param name="logger"></param>
         /// <returns></returns>
-        private static Watcher CreateServiceWatcher(string serviceName, OnStartServiceArgs args, EMailSender sender,
-            TraceLogger logger)
+        private static Watcher CreateServiceWatcher(
+            string serviceName,
+            OnStartServiceArgs args,
+            EMailSender sender)
         {
             if (args.Settings["watcher"] == null)
             {
@@ -189,7 +192,7 @@ namespace XRouter.Manager
             }
             bool autoStartEnabled = Convert.ToBoolean(autoRestartEnabledStr);
 
-            return new Watcher(serviceName, args.IsDebugMode, autoStartEnabled, logger, sender);
+            return new Watcher(serviceName, args.IsDebugMode, autoStartEnabled, sender);
         }
 
         /// <summary>
@@ -199,10 +202,12 @@ namespace XRouter.Manager
         /// <param name="args"></param>
         /// <param name="watcher"></param>
         /// <param name="storagesInfo"></param>
-        /// <param name="logger"></param>
         /// <returns></returns>
-        private static ConsoleServer CreateConsoleServer(string serviceName, OnStartServiceArgs args, Watcher watcher,
-            StoragesInfo storagesInfo, TraceLogger logger)
+        private static ConsoleServer CreateConsoleServer(
+            string serviceName,
+            OnStartServiceArgs args,
+            Watcher watcher,
+            StoragesInfo storagesInfo)
         {
             if (args.Settings["console"] == null)
             {
@@ -223,7 +228,7 @@ namespace XRouter.Manager
                 throw new ArgumentNullException("metadataUri");
             }
 
-            return new ConsoleServer(serviceName, args.IsDebugMode, uri, metadataUri, storagesInfo, watcher, logger);
+            return new ConsoleServer(serviceName, args.IsDebugMode, uri, metadataUri, storagesInfo, watcher);
         }
     }
 }

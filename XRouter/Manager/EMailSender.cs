@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net.Mail;
-using DaemonNT.Logging;
+using XRouter.Common;
 
 namespace XRouter.Manager
 {
@@ -34,19 +34,13 @@ namespace XRouter.Manager
         /// </summary>
         private MailAddress to = null;
 
-        /// <summary>
-        /// A reference to the trace logger.
-        /// </summary>
-        private TraceLogger logger = null;
-
         public EMailSender(string smtpHost, int? smtpPort, MailAddress from,
-            MailAddress to, TraceLogger logger)
+            MailAddress to)
         {
             this.smtpHost = smtpHost;
             this.smtpPort = smtpPort;
             this.from = from;
             this.to = to;
-            this.logger = logger;
         }
 
         /// <summary>
@@ -61,7 +55,7 @@ namespace XRouter.Manager
         {
             try
             {
-                this.logger.LogInfo(string.Format("Sending e-mail:\nSubject: '{0}'\nBody:\n{1}", subject, body));
+                TraceLog.Info(string.Format("Sending e-mail:\nSubject: '{0}'\nBody:\n{1}", subject, body));
 
                 // create an SMTP client
                 SmtpClient smtp = new SmtpClient();
@@ -83,7 +77,7 @@ namespace XRouter.Manager
             }
             catch (Exception e)
             {
-                this.logger.LogException(e);
+                TraceLog.Exception(e);
             }
         }
     }

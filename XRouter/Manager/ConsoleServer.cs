@@ -5,7 +5,6 @@ using System.ServiceProcess;
 using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
-using DaemonNT.Logging;
 using XRouter.Common;
 using XRouter.Common.Persistence;
 
@@ -15,7 +14,8 @@ namespace XRouter.Manager
     /// Implements a console server which provides services to the GUI (over a
     /// WCF web service).
     /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, AddressFilterMode = AddressFilterMode.Any)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single,
+        AddressFilterMode = AddressFilterMode.Any)]
     internal sealed class ConsoleServer : IConsoleServer
     {
         /// <summary>
@@ -37,11 +37,6 @@ namespace XRouter.Manager
         /// WCF web service host.
         /// </summary>
         private ServiceHost wcfHost = null;
-
-        /// <summary>
-        /// Reference to the DaemonNT trace logger (for writing).
-        /// </summary>
-        private TraceLogger logger = null;
 
         /// <summary>
         /// Reference to a service watcher.
@@ -74,8 +69,13 @@ namespace XRouter.Manager
         /// </summary>
         private StoragesInfo storagesInfo = null;
 
-        public ConsoleServer(string serviceName, bool isDebugMode, string uri, string metadataUri,
-            StoragesInfo storagesInfo, Watcher watcher, TraceLogger logger)
+        public ConsoleServer(
+            string serviceName,
+            bool isDebugMode,
+            string uri,
+            string metadataUri,
+            StoragesInfo storagesInfo,
+            Watcher watcher)
         {
             this.serviceName = serviceName;
             this.IsDebugMode = isDebugMode;
@@ -83,7 +83,6 @@ namespace XRouter.Manager
             this.metadataUri = metadataUri;
             this.storagesInfo = storagesInfo;
             this.serviceWatcher = watcher;
-            this.logger = logger;
         }
 
         /// <summary>
@@ -184,7 +183,7 @@ namespace XRouter.Manager
                 // TODO: it is possible to use DaemonNT.ServiceCommands.DebugStart()
                 // or start a new process
 
-                this.logger.LogWarning("StartXRouterService() is not supported when XRouterManager is in debug mode.");
+                TraceLog.Warning("StartXRouterService() is not supported when XRouterManager is in debug mode.");
             }
         }
 
@@ -199,7 +198,7 @@ namespace XRouter.Manager
             }
             else
             {
-                this.logger.LogWarning("StopXRouterService() is not supported when XRouterManager is in debug mode.");
+                TraceLog.Warning("StopXRouterService() is not supported when XRouterManager is in debug mode.");
             }
         }
 

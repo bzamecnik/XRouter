@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ServiceProcess;
 using System.Threading;
-using DaemonNT.Logging;
+using XRouter.Common;
 
 namespace XRouter.Manager
 {
@@ -44,11 +44,6 @@ namespace XRouter.Manager
         /// When in debug mode the watcher does not work.
         /// </remarks>
         private bool isDebugMode = false;
-
-        /// <summary>
-        /// Reference to the DaemonNT trace logger (for writing).
-        /// </summary>
-        private TraceLogger logger = null;
 
         /// <summary>
         /// Indicated whether to auto-restart the managed service if it seems
@@ -127,18 +122,17 @@ namespace XRouter.Manager
             this.runtimeAutoRestartEnabled = false;
         }
 
-        public Watcher(string serviceName, bool isDebugMode, bool autoStartEnabled, TraceLogger logger, EMailSender sender)
+        public Watcher(string serviceName, bool isDebugMode, bool autoStartEnabled, EMailSender sender)
         {
             this.managedServiceName = serviceName;
             this.isDebugMode = isDebugMode;
             this.configAutoRestartEnabled = autoStartEnabled;
             this.runtimeAutoRestartEnabled = autoStartEnabled;
-            this.logger = logger;
             this.emailSender = sender;
 
             if (isDebugMode)
             {
-                logger.LogWarning("Watcher is disabled in debug mode.");
+                TraceLog.Warning("Watcher is disabled in debug mode.");
             }
         }
 
@@ -198,7 +192,7 @@ namespace XRouter.Manager
                 }
                 catch (Exception e)
                 {
-                    this.logger.LogException(e);
+                    TraceLog.Exception(e);
                 }
             }
         }
@@ -213,7 +207,7 @@ namespace XRouter.Manager
                 string logMessage = (string.Format(
                     "Watcher automatically restarted managed service '{0}'.",
                     this.managedServiceName));
-                this.logger.LogInfo(logMessage);
+                TraceLog.Info(logMessage);
 
                 // send e-mail
                 if (this.emailSender != null)
