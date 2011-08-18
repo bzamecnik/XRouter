@@ -119,7 +119,10 @@ namespace XRouter.Common
             var xComponents = System.Xml.XPath.Extensions.XPathSelectElements(Content,
                 string.Format("/configuration/components/{0}", componentElementName));
             XElement xRoot = new XElement(XName.Get(componentElementName));
-            foreach (var xComponenent in xComponents)
+            // NOTE: sort elements in order to provide consistent result
+            // eg. the first component of a type is always selected the same
+            // for the same data
+            foreach (var xComponenent in xComponents.OrderBy((comp) => comp.Name))
             {
                 xRoot.Add(xComponenent);
             }
