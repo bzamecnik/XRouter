@@ -81,3 +81,8 @@ namespace XRouter.Gui
         }
     }
 }
+
+// This prevents strange compilation error with missing namespace
+namespace Microsoft.Windows.Controls.Primitives
+{
+}
