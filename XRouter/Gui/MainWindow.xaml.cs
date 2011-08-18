@@ -9,6 +9,7 @@ using XRouter.Common;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
 using XRouter.Gui.CommonControls;
+using XRouter.Gui.Xrm;
 
 namespace XRouter.Gui
 {
@@ -79,6 +80,12 @@ Details:
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            uiXrmEditor.Initialize(new XDocumentTypeDescriptor[] {
+                new Xrm.DocumentTypeDescriptors.GeneralXDocumentTypeDescriptor(),
+                new Xrm.DocumentTypeDescriptors.SchematronDocumentTypeDescriptor(),
+                new Xrm.DocumentTypeDescriptors.XsltDocumentTypeDescriptor(),
+            });
+
             ConfigManager.LoadConfigurationFromServer();
             LoadConfiguration();
 
