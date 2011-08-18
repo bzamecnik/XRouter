@@ -45,8 +45,9 @@ namespace XRouter.Common
                     }
                     catch (Exception ex)
                     {
-                        TraceLog.Warning(string.Format("Cannot read log file: {0}", logFilePath));
-                        TraceLog.Exception(ex);
+                        TraceLog.Warning(string.Format(
+                            "Cannot read log file: {0}. Reason: {1}",
+                            Path.GetFileName(logFilePath), ex.Message));
                     }
                 }
             }
