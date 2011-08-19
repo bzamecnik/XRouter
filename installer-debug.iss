@@ -53,3 +53,15 @@ Source: "bin\Debug\XRouter.Processor.dll"; DestDir: "{app}"; Flags: ignoreversio
 [Icons]
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
+Name: "{group}\XRouter Configuration Manager"; Filename: "{app}\XRouter.Gui.exe"; WorkingDir: "{app}"
+Name: "{group}\DaemonNT Configuration Editor"; Filename: "{app}\DaemonNT.GUI.ConfigEditor.exe"; WorkingDir: "{app}"
+
+Name: "{group}\XRouter\Install XRouter as Windows Service"; Filename: "{app}\DaemonNT.exe"; WorkingDir: "{app}"; Parameters: "install xrouter"
+Name: "{group}\XRouter\Uninstall XRouter as Windows Service"; Filename: "{app}\DaemonNT.exe"; WorkingDir: "{app}"; Parameters: "uninstall xrouter"
+Name: "{group}\XRouter\Start XRouter as Windows Service"; Filename: "{app}\DaemonNT.exe"; WorkingDir: "{app}"; Parameters: "start xrouter"
+Name: "{group}\XRouter\Stop XRouter as Windows Service"; Filename: "{app}\DaemonNT.exe"; WorkingDir: "{app}"; Parameters: "stop xrouter"
+
+Name: "{group}\XRouter Manager\Install XRouter Manager as Windows Service"; Filename: "{app}\DaemonNT.exe"; WorkingDir: "{app}"; Parameters: "install xroutermanager"
+Name: "{group}\XRouter Manager\Uninstall XRouter Manager as Windows Service"; Filename: "{app}\DaemonNT.exe"; WorkingDir: "{app}"; Parameters: "uninstall xroutermanager"
+Name: "{group}\XRouter Manager\Start XRouter Manager as Windows Service"; Filename: "{app}\DaemonNT.exe"; WorkingDir: "{app}"; Parameters: "start xroutermanager"
+Name: "{group}\XRouter Manager\Stop XRouter Manager as Windows Service"; Filename: "{app}\DaemonNT.exe"; WorkingDir: "{app}"; Parameters: "stop xroutermanager"
