@@ -44,6 +44,9 @@ Name: "sw\daemonNt\Gui"; Description: "DaemonNT GUI"; Types: full
 Name: "docs"; Description: "Documentation"; Types: full
 Name: "examples"; Description: "Examples"; Types: full
 
+[Dirs]
+Name: "{app}\Logs"; Components: sw\xRouter
+
 [Files]
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "bin\{#BuildType}\DaemonNT.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\daemonNt\Console
@@ -67,9 +70,9 @@ Source: "bin\{#BuildType}\XRouter.Processor.dll"; DestDir: "{app}"; Flags: ignor
 Source: "README"; DestName: "README.txt"; DestDir: "{app}\Documentation"; Flags: isreadme; Components: sw
 Source: "LICENSE"; DestName: "LICENSE.txt"; DestDir: "{app}\Documentation"; Components: sw
 Source: "AUTHORS"; DestName: "AUTHORS.txt"; DestDir: "{app}\Documentation"; Components: sw
-Source: "docs\XRouter\*"; Excludes: "\latex,dummy.txt"; DestDir: "{app}\Documentation\XRouter"; Flags: recursesubdirs; Components: docs
-Source: "docs\DaemonNT\*"; Excludes: "\latex,dummy.txt"; DestDir: "{app}\Documentation\DaemonNT"; Flags: recursesubdirs; Components: docs
-Source: "docs\SchemaTron\*"; Excludes: "\latex,dummy.txt"; DestDir: "{app}\Documentation\SchemaTron"; Flags: recursesubdirs; Components: docs
+Source: "docs\XRouter\*"; Excludes: "dummy.txt,*.chw"; DestDir: "{app}\Documentation\XRouter"; Components: docs
+Source: "docs\DaemonNT\*"; Excludes: "dummy.txt,*.chw"; DestDir: "{app}\Documentation\DaemonNT"; Components: docs
+Source: "docs\SchemaTron\*"; Excludes: "dummy.txt,*.chw"; DestDir: "{app}\Documentation\SchemaTron"; Components: docs
 
 [Icons]
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"

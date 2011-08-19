@@ -1,4 +1,17 @@
-﻿namespace DaemonNT
+﻿/*! \mainpage DaemonNT - API reference
+ *
+ * %DaemonNT provides a environment for hosting programs as Windows services.
+ * It can install services and control their running. %DaemonNT is designed to
+ * be easy to configure, use and extend. In addition, its offers its own
+ * simple, configurable, yet high-performance logging facility and enables
+ * developers with a debugging mode. So that %DaemonNT is useful not only for
+ * deployment of services but also for their development.
+ * 
+ * Please find more information in the full documentation which can be found
+ * at the project home page: http://assembla.com/spaces/xrouter .
+ */
+
+namespace DaemonNT
 {
     using System;
     using System.Collections.Generic;

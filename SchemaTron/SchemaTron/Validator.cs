@@ -1,4 +1,20 @@
-﻿using System;
+﻿/*! \mainpage SchemaTron - API reference
+ *
+ * %SchemaTron represents a native C# implementation (.NET 4.0 DLL assembly)
+ * of the ISO Schematron validation language over XPath 1.0 query language.
+ * 
+ * ISO Schematron is a relatively simple language based on XML capable of
+ * specifying XML schemas. It allows to express a valid document directly
+ * with a set of rules and assertions, specified using an external query
+ * language. It is designed for a different style of validation than the
+ * typical grammar-based schemas and it does not need the whole gramatical
+ * infrastructure (DTD, XSD, Relax NG).
+ * 
+ * Please find more information in the full documentation which can be found
+ * at the project home page: http://assembla.com/spaces/xrouter .
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
