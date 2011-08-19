@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Security.Permissions;
     using System.Text;
 
     internal class LoggerFileStorage : ILoggerStorage
@@ -37,7 +38,23 @@
             this.source = source;
             // TODO: should we use AppDomain.CurrentDomain.BaseDirectory or
             // Directory.GetCurrentDirectory()
-            this.directory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, RelativePathToLogs);
+            this.directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, RelativePathToLogs);
+            
+            TestLogDirectoryWritable();
+        }
+
+        /// <summary>
+        /// Checks if we can create and write log files.
+        /// If not a System.UnauthorizedAccessException is thrown immediately,
+        /// not at the time of the first write.
+        /// </summary>
+        /// <exception cref="System.UnauthorizedAccessException">
+        /// If the target log directory is not writable.</exception>
+        private void TestLogDirectoryWritable()
+        {
+            string testFile = Path.Combine(this.directory, Path.GetRandomFileName());
+            using (File.Create(testFile)) ;
+            File.Delete(testFile);
         }
 
         private void Save(DateTime logDateTime, string logItem)
