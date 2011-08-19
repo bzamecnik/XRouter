@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -89,14 +89,17 @@
     <ProjectReference Include="..\..\ObjectConfigurator\ObjectConfigurator.csproj">
       <Project>{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}</Project>
       <Name>ObjectConfigurator</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Broker\XRouter.Broker.csproj">
       <Project>{AF28F3BF-7340-408E-B9AC-C9CE0F17A599}</Project>
       <Name>XRouter.Broker</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Common\XRouter.Common.csproj">
       <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
       <Name>XRouter.Common</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

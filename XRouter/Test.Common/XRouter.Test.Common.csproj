@@ -72,6 +72,7 @@
     <ProjectReference Include="..\Manager\XRouter.Manager.csproj">
       <Project>{65687946-3002-4E95-8F35-A98EFDB615FD}</Project>
       <Name>XRouter.Manager</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Processor\XRouter.Processor.csproj">
       <Project>{69C0BC8F-EEF4-4DA8-B220-2B35AA20F273}</Project>

@@ -50,14 +50,17 @@
     <ProjectReference Include="..\..\ObjectConfigurator\ObjectConfigurator.csproj">
       <Project>{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}</Project>
       <Name>ObjectConfigurator</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Common\XRouter.Common.csproj">
       <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
       <Name>XRouter.Common</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Gateway\XRouter.Gateway.csproj">
       <Project>{67A83368-80F1-467D-950A-64DD5F1EAD6C}</Project>
       <Name>XRouter.Gateway</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

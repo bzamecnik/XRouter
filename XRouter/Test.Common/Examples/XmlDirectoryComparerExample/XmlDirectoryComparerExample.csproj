@@ -86,6 +86,7 @@
     <ProjectReference Include="..\..\XRouter.Test.Common.csproj">
       <Project>{36110949-7E99-41E5-BCB3-B84275CD7505}</Project>
       <Name>XRouter.Test.Common</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

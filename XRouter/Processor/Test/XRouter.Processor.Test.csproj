@@ -46,6 +46,7 @@
     <ProjectReference Include="..\XRouter.Processor.csproj">
       <Project>{69C0BC8F-EEF4-4DA8-B220-2B35AA20F273}</Project>
       <Name>XRouter.Processor</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
