@@ -35,6 +35,7 @@ Source: "bin\Release\DaemonNT.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\DaemonNT.GUI.ConfigEditor.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\DaemonNT.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\ObjectConfigurator.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\RibbonControlsLibrary.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\SchemaTron.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\SimpleDiagrammer.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\XRouter.Adapters.dll"; DestDir: "{app}"; Flags: ignoreversion
