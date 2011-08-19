@@ -32,25 +32,44 @@ SolidCompression=yes
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
+[Components]
+Name: "sw"; Description: "Program files"; Types: full custom
+Name: "sw\xRouter"; Description: "XRouter"; Types: full
+Name: "sw\xRouter\Service"; Description: "XRouter Service"; Types: full compact
+Name: "sw\xRouter\Manager"; Description: "XRouter Manager"; Types: full compact
+Name: "sw\xRouter\Gui"; Description: "XRouter GUI"; Types: full
+Name: "sw\daemonNt"; Description: "DaemonNT"; Types: full
+Name: "sw\daemonNt\Console"; Description: "DaemonNT Console"; Types: full compact
+Name: "sw\daemonNt\Gui"; Description: "DaemonNT GUI"; Types: full
+Name: "docs"; Description: "Documentation"; Types: full
+Name: "examples"; Description: "Examples"; Types: full
+
 [Files]
-Source: "bin\{#BuildType}\DaemonNT.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\DaemonNT.GUI.ConfigEditor.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\DaemonNT.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\ObjectConfigurator.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\RibbonControlsLibrary.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\SchemaTron.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\SimpleDiagrammer.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\XRouter.Adapters.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\XRouter.Broker.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\XRouter.Common.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\XRouter.ComponentHosting.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\XRouter.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\XRouter.Gateway.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\XRouter.Gui.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\XRouter.Gui.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\XRouter.Manager.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\{#BuildType}\XRouter.Processor.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+Source: "bin\{#BuildType}\DaemonNT.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\daemonNt\Console
+Source: "bin\{#BuildType}\DaemonNT.GUI.ConfigEditor.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\daemonNt\Gui
+Source: "bin\{#BuildType}\DaemonNT.xml"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter\Service sw\xRouter\Manager
+Source: "bin\{#BuildType}\ObjectConfigurator.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+Source: "bin\{#BuildType}\RibbonControlsLibrary.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter\Gui
+Source: "bin\{#BuildType}\SchemaTron.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw
+Source: "bin\{#BuildType}\SimpleDiagrammer.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+Source: "bin\{#BuildType}\XRouter.Adapters.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+Source: "bin\{#BuildType}\XRouter.Broker.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+Source: "bin\{#BuildType}\XRouter.Common.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+Source: "bin\{#BuildType}\XRouter.ComponentHosting.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+Source: "bin\{#BuildType}\XRouter.Data.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+Source: "bin\{#BuildType}\XRouter.Gateway.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+Source: "bin\{#BuildType}\XRouter.Gui.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter\Gui
+Source: "bin\{#BuildType}\XRouter.Gui.exe.config"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter\Gui
+Source: "bin\{#BuildType}\XRouter.Manager.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+Source: "bin\{#BuildType}\XRouter.Processor.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+
+Source: "README"; DestName: "README.txt"; DestDir: "{app}\Documentation"; Flags: isreadme; Components: sw
+Source: "LICENSE"; DestName: "LICENSE.txt"; DestDir: "{app}\Documentation"; Components: sw
+Source: "AUTHORS"; DestName: "AUTHORS.txt"; DestDir: "{app}\Documentation"; Components: sw
+Source: "docs\XRouter\*"; Excludes: "\latex,dummy.txt"; DestDir: "{app}\Documentation\XRouter"; Flags: recursesubdirs; Components: docs
+Source: "docs\DaemonNT\*"; Excludes: "\latex,dummy.txt"; DestDir: "{app}\Documentation\DaemonNT"; Flags: recursesubdirs; Components: docs
+Source: "docs\SchemaTron\*"; Excludes: "\latex,dummy.txt"; DestDir: "{app}\Documentation\SchemaTron"; Flags: recursesubdirs; Components: docs
 
 [Icons]
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
