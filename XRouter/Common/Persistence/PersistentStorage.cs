@@ -11,6 +11,7 @@ namespace XRouter.Common.Persistence
     public class PersistentStorage : IXmlStorage
     {
         private IDataAccess dataAccess;
+        private XDocument configXmlCache;
 
         public PersistentStorage(string connectionString)
         {
@@ -21,16 +22,21 @@ namespace XRouter.Common.Persistence
 
         public XDocument GetApplicationConfiguration()
         {
-            string configXml = dataAccess.LoadConfiguration();
-            if (configXml == null) {
-                configXml = ApplicationConfiguration.InitialContent;
+            if (configXmlCache == null)
+            {
+                string configXml = dataAccess.LoadConfiguration();
+                if (configXml == null)
+                {
+                    configXml = ApplicationConfiguration.InitialContent;
+                }
+                configXmlCache = XDocument.Parse(configXml);
             }
-            XDocument result = XDocument.Parse(configXml);
-            return result;
+            return configXmlCache;
         }
 
         public void SaveApplicationConfiguration(XDocument config)
         {
+            configXmlCache = config;
             string configXml = config.ToString();
             dataAccess.SaveConfiguration(configXml);
         }

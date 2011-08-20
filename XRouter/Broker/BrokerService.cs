@@ -30,6 +30,8 @@ namespace XRouter.Broker
         private Dispatching.Dispatcher dispatcher;
         private XmlResourceManager xmlResourceManager;
 
+        private ApplicationConfiguration appConfigCache;
+
         private object syncLock = new object();
 
         public BrokerService()
@@ -74,13 +76,17 @@ namespace XRouter.Broker
 
         public ApplicationConfiguration GetConfiguration()
         {
-            XDocument configXml = storage.GetApplicationConfiguration();
-            var result = new ApplicationConfiguration(configXml);
-            return result;
+            if (appConfigCache == null)
+            {
+                XDocument configXml = storage.GetApplicationConfiguration();
+                appConfigCache = new ApplicationConfiguration(configXml);
+            }
+            return appConfigCache;
         }
 
         public void UpdateConfiguration(ApplicationConfiguration config)
         {
+            appConfigCache = config;
             storage.SaveApplicationConfiguration(config.Content);
 
             // TODO: why not just iterate over componentsAccessors.Values?
