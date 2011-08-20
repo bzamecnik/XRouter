@@ -21,7 +21,7 @@ namespace XRouter.Common.ComponentInterfaces
         /// <seealso cref="XRouter.Common.MessageFlowState"/>
         void UpdateTokenMessageFlowState(
             string updatingProcessorName,
-            Guid tokenGuid,
+            Token targetToken,
             MessageFlowState messageFlowState);
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace XRouter.Common.ComponentInterfaces
         /// <param name="message">contents of the message to be added</param>
         void AddMessageToToken(
             string updatingProcessorName,
-            Guid targetTokenGuid,
+            Token targetToken,
             string messageName,
             SerializableXDocument message);
 
@@ -47,14 +47,14 @@ namespace XRouter.Common.ComponentInterfaces
         /// </summary>
         /// <param name="updatingProcessorName">name of the processor which
         /// updates the token</param>
-        /// <param name="targetTokenGuid">identifier of the token to be updated</param>
+        /// <param name="targetToken">the token to be updated</param>
         /// <param name="sourceNodeName">name of the message flow node where
         /// the exception was thrown</param>
         /// <param name="message"></param>
         /// <param name="stackTrace"></param>
         void AddExceptionToToken(
             string updatingProcessorName,
-            Guid targetTokenGuid,
+            Token targetToken,
             string sourceNodeName,
             string message,
             string stackTrace);
@@ -72,7 +72,7 @@ namespace XRouter.Common.ComponentInterfaces
         /// gateway</param>
         void FinishToken(
             string updatingProcessorName,
-            Guid tokenGuid,
+            Token token,
             SerializableXDocument resultMessage);
 
         /// <summary>

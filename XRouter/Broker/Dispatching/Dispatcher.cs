@@ -88,7 +88,8 @@ namespace XRouter.Broker.Dispatching
                     {
                         Token token = brokerService.GetToken(tokenGuid);
                         MessageFlowState messageflowState = token.GetMessageFlowState();
-                        if (messageflowState.AssignedProcessor != null) {
+                        if (messageflowState.AssignedProcessor != null)
+                        {
                             return; // Token is already dispatched
                         }
 
@@ -96,23 +97,24 @@ namespace XRouter.Broker.Dispatching
                         if (messageflowState.MessageFlowGuid == new Guid())
                         {
                             Guid messageFlowGuid = config.GetCurrentMessageFlowGuid();
-                            brokerService.UpdateTokenMessageFlow(tokenGuid, messageFlowGuid);
-                            token.UpdateMessageFlowState(mfs => { mfs.MessageFlowGuid = messageFlowGuid; });
+                            token = brokerService.UpdateTokenMessageFlow(tokenGuid, messageFlowGuid);
                         }
                         try
                         {
                             TraceLog.Info(string.Format(
                                 "Dispatcher assigning token '{0}' to processor '{1}'",
                                 token.Guid, processor.ComponentName));
+                            token = brokerService.UpdateTokenLastResponseFromProcessor(tokenGuid, DateTime.Now);
+                            token = brokerService.UpdateTokenAssignedProcessor(tokenGuid, processor.ComponentName);
+                            token.State = TokenState.InProcessor;
                             processor.AddWork(token);
                         }
                         catch
                         {
+                            brokerService.UpdateTokenAssignedProcessor(tokenGuid, null);
                             continue; // if adding token to processor fails, try next one
                         }
-                        brokerService.UpdateTokenLastResponseFromProcessor(tokenGuid, DateTime.Now);
-                        brokerService.UpdateTokenAssignedProcessor(tokenGuid, processor.ComponentName);
-                        return;
+                        return; // token has been successfully dispatched
                     }
                 }
             }

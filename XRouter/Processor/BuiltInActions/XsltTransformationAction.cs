@@ -73,7 +73,7 @@ namespace XRouter.Processor.BuiltInActions
 
             XDocument outputMessage = XDocument.Parse(outputBuilder.ToString());
 
-            ProcessorService.CreateMessage(token.Guid, outputMessageName, outputMessage);
+            ProcessorService.CreateMessage(token, outputMessageName, outputMessage);
         }
 
         public void Dispose()

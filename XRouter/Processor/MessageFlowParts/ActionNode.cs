@@ -47,7 +47,25 @@ namespace XRouter.Processor.MessageFlowParts
         public override string Evaluate(Token token)
         {
             TraceLog.Info("Evaluating action: " + Name);
-            Parallel.ForEach(actions, delegate(IActionPlugin action)
+            // NOTE: ref parameter of the method can't be directly passed into
+            // a lambda function
+            //Token workingToken = token;
+            //Parallel.ForEach(actions, delegate(IActionPlugin action)
+            //{
+            //    try
+            //    {
+            //        action.Evaluate(ref workingToken);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        ProcessorService.AddExceptionToToken(workingToken.Guid, ex, out workingToken);
+            //    }
+            //});
+
+            // TODO: token reference must not be modified when using it in parallel
+            // Until the problem is solved use just sequential for each loop.
+
+            foreach (var action in actions)
             {
                 try
                 {
@@ -55,9 +73,9 @@ namespace XRouter.Processor.MessageFlowParts
                 }
                 catch (Exception ex)
                 {
-                    ProcessorService.AddExceptionToToken(token.Guid, ex);
+                    ProcessorService.AddExceptionToToken(token, ex);
                 }
-            });
+            }
 
             return Config.NextNode.Name;
         }

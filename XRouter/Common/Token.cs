@@ -237,6 +237,14 @@ namespace XRouter.Common
             }
         }
 
+        public void UpdateContent(XDocument content)
+        {
+            lock (SyncLock)
+            {
+                Content = new SerializableXDocument(content);
+            }
+        }
+
         private string GetTokenAttribute(string name)
         {
             lock (SyncLock) {

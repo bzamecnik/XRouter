@@ -49,21 +49,28 @@ namespace XRouter.Processor
         /// add the new message</param>
         /// <param name="messageName">name of the new message</param>
         /// <param name="message">message content</param>
-        public void CreateMessage(Guid targetTokenGuid, string messageName, XDocument message)
+        /// <returns>updated token</returns>
+        public void CreateMessage(
+            Token targetToken,
+            string messageName,
+            XDocument message)
         {
-            BrokerService.AddMessageToToken(ProcessorName, targetTokenGuid, messageName, new SerializableXDocument(message));
+            BrokerService.AddMessageToToken(ProcessorName, targetToken,
+                messageName, new SerializableXDocument(message));
         }
 
         /// <summary>
         /// Adds an exception to the token along with the name of the node
         /// where the exception was thrown.
         /// </summary>
-        /// <param name="targetTokenGuid">identifier of the token to which to
-        /// add the exception</param>
+        /// <param name="targetToken">the token to which to add the exception
+        /// </param>
         /// <param name="ex">exception to be added to the token</param>
-        public void AddExceptionToToken(Guid targetTokenGuid, Exception ex)
+        /// <param name="updatedToken">updated token</param>
+        public void AddExceptionToToken(Token targetToken, Exception ex)
         {
-            BrokerService.AddExceptionToToken(ProcessorName, targetTokenGuid, Node.Name, ex.Message, ex.StackTrace);
+            BrokerService.AddExceptionToToken(ProcessorName, targetToken,
+                Node.Name, ex.Message, ex.StackTrace);
         }
 
         /// <summary>
@@ -101,7 +108,8 @@ namespace XRouter.Processor
         /// <seealso cref="XRouter.Common.MessageFlowState"/>
         public void MakeMessageFlowStatePersistent(Token token)
         {
-            BrokerService.UpdateTokenMessageFlowState(ProcessorName, token.Guid, token.GetMessageFlowState());
+            BrokerService.UpdateTokenMessageFlowState(ProcessorName, token,
+                token.GetMessageFlowState());
         }
 
         /// <summary>
@@ -114,8 +122,9 @@ namespace XRouter.Processor
         /// gateway; can be null</param>
         public void FinishToken(Token token, XDocument resultMessage)
         {
-            SerializableXDocument serializableResultMessage =  new SerializableXDocument(resultMessage);
-            BrokerService.FinishToken(ProcessorName, token.Guid, serializableResultMessage);
+            SerializableXDocument serializableResultMessage = new SerializableXDocument(resultMessage);
+            BrokerService.FinishToken(ProcessorName, token,
+                serializableResultMessage);
         }
     }
 }
