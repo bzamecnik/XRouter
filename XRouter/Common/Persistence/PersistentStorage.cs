@@ -13,6 +13,26 @@ namespace XRouter.Common.Persistence
         private IDataAccess dataAccess;
         private XDocument configXmlCache;
 
+        private object _updateTokenLock = new object();
+        /// <summary>
+        /// A lock for updating tokens to ensure atomicity.
+        /// </summary>
+        /// <remarks>
+        /// Currently no two tokens can be updated in parallel. Better would
+        /// be to enable updating tokens with different GUIDs in parallel.
+        /// </remarks>
+        private object UpdateTokenLock
+        {
+            get
+            {
+                if (_updateTokenLock == null)
+                {
+                    _updateTokenLock = new object();
+                }
+                return _updateTokenLock;
+            }
+        }
+
         public PersistentStorage(string connectionString)
         {
             dataAccess = new MsSqlDataAccess();
@@ -67,10 +87,13 @@ namespace XRouter.Common.Persistence
         /// <returns>updated token</returns>
         public Token UpdateToken(Guid tokenGuid, Action<Token> updater)
         {
-            Token token = GetToken(tokenGuid);
-            updater(token);
-            SaveToken(token);
-            return token;
+            lock (UpdateTokenLock)
+            {
+                Token token = GetToken(tokenGuid);
+                updater(token);
+                SaveToken(token);
+                return token;
+            }
         }
 
         /// <summary>
@@ -86,10 +109,13 @@ namespace XRouter.Common.Persistence
         /// <returns></returns>
         public void UpdateToken(Token token, Action<Token> updater)
         {
+            lock (UpdateTokenLock)
+            {
                 Token currentToken = GetToken(token.Guid);
                 updater(currentToken);
                 SaveToken(currentToken);
                 token.UpdateContent(currentToken.Content);
+            }
         }
 
         public Token[] GetTokens(int pageSize, int pageNumber)
@@ -114,7 +140,8 @@ namespace XRouter.Common.Persistence
         private IEnumerable<Token> CreateTokens(IEnumerable<string> tokensXml)
         {
             List<Token> result = new List<Token>();
-            foreach (string tokenXml in tokensXml) {
+            foreach (string tokenXml in tokensXml)
+            {
                 Token token = new Token(tokenXml);
                 result.Add(token);
             }
@@ -137,7 +164,8 @@ namespace XRouter.Common.Persistence
             XElement xContainer = config.XPathSelectElement("/configuration/xml-resource-storage");
 
             XDocument result = new XDocument();
-            if (xContainer != null) {
+            if (xContainer != null)
+            {
                 result.Add(xContainer);
             }
             return result;
