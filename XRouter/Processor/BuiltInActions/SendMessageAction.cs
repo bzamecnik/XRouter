@@ -65,7 +65,7 @@ namespace XRouter.Processor.BuiltInActions
             {
                 if (resultMessageName.Trim().Length > 0)
                 {
-                    processorService.CreateMessage(token.Guid, resultMessageName.Trim(), outputMessage);
+                    token = processorService.CreateMessage(token.Guid, resultMessageName.Trim(), outputMessage);
                 }
             }
         }

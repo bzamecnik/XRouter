@@ -48,11 +48,23 @@ namespace XRouter.Common.Persistence
             return result;
         }
 
-        public void UpdateToken(Guid tokenGuid, Action<Token> updater)
+        /// <summary>
+        /// Updates a token.
+        /// </summary>
+        /// <remarks>
+        /// Loads a token specified by its GUID from the storage, updates it
+        /// with a provided action, saves it and returns the updated token
+        /// instance.
+        /// </remarks>
+        /// <param name="tokenGuid"></param>
+        /// <param name="updater"></param>
+        /// <returns>updated token</returns>
+        public Token UpdateToken(Guid tokenGuid, Action<Token> updater)
         {
             Token token = GetToken(tokenGuid);
             updater(token);
             SaveToken(token);
+            return token;
         }
 
         public Token[] GetTokens(int pageSize, int pageNumber)

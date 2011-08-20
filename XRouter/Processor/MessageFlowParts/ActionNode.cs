@@ -55,7 +55,7 @@ namespace XRouter.Processor.MessageFlowParts
                 }
                 catch (Exception ex)
                 {
-                    ProcessorService.AddExceptionToToken(token.Guid, ex);
+                    token = ProcessorService.AddExceptionToToken(token.Guid, ex);
                 }
             });
 

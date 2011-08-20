@@ -49,9 +49,10 @@ namespace XRouter.Processor
         /// add the new message</param>
         /// <param name="messageName">name of the new message</param>
         /// <param name="message">message content</param>
-        public void CreateMessage(Guid targetTokenGuid, string messageName, XDocument message)
+        /// <returns>updated token</returns>
+        public Token CreateMessage(Guid targetTokenGuid, string messageName, XDocument message)
         {
-            BrokerService.AddMessageToToken(ProcessorName, targetTokenGuid, messageName, new SerializableXDocument(message));
+            return BrokerService.AddMessageToToken(ProcessorName, targetTokenGuid, messageName, new SerializableXDocument(message));
         }
 
         /// <summary>
@@ -61,9 +62,10 @@ namespace XRouter.Processor
         /// <param name="targetTokenGuid">identifier of the token to which to
         /// add the exception</param>
         /// <param name="ex">exception to be added to the token</param>
-        public void AddExceptionToToken(Guid targetTokenGuid, Exception ex)
+        /// <returns>updated token</returns>
+        public Token AddExceptionToToken(Guid targetTokenGuid, Exception ex)
         {
-            BrokerService.AddExceptionToToken(ProcessorName, targetTokenGuid, Node.Name, ex.Message, ex.StackTrace);
+            return BrokerService.AddExceptionToToken(ProcessorName, targetTokenGuid, Node.Name, ex.Message, ex.StackTrace);
         }
 
         /// <summary>

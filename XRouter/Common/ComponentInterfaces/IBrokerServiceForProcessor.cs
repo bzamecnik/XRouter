@@ -36,7 +36,7 @@ namespace XRouter.Common.ComponentInterfaces
         /// <param name="targetTokenGuid">identifier of the token to be updated</param>
         /// <param name="messageName">name of the message to be added</param>
         /// <param name="message">contents of the message to be added</param>
-        void AddMessageToToken(
+        Token AddMessageToToken(
             string updatingProcessorName,
             Guid targetTokenGuid,
             string messageName,
@@ -52,7 +52,7 @@ namespace XRouter.Common.ComponentInterfaces
         /// the exception was thrown</param>
         /// <param name="message"></param>
         /// <param name="stackTrace"></param>
-        void AddExceptionToToken(
+        Token AddExceptionToToken(
             string updatingProcessorName,
             Guid targetTokenGuid,
             string sourceNodeName,
