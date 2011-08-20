@@ -111,6 +111,7 @@ namespace XRouter.Broker.Dispatching
                         }
                         catch
                         {
+                            // NOTE: token retains the Received state
                             brokerService.UpdateTokenAssignedProcessor(tokenGuid, null);
                             continue; // if adding token to processor fails, try next one
                         }

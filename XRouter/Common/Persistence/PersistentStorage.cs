@@ -126,14 +126,20 @@ namespace XRouter.Common.Persistence
         public Token[] GetUndispatchedTokens()
         {
             //todo: Determine correct xpath
-            string xpath = "/token/messageflow-state/AssignedProcessor";  // AssignedProcessor!=null
+            // <MessageFlowState><AssignedProcessor i:nil="true" />
+            // 
+            string xpath = "/token/messageflow-state/MessageFlowState/AssignedProcessor[@i:nil='true']";
             return CreateTokens(dataAccess.LoadMatchingTokens(xpath)).ToArray();
         }
 
         public Token[] GetActiveTokensAssignedToProcessor(string processorName)
         {
             //todo: Determine correct xpath
-            string xpath = "/token/messageflow-state/AssignedProcessor"; // (t.MessageFlowState.AssignedProcessor == processorName) && (t.State == TokenState.InProcessor)
+            // <MessageFlowState><AssignedProcessor z:Id="2">processor1</AssignedProcessor>
+            // 
+            string xpath = string.Format(
+                "/token[@state='InProcessor']/messageflow-state/MessageFlowState/AssignedProcessor[.='{0}']",
+                processorName);
             return CreateTokens(dataAccess.LoadMatchingTokens(xpath)).ToArray();
         }
 
