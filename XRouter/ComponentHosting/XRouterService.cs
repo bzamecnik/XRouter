@@ -64,43 +64,43 @@ namespace XRouter.ComponentHosting
                 new[] { new ProcessorProvider(processorName, processor) }
             );
 
-            var config = broker.GetConfiguration();
+            //var config = broker.GetConfiguration();
 
-            #region Prepare action types and adapters (currently hard-coded for testing purposes)
-            config.AddActionType(new ActionType(
-                "Message sender",
-                "XRouter.Processor.BuiltInActions.SendMessageAction,XRouter.Processor.dll",
-                new ObjectConfigurator.ClassMetadata(typeof(Processor.BuiltInActions.SendMessageAction))));
+            //#region Prepare action types and adapters (currently hard-coded for testing purposes)
+            //config.AddActionType(new ActionType(
+            //    "Message sender",
+            //    "XRouter.Processor.BuiltInActions.SendMessageAction,XRouter.Processor.dll",
+            //    new ObjectConfigurator.ClassMetadata(typeof(Processor.BuiltInActions.SendMessageAction))));
 
-            config.AddActionType(new ActionType(
-                "Xslt transformer",
-                "XRouter.Processor.BuiltInActions.XsltTransformationAction,XRouter.Processor.dll",
-                new ObjectConfigurator.ClassMetadata(typeof(Processor.BuiltInActions.XsltTransformationAction))));
+            //config.AddActionType(new ActionType(
+            //    "Xslt transformer",
+            //    "XRouter.Processor.BuiltInActions.XsltTransformationAction,XRouter.Processor.dll",
+            //    new ObjectConfigurator.ClassMetadata(typeof(Processor.BuiltInActions.XsltTransformationAction))));
 
-            config.AddAdapterType(new AdapterType(
-                "Directory I/O adapter",
-                "XRouter.Adapters.DirectoryAdapter,XRouter.Adapters.dll",
-                new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.DirectoryAdapter))));
+            //config.AddAdapterType(new AdapterType(
+            //    "Directory I/O adapter",
+            //    "XRouter.Adapters.DirectoryAdapter,XRouter.Adapters.dll",
+            //    new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.DirectoryAdapter))));
 
-            config.AddAdapterType(new AdapterType(
-               "E-mail client adapter",
-               "XRouter.Adapters.EMailClientAdapter,XRouter.Adapters.dll",
-               new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.EMailClientAdapter))));
+            //config.AddAdapterType(new AdapterType(
+            //   "E-mail client adapter",
+            //   "XRouter.Adapters.EMailClientAdapter,XRouter.Adapters.dll",
+            //   new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.EMailClientAdapter))));
 
-            config.AddAdapterType(new AdapterType(
-               "Web client adapter",
-               "XRouter.Adapters.HttpClientAdapter,XRouter.Adapters.dll",
-               new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.HttpClientAdapter))));
+            //config.AddAdapterType(new AdapterType(
+            //   "Web client adapter",
+            //   "XRouter.Adapters.HttpClientAdapter,XRouter.Adapters.dll",
+            //   new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.HttpClientAdapter))));
 
-            config.AddAdapterType(new AdapterType(
-               "Web service adapter",
-               "XRouter.Adapters.HttpServiceAdapter,XRouter.Adapters.dll",
-               new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.HttpServiceAdapter))));
-            #endregion
+            //config.AddAdapterType(new AdapterType(
+            //   "Web service adapter",
+            //   "XRouter.Adapters.HttpServiceAdapter,XRouter.Adapters.dll",
+            //   new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.HttpServiceAdapter))));
+            //#endregion
 
-            #region Configure the gateway
-            config.SaveAdapterConfiguration(new AdapterConfiguration("directoryAdapter", "gateway1", "Directory I/O adapter"));
-            #endregion
+            //#region Configure the gateway
+            //config.SaveAdapterConfiguration(new AdapterConfiguration("directoryAdapter", "gateway1", "Directory I/O adapter"));
+            //#endregion
 
             //#region Create message flow
             //var terminator = MessageFlowBuilder.CreateTerminator("termination");
@@ -157,8 +157,8 @@ namespace XRouter.ComponentHosting
 
             //config.AddMessageFlow(messageFlowConfig);
             //config.SetCurrentMessageFlowGuid(messageFlowConfig.Guid);
-            
-            broker.UpdateConfiguration(config);
+
+            //broker.UpdateConfiguration(config);
 
             processor.Start(processorName, broker);
             // TODO: wait for processor being started
