@@ -44,14 +44,15 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
 
         internal MessageflowGraphPresenter MessageflowGraphPresenter { get; set; }
 
-        internal ApplicationConfiguration AppConfig { get; private set; }
+        internal ConfigurationManager ConfigManager { get; private set; }
+        internal ApplicationConfiguration AppConfig { get { return ConfigManager.Configuration; } }
 
         private Border propertiesContainer;
 
-        public NodeSelectionManager(Border propertiesContainer, ApplicationConfiguration appConfig)
+        public NodeSelectionManager(Border propertiesContainer, ConfigurationManager configManager)
         {
             this.propertiesContainer = propertiesContainer;
-            AppConfig = appConfig;
+            ConfigManager = configManager;
         }
 
         public void SelectNode(NodeConfiguration selectedNode)

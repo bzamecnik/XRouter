@@ -83,7 +83,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
 
         private FrameworkElement CreateBranchPresentation(XrmUri branchKey)
         {
-            XrmUriEditor uiCondition = new XrmUriEditor {
+            XrmUriEditor uiCondition = new XrmUriEditor(nodeSelectionManager.ConfigManager) {
                 XrmUri = branchKey,
                 Margin = new Thickness(5, 2, 5, 2)
             };

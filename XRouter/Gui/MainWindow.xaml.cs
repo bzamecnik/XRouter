@@ -29,11 +29,12 @@ namespace XRouter.Gui
 
         public MainWindow()
         {
+            ConfigManager = new ConfigurationManager();
+
             Configurator.CustomItemTypes.Add(new TokenSelectionConfigurationItemType(() => new TokenSelectionEditor()));
-            Configurator.CustomItemTypes.Add(new XrmUriConfigurationItemType(() => new XrmUriEditor()));
+            Configurator.CustomItemTypes.Add(new XrmUriConfigurationItemType(() => new XrmUriEditor(ConfigManager)));
             Configurator.CustomItemTypes.Add(new UriConfigurationItemType(() => new UriEditor()));
 
-            ConfigManager = new ConfigurationManager();
             #region Run XRouter Manager if it is not already available
             try
             {

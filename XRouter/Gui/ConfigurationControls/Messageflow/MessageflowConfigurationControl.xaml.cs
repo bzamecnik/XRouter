@@ -50,7 +50,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             ConfigManager = configManager;
             ConfigTreeItem = configTreeItem;
 
-            NodeSelectionManager = new NodeSelectionManager(uiNodePropertiesContainer, ConfigManager.Configuration);
+            NodeSelectionManager = new NodeSelectionManager(uiNodePropertiesContainer, ConfigManager);
 
             Messageflow = ConfigManager.Configuration.GetMessageFlow(ConfigManager.Configuration.GetCurrentMessageFlowGuid());
             MessageflowGraphPresenter = new MessageflowGraphPresenter(Messageflow, NodeSelectionManager);
@@ -132,7 +132,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                 using (var fs = new FileStream(dialog.FileName, FileMode.Open)) {
                     Messageflow = MessageFlowConfiguration.Read(fs);
                 }
-                NodeSelectionManager = new NodeSelectionManager(uiNodePropertiesContainer, ConfigManager.Configuration);
+                NodeSelectionManager = new NodeSelectionManager(uiNodePropertiesContainer, ConfigManager);
                 uiNodePropertiesContainer.Child = null;
                 MessageflowGraphPresenter = new MessageflowGraphPresenter(Messageflow, NodeSelectionManager);
                 NodeSelectionManager.MessageflowGraphPresenter = MessageflowGraphPresenter;
