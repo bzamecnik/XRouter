@@ -13,6 +13,9 @@ namespace XRouter.Common.Persistence
         private IDataAccess dataAccess;
         private XDocument configXmlCache;
 
+        private object tokensLocksSync = new object();
+        private Dictionary<Guid, WeakReference> tokensLocks = new Dictionary<Guid, WeakReference>();
+
         public PersistentStorage(string connectionString)
         {
             dataAccess = new MsSqlDataAccess();
@@ -56,9 +59,11 @@ namespace XRouter.Common.Persistence
 
         public void UpdateToken(Guid tokenGuid, Action<Token> updater)
         {
-            Token token = GetToken(tokenGuid);
-            updater(token);
-            SaveToken(token);
+            RunAtomicForToken(tokenGuid, delegate {
+                Token token = GetToken(tokenGuid);
+                updater(token);
+                SaveToken(token);
+            });
         }
 
         public Token[] GetTokens(int pageSize, int pageNumber)
@@ -88,6 +93,40 @@ namespace XRouter.Common.Persistence
                 result.Add(token);
             }
             return result;
+        }
+
+        private void RunAtomicForToken(Guid tokenGuid, Action action)
+        {
+            #region Get or create tokenLock for given token (atomicaly)
+            object tokenLock = null;
+            lock (tokensLocksSync) {
+                if (tokensLocks.ContainsKey(tokenGuid)) {
+                    tokenLock = tokensLocks[tokenGuid].Target;
+                }
+                if (tokenLock == null) {
+                    tokenLock = new object();
+                    tokensLocks.Add(tokenGuid, new WeakReference(tokenLock));
+                }
+            }
+            #endregion
+
+            // At this momement, there is globally exactly one tokenLock object for given token guid
+            lock (tokenLock) {
+                action();
+            }
+
+            #region Clear unused tokenLocks
+            tokenLock = null;
+            lock (tokensLocksSync) {
+                foreach (var pair in tokensLocks.ToArray()) {
+                    Guid guid = pair.Key;
+                    WeakReference wr = pair.Value;
+                    if (!wr.IsAlive) {
+                        tokensLocks.Remove(guid);
+                    }
+                }
+            }
+            #endregion
         }
 
         #region Implementation of IXmlStorage
