@@ -19,10 +19,11 @@ namespace XRouter.Common.ComponentInterfaces
         /// <param name="messageFlowState">new state of the token's message
         /// flow</param>
         /// <seealso cref="XRouter.Common.MessageFlowState"/>
-        Token UpdateTokenMessageFlowState(
+        void UpdateTokenMessageFlowState(
             string updatingProcessorName,
             Guid tokenGuid,
-            MessageFlowState messageFlowState);
+            MessageFlowState messageFlowState,
+            out Token updatedToken);
 
         /// <summary>
         /// Adds a message to the token.
@@ -36,11 +37,12 @@ namespace XRouter.Common.ComponentInterfaces
         /// <param name="targetTokenGuid">identifier of the token to be updated</param>
         /// <param name="messageName">name of the message to be added</param>
         /// <param name="message">contents of the message to be added</param>
-        Token AddMessageToToken(
+        void AddMessageToToken(
             string updatingProcessorName,
             Guid targetTokenGuid,
             string messageName,
-            SerializableXDocument message);
+            SerializableXDocument message,
+            out Token updatedToken);
 
         /// <summary>
         /// Adds an exception to the token.
@@ -52,12 +54,13 @@ namespace XRouter.Common.ComponentInterfaces
         /// the exception was thrown</param>
         /// <param name="message"></param>
         /// <param name="stackTrace"></param>
-        Token AddExceptionToToken(
+        void AddExceptionToToken(
             string updatingProcessorName,
             Guid targetTokenGuid,
             string sourceNodeName,
             string message,
-            string stackTrace);
+            string stackTrace,
+            out Token updatedToken);
 
         /// <summary>
         /// Finishes the token processing. It changes only the token state, not
@@ -70,10 +73,11 @@ namespace XRouter.Common.ComponentInterfaces
         /// </param>
         /// <param name="resultMessage">reply going back the the original
         /// gateway</param>
-        Token FinishToken(
+        void FinishToken(
             string updatingProcessorName,
             Guid tokenGuid,
-            SerializableXDocument resultMessage);
+            SerializableXDocument resultMessage,
+            out Token updatedToken);
 
         /// <summary>
         /// Sends an output message to a specified output endpoint -

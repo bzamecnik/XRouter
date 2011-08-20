@@ -16,16 +16,16 @@ namespace XRouter.Processor
         /// <param name="targetTokenGuid">identifier of the updated token</param>
         /// <param name="messageName">name of the new message</param>
         /// <param name="message">contents of the new message</param>
-        /// <returns>updated token</returns>
-        Token CreateMessage(Guid targetTokenGuid, string messageName, XDocument message);
+        /// <param name="updatedToken">updated token</param>
+        void CreateMessage(Guid targetTokenGuid, string messageName, XDocument message, out Token updatedToken);
 
         /// <summary>
         /// Adds an exception to the token.
         /// </summary>
         /// <param name="targetTokenGuid">identifier of the token to be updated</param>
         /// <param name="exception">exception to be added</param>
-        /// <returns>updated token</returns>
-        Token AddExceptionToToken(Guid targetTokenGuid, Exception exception);
+        /// <param name="updatedToken">updated token</param>
+        void AddExceptionToToken(Guid targetTokenGuid, Exception exception, out Token updatedToken);
 
         /// <summary>
         /// Sends an output message to a specified output endpoint -

@@ -30,6 +30,6 @@ namespace XRouter.Processor
         /// Perfoms the action with the specified token.
         /// </summary>
         /// <param name="token"></param>
-        Token Evaluate(Token token);
+        void Evaluate(ref Token token);
     }
 }
