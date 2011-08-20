@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Xml.XPath;
+using System.Xml.Linq;
 
 namespace XRouter.Common.Xrm
 {
@@ -13,6 +14,11 @@ namespace XRouter.Common.Xrm
     [DataContract]
     public class XrmUri
     {
+        public static readonly XName GroupElementName = XName.Get("group");
+        public static readonly XName ItemElementName = XName.Get("item");
+        public static readonly XName NameAttributeName = XName.Get("name");
+        public static readonly XName TypeAttributeName = XName.Get("type");
+
         /// <summary>
         /// XPath expression which selectes the resource from the XML resource
         /// storage.

@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using XRouter.Gui.Utils;
+using XRouter.Common.Xrm;
 
 namespace XRouter.Gui.Xrm
 {
@@ -59,8 +60,8 @@ namespace XRouter.Gui.Xrm
         private void SetActiveItem(XElement xItem, TreeViewItem uiItem)
         {
             if ((xActiveItem != null) && (isActiveXmlChanged)) {
-                string oldItemName = xActiveItem.Attribute(XName.Get("name")).Value;
-                string newItemName = xItem.Attribute(XName.Get("name")).Value;
+                string oldItemName = xActiveItem.Attribute(XrmUri.NameAttributeName).Value;
+                string newItemName = xItem.Attribute(XrmUri.NameAttributeName).Value;
                 string message = string.Format("Active document \"{0}\" item is not saved. Do you want to switch to document \"{1}\" without saving?", oldItemName, newItemName);
                 var mbr = MessageBox.Show(message, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
                 if (mbr != MessageBoxResult.Yes) {
@@ -98,7 +99,7 @@ namespace XRouter.Gui.Xrm
             }
 
             XElement xSelectedItem = (XElement)uiSelectedItem.Tag;
-            if (xSelectedItem.Name.LocalName != "item") {
+            if (xSelectedItem.Name != XrmUri.ItemElementName) {
                 SetActiveItem(null, null);
                 return;
             }
@@ -143,7 +144,7 @@ namespace XRouter.Gui.Xrm
             }
 
             if (isValid) {
-                string documentTypeName = xActiveItem.Attribute(XName.Get("type")).Value;
+                string documentTypeName = xActiveItem.Attribute(XrmUri.TypeAttributeName).Value;
                 XDocumentTypeDescriptor docTypeDescriptor = documentTypeDescriptors.FirstOrDefault(d => d.DocumentTypeName == documentTypeName);
                 if (docTypeDescriptor == null) {
                     errorDescription = "Unknown document type: " + documentTypeName;
@@ -167,11 +168,11 @@ namespace XRouter.Gui.Xrm
         private void ReloadTree()
         {
             uiTree.Items.Clear();
-            foreach (XElement xGroup in XContent.Root.Elements(XName.Get("group"))) {
+            foreach (XElement xGroup in XContent.Root.Elements(XrmUri.GroupElementName)) {
                 TreeViewItem uiGroup = CreateUIGroup(xGroup);
                 uiTree.Items.Add(uiGroup);
             }
-            foreach (XElement xItem in XContent.Root.Elements(XName.Get("item"))) {
+            foreach (XElement xItem in XContent.Root.Elements(XrmUri.ItemElementName)) {
                 TreeViewItem uiItem = CreateUIItem(xItem);
                 uiTree.Items.Add(uiItem);
             }
@@ -184,7 +185,7 @@ namespace XRouter.Gui.Xrm
         {
             TreeViewItem uiGroup = new TreeViewItem {
                 Tag = xGroup,
-                Header = xGroup.Attribute(XName.Get("name")).Value
+                Header = xGroup.Attribute(XrmUri.NameAttributeName).Value
             };
 
             #region Create context menu
@@ -194,11 +195,11 @@ namespace XRouter.Gui.Xrm
             uiGroup.ContextMenu.Items.Add(CreateRemoveMenuItem(xGroup, uiGroup));
             #endregion
 
-            foreach (XElement xChildGroup in xGroup.Elements(XName.Get("group"))) {
+            foreach (XElement xChildGroup in xGroup.Elements(XrmUri.GroupElementName)) {
                 TreeViewItem uiChildGroup = CreateUIGroup(xChildGroup);
                 uiGroup.Items.Add(uiChildGroup);
             }
-            foreach (XElement xChildItem in xGroup.Elements(XName.Get("item"))) {
+            foreach (XElement xChildItem in xGroup.Elements(XrmUri.ItemElementName)) {
                 TreeViewItem uiChildItem = CreateUIItem(xChildItem);
                 uiGroup.Items.Add(uiChildItem);
             }
@@ -209,7 +210,7 @@ namespace XRouter.Gui.Xrm
         {
             TreeViewItem uiItem = new TreeViewItem {
                 Tag = xItem,
-                Header = xItem.Attribute(XName.Get("name")).Value
+                Header = xItem.Attribute(XrmUri.NameAttributeName).Value
             };
 
             #region Create context menu
@@ -233,9 +234,9 @@ namespace XRouter.Gui.Xrm
                     Header = docTypeDescriptor.DocumentTypeName
                 };
                 uiDocType.Click += delegate {
-                    XElement xItem = new XElement(XName.Get("item"));
-                    xItem.SetAttributeValue(XName.Get("name"), CreateNewUniqueName(xParent, docTypeDescriptor.DocumentTypeName));
-                    xItem.SetAttributeValue(XName.Get("type"), docTypeDescriptor.DocumentTypeName);
+                    XElement xItem = new XElement(XrmUri.ItemElementName);
+                    xItem.SetAttributeValue(XrmUri.NameAttributeName, CreateNewUniqueName(xParent, docTypeDescriptor.DocumentTypeName));
+                    xItem.SetAttributeValue(XrmUri.TypeAttributeName, docTypeDescriptor.DocumentTypeName);
                     xItem.Add(docTypeDescriptor.CreateDefaultRoot());
                     xParent.Add(xItem);
                     TreeViewItem uiItem = CreateUIItem(xItem);
@@ -253,8 +254,8 @@ namespace XRouter.Gui.Xrm
                 Header = "Group"
             };
             uiAddGroup.Click += delegate {
-                XElement xGroup = new XElement(XName.Get("group"));
-                xGroup.SetAttributeValue(XName.Get("name"), CreateNewUniqueName(xParent, "group"));
+                XElement xGroup = new XElement(XrmUri.GroupElementName);
+                xGroup.SetAttributeValue(XrmUri.NameAttributeName, CreateNewUniqueName(xParent, "group"));
                 xParent.Add(xGroup);
                 TreeViewItem uiGroup = CreateUIGroup(xGroup);
                 if (uiParent != null) {
@@ -295,21 +296,21 @@ namespace XRouter.Gui.Xrm
                 Header = "Rename"
             };
             uiRename.Click += delegate {
-                string oldName = xNode.Attribute(XName.Get("name")).Value;
+                string oldName = xNode.Attribute(XrmUri.NameAttributeName).Value;
                 string newName = oldName;
                 while (true) {
                     newName = Microsoft.VisualBasic.Interaction.InputBox("Enter new name", "Renaming", newName);
                     if ((newName == null) || (newName.Trim().Length == 0) || (newName == oldName)) {
                         return;
                     }
-                    var siblingNames = xNode.Parent.Elements().Select(e => e.Attribute(XName.Get("name")).Value);
+                    var siblingNames = xNode.Parent.Elements().Select(e => e.Attribute(XrmUri.NameAttributeName).Value);
                     if (siblingNames.Contains(newName)) {
                         MessageBox.Show("Given name already exists.", "Renaming failed", MessageBoxButton.OK, MessageBoxImage.Error);
                         continue;
                     }
                     break;
                 };
-                xNode.SetAttributeValue(XName.Get("name"), newName);
+                xNode.SetAttributeValue(XrmUri.NameAttributeName, newName);
                 uiNode.Header = newName;
             };
             return uiRename;
@@ -318,7 +319,7 @@ namespace XRouter.Gui.Xrm
         private string CreateNewUniqueName(XElement xParent, string baseName)
         {
             int index = 1;
-            var siblingNames = xParent.Elements().Select(s => s.Attribute(XName.Get("name")).Value);
+            var siblingNames = xParent.Elements().Select(s => s.Attribute(XrmUri.NameAttributeName).Value);
             while (siblingNames.Contains(baseName + index.ToString())) {
                 index++;
             }
