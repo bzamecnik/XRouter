@@ -109,7 +109,9 @@ namespace XRouter.Processor
             lock (addWorkLock)
             {
                 isStopping = true;
-                tokensFinishedEvent.WaitOne();
+                // NOTE: there must be a timeout, as eg. if a token can't be
+                // finished a plain Wait() would wait indefinitely!
+                tokensFinishedEvent.WaitOne(5000);
                 tokensToProcess.CompleteAdding();
             }
         }
