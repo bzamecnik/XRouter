@@ -104,15 +104,14 @@ namespace XRouter.Broker.Dispatching
                             TraceLog.Info(string.Format(
                                 "Dispatcher assigning token '{0}' to processor '{1}'",
                                 token.Guid, processor.ComponentName));
-                            brokerService.UpdateTokenLastResponseFromProcessor(tokenGuid, DateTime.Now);
-                            brokerService.UpdateTokenAssignedProcessor(tokenGuid, processor.ComponentName);
                             processor.AddWork(token);
                         }
                         catch
                         {
-                            brokerService.UpdateTokenAssignedProcessor(tokenGuid, null);
                             continue; // if adding token to processor fails, try next one
                         }
+                        brokerService.UpdateTokenLastResponseFromProcessor(tokenGuid, DateTime.Now);
+                        brokerService.UpdateTokenAssignedProcessor(tokenGuid, processor.ComponentName);
                         return;
                     }
                 }
