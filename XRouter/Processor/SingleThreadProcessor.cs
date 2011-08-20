@@ -59,11 +59,10 @@ namespace XRouter.Processor
         {
             foreach (Token token in tokensToProcess.GetConsumingEnumerable())
             {
-                Token workingToken = token;
-                bool canContinue = messageFlow.DoStep(ref workingToken);
+                bool canContinue = messageFlow.DoStep(token);
                 if (canContinue)
                 {
-                    tokensToProcess.Add(workingToken);
+                    tokensToProcess.Add(token);
                 }
                 else
                 {

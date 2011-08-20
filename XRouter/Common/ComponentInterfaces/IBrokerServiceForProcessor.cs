@@ -21,9 +21,8 @@ namespace XRouter.Common.ComponentInterfaces
         /// <seealso cref="XRouter.Common.MessageFlowState"/>
         void UpdateTokenMessageFlowState(
             string updatingProcessorName,
-            Guid tokenGuid,
-            MessageFlowState messageFlowState,
-            out Token updatedToken);
+            Token targetToken,
+            MessageFlowState messageFlowState);
 
         /// <summary>
         /// Adds a message to the token.
@@ -39,28 +38,26 @@ namespace XRouter.Common.ComponentInterfaces
         /// <param name="message">contents of the message to be added</param>
         void AddMessageToToken(
             string updatingProcessorName,
-            Guid targetTokenGuid,
+            Token targetToken,
             string messageName,
-            SerializableXDocument message,
-            out Token updatedToken);
+            SerializableXDocument message);
 
         /// <summary>
         /// Adds an exception to the token.
         /// </summary>
         /// <param name="updatingProcessorName">name of the processor which
         /// updates the token</param>
-        /// <param name="targetTokenGuid">identifier of the token to be updated</param>
+        /// <param name="targetToken">the token to be updated</param>
         /// <param name="sourceNodeName">name of the message flow node where
         /// the exception was thrown</param>
         /// <param name="message"></param>
         /// <param name="stackTrace"></param>
         void AddExceptionToToken(
             string updatingProcessorName,
-            Guid targetTokenGuid,
+            Token targetToken,
             string sourceNodeName,
             string message,
-            string stackTrace,
-            out Token updatedToken);
+            string stackTrace);
 
         /// <summary>
         /// Finishes the token processing. It changes only the token state, not
@@ -75,9 +72,8 @@ namespace XRouter.Common.ComponentInterfaces
         /// gateway</param>
         void FinishToken(
             string updatingProcessorName,
-            Guid tokenGuid,
-            SerializableXDocument resultMessage,
-            out Token updatedToken);
+            Token token,
+            SerializableXDocument resultMessage);
 
         /// <summary>
         /// Sends an output message to a specified output endpoint -

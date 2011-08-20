@@ -27,7 +27,7 @@ namespace XRouter.Processor.MessageFlowParts
             Config = (TerminatorNodeConfiguration)configuration;
         }
 
-        public override string Evaluate(ref Token token)
+        public override string Evaluate(Token token)
         {
             TraceLog.Info("Entering terminator: " + Name);
             XDocument resultMessage = null;
@@ -36,7 +36,7 @@ namespace XRouter.Processor.MessageFlowParts
                 resultMessage = Config.ResultMessageSelection.GetSelectedDocument(token);
             }
 
-            ProcessorService.FinishToken(ref token, resultMessage, out token);
+            ProcessorService.FinishToken(token, resultMessage);
             return null;
         }
     }

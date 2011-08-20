@@ -59,7 +59,7 @@ namespace XRouter.Processor.BuiltInActions
             xslTransform.Load(xsltReader, xsltSettings, resolver);
         }
 
-        public void Evaluate(ref Token token)
+        public void Evaluate(Token token)
         {
             TraceLog.Info(string.Format("Entering XSL transformation of '{0}' to message '{1}'",
                 inputMessageSelection.SelectionPattern, outputMessageName));
@@ -73,7 +73,7 @@ namespace XRouter.Processor.BuiltInActions
 
             XDocument outputMessage = XDocument.Parse(outputBuilder.ToString());
 
-            ProcessorService.CreateMessage(token.Guid, outputMessageName, outputMessage, out token);
+            ProcessorService.CreateMessage(token, outputMessageName, outputMessage);
         }
 
         public void Dispose()

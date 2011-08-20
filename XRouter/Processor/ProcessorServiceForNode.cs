@@ -51,27 +51,26 @@ namespace XRouter.Processor
         /// <param name="message">message content</param>
         /// <returns>updated token</returns>
         public void CreateMessage(
-            Guid targetTokenGuid,
+            Token targetToken,
             string messageName,
-            XDocument message,
-            out Token updatedToken)
+            XDocument message)
         {
-            BrokerService.AddMessageToToken(ProcessorName, targetTokenGuid,
-                messageName, new SerializableXDocument(message), out updatedToken);
+            BrokerService.AddMessageToToken(ProcessorName, targetToken,
+                messageName, new SerializableXDocument(message));
         }
 
         /// <summary>
         /// Adds an exception to the token along with the name of the node
         /// where the exception was thrown.
         /// </summary>
-        /// <param name="targetTokenGuid">identifier of the token to which to
-        /// add the exception</param>
+        /// <param name="targetToken">the token to which to add the exception
+        /// </param>
         /// <param name="ex">exception to be added to the token</param>
         /// <param name="updatedToken">updated token</param>
-        public void AddExceptionToToken(Guid targetTokenGuid, Exception ex, out Token updatedToken)
+        public void AddExceptionToToken(Token targetToken, Exception ex)
         {
-            BrokerService.AddExceptionToToken(ProcessorName, targetTokenGuid,
-                Node.Name, ex.Message, ex.StackTrace, out updatedToken);
+            BrokerService.AddExceptionToToken(ProcessorName, targetToken,
+                Node.Name, ex.Message, ex.StackTrace);
         }
 
         /// <summary>
@@ -107,10 +106,10 @@ namespace XRouter.Processor
         /// </summary>
         /// <param name="token">token to be updated</param>
         /// <seealso cref="XRouter.Common.MessageFlowState"/>
-        public void MakeMessageFlowStatePersistent(ref Token token)
+        public void MakeMessageFlowStatePersistent(Token token)
         {
-            BrokerService.UpdateTokenMessageFlowState(ProcessorName, token.Guid,
-                token.GetMessageFlowState(), out token);
+            BrokerService.UpdateTokenMessageFlowState(ProcessorName, token,
+                token.GetMessageFlowState());
         }
 
         /// <summary>
@@ -121,11 +120,11 @@ namespace XRouter.Processor
         /// <param name="token">token to be finished</param>
         /// <param name="resultMessage">reply message going back the the original
         /// gateway; can be null</param>
-        public void FinishToken(ref Token token, XDocument resultMessage, out Token updatedToken)
+        public void FinishToken(Token token, XDocument resultMessage)
         {
             SerializableXDocument serializableResultMessage = new SerializableXDocument(resultMessage);
-            BrokerService.FinishToken(ProcessorName, token.Guid,
-                serializableResultMessage, out updatedToken);
+            BrokerService.FinishToken(ProcessorName, token,
+                serializableResultMessage);
         }
     }
 }

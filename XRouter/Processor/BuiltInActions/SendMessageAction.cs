@@ -46,7 +46,7 @@ namespace XRouter.Processor.BuiltInActions
             targetEndpoint = new EndpointAddress(targetGatewayName, targetAdapterName, targetEndpointName);
         }
 
-        public void Evaluate(ref Token token)
+        public void Evaluate(Token token)
         {
             TraceLog.Info(string.Format("Sending '{0}' to output endpoint '{1}'", messageSelection.SelectionPattern, targetEndpoint.ToString()));
 
@@ -65,8 +65,8 @@ namespace XRouter.Processor.BuiltInActions
             {
                 if (resultMessageName.Trim().Length > 0)
                 {
-                    processorService.CreateMessage(token.Guid, resultMessageName.Trim(),
-                        outputMessage, out token);
+                    processorService.CreateMessage(token, resultMessageName.Trim(),
+                        outputMessage);
                 }
             }
         }

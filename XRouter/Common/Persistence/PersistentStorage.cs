@@ -55,11 +55,11 @@ namespace XRouter.Common.Persistence
         }
 
         /// <summary>
-        /// Updates a token.
+        /// Updates a token into new instance.
         /// </summary>
         /// <remarks>
         /// Loads a token specified by its GUID from the storage, updates it
-        /// with a provided action, saves it and returns the updated token
+        /// with a provided action, saves it and returns a *new* updated token
         /// instance.
         /// </remarks>
         /// <param name="tokenGuid"></param>
@@ -71,6 +71,25 @@ namespace XRouter.Common.Persistence
             updater(token);
             SaveToken(token);
             return token;
+        }
+
+        /// <summary>
+        /// Updates a token and stores the content into an exiting instance.
+        /// </summary>
+        /// <remarks>
+        /// Loads a token specified by its GUID from the storage, updates it
+        /// with a provided action, saves it and returns the provided token
+        /// instance only with updated content.
+        /// </remarks>
+        /// <param name="token"></param>
+        /// <param name="updater"></param>
+        /// <returns></returns>
+        public void UpdateToken(Token token, Action<Token> updater)
+        {
+                Token currentToken = GetToken(token.Guid);
+                updater(currentToken);
+                SaveToken(currentToken);
+                token.UpdateContent(currentToken.Content);
         }
 
         public Token[] GetTokens(int pageSize, int pageNumber)

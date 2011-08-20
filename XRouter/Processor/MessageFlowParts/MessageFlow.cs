@@ -84,7 +84,7 @@ namespace XRouter.Processor.MessageFlowParts
         /// <param name="token">token to be processed</param>
         /// <returns>true if the traversal should continue; false if it has
         /// finished</returns>
-        public bool DoStep(ref Token token)
+        public bool DoStep(Token token)
         {
             #region Determine currentNode
             Node currentNode;
@@ -97,7 +97,7 @@ namespace XRouter.Processor.MessageFlowParts
             }
             #endregion
 
-            string nextNodeName = currentNode.Evaluate(ref token);
+            string nextNodeName = currentNode.Evaluate(token);
 
             MessageFlowState messageflowState = token.GetMessageFlowState();
             messageflowState.NextNodeName = nextNodeName;
@@ -105,7 +105,7 @@ namespace XRouter.Processor.MessageFlowParts
 
             if ((token.IsPersistent) && (!(currentNode is CbrNode))) {
                 Processor.BrokerService.UpdateTokenMessageFlowState(
-                    Processor.Name, token.Guid, messageflowState, out token);
+                    Processor.Name, token, messageflowState);
             }
 
             bool shouldContinue = nextNodeName != null;

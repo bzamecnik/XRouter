@@ -44,7 +44,7 @@ namespace XRouter.Processor.MessageFlowParts
             }
         }
 
-        public override string Evaluate(ref Token token)
+        public override string Evaluate(Token token)
         {
             TraceLog.Info("Evaluating action: " + Name);
             // NOTE: ref parameter of the method can't be directly passed into
@@ -69,11 +69,11 @@ namespace XRouter.Processor.MessageFlowParts
             {
                 try
                 {
-                    action.Evaluate(ref token);
+                    action.Evaluate(token);
                 }
                 catch (Exception ex)
                 {
-                    ProcessorService.AddExceptionToToken(token.Guid, ex, out token);
+                    ProcessorService.AddExceptionToToken(token, ex);
                 }
             }
 
