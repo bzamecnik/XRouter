@@ -13,10 +13,12 @@ namespace Restaurant.RestaurantDataCreation
         static void Main(string[] args)
         {
             int tables = 10;
-            int orders = 25;
+            int orders = 50;
 
-            int maxFoodID = 3;
+            int maxFoodID = 9;
             int maxDrinkID = 5;
+
+            string savePath = @"..\..\..\Data/Generated\";
 
             Random random = new Random();
 
@@ -40,7 +42,7 @@ namespace Restaurant.RestaurantDataCreation
                 order.Add(new XElement("Item", ItemId));
 
                 doc.Add(order);
-                doc.Save("Order" + orderNumber.ToString().PadLeft(5, '0') + ".xml");
+                doc.Save(savePath + "Order" + orderNumber.ToString().PadLeft(5, '0') + ".xml");
             }
             Console.WriteLine("Orders have been generated");
 
@@ -52,7 +54,7 @@ namespace Restaurant.RestaurantDataCreation
                 XElement payment = new XElement("Payment", new XElement("Table", table));
 
                 doc.Add(payment);
-                doc.Save("PaymentForTable" + table.ToString().PadLeft(2, '0') + ".xml");
+                doc.Save(savePath + "PaymentForTable" + table.ToString().PadLeft(2, '0') + ".xml");
             }
             Console.WriteLine("Payments hace been generated");
 
