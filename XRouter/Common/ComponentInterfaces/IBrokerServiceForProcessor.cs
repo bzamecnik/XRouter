@@ -19,7 +19,7 @@ namespace XRouter.Common.ComponentInterfaces
         /// <param name="messageFlowState">new state of the token's message
         /// flow</param>
         /// <seealso cref="XRouter.Common.MessageFlowState"/>
-        void UpdateTokenMessageFlowState(
+        Token UpdateTokenMessageFlowState(
             string updatingProcessorName,
             Guid tokenGuid,
             MessageFlowState messageFlowState);
@@ -70,7 +70,7 @@ namespace XRouter.Common.ComponentInterfaces
         /// </param>
         /// <param name="resultMessage">reply going back the the original
         /// gateway</param>
-        void FinishToken(
+        Token FinishToken(
             string updatingProcessorName,
             Guid tokenGuid,
             SerializableXDocument resultMessage);

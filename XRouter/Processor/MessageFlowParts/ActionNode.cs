@@ -44,20 +44,22 @@ namespace XRouter.Processor.MessageFlowParts
             }
         }
 
-        public override string Evaluate(Token token)
+        public override string Evaluate(ref Token token)
         {
             TraceLog.Info("Evaluating action: " + Name);
+            Token workingToken = token;
             Parallel.ForEach(actions, delegate(IActionPlugin action)
             {
                 try
                 {
-                    action.Evaluate(token);
+                    workingToken = action.Evaluate(workingToken);
                 }
                 catch (Exception ex)
                 {
-                    token = ProcessorService.AddExceptionToToken(token.Guid, ex);
+                    workingToken = ProcessorService.AddExceptionToToken(workingToken.Guid, ex);
                 }
             });
+            token = workingToken;
 
             return Config.NextNode.Name;
         }

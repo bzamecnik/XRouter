@@ -51,6 +51,6 @@ namespace XRouter.Processor.MessageFlowParts
         /// <returns>
         /// Name of the next node or null if the processing is terminated.
         /// </returns>
-        public abstract string Evaluate(Token token);
+        public abstract string Evaluate(ref Token token);
     }
 }

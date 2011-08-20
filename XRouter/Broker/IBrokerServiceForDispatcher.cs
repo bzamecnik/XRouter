@@ -42,14 +42,14 @@ namespace XRouter.Broker
         /// </summary>
         /// <param name="tokenGuid">identifier of the token</param>
         /// <param name="assignedProcessor">processor name</param>
-        void UpdateTokenAssignedProcessor(Guid tokenGuid, string assignedProcessor);
+        Token UpdateTokenAssignedProcessor(Guid tokenGuid, string assignedProcessor);
 
         /// <summary>
         /// Updates the message flow with which the token should be processed.
         /// </summary>
         /// <param name="tokenGuid">identifier of the token</param>
         /// <param name="messageFlowGuid">identifier of the message flow</param>
-        void UpdateTokenMessageFlow(Guid tokenGuid, Guid messageFlowGuid);
+        Token UpdateTokenMessageFlow(Guid tokenGuid, Guid messageFlowGuid);
 
         /// <summary>
         /// Updates the time of most recent time when the processor updated
@@ -57,7 +57,7 @@ namespace XRouter.Broker
         /// </summary>
         /// <param name="tokenGuid">identifier of the token</param>
         /// <param name="lastResponse">time of the last processor response</param>
-        void UpdateTokenLastResponseFromProcessor(Guid tokenGuid, DateTime lastResponse);
+        Token UpdateTokenLastResponseFromProcessor(Guid tokenGuid, DateTime lastResponse);
 
         /// <summary>
         /// Obtains the token identified by a GUID.

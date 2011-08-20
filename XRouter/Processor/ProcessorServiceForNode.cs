@@ -101,9 +101,9 @@ namespace XRouter.Processor
         /// </summary>
         /// <param name="token">token to be updated</param>
         /// <seealso cref="XRouter.Common.MessageFlowState"/>
-        public void MakeMessageFlowStatePersistent(Token token)
+        public void MakeMessageFlowStatePersistent(ref Token token)
         {
-            BrokerService.UpdateTokenMessageFlowState(ProcessorName, token.Guid, token.GetMessageFlowState());
+            token = BrokerService.UpdateTokenMessageFlowState(ProcessorName, token.Guid, token.GetMessageFlowState());
         }
 
         /// <summary>
@@ -114,10 +114,10 @@ namespace XRouter.Processor
         /// <param name="token">token to be finished</param>
         /// <param name="resultMessage">reply message going back the the original
         /// gateway; can be null</param>
-        public void FinishToken(Token token, XDocument resultMessage)
+        public void FinishToken(ref Token token, XDocument resultMessage)
         {
             SerializableXDocument serializableResultMessage =  new SerializableXDocument(resultMessage);
-            BrokerService.FinishToken(ProcessorName, token.Guid, serializableResultMessage);
+            token = BrokerService.FinishToken(ProcessorName, token.Guid, serializableResultMessage);
         }
     }
 }

@@ -63,7 +63,7 @@ namespace XRouter.Processor.MessageFlowParts
             }
         }
 
-        public override string Evaluate(Token token)
+        public override string Evaluate(ref Token token)
         {
             TraceLog.Info("Entering CBR: " + Name);
             XDocument testedDocument = Config.TestedSelection.GetSelectedDocument(token);
