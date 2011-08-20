@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using XRouter.Gui.Utils;
 
 namespace XRouter.Gui.Xrm
 {
@@ -24,9 +25,19 @@ namespace XRouter.Gui.Xrm
 
         private IEnumerable<XDocumentTypeDescriptor> documentTypeDescriptors;
 
+        private XElement xActiveItem;
+        private TreeViewItem uiActiveItem;
+        private bool isActiveXmlChanged = false;
+
         public XrmEditor()
         {
             InitializeComponent();
+
+            uiEditor.SyntaxHighlighting = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance.GetDefinition("XML");
+            uiEditor.Options.ConvertTabsToSpaces = true;
+            uiEditor.Options.IndentationSize = 4;
+            uiEditor.ShowLineNumbers = true;
+            uiEditorContainer.Visibility = Visibility.Collapsed;
         }
 
         internal void Initialize(IEnumerable<XDocumentTypeDescriptor> documentTypeDescriptors)
@@ -45,8 +56,112 @@ namespace XRouter.Gui.Xrm
             return XContent;
         }
 
-        private void SetActiveItem(XElement xItem, MenuItem uiItem)
+        private void SetActiveItem(XElement xItem, TreeViewItem uiItem)
         {
+            if ((xActiveItem != null) && (isActiveXmlChanged)) {
+                string oldItemName = xActiveItem.Attribute(XName.Get("name")).Value;
+                string newItemName = xItem.Attribute(XName.Get("name")).Value;
+                string message = string.Format("Active document \"{0}\" item is not saved. Do you want to switch to document \"{1}\" without saving?", oldItemName, newItemName);
+                var mbr = MessageBox.Show(message, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+                if (mbr != MessageBoxResult.Yes) {
+                    ThreadUtils.InvokeLater(TimeSpan.FromSeconds(0.2), delegate {
+                        uiActiveItem.IsSelected = true;
+                    });
+                    return;
+                }
+            }
+
+            xActiveItem = xItem;
+            uiActiveItem = uiItem;
+            if (xItem == null) {
+                uiEditorContainer.Visibility = Visibility.Collapsed;
+                isActiveXmlChanged = false;
+                return;
+            }
+
+            uiEditor.Text = xItem.Elements().First().ToString();
+            isActiveXmlChanged = false;
+            uiValidationStatus.Text = string.Empty;
+            uiEditorContainer.Visibility = Visibility.Visible;
+        }
+
+        private void uiTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (e.NewValue == null) {
+                SetActiveItem(null, null);
+                return;
+            }
+
+            TreeViewItem uiSelectedItem = (TreeViewItem)e.NewValue;
+            if (uiSelectedItem == uiActiveItem) {
+                return;
+            }
+
+            XElement xSelectedItem = (XElement)uiSelectedItem.Tag;
+            if (xSelectedItem.Name.LocalName != "item") {
+                SetActiveItem(null, null);
+                return;
+            }
+
+            SetActiveItem(xSelectedItem, uiSelectedItem);
+        }
+
+        private void uiEditor_TextChanged(object sender, EventArgs e)
+        {
+            isActiveXmlChanged = true;
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            XDocument xDoc = Validate();
+            if (xDoc == null) {
+                MessageBox.Show("Cannot save xml when it contains errors.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            xActiveItem.Elements().First().Remove(); // remove old root of document
+            xActiveItem.Add(xDoc.Root); // add new root of document
+            isActiveXmlChanged = false;
+        }
+
+        private void Validate_Click(object sender, RoutedEventArgs e)
+        {
+            Validate();
+        }
+
+        private XDocument Validate()
+        {
+            bool isValid;
+            string errorDescription = null;
+
+            XDocument xDocument = null;
+            try {
+                xDocument = XDocument.Parse(uiEditor.Text);
+                isValid = true;
+            } catch (Exception ex) {
+                errorDescription = "Xml is not well-formed: " + Environment.NewLine + ex.Message;
+                isValid = false;
+            }
+
+            if (isValid) {
+                string documentTypeName = xActiveItem.Attribute(XName.Get("type")).Value;
+                XDocumentTypeDescriptor docTypeDescriptor = documentTypeDescriptors.FirstOrDefault(d => d.DocumentTypeName == documentTypeName);
+                if (docTypeDescriptor == null) {
+                    errorDescription = "Unknown document type: " + documentTypeName;
+                    isValid = false;
+                } else {
+                    isValid = docTypeDescriptor.IsValid(xDocument, out errorDescription);
+                }
+            }
+
+            if (isValid) {
+                uiValidationStatus.Text = "Document is valid.";
+                uiValidationStatus.Foreground = Brushes.DarkGreen;
+                return xDocument;
+            } else {
+                uiValidationStatus.Text = errorDescription ?? "Document is invalid.";
+                uiValidationStatus.Foreground = Brushes.DarkRed;
+                return null;
+            }
         }
 
         private void ReloadTree()
@@ -93,7 +208,8 @@ namespace XRouter.Gui.Xrm
         private TreeViewItem CreateUIItem(XElement xItem)
         {
             TreeViewItem uiItem = new TreeViewItem {
-                Header = xItem.Attribute(XName.Get("name")).Value,
+                Tag = xItem,
+                Header = xItem.Attribute(XName.Get("name")).Value
             };
 
             #region Create context menu
@@ -120,6 +236,7 @@ namespace XRouter.Gui.Xrm
                     XElement xItem = new XElement(XName.Get("item"));
                     xItem.SetAttributeValue(XName.Get("name"), CreateNewUniqueName(xParent, docTypeDescriptor.DocumentTypeName));
                     xItem.SetAttributeValue(XName.Get("type"), docTypeDescriptor.DocumentTypeName);
+                    xItem.Add(docTypeDescriptor.CreateDefaultRoot());
                     xParent.Add(xItem);
                     TreeViewItem uiItem = CreateUIItem(xItem);
                     if (uiParent != null) {
