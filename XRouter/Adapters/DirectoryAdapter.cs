@@ -140,7 +140,7 @@ namespace XRouter.Adapters
                 else
                 {
                     // tady poresime ziskani defaultniho jednoznacneho 
-                    fileName = string.Format(Guid.NewGuid().ToString() + " " + DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss") + ".xml");
+                    fileName = string.Format("{0}_{1}.xml", DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss"), Guid.NewGuid().ToString());
                 }
 
                 TraceLog.Info(string.Format("Writing output file '{0}' into '{1}'", fileName, targetPath));
