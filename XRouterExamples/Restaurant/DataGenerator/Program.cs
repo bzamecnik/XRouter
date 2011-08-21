@@ -27,8 +27,8 @@ namespace Restaurant.RestaurantDataCreation
             {
                 XDocument doc = new XDocument();
 
-                XElement order = new XElement("Order");
-                order.Add(new XElement("Table", random.Next(1, tables)));
+                XElement order = new XElement("order");
+                order.Add(new XElement("table", random.Next(1, tables)));
 
                 string ItemId;
                 if (random.Next(0, 1) == 0)
@@ -39,10 +39,10 @@ namespace Restaurant.RestaurantDataCreation
                 {
                     ItemId = "drink" + random.Next(1, maxDrinkID).ToString().PadLeft(4, '0');
                 }
-                order.Add(new XElement("Item", ItemId));
+                order.Add(new XElement("item", ItemId));
 
                 doc.Add(order);
-                doc.Save(savePath + "Order" + orderNumber.ToString().PadLeft(5, '0') + ".xml");
+                doc.Save(savePath + "order" + orderNumber.ToString().PadLeft(5, '0') + ".xml");
             }
             Console.WriteLine("Orders have been generated");
 
@@ -51,10 +51,10 @@ namespace Restaurant.RestaurantDataCreation
             {
                 XDocument doc = new XDocument();
 
-                XElement payment = new XElement("Payment", new XElement("Table", table));
+                XElement payment = new XElement("payment", new XElement("table", table));
 
                 doc.Add(payment);
-                doc.Save(savePath + "PaymentForTable" + table.ToString().PadLeft(2, '0') + ".xml");
+                doc.Save(savePath + "paymentForTable" + table.ToString().PadLeft(2, '0') + ".xml");
             }
             Console.WriteLine("Payments hace been generated");
 

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Order>
-  <Table>2</Table>
-  <Item>food0001</Item>
-</Order>
+<order>
+  <table>1</table>
+  <item>food0002</item>
+</order>

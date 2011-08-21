@@ -9,6 +9,6 @@ namespace XRouterWS
 {   
     public class Payment
     {     
-        public int Table { set; get; }
+        public int table { set; get; }
     }
 }

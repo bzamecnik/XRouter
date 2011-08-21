@@ -13,7 +13,7 @@ namespace XRouterWS
     [ServiceBehavior(InstanceContextMode = System.ServiceModel.InstanceContextMode.Single)]
     class Service : IService
     {
-        private List<Receipt> receipts;
+        private List<Receipt> receipts = new List<Receipt>();
         private readonly XDocument menu;
 
         private class MenuItem
@@ -32,8 +32,8 @@ namespace XRouterWS
                 return null;
             }
 
-            menuItem.Name = result.Attribute("Name").Value;
-            menuItem.Price = int.Parse(result.Attribute("Price").Value);
+            menuItem.Name = result.Element(XName.Get("name")).Value;
+            menuItem.Price = int.Parse(result.Element(XName.Get("price")).Value);
 
             return menuItem;
         }
@@ -46,10 +46,10 @@ namespace XRouterWS
         public void SaveOrder(Order order)
         {
             Console.WriteLine("save order");
-            Console.WriteLine(order.Item);
-            Console.WriteLine(order.Table);
+            Console.WriteLine(order.item);
+            Console.WriteLine(order.table);
 
-            MenuItem menuItem = GetReceiptItem(order.Item);
+            MenuItem menuItem = GetReceiptItem(order.item);
             if (menuItem == null) //unknown food or drink
             {
                 return;
@@ -58,7 +58,7 @@ namespace XRouterWS
             Receipt receipt = null;
             foreach (Receipt rcpt in receipts)
             {
-                if (rcpt.Table == order.Table)
+                if (rcpt.table == order.table)
                 {
                     receipt = rcpt;
                     break;
@@ -67,12 +67,12 @@ namespace XRouterWS
             if (receipt == null)
             {
                 receipt = new Receipt();
-                receipt.Table = order.Table;
+                receipt.table = order.table;
                 receipts.Add(receipt);
             }
 
             Item item = null;
-            foreach (Item itm in receipt.Items)
+            foreach (Item itm in receipt.items)
             {
                 if (itm.Name == menuItem.Name)
                 {
@@ -86,7 +86,7 @@ namespace XRouterWS
                 item.Name = menuItem.Name;
                 item.Quantity = 0;
                 item.TotalPrice = 0;
-                receipt.Items.Add(item);
+                receipt.items.Add(item);
             }
 
             item.Quantity += 1;
@@ -96,13 +96,13 @@ namespace XRouterWS
         public Receipt GetReceipt(Payment payment)
         {
             Console.WriteLine("get receipt");
-            Console.WriteLine(payment.Table);
+            Console.WriteLine(payment.table);
 
             //find, delete and send
             Receipt receipt = null;
             foreach (Receipt rcpt in receipts)
             {
-                if (rcpt.Table == payment.Table)
+                if (rcpt.table == payment.table)
                 {
                     receipt = rcpt;
                     receipts.Remove(rcpt);
@@ -112,9 +112,9 @@ namespace XRouterWS
             if (receipt == null)
             {
                 receipt = new Receipt();
-                receipt.Table = payment.Table;
+                receipt.table = payment.table;
             }
-            receipt.Date = DateTime.Now;
+            receipt.date = DateTime.Now;
 
             return receipt;
         }

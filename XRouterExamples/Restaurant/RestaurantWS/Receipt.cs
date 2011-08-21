@@ -9,10 +9,10 @@ namespace XRouterWS
 {   
     public class Receipt
     {      
-        public DateTime Date { set; get; }
+        public DateTime date { set; get; }
        
-        public int Table { set; get; }
+        public int table { set; get; }
         
-        public List<Item> Items = new List<Item>();
+        public List<Item> items = new List<Item>();
     }   
 }

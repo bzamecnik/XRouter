@@ -9,8 +9,8 @@ namespace XRouterWS
 {    
     public class Order
     {          
-        public int Table { set; get; }
+        public int table { set; get; }
                
-        public string Item { set; get; }
+        public string item { set; get; }
     }
 }
