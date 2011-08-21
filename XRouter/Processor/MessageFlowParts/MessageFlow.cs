@@ -60,7 +60,11 @@ namespace XRouter.Processor.MessageFlowParts
                 else if (nodeCfg is TerminatorNodeConfiguration)
                 {
                     node = new TerminatorNode();
-                }
+                } 
+                else if (nodeCfg is EntryNodeConfiguration)
+                {
+                    node = new EntryNode();
+                } 
                 else
                 {
                     throw new InvalidOperationException(string.Format(
