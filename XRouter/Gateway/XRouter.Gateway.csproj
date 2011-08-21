@@ -55,8 +55,8 @@
   <ItemGroup>
     <Compile Include="Adapter.cs" />
     <Compile Include="AdapterPluginAttribute.cs" />
-    <Compile Include="IAdapterService.cs" />
     <Compile Include="Gateway.cs" />
+    <Compile Include="MessageResultHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
