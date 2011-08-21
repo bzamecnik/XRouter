@@ -42,7 +42,15 @@
   <ItemGroup>
     <Compile Include="MsSqlDataAccess.cs" />
     <Compile Include="IDataAccess.cs" />
+    <Compile Include="Persistence\MemoryDataAccess.cs" />
+    <Compile Include="Persistence\PersistentStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\XRouter.Common.csproj">
+      <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
+      <Name>XRouter.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

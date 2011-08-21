@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using XRouter.Data;
+using System.IO;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using System.IO;
 
-namespace XRouter.Common.Persistence
+namespace XRouter.Data.Persistence
 {
-    class MemoryDataAccess : IDataAccess
+    public class MemoryDataAccess : IDataAccess
     {
         private object storageLock = new object();
 
@@ -18,7 +17,7 @@ namespace XRouter.Common.Persistence
         private Dictionary<Guid, string> tokens = new Dictionary<Guid, string>();
 
         public static readonly string DefaultConfigFileName = @"app-config.xml";
-        
+
         public string ConfigFileName { get; set; }
 
         private DateTime FileLastModified = DateTime.Now;
@@ -48,8 +47,7 @@ namespace XRouter.Common.Persistence
         public string LoadConfiguration()
         {
             lock (storageLock) {
-                if (File.GetLastWriteTime(ConfigFileName) > FileLastModified)
-                {
+                if (File.GetLastWriteTime(ConfigFileName) > FileLastModified) {
                     configurationXml = File.ReadAllText(ConfigFileName);
                 }
                 return configurationXml;
@@ -88,10 +86,8 @@ namespace XRouter.Common.Persistence
 
         public IEnumerable<string> LoadMatchingTokens(string xpath)
         {
-            lock (storageLock)
-            {
-                var result = tokens.Values.Where(tokenXml =>
-                {
+            lock (storageLock) {
+                var result = tokens.Values.Where(tokenXml => {
                     XDocument xToken = XDocument.Parse(tokenXml);
                     object matching = xToken.XPathEvaluate(xpath);
                     return matching != null;

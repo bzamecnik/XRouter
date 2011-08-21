@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using XRouter.Common.Xrm;
-using XRouter.Data;
+using XRouter.Common;
 
-namespace XRouter.Common.Persistence
+namespace XRouter.Data.Persistence
 {
     public class PersistentStorage : IXmlStorage
     {
@@ -25,8 +26,7 @@ namespace XRouter.Common.Persistence
         {
             get
             {
-                if (_updateTokenLock == null)
-                {
+                if (_updateTokenLock == null) {
                     _updateTokenLock = new object();
                 }
                 return _updateTokenLock;
@@ -42,11 +42,9 @@ namespace XRouter.Common.Persistence
 
         public XDocument GetApplicationConfiguration()
         {
-            if (configXmlCache == null)
-            {
+            if (configXmlCache == null) {
                 string configXml = dataAccess.LoadConfiguration();
-                if (configXml == null)
-                {
+                if (configXml == null) {
                     configXml = ApplicationConfiguration.InitialContent;
                 }
                 configXmlCache = XDocument.Parse(configXml);
@@ -89,11 +87,9 @@ namespace XRouter.Common.Persistence
         /// token exists</returns>
         public Token UpdateToken(Guid tokenGuid, Action<Token> updater)
         {
-            lock (UpdateTokenLock)
-            {
+            lock (UpdateTokenLock) {
                 Token token = GetToken(tokenGuid);
-                if (token == null)
-                {
+                if (token == null) {
                     return null;
                 }
                 updater(token);
@@ -114,8 +110,7 @@ namespace XRouter.Common.Persistence
         /// <param name="updater"></param>
         public void UpdateToken(Token token, Action<Token> updater)
         {
-            lock (UpdateTokenLock)
-            {
+            lock (UpdateTokenLock) {
                 Token currentToken = GetToken(token.Guid);
                 updater(currentToken);
                 SaveToken(currentToken);
@@ -151,8 +146,7 @@ namespace XRouter.Common.Persistence
         private IEnumerable<Token> CreateTokens(IEnumerable<string> tokensXml)
         {
             List<Token> result = new List<Token>();
-            foreach (string tokenXml in tokensXml)
-            {
+            foreach (string tokenXml in tokensXml) {
                 Token token = new Token(tokenXml);
                 result.Add(token);
             }
@@ -175,8 +169,7 @@ namespace XRouter.Common.Persistence
             XElement xContainer = config.XPathSelectElement("/configuration/xml-resource-storage");
 
             XDocument result = new XDocument();
-            if (xContainer != null)
-            {
+            if (xContainer != null) {
                 result.Add(xContainer);
             }
             return result;

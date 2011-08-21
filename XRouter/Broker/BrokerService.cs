@@ -7,9 +7,9 @@ using System.Xml;
 using System.Xml.Linq;
 using XRouter.Common;
 using XRouter.Common.ComponentInterfaces;
-using XRouter.Common.Persistence;
 using XRouter.Common.Xrm;
 using wcf = System.ServiceModel;
+using XRouter.Data.Persistence;
 
 namespace XRouter.Broker
 {

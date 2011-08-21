@@ -65,6 +65,10 @@
       <Name>XRouter.Common</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Data\XRouter.Data.csproj">
+      <Project>{873A6405-E524-4D55-B0F0-B125DE17655B}</Project>
+      <Name>XRouter.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
