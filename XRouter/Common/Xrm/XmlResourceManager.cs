@@ -38,17 +38,7 @@ namespace XRouter.Common.Xrm
         public XDocument GetXmlResource(XrmUri resourceUri)
         {
             XDocument content = storage.LoadXml();
-            XElement xContainer = content.XPathSelectElement(resourceUri.XPath);
-            if (xContainer == null) {
-                return null;
-            }
-            XElement xItem = xContainer.Elements().FirstOrDefault();
-            if (xItem == null) {
-                return null;
-            }
-
-            XDocument result = new XDocument();
-            result.Add(xItem);
+            XDocument result = resourceUri.GetResource(content);
             return result;
         }
 

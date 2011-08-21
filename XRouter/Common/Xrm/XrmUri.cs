@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.XPath;
 using System.Xml.Linq;
@@ -53,7 +54,14 @@ namespace XRouter.Common.Xrm
 
         public XDocument GetResource(XDocument xrmContent)
         {
-            XElement xResource = xrmContent.Root.XPathSelectElement("." + XPath);
+            XElement xResourceContainer = xrmContent.Root.XPathSelectElement("." + XPath);
+            if (xResourceContainer == null) {
+                return null;
+            }
+            XElement xResource = xResourceContainer.Elements().FirstOrDefault();
+            if (xResource == null) {
+                return null;
+            }
             XDocument result = new XDocument(xResource);
             return result;
         }

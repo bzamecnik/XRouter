@@ -160,9 +160,6 @@ namespace XRouter.Gui.CommonControls
             string nodeName = xNode.Attribute(XrmUri.NameAttributeName).Value;
             string elementName = (xNode.Name == XrmUri.ItemElementName) ? XrmUri.ItemElementName.ToString() : XrmUri.GroupElementName.ToString();
             string xpath = parentXPath + string.Format("/{0}[@{1}='{2}']", elementName, XrmUri.NameAttributeName.LocalName, SecurityElement.Escape(nodeName));
-            if (xNode.Name == XrmUri.ItemElementName) {
-                xpath += "/*[1]";
-            }
             return xpath;
         }
     }
