@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using XRouter.Common.Utils;
+using System.Security;
 
 namespace XRouter.Common
 {
@@ -26,6 +27,62 @@ namespace XRouter.Common
         /// </summary>
         [DataMember]
         public Guid Guid { get; private set; }
+
+        public DateTime Created {
+            get {
+                lock (SyncLock) {
+                    DateTime result = DateTime.Parse(GetTokenAttribute("created"), System.Globalization.CultureInfo.InvariantCulture);
+                    return result;
+                }
+            }
+            private set {
+                lock (SyncLock) {
+                   SetTokenAttribute("state", value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                }
+            }
+        }
+
+        public DateTime Received {
+            get {
+                lock (SyncLock) {
+                    DateTime result = DateTime.Parse(GetTokenAttribute("received"), System.Globalization.CultureInfo.InvariantCulture);
+                    return result;
+                }
+            }
+            private set {
+                lock (SyncLock) {
+                    SetTokenAttribute("received", value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                }
+            }
+        }
+
+        public DateTime Dispatched {
+            get {
+                lock (SyncLock) {
+                    DateTime result = DateTime.Parse(GetTokenAttribute("dispatched"), System.Globalization.CultureInfo.InvariantCulture);
+                    return result;
+                }
+            }
+            private set {
+                lock (SyncLock) {
+                    SetTokenAttribute("dispatched", value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                }
+            }
+        }
+
+        public DateTime Finished {
+            get {
+                lock (SyncLock) {
+                    DateTime result = DateTime.Parse(GetTokenAttribute("finished"), System.Globalization.CultureInfo.InvariantCulture);
+                    return result;
+                }
+            }
+            private set {
+                lock (SyncLock) {
+                    SetTokenAttribute("finished", value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                }
+            }
+        }
 
         private object _syncLock = new object();
         /// <summary>
@@ -63,6 +120,17 @@ namespace XRouter.Common
             } set {
                 lock (SyncLock) {
                     SetTokenAttribute("state", value.ToString());
+                    switch (value) {
+                        case TokenState.Received:
+                            Received = DateTime.Now;
+                            break;
+                        case TokenState.InProcessor:
+                            Dispatched = DateTime.Now;
+                            break;
+                        case TokenState.Finished:
+                            Finished = DateTime.Now;
+                            break;
+                    }
                 }
             }
         }
@@ -132,6 +200,7 @@ namespace XRouter.Common
 </token>
 ")
         {
+            Created = DateTime.Now;
         }
 
         /// <summary>
@@ -313,7 +382,7 @@ namespace XRouter.Common
         {
             lock (SyncLock)
             {
-                var message = Content.XDocument.XPathSelectElement("token/messages/message[@name=]" + name);
+                var message = Content.XDocument.XPathSelectElement(string.Format("token/messages/message[@name='{0}']", SecurityElement.Escape(name)));
                 return message;
             }
         }
