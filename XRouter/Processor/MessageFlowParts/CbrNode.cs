@@ -31,6 +31,7 @@ namespace XRouter.Processor.MessageFlowParts
     /// </para>
     /// </remarks>
     /// <seealso cref="XRouter.Common.MessageFlowConfig.CbrNodeConfiguration"/>
+    /// <seealso cref="Xrouter.Processor.CbrEvaluator"/>
     class CbrNode : Node
     {
         private CbrNodeConfiguration Config { get; set; }

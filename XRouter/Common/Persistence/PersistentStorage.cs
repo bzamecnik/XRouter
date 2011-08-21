@@ -8,6 +8,31 @@ using XRouter.Data;
 
 namespace XRouter.Common.Persistence
 {
+    /// <summary>
+    /// Implements a persistent storage of tokens, application configuration,
+    /// and other XML resources (XRM). It wraps a plain data access object with
+    /// some business logic.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Application configuration is assumed not to change during run-time,
+    /// so it is cached and never updated after being loaded initially.
+    /// </para>
+    /// <para>
+    /// The data access is prepared to be interchangable a only needs to
+    /// implement the IDataAccess interface. Currently only the
+    /// MsSqlDataAccess (MS SQL Server) is used.
+    /// </para>
+    /// <para>
+    /// Token updates are atomic.
+    /// </para>
+    /// <para>
+    /// Application configuration is currenlty assumed not to change during
+    /// run-time of the XRouter service, so it is cached and after being
+    /// loaded initially it can be only updated by calling the
+    /// SaveApplicationConfiguration() method.
+    /// </para>
+    /// </remarks>
     public class PersistentStorage : IXmlStorage
     {
         private IDataAccess dataAccess;
@@ -40,6 +65,8 @@ namespace XRouter.Common.Persistence
             dataAccess.Initialize(connectionString);
         }
 
+        #region Application configuration
+
         public XDocument GetApplicationConfiguration()
         {
             if (configXmlCache == null)
@@ -60,6 +87,10 @@ namespace XRouter.Common.Persistence
             string configXml = config.ToString();
             dataAccess.SaveConfiguration(configXml);
         }
+
+        #endregion
+
+        #region Tokens
 
         public void SaveToken(Token token)
         {
@@ -158,6 +189,8 @@ namespace XRouter.Common.Persistence
             }
             return result;
         }
+
+        #endregion
 
         #region Implementation of IXmlStorage
         void IXmlStorage.SaveXml(XDocument xml)

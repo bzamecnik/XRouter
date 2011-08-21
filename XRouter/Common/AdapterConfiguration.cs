@@ -7,6 +7,10 @@ using System.Xml.Linq;
 
 namespace XRouter.Common
 {
+    /// <summary>
+    /// Represent serializable configuration of a gateway adapter.
+    /// </summary>
+    /// <seealso cref="XRouter.Gateway.Adapter"/>
     [DataContract]
     public class AdapterConfiguration
     {
