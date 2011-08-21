@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using XRouter.Common;
 
 namespace XRouter.Data.Persistence
 {
@@ -63,6 +64,11 @@ namespace XRouter.Data.Persistence
                     tokens.Add(tokenGuid, tokenXml);
                 }
             }
+        }
+
+        public void SaveToken(Token token)
+        {
+            SaveToken(token.Guid, token.Content.XDocument.ToString());
         }
 
         public string LoadToken(Guid tokenGuid)

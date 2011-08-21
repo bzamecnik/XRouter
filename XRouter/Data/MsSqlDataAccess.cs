@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using XRouter.Common;
 
 namespace XRouter.Data
 {
@@ -52,6 +53,15 @@ namespace XRouter.Data
                     new SqlParameter("MessageGUID", tokenGuid),
                     new SqlParameter("Token", tokenXml)
                 }).Close();
+        }
+
+        public void SaveToken(Token token)
+        {
+            string tokenXml = token.Content.XDocument.ToString();
+            string inputMessage = token.GetMessage("input").ToString();
+            //TODO
+
+            SaveToken(token.Guid, tokenXml);
         }
 
         public string LoadToken(Guid tokenGuid)

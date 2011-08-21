@@ -62,7 +62,7 @@ namespace XRouter.Data.Persistence
         public void SaveToken(Token token)
         {
             string tokenXml = token.Content.XDocument.ToString();
-            dataAccess.SaveToken(token.Guid, tokenXml);
+            dataAccess.SaveToken(token);
         }
 
         public Token GetToken(Guid tokenGuid)
