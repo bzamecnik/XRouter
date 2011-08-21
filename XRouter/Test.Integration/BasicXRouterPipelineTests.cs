@@ -96,9 +96,9 @@ namespace XRouter.Test.Integration
                 });
             var messageFlow = new MessageFlowConfiguration("sendToA", 1)
             {
-                Nodes = { sendToA, terminator, cbr },
-                RootNode = sendToA
+                Nodes = { sendToA, terminator, cbr }
             };
+            messageFlow.GetEntryNode().NextNode = sendToA;
             #endregion
 
             var xrm = configManager.LoadXrmItems(

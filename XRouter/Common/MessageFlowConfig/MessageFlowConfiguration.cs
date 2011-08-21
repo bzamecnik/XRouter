@@ -13,6 +13,7 @@ namespace XRouter.Common.MessageFlowConfig
     /// </summary>
     /// <seealso cref="XRouter.Processor.MessageFlowParts.MessageFlow"/>
     [DataContract]
+    [KnownType(typeof(EntryNodeConfiguration))]
     [KnownType(typeof(TerminatorNodeConfiguration))]
     [KnownType(typeof(CbrNodeConfiguration))]
     [KnownType(typeof(ActionNodeConfiguration))]
@@ -28,9 +29,6 @@ namespace XRouter.Common.MessageFlowConfig
         public int Version { get; set; }
 
         [DataMember]
-        public NodeConfiguration RootNode { get; set; }
-
-        [DataMember]
         public List<NodeConfiguration> Nodes { get; private set; }
 
         public MessageFlowConfiguration(string name, int version)
@@ -39,6 +37,8 @@ namespace XRouter.Common.MessageFlowConfig
             Name = name;
             Version = version;
             Nodes = new List<NodeConfiguration>();
+
+            Nodes.Add(new EntryNodeConfiguration() { Name = "Entry" });
         }
 
         public void PromoteToNewVersion()
@@ -47,12 +47,15 @@ namespace XRouter.Common.MessageFlowConfig
             Guid = Guid.NewGuid();
         }
 
+        public EntryNodeConfiguration GetEntryNode()
+        {
+            EntryNodeConfiguration result = Nodes.OfType<EntryNodeConfiguration>().Single();
+            return result;
+        }
+
         public void RemoveNode(NodeConfiguration nodeToRemove)
         {
             Nodes.Remove(nodeToRemove);
-            if (RootNode == nodeToRemove) {
-                RootNode = null;
-            }
 
             foreach (NodeConfiguration node in Nodes) {
                 if (node is ActionNodeConfiguration) {

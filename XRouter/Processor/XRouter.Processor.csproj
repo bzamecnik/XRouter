@@ -54,6 +54,7 @@
     <Compile Include="MessageFlowBuilding\MessageFlowBuilder.cs" />
     <Compile Include="MessageFlowParts\ActionNode.cs" />
     <Compile Include="MessageFlowParts\CbrNode.cs" />
+    <Compile Include="MessageFlowParts\EntryNode.cs" />
     <Compile Include="MessageFlowParts\MessageFlow.cs" />
     <Compile Include="MessageFlowParts\Node.cs" />
     <Compile Include="MessageFlowParts\TerminatorNode.cs" />

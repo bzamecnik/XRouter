@@ -20,6 +20,11 @@ namespace XRouter.Processor.MessageFlowBuilding
             return new TerminatorNodeConfiguration() { Name = name, IsReturningOutput = false };
         }
 
+        public static EntryNodeConfiguration CreateEntry(string name, NodeConfiguration nextNode)
+        {
+            return new EntryNodeConfiguration() { Name = name, NextNode = nextNode };
+        }
+
         public static ActionNodeConfiguration CreateSender(string name, string inputMessage, string outputEndpoint, NodeConfiguration nextNode)
         {
             var configuration = XDocument.Parse(

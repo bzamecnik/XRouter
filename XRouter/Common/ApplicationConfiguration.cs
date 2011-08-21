@@ -48,20 +48,16 @@ namespace XRouter.Common
             <Guid>d77b24b8-9333-457b-92e8-dd1624f3e9ce</Guid>
             <Name z:Id='2'>default</Name>
             <Nodes z:Id='3' z:Size='1'>
-              <NodeConfiguration z:Id='4' i:type='TerminatorNodeConfiguration'>
+              <NodeConfiguration z:Id='4' i:type='EntryNodeConfiguration'>
                 <Location xmlns:d4p1='http://schemas.datacontract.org/2004/07/System.Windows'>
                   <d4p1:_x>0</d4p1:_x>
                   <d4p1:_y>0</d4p1:_y>
                 </Location>
-                <_name z:Id='5'>Terminator</_name>
-                <IsReturningOutput>false</IsReturningOutput>
-                <ResultMessageSelection z:Id='6'>
-                  <SelectionPattern z:Id='7' />
-                </ResultMessageSelection>
+                <_name z:Id='5'>Entry</_name>
+                <NextNode i:nil='true' />
               </NodeConfiguration>
             </Nodes>
-            <RootNode i:nil='true' />
-            <Version>3</Version>
+            <Version>1</Version>
           </MessageFlowConfiguration>
         </messageflow>
     </messageflows>

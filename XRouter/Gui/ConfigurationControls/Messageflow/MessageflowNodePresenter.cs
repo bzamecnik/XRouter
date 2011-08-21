@@ -90,6 +90,11 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                 };
                 uiType.Text = "Terminator";
                 uiIcon.Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Button-exit-icon.png"));
+            } else if (node is EntryNodeConfiguration) {
+                nodeShape = new Ellipse {
+                };
+                uiType.Text = "Entry";
+                uiIcon.Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Button-exit-icon.png"));
             }
             nodeShape.Stretch = Stretch.Fill;
             nodeShape.Effect = new DropShadowEffect { Opacity = 0.6, ShadowDepth = 8 };
@@ -102,30 +107,14 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                         Padding = nodeContentPadding,
                         Child = uiName
                     }
-                    //new Grid {
-                    //    HorizontalAlignment = HorizontalAlignment.Center,
-                    //    VerticalAlignment = VerticalAlignment.Center,
-                    //    RowDefinitions = {
-                    //        new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                    //        new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }
-                    //    },
-                    //    ColumnDefinitions = {
-                    //        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                    //        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                    //        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
-                    //    },
-                    //    Children = {
-                    //        uiIcon,
-                    //        uiType,
-                    //        uiName
-                    //    }
-                    //}
                 }
             };
             uiNode.PreviewMouseDown += delegate {
                 nodeSelectionManager.SelectNode(node);
             };
-            uiNode.ContextMenu = CreateNodeContextMenu();
+            if (!(node is EntryNodeConfiguration)) {
+                uiNode.ContextMenu = CreateNodeContextMenu();
+            }
 
             UpdateNodeSelection();
             nodeSelectionManager.NodeSelected += delegate { UpdateNodeSelection(); };

@@ -73,6 +73,9 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                 } else if (node is ActionNodeConfiguration) {
                     var actionNode = (ActionNodeConfiguration)node;
                     result.Add(Tuple.Create(node, actionNode.NextNode));
+                } else if (node is EntryNodeConfiguration) {
+                    var entryNode = (EntryNodeConfiguration)node;
+                    result.Add(Tuple.Create(node, entryNode.NextNode));
                 }
             }
 

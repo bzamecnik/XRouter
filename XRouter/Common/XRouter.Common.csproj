@@ -65,6 +65,7 @@
     <Compile Include="LogLevelFilters.cs" />
     <Compile Include="MessageFlowConfig\ActionType.cs" />
     <Compile Include="MessageFlowConfig\CbrNodeConfiguration.cs" />
+    <Compile Include="MessageFlowConfig\EntryNodeConfiguration.cs" />
     <Compile Include="MessageFlowConfig\TokenSelectionConfigurationItemType.cs" />
     <Compile Include="Persistence\MemoryDataAccess.cs" />
     <Compile Include="Persistence\PersistentStorage.cs" />

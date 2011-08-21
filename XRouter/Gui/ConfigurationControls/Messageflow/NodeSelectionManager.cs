@@ -71,6 +71,8 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                 propertiesContainer.Child = new NodePropertiesEditors.CbrNodePropertiesEditor((CbrNodeConfiguration)selectedNode, this);
             } else if (selectedNode is TerminatorNodeConfiguration) {
                 propertiesContainer.Child = new NodePropertiesEditors.TerminatorNodePropertiesEditor((TerminatorNodeConfiguration)selectedNode, this);
+            } else if (selectedNode is EntryNodeConfiguration) {
+                propertiesContainer.Child = new NodePropertiesEditors.EntryNodePropertiesEditor((EntryNodeConfiguration)selectedNode, this);
             } else {
                 propertiesContainer.Child = null;
             }

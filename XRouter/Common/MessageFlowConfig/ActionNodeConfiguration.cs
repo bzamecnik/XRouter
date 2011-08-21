@@ -9,6 +9,7 @@ namespace XRouter.Common.MessageFlowConfig
     /// </summary>
     /// <seealso cref="XRouter.Processor.MessageFlowParts.ActionNode"/>
     [DataContract]
+    [KnownType(typeof(EntryNodeConfiguration))]
     [KnownType(typeof(TerminatorNodeConfiguration))]
     [KnownType(typeof(CbrNodeConfiguration))]
     [KnownType(typeof(ActionNodeConfiguration))]

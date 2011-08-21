@@ -90,6 +90,9 @@
     <Compile Include="ConfigurationControls\Messageflow\NodePropertiesEditors\CbrNodePropertiesEditor.xaml.cs">
       <DependentUpon>CbrNodePropertiesEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ConfigurationControls\Messageflow\NodePropertiesEditors\EntryNodePropertiesEditor.xaml.cs">
+      <DependentUpon>EntryNodePropertiesEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ConfigurationControls\Messageflow\NodePropertiesEditors\TerminatorNodePropertiesEditor.xaml.cs">
       <DependentUpon>TerminatorNodePropertiesEditor.xaml</DependentUpon>
     </Compile>
@@ -157,6 +160,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ConfigurationControls\Messageflow\NodePropertiesEditors\CbrNodePropertiesEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfigurationControls\Messageflow\NodePropertiesEditors\EntryNodePropertiesEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

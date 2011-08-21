@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using XRouter.Common;
 using XRouter.Common.MessageFlowConfig;
@@ -34,7 +35,7 @@ namespace XRouter.Processor.MessageFlowParts
 
         private ProcessorService Processor { get; set; }
 
-        private Node rootNode;
+        private EntryNode entryNode;
 
         private Dictionary<string, Node> nodesByName = new Dictionary<string, Node>();
 
@@ -71,7 +72,7 @@ namespace XRouter.Processor.MessageFlowParts
             }
             #endregion
 
-            rootNode = nodesByName[Configuration.RootNode.Name];
+            entryNode = (EntryNode)nodesByName[configuration.GetEntryNode().Name];
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace XRouter.Processor.MessageFlowParts
                 currentNode = nodesByName[currentNodeName];
             }
             else {
-                currentNode = rootNode;
+                currentNode = entryNode;
             }
             #endregion
 
