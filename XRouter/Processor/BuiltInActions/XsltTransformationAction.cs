@@ -6,6 +6,7 @@ using ObjectConfigurator;
 using XRouter.Common;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
+using System.IO;
 
 namespace XRouter.Processor.BuiltInActions
 {
@@ -67,11 +68,21 @@ namespace XRouter.Processor.BuiltInActions
             XDocument inputMessage = inputMessageSelection.GetSelectedDocument(token);
             var reader = inputMessage.Root.CreateReader();
 
-            StringBuilder outputBuilder = new StringBuilder();
-            var writer = XmlWriter.Create(outputBuilder);
-            xslTransform.Transform(reader, writer);
-
-            XDocument outputMessage = XDocument.Parse(outputBuilder.ToString());
+            XDocument outputMessage;
+            if (xslTransform.OutputSettings.OutputMethod != XmlOutputMethod.Xml) {
+                StringWriter writer = new StringWriter();
+                XmlDocument xmlInputMessage = new XmlDocument();
+                xmlInputMessage.Load(reader);
+                xslTransform.Transform(xmlInputMessage, null, writer);
+                string result = writer.ToString();
+                outputMessage = new XDocument(new XElement(XName.Get("content")));
+                outputMessage.Root.Value = result;
+            } else {
+                StringBuilder outputBuilder = new StringBuilder();
+                var writer = XmlWriter.Create(outputBuilder);
+                xslTransform.Transform(reader, writer);
+                outputMessage = XDocument.Parse(outputBuilder.ToString());
+            }
 
             ProcessorService.CreateMessage(token, outputMessageName, outputMessage);
         }
