@@ -41,6 +41,9 @@ namespace XRouter.Adapters
         })]
         private ConcurrentDictionary<string, string> outputEndpointToPathMap;
 
+        [ConfigurationItem("Save only text", null, false)]
+        private bool saveOnlyText;
+
         protected override void Run()
         {
             System.Diagnostics.Debug.Assert(inputEndpointToPathMap != null);
@@ -129,7 +132,7 @@ namespace XRouter.Adapters
             {
                 string fileName;
 
-                if (metadata != null)
+                if ((metadata != null) && (metadata.Root != null))
                 {
                     // tohle by bylo dobre, ale chtelo by to, aby tam uzivatel mohl specifikovat substituce (poresime osobne)                    
                     fileName = metadata.Element(XName.Get("file-metadata")).Attribute(XName.Get("filename")).Value;
@@ -137,13 +140,20 @@ namespace XRouter.Adapters
                 else
                 {
                     // tady poresime ziskani defaultniho jednoznacneho 
-                    fileName = string.Format(DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss.xml"));
+                    fileName = string.Format(Guid.NewGuid().ToString() + " " + DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss") + ".xml");
                 }
 
                 TraceLog.Info(string.Format("Writing output file '{0}' into '{1}'", fileName, targetPath));
 
+                string output;
+                if (saveOnlyText) {
+                    output = message.Root.Value;
+                } else {
+                    output = message.ToString();
+                }
+
                 // tady musime zase osetrit to, aby se neprepisovaly zpravy, udelame to generovanim jednoznacnych nazvu souboru
-                File.WriteAllText(Path.Combine(targetPath, fileName), message.ToString());
+                File.WriteAllText(Path.Combine(targetPath, fileName), output);
             }
             else
             {
