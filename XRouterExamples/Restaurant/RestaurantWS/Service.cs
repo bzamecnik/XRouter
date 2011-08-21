@@ -45,10 +45,6 @@ namespace XRouterWS
       
         public void SaveOrder(Order order)
         {
-            Console.WriteLine("save order");
-            Console.WriteLine(order.item);
-            Console.WriteLine(order.table);
-
             MenuItem menuItem = GetReceiptItem(order.item);
             if (menuItem == null) //unknown food or drink
             {
@@ -71,10 +67,10 @@ namespace XRouterWS
                 receipts.Add(receipt);
             }
 
-            Item item = null;
-            foreach (Item itm in receipt.items)
+            item item = null;
+            foreach (item itm in receipt.items)
             {
-                if (itm.Name == menuItem.Name)
+                if (itm.name == menuItem.Name)
                 {
                     item = itm;
                     break;
@@ -82,22 +78,19 @@ namespace XRouterWS
             }
             if (item == null)
             {
-                item = new Item();
-                item.Name = menuItem.Name;
-                item.Quantity = 0;
-                item.TotalPrice = 0;
+                item = new item();
+                item.name = menuItem.Name;
+                item.quantity = 0;
+                item.totalPrice = 0;
                 receipt.items.Add(item);
             }
 
-            item.Quantity += 1;
-            item.TotalPrice = item.Quantity * menuItem.Price;
+            item.quantity += 1;
+            item.totalPrice = item.quantity * menuItem.Price;
         }
 
         public Receipt GetReceipt(Payment payment)
         {
-            Console.WriteLine("get receipt");
-            Console.WriteLine(payment.table);
-
             //find, delete and send
             Receipt receipt = null;
             foreach (Receipt rcpt in receipts)

@@ -7,12 +7,12 @@ using System.Runtime.Serialization;
 
 namespace XRouterWS
 {
-    public class Item
+    public class item
     {   
-        public string Name { set; get; }
+        public string name { set; get; }
 
-        public int Quantity { set; get; }
+        public int quantity { set; get; }
       
-        public int TotalPrice { set; get; }
+        public int totalPrice { set; get; }
     }
 }

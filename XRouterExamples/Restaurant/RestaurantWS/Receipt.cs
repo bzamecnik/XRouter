@@ -13,6 +13,6 @@ namespace XRouterWS
        
         public int table { set; get; }
         
-        public List<Item> items = new List<Item>();
+        public List<item> items = new List<item>();
     }   
 }

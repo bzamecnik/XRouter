@@ -7,17 +7,17 @@
   <xsl:template match="/">
     
     Restaurace MFF                  Účet pro
-    Malá Strana, Praha 1            stůl č. <xsl:value-of select="//Table"/>
+    Malá Strana, Praha 1            stůl č. <xsl:value-of select="//table"/>
     
-    Vydáno: <xsl:value-of select="//Date"/>
+    Vydáno: <xsl:value-of select="//date"/>
     ------------------------------------------
     
-    <xsl:for-each select="//Item">
-      <xsl:value-of select="./@Name"/> (<xsl:value-of select="./Quantity"/>X) .............. <xsl:value-of select="./TotalPrice"/>,00 Kč
+    <xsl:for-each select="//item">
+      <xsl:value-of select="./@name"/> (<xsl:value-of select="./quantity"/>X) .............. <xsl:value-of select="./totalPrice"/>,00 Kč
     </xsl:for-each>
     ------------------------------------------
 
-    Celkem (vč. DPH): .............. <xsl:value-of select="sum(//TotalPrice)"/>,00 Kč
+    Celkem (vč. DPH): .............. <xsl:value-of select="sum(//totalPrice)"/>,00 Kč
 
     Děkujeme za Vaši návštěvu!
 
