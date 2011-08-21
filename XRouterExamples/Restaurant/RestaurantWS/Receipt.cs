@@ -9,7 +9,7 @@ namespace XRouterWS
 {   
     public class Receipt
     {      
-        public DateTime date { set; get; }
+        public string date { set; get; }
        
         public int table { set; get; }
         

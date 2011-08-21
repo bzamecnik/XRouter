@@ -107,7 +107,7 @@ namespace XRouterWS
                 receipt = new Receipt();
                 receipt.table = payment.table;
             }
-            receipt.date = DateTime.Now;
+            receipt.date = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
 
             return receipt;
         }
