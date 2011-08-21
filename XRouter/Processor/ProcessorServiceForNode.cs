@@ -45,8 +45,8 @@ namespace XRouter.Processor
         /// <summary>
         /// Creates a new message within the token.
         /// </summary>
-        /// <param name="targetTokenGuid">identifier of the token to which to
-        /// add the new message</param>
+        /// <param name="targetToken">token to which to add the new message
+        /// </param>
         /// <param name="messageName">name of the new message</param>
         /// <param name="message">message content</param>
         /// <returns>updated token</returns>
@@ -63,7 +63,7 @@ namespace XRouter.Processor
         /// Adds an exception to the token along with the name of the node
         /// where the exception was thrown.
         /// </summary>
-        /// <param name="targetToken">the token to which to add the exception
+        /// <param name="targetToken">token to which to add the exception
         /// </param>
         /// <param name="ex">exception to be added to the token</param>
         /// <param name="updatedToken">updated token</param>
