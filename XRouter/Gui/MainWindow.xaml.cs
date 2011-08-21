@@ -10,6 +10,7 @@ using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
 using XRouter.Gui.CommonControls;
 using XRouter.Gui.Xrm;
+using System.Windows.Input;
 
 namespace XRouter.Gui
 {
@@ -142,6 +143,19 @@ Details:
 
         private void SaveToServer_Click(object sender, RoutedEventArgs e)
         {
+            #region This fix removes focus from TextBox in order to save its value
+            TextBox uiFocusedTextBox = Keyboard.FocusedElement as TextBox;
+            if (uiFocusedTextBox != null) {
+                Panel uiContainer = uiFocusedTextBox.Parent as Panel;
+                if (uiContainer != null) {
+                    TextBox uiTempTextBox = new TextBox();
+                    uiContainer.Children.Add(uiTempTextBox);
+                    Keyboard.Focus(uiTempTextBox);
+                    uiContainer.Children.Remove(uiTempTextBox);
+                }
+            }
+            #endregion
+
             SaveConfiguration();
             ConfigManager.SaveConfigurationToServer();
         }
