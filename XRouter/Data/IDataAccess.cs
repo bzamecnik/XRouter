@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using XRouter.Common;
 
 namespace XRouter.Data
 {
@@ -62,6 +63,8 @@ namespace XRouter.Data
         /// <param name="tokenGuid">unique identifier of the token</param>
         /// <param name="tokenXml">token XML content</param>
         void SaveToken(Guid tokenGuid, string tokenXml);
+
+        void SaveToken(Token token);
 
         // TODO: what about the order of tokens?
 
