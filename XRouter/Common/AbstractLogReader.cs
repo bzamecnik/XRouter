@@ -6,12 +6,34 @@ using DaemonNT.Logging;
 
 namespace XRouter.Common
 {
+    /// <summary>
+    /// Provides read access to previously logged log entries.
+    /// </summary>
+    /// <remarks>
+    /// This is an abstract base class which provides some common utility
+    /// functions. The concrete implementation of parsing the log files must
+    /// be defined in a derived class in the GetEntriesFromFile() method.
+    /// </remarks>
     public abstract class AbstractLogReader<EntryType>
     {
+        /// <summary>
+        /// Wild-card pattern of log files to be scanned (within a single
+        /// directory).
+        /// </summary>
         protected string LogFilePattern = "*.log";
 
+        /// <summary>
+        /// Directory containing the log files to be scanned.
+        /// </summary>
         protected string LogFilesDirectory { get; set; }
 
+        /// <summary>
+        /// Creates a new instance of the log reader.
+        /// </summary>
+        /// <param name="logFilesDirectory">directory containing the log files
+        /// to be scanned; it can contain either absolute path or relative
+        /// path related to the location of assembly executing the function
+        /// </param>
         public AbstractLogReader(string logFilesDirectory)
         {
             LogFilesDirectory = logFilesDirectory;
@@ -21,6 +43,31 @@ namespace XRouter.Common
             }
         }
 
+        /// <summary>
+        /// Scans the log files and obtains log entries matching the specified
+        /// criteria. The log entries are paged.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// If you want to select all entries (non-paged) set pageSize to
+        /// int.MaxValue and pageNumber to 1.
+        /// </para>
+        /// <para>
+        /// The log entries are assumed to be already ordered by date and time
+        /// ascendantly.
+        /// </para>
+        /// </remarks>
+        /// <param name="minDate">earliest date and time of log entries to be
+        /// selected</param>
+        /// <param name="maxDate">latest date and time of log entries to be
+        /// selected</param>
+        /// <param name="logLevelFilter">log level flags of selected log
+        /// entries</param>
+        /// <param name="pageSize">size of one page of selected log entries
+        /// </param>
+        /// <param name="pageNumber">1-based index of the page of selected log
+        /// entries</param>
+        /// <returns>the selected page of log entries</returns>
         public EntryType[] GetEntries(
             DateTime minDate,
             DateTime maxDate,
@@ -57,6 +104,21 @@ namespace XRouter.Common
             return result;
         }
 
+        /// <summary>
+        /// Scans a single file for log entries filtered by provided criteria
+        /// and puts the matching entries to the provided container.
+        /// </summary>
+        /// <param name="logFilePath">path to the log file to be scanned</param>
+        /// <param name="date">date of the log file (useful when the log
+        /// entries themselves are not dates)</param>
+        /// <param name="minDate">earliest date and time of log entries to be
+        /// selected</param>
+        /// <param name="maxDate">lasted date and time of log entries to be
+        /// selected</param>
+        /// <param name="logLevelFilter">log level flags of selected log
+        /// entries</param>
+        /// <param name="matchingEntries">prepared container where to put the
+        /// selected log entries</param>
         protected abstract void GetEntriesFromFile(
             string logFilePath,
             DateTime date,

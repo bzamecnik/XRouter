@@ -18,6 +18,10 @@ namespace XRouter.Broker
     /// the other components. It also provides a web service for XRouter
     /// management.
     /// </summary>
+    /// <remarks>
+    /// Application configuration is assumed not to change during run-time,
+    /// so it is cached and never updated after being loaded initially.
+    /// </remarks>
     [wcf.ServiceBehavior(InstanceContextMode = wcf.InstanceContextMode.Single)]
     public class BrokerService : IBrokerService, IBrokerServiceForDispatcher
     {

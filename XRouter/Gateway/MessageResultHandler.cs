@@ -1,9 +1,7 @@
-﻿using System;
-using System.Xml.Linq;
-
-namespace XRouter.Gateway
+﻿namespace XRouter.Gateway
 {
-    // TODO: move to Gateway.cs or a separate file MessageResultHandler.cs
+    using System;
+    using System.Xml.Linq;
 
     /// <summary>
     /// A delegate which is performed when the token is being finished and
@@ -21,15 +19,4 @@ namespace XRouter.Gateway
         XDocument resultMessage,
         XDocument sourceMetadata,
         object context);
-
-    // TODO: unused!
-	public interface IAdapterService
-	{
-        void ReceiveMessage(
-            XDocument message,
-            string endpointName,
-            XDocument metadata,
-            object context,
-            MessageResultHandler resultHandler);
-	}
 }

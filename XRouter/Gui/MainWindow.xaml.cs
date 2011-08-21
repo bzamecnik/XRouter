@@ -43,7 +43,7 @@ namespace XRouter.Gui
                 // test the connection
                 ConfigManager.ConsoleServer.GetXRouterServiceStatus();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 RunXRouterManager();
                 try

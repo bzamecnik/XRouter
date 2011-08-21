@@ -64,7 +64,7 @@ namespace XRouter.Adapters
                     {
                         newFiles = Directory.GetFiles(path);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         // Ignore input directories which cannot be read.
                         continue;
@@ -101,7 +101,7 @@ namespace XRouter.Adapters
                                     ReceiveMessageData(fileContent, enpointName, metadata, null, null);
                                 }
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 // message receiving failed
                                 continue;
@@ -114,7 +114,7 @@ namespace XRouter.Adapters
 
                             File.Delete(newFilePath);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             // Ignore input files which cannot be read.
                             continue;

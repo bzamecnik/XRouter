@@ -9,10 +9,27 @@ using XRouter.Common;
 
 namespace XRouter.Data
 {
+    /// <summary>
+    /// Implements a data access object with a MS SQL Server being the data
+    /// storage.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// All the queries are performed by executing a SQL procedure on the
+    /// database server.
+    /// </para>
+    /// <para>
+    /// All SQL-related exceptions are propagated outside.
+    /// </para>
+    /// </remarks>
     public class MsSqlDataAccess : IDataAccess
     {
         private string connectionString;
 
+        /// <summary>
+        /// Creates a new instance of the data access object.
+        /// NOTE: it must be initialized first via the Initialize() method!
+        /// </summary>
         public MsSqlDataAccess () {}
 
         #region Public methods - interface IDataAccess
