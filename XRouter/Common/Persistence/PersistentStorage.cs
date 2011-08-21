@@ -92,6 +92,10 @@ namespace XRouter.Common.Persistence
             lock (UpdateTokenLock)
             {
                 Token token = GetToken(tokenGuid);
+                if (token == null)
+                {
+                    return null;
+                }
                 updater(token);
                 SaveToken(token);
                 return token;
