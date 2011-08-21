@@ -47,6 +47,7 @@
     <Compile Include="ActionPluginAttribute.cs" />
     <Compile Include="BuiltInActions\SendMessageAction.cs" />
     <Compile Include="BuiltInActions\XsltTransformationAction.cs" />
+    <Compile Include="CbrEvaluator.cs" />
     <Compile Include="IActionPlugin.cs" />
     <Compile Include="IProcessorServiceForAction.cs" />
     <Compile Include="MessageFlowBuilding\CbrCase.cs" />

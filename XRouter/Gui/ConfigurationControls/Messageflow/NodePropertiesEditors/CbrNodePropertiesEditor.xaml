@@ -5,8 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:controls="clr-namespace:XRouter.Gui.CommonControls"
              xmlns:src="clr-namespace:XRouter.Gui.ConfigurationControls.Messageflow"
+             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="500" d:DesignWidth="500">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -64,6 +65,27 @@
                 <TextBlock Margin="10 10 10 5" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center">Branches</TextBlock>
                 <controls:ListEditor x:Name="uiBranches" Margin="5 0 5 5" />
             </StackPanel>
+        </Border>
+
+        <Border Grid.Row="4" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSkyBlue" Offset="-1" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Margin="10 10 10 0" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center">Testing</TextBlock>
+                <TextBlock Grid.Row="1" Margin="10 0 10 5" VerticalAlignment="Center">Enter xml you want to test:</TextBlock>
+                <avalonEdit:TextEditor Grid.Row="2" Name="uiTestXml" FontSize="10pt" FontFamily="Courier New" Margin="5 0 5 5" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                <Button Grid.Row="3" Click="TestXml_Click" HorizontalAlignment="Right" Padding="10 2 10 2" Margin="5 0 5 5">Evaluate</Button>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>

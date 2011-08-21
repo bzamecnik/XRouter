@@ -51,6 +51,13 @@ namespace XRouter.Common.Xrm
             XPath = uri.AbsolutePath;
         }
 
+        public XDocument GetResource(XDocument xrmContent)
+        {
+            XElement xResource = xrmContent.Root.XPathSelectElement("." + XPath);
+            XDocument result = new XDocument(xResource);
+            return result;
+        }
+
         /// <summary>
         /// Tests whether the XPath expression compiles well.
         /// </summary>

@@ -125,6 +125,7 @@ namespace XRouter.Gui.CommonControls
 
             string xpath = GetXrmNodeXPath(xSelectedNode);
             uiXPath.Text = xpath;
+            ChangeXPath(xpath);
             uiChoosePopup.IsOpen = false;
         }
 

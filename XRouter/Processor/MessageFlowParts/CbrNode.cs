@@ -4,6 +4,7 @@ using SchemaTron;
 using XRouter.Common;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
+using System;
 
 namespace XRouter.Processor.MessageFlowParts
 {
@@ -34,10 +35,7 @@ namespace XRouter.Processor.MessageFlowParts
     {
         private CbrNodeConfiguration Config { get; set; }
 
-        /// <summary>
-        /// Each branch assigns a validator with a target node name.
-        /// </summary>
-        private Dictionary<Validator, string> branches;
+        private CbrEvaluator evaluator;
 
         /// <summary>
         /// Initializes a CBR node.
@@ -48,61 +46,15 @@ namespace XRouter.Processor.MessageFlowParts
         {
             Config = (CbrNodeConfiguration)configuration;
 
-            IInclusionResolver xrmInclusionResolver = new XrmInclusionResolver(ProcessorService);
-
-            branches = new Dictionary<Validator, string>();
-            foreach (var branch in Config.Branches)
-            {
-                XDocument xSchema = ProcessorService.GetXmlResource(branch.Key);
-                Validator validator = Validator.Create(xSchema);
-                ValidatorSettings validatorSettings = new ValidatorSettings
-                {
-                    InclusionsResolver = xrmInclusionResolver
-                };
-                branches.Add(validator, branch.Value.Name);
-            }
+            evaluator = new CbrEvaluator(Config, ProcessorService.GetXmlResource);
         }
 
         public override string Evaluate(Token token)
         {
             TraceLog.Info("Entering CBR: " + Name);
             XDocument testedDocument = Config.TestedSelection.GetSelectedDocument(token);
-
-            #region Determine targetNodeName
-            string targetNodeName = Config.DefaultTarget.Name;
-            foreach (Validator validator in branches.Keys)
-            {
-                ValidatorResults results = validator.Validate(testedDocument, false);
-                if (results.IsValid)
-                {
-                    targetNodeName = branches[validator];
-                    break;
-                }
-            }
-            #endregion
-
+            string targetNodeName = evaluator.GetTargetNodeName(testedDocument);
             return targetNodeName;
-        }
-
-        /// <summary>
-        /// Schematron inclusion resolver which obtains the referenced
-        /// resources from the XML resource manager.
-        /// </summary>
-        private class XrmInclusionResolver : IInclusionResolver
-        {
-            private ProcessorServiceForNode processorService;
-
-            public XrmInclusionResolver(ProcessorServiceForNode processorService)
-            {
-                this.processorService = processorService;
-            }
-
-            public XDocument Resolve(string href)
-            {
-                XrmUri xrmUri = new XrmUri(href);
-                XDocument result = processorService.GetXmlResource(xrmUri);
-                return result;
-            }
         }
     }
 }

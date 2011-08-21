@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Xrm;
 using XRouter.Gui.CommonControls;
+using XRouter.Processor;
+using System.Xml.Linq;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
 {
@@ -59,6 +61,13 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
             foreach (XrmUri branchKey in node.Branches.Keys) {
                 uiBranches.AddItem(CreateBranchPresentation(branchKey));
             }
+            #endregion
+
+            #region Prepare uiTestXml
+            uiTestXml.SyntaxHighlighting = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance.GetDefinition("XML");
+            uiTestXml.Options.ConvertTabsToSpaces = true;
+            uiTestXml.Options.IndentationSize = 4;
+            uiTestXml.ShowLineNumbers = true;
             #endregion
         }
 
@@ -109,5 +118,35 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
         }
 
         #endregion
+
+        private void TestXml_Click(object sender, RoutedEventArgs e)
+        {
+            XDocument xDoc;
+            try {
+                xDoc = XDocument.Parse(uiTestXml.Text);
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            string targetNodeName;
+            try {
+                CbrEvaluator evaluator = new CbrEvaluator(node, GetXrmResource);
+                targetNodeName = evaluator.GetTargetNodeName(xDoc);
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            string message = string.Format("Target node name: {0}", targetNodeName);
+            MessageBox.Show(message, "CBR result", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private XDocument GetXrmResource(XrmUri xrmUri)
+        {
+            XDocument xrmContent = nodeSelectionManager.AppConfig.GetXrmContent();
+            XDocument result = xrmUri.GetResource(xrmContent);
+            return result;
+        }
     }
 }
