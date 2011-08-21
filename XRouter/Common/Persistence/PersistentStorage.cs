@@ -69,6 +69,7 @@ namespace XRouter.Common.Persistence
 
         public Token GetToken(Guid tokenGuid)
         {
+            // TODO: what about GUID of a non-existent token
             string tokenXml = dataAccess.LoadToken(tokenGuid);
             Token result = new Token(tokenGuid, tokenXml);
             return result;
@@ -84,7 +85,8 @@ namespace XRouter.Common.Persistence
         /// </remarks>
         /// <param name="tokenGuid"></param>
         /// <param name="updater"></param>
-        /// <returns>updated token</returns>
+        /// <returns>updated token with the specified GUID; or null if no such
+        /// token exists</returns>
         public Token UpdateToken(Guid tokenGuid, Action<Token> updater)
         {
             lock (UpdateTokenLock)
@@ -106,7 +108,6 @@ namespace XRouter.Common.Persistence
         /// </remarks>
         /// <param name="token"></param>
         /// <param name="updater"></param>
-        /// <returns></returns>
         public void UpdateToken(Token token, Action<Token> updater)
         {
             lock (UpdateTokenLock)

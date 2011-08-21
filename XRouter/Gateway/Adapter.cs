@@ -33,7 +33,7 @@ namespace XRouter.Gateway
             private set { isRunning = value; }
         }
 
-        [ConfigurationItem("Persist input tokens", "If checked, tokens created from this adapter will be persistently stored in database after each action in messageflow.", false)]
+        [ConfigurationItem("Persist input tokens", "If checked the message flow state of each token originated from this adapter will be persistently stored (eg. in a database) after performing each step in the message flow processing.", false)]
         public bool AreInputTokensPersistent { get; private set; }
 
         private Task runTask;

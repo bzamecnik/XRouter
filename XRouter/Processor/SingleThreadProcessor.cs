@@ -12,6 +12,13 @@ namespace XRouter.Processor
     /// with other threads via a shared queue where it acts as a consumer.
     /// It has a single message flow according which to process the tokens.
     /// </summary>
+    /// <remarks>
+    /// During processing within SingleThreadProcessor a single token lives in
+    /// a single instance of token (no other instances are created). So that
+    /// each token instance can be accessed parallelly. Updates to the
+    /// token instance might be synchronized with its persistent representation
+    /// (eg. in a database).
+    /// </remarks>
     class SingleThreadProcessor
     {
         /// <summary>

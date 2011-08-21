@@ -13,7 +13,7 @@ namespace XRouter.Processor
         /// <summary>
         /// Creates a new message and adds it to the token.
         /// </summary>
-        /// <param name="targetToken">the token to be updated</param>
+        /// <param name="targetToken">token to be updated</param>
         /// <param name="messageName">name of the new message</param>
         /// <param name="message">contents of the new message</param>
         /// <param name="updatedToken">updated token</param>

@@ -14,8 +14,7 @@ namespace XRouter.Common.ComponentInterfaces
         /// </summary>
         /// <param name="updatingProcessorName">name of the processor which
         /// updates the token</param>
-        /// <param name="tokenGuid">identifier of the token to be updated
-        /// </param>
+        /// <param name="targetToken">token to be updated</param>
         /// <param name="messageFlowState">new state of the token's message
         /// flow</param>
         /// <seealso cref="XRouter.Common.MessageFlowState"/>
@@ -33,7 +32,7 @@ namespace XRouter.Common.ComponentInterfaces
         /// </remarks>
         /// <param name="updatingProcessorName">name of the processor which
         /// updates the token</param>
-        /// <param name="targetTokenGuid">identifier of the token to be updated</param>
+        /// <param name="targetToken">token to be updated</param>
         /// <param name="messageName">name of the message to be added</param>
         /// <param name="message">contents of the message to be added</param>
         void AddMessageToToken(
@@ -47,7 +46,7 @@ namespace XRouter.Common.ComponentInterfaces
         /// </summary>
         /// <param name="updatingProcessorName">name of the processor which
         /// updates the token</param>
-        /// <param name="targetToken">the token to be updated</param>
+        /// <param name="targetToken">token to be updated</param>
         /// <param name="sourceNodeName">name of the message flow node where
         /// the exception was thrown</param>
         /// <param name="message"></param>
@@ -66,7 +65,7 @@ namespace XRouter.Common.ComponentInterfaces
         /// </summary>
         /// <param name="updatingProcessorName">name of the processor which
         /// tries to finish the token</param>
-        /// <param name="tokenGuid">identifier of the token to be finished
+        /// <param name="token">token to be finished
         /// </param>
         /// <param name="resultMessage">reply going back the the original
         /// gateway</param>
