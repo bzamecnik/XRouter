@@ -6,7 +6,7 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using XRouter.Common;
-using XRouter.Data.Persistence;
+using XRouter.Data;
 
 namespace XRouter.Manager
 {

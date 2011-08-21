@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using XRouter.Common.Xrm;
 using XRouter.Common;
+using XRouter.Common.Xrm;
 
-namespace XRouter.Data.Persistence
+namespace XRouter.Data
 {
     /// <summary>
     /// Implements a persistent storage of tokens, application configuration,

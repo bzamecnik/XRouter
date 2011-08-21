@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using XRouter.Common;
 
-namespace XRouter.Data.Persistence
+namespace XRouter.Data
 {
     public class MemoryDataAccess : IDataAccess
     {

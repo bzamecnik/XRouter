@@ -3,13 +3,12 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Xml;
 using System.Xml.Linq;
 using XRouter.Common;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.Xrm;
+using XRouter.Data;
 using wcf = System.ServiceModel;
-using XRouter.Data.Persistence;
 
 namespace XRouter.Broker
 {
