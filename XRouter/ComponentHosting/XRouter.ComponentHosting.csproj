@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{75DA200B-E8F1-4698-ADA1-77611103174F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XRouter.ComponentHosting</RootNamespace>
+    <AssemblyName>XRouter.ComponentHosting</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XRouterService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DaemonNT\DaemonNT\DaemonNT.csproj">
+      <Project>{3CF25136-3BF3-4213-9FDC-1E80F2C75171}</Project>
+      <Name>DaemonNT</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ObjectConfigurator\ObjectConfigurator.csproj">
+      <Project>{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}</Project>
+      <Name>ObjectConfigurator</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Adapters\XRouter.Adapters.csproj">
+      <Project>{22D3C3BC-6341-4909-A5C1-CA8BE1455770}</Project>
+      <Name>XRouter.Adapters</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Broker\XRouter.Broker.csproj">
+      <Project>{AF28F3BF-7340-408E-B9AC-C9CE0F17A599}</Project>
+      <Name>XRouter.Broker</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\XRouter.Common.csproj">
+      <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
+      <Name>XRouter.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Gateway\XRouter.Gateway.csproj">
+      <Project>{67A83368-80F1-467D-950A-64DD5F1EAD6C}</Project>
+      <Name>XRouter.Gateway</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Processor\XRouter.Processor.csproj">
+      <Project>{69C0BC8F-EEF4-4DA8-B220-2B35AA20F273}</Project>
+      <Name>XRouter.Processor</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DaemonNT.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Misc\XRouterTest\Samples\sample1 a.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample1 ab.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample1 b.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample1 c.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample2 a.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample2 b.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample2 c.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample3 a.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample3 b.xml" />
+    <Content Include="Misc\XRouterTest\Samples\sample3 c.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Misc\XRouterTest\In\" />
+    <Folder Include="Misc\XRouterTest\OutA\" />
+    <Folder Include="Misc\XRouterTest\OutB\" />
+    <Folder Include="Misc\XRouterTest\OutC\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

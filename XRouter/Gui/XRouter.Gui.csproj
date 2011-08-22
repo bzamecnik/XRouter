@@ -1,0 +1,431 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C39EC164-BED9-4101-940B-E62A9411893D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XRouter.Gui</RootNamespace>
+    <AssemblyName>XRouter.Gui</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.AvalonEdit">
+      <HintPath>..\..\Lib\ThirdParty\AvalonEdit-4.0.0.7070\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="RibbonControlsLibrary, Version=4.0.0.11019, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\Lib\ThirdParty\RibbonControlsLibrary-4.0.0.11019\RibbonControlsLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="CommonControls\ListEditor.xaml.cs">
+      <DependentUpon>ListEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CommonControls\Resizer.cs" />
+    <Compile Include="CommonControls\TokenSelectionEditor.xaml.cs">
+      <DependentUpon>TokenSelectionEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CommonControls\UriEditor.xaml.cs">
+      <DependentUpon>UriEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CommonControls\XrmUriEditor.xaml.cs">
+      <DependentUpon>XrmUriEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationControls\Messageflow\MessageflowConfigurationControl.xaml.cs">
+      <DependentUpon>MessageflowConfigurationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationControls\Messageflow\MessageflowEdgePresenter.cs" />
+    <Compile Include="ConfigurationControls\Messageflow\MessageflowGraphPresenter.cs" />
+    <Compile Include="ConfigurationControls\Messageflow\MessageflowNodePresenter.cs" />
+    <Compile Include="ConfigurationControls\Messageflow\NodePropertiesEditors\ActionNodePropertiesEditor.xaml.cs">
+      <DependentUpon>ActionNodePropertiesEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationControls\Messageflow\NodePropertiesEditors\CbrNodePropertiesEditor.xaml.cs">
+      <DependentUpon>CbrNodePropertiesEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationControls\Messageflow\NodePropertiesEditors\EntryNodePropertiesEditor.xaml.cs">
+      <DependentUpon>EntryNodePropertiesEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationControls\Messageflow\NodePropertiesEditors\TerminatorNodePropertiesEditor.xaml.cs">
+      <DependentUpon>TerminatorNodePropertiesEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationControls\Messageflow\NodeSelectionManager.cs" />
+    <Compile Include="ConfigurationControls\Messageflow\TargetNodeSelector.xaml.cs">
+      <DependentUpon>TargetNodeSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationManager.cs" />
+    <Compile Include="ConfigurationTreeItem.cs" />
+    <Compile Include="LogViewControl.xaml.cs">
+      <DependentUpon>LogViewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\Generic.xaml.cs">
+      <DependentUpon>Generic.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IConfigurationControl.cs" />
+    <Compile Include="Themes\Properties\Resources.Designer.cs" />
+    <Compile Include="Themes\Properties\Settings.Designer.cs" />
+    <Compile Include="Themes\ThemeManager.cs" />
+    <Compile Include="TokensViewControl.xaml.cs">
+      <DependentUpon>TokensViewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\ThreadUtils.cs" />
+    <Compile Include="Xrm\DocumentTypeDescriptors\GeneralXDocumentTypeDescriptor.cs" />
+    <Compile Include="Xrm\DocumentTypeDescriptors\SchematronDocumentTypeDescriptor.cs" />
+    <Compile Include="Xrm\DocumentTypeDescriptors\XsltDocumentTypeDescriptor.cs" />
+    <Compile Include="Xrm\XDocumentTypeDescriptor.cs" />
+    <Compile Include="Xrm\XrmEditor.xaml.cs">
+      <DependentUpon>XrmEditor.xaml</DependentUpon>
+    </Compile>
+    <Page Include="CommonControls\ListEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CommonControls\TokenSelectionEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CommonControls\UriEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CommonControls\XrmUriEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfigurationControls\Adapter\AdapterConfigurationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ConfigurationControls\General\GeneralConfigurationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ConfigurationControls\Gateway\GatewayConfigurationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ConfigurationControls\Messageflow\MessageflowConfigurationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfigurationControls\Messageflow\NodePropertiesEditors\ActionNodePropertiesEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfigurationControls\Messageflow\NodePropertiesEditors\CbrNodePropertiesEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfigurationControls\Messageflow\NodePropertiesEditors\EntryNodePropertiesEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfigurationControls\Messageflow\NodePropertiesEditors\TerminatorNodePropertiesEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfigurationControls\Messageflow\TargetNodeSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfigurationControls\Processor\ProcessorConfigurationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="LogViewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConfigurationControls\Adapter\AdapterConfigurationControl.xaml.cs">
+      <DependentUpon>AdapterConfigurationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationControls\General\GeneralConfigurationControl.xaml.cs">
+      <DependentUpon>GeneralConfigurationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationControls\Gateway\GatewayConfigurationControl.xaml.cs">
+      <DependentUpon>GatewayConfigurationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurationControls\Processor\ProcessorConfigurationControl.xaml.cs">
+      <DependentUpon>ProcessorConfigurationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Themes\BubbleCreme\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\BureauBlack\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\BureauBlue\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\DavesGlossyControls\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ExpressionDark\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ExpressionLight\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\RainierOrange\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\RainierPurple\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\RainierRadialBlue\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ShinyBlue\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ShinyDarkGreen\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ShinyDarkPurple\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ShinyDarkTeal\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ShinyRed\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\TwilightBlue\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\UXMusingsBubblyBlue\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\UXMusingsGreen\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\UXMusingsRed\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\UXMusingsRoughGreen\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\UXMusingsRoughRed\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\WhistlerBlue\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TokensViewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xrm\XrmEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Themes\Properties\Resources.resx" />
+    <None Include="App.config" />
+    <None Include="Properties\DataSources\XRouter.Common.ApplicationConfiguration.datasource" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <None Include="Themes\Properties\Settings.settings" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DaemonNT\DaemonNT\DaemonNT.csproj">
+      <Project>{3CF25136-3BF3-4213-9FDC-1E80F2C75171}</Project>
+      <Name>DaemonNT</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ObjectConfigurator\ObjectConfigurator.csproj">
+      <Project>{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}</Project>
+      <Name>ObjectConfigurator</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SchemaTron\SchemaTron\SchemaTron.csproj">
+      <Project>{3095DD68-66F1-4DC9-AA60-564EF2FC1EE8}</Project>
+      <Name>SchemaTron</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SimpleDiagrammer\SimpleDiagrammer.csproj">
+      <Project>{C11BCFD6-9026-462E-A7CA-64037DFA974B}</Project>
+      <Name>SimpleDiagrammer</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Adapters\XRouter.Adapters.csproj">
+      <Project>{22D3C3BC-6341-4909-A5C1-CA8BE1455770}</Project>
+      <Name>XRouter.Adapters</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\XRouter.Common.csproj">
+      <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
+      <Name>XRouter.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Gateway\XRouter.Gateway.csproj">
+      <Project>{67A83368-80F1-467D-950A-64DD5F1EAD6C}</Project>
+      <Name>XRouter.Gateway</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Manager\XRouter.Manager.csproj">
+      <Project>{65687946-3002-4E95-8F35-A98EFDB615FD}</Project>
+      <Name>XRouter.Manager</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Processor\XRouter.Processor.csproj">
+      <Project>{69C0BC8F-EEF4-4DA8-B220-2B35AA20F273}</Project>
+      <Name>XRouter.Processor</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Link.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\1446_envelope_stamp_clsd_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Generic_Device.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\XML_Schema.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\OrgChartHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Button-exit-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Actions-tool-animator-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Actions-insert-link-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\link-go-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\nfs-unmount-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Actions-document-export-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Actions-document-import-icon.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

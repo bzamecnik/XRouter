@@ -5,6 +5,7 @@ using System.Xml;
 using DaemonNT;
 using XRouter.Common.ComponentInterfaces;
 using wcf = System.ServiceModel;
+using XRouter.Manager;
 
 namespace XRouter.Test.Common
 {
@@ -20,55 +21,62 @@ namespace XRouter.Test.Common
         /// Proxy to broker component which allows to communite with a running
         /// XRouter instance.
         /// </summary>
-        public IBrokerServiceForManagement BrokerProxy { get; private set; }
+        public IConsoleServer ConsoleServerProxy { get; private set; }
 
-        private static readonly string DefaultDaemonNtConfigFile =
-            @"DaemonNT.xml";
+        private static readonly string DefaultDaemonNtConfigFile = @"DaemonNT.xml";
 
-        private static readonly string DefaultServiceName = "xrouter";
+        private static readonly string DefaultXRouterServiceName = "xrouter";
+        private static readonly string DefaultXRouterManagerServiceName = "xroutermanager";
 
-        private IXRouterRunner runner;
+        private IServiceRunner xRouterRunner;
+        private IServiceRunner xRouterManagerRunner;
 
         public XRouterManager()
-            : this(DefaultDaemonNtConfigFile, DefaultServiceName)
+            : this(DefaultDaemonNtConfigFile, DefaultXRouterServiceName, DefaultXRouterManagerServiceName)
         {
         }
 
-        public XRouterManager(string daemonNtConfigFile, string serviceName)
+        public XRouterManager(string daemonNtConfigFile, string xRouterServiceName, string xRouterManagerServiceName)
         {
-            runner = new ProcessXRouterRunner(daemonNtConfigFile, serviceName);
-            Start();
-            BrokerProxy = GetBrokerServiceProxy();
+            xRouterRunner = new ProcessRunner(daemonNtConfigFile, xRouterServiceName);
+            xRouterManagerRunner = new ProcessRunner(daemonNtConfigFile, xRouterManagerServiceName);
+            xRouterManagerRunner.Start();
+            ConsoleServerProxy = GetConsoleServerProxy();
         }
 
         #region IDisposable Members
 
         public void Dispose()
         {
-            Stop();
+            xRouterManagerRunner.Stop();
         }
 
         #endregion
 
-        private IBrokerServiceForManagement GetBrokerServiceProxy()
+        private IConsoleServer GetConsoleServerProxy()
         {
             // NOTE: code taken from XRouter.Gui.ConfigurationManager
-            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress("net.pipe://localhost/XRouter.ServiceForManagement");
-            var binding = new wcf.NetNamedPipeBinding(wcf.NetNamedPipeSecurityMode.None) { MaxReceivedMessageSize = int.MaxValue };
-            binding.ReaderQuotas = new XmlDictionaryReaderQuotas() { MaxBytesPerRead = int.MaxValue, MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue };
-            wcf.ChannelFactory<IBrokerServiceForManagement> channelFactory = new wcf.ChannelFactory<IBrokerServiceForManagement>(binding, endpointAddress);
+            wcf.EndpointAddress endpointAddress = new wcf.EndpointAddress("http://localhost:9090/XRouter.ConsoleService/ConsoleServer");
+            // set binding (WebService - SOAP/HTTP)
+            wcf.WSHttpBinding binding = new wcf.WSHttpBinding();
+            binding.MaxReceivedMessageSize = int.MaxValue;
+            binding.ReaderQuotas = new XmlDictionaryReaderQuotas() {
+                MaxBytesPerRead = int.MaxValue,
+                MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue
+            };
+            wcf.ChannelFactory<IConsoleServer> channelFactory = new wcf.ChannelFactory<IConsoleServer>(binding, endpointAddress);
             return channelFactory.CreateChannel();
         }
 
-        private void Start()
+        public void StartXRouter()
         {
             Console.WriteLine("Starting XRouter service in debug mode.");
-            runner.Start();
+            xRouterRunner.Start();
         }
 
-        private void Stop()
+        public void StopXRouter()
         {
-            runner.Stop();
+            xRouterRunner.Stop();
             Console.WriteLine("XRouter service stopped.");
         }
     }

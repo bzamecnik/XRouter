@@ -1,15 +1,17 @@
-﻿XRouter project
+XRouter project
 ===============
 
-XRouter can integrate various systems which communicate via XML messages. It is
+XRouter can integrate various systems communicating via XML messages. It is
 a simple, easy-to-use, configurable, light-weight, efficient alternative to
-complex enterprise service bus (ESB) solutions. It is released as open-source
-software.
+complex enterprise service bus (ESB) solutions. It is well-designed, thoroughly
+documented and released as an open-source software.
 
 The XRouter project consists of several subprojects:
-- XRouter - XML router itself
-- SchemaTron - ISO Schematron validator implemented in native C#
+- XRouter - XML router itself - routing service and a GUI
+- SchemaTron - Native C# validator of ISO Schematron language
 - DaemonNT - Windows service hosting made easy
+- ObjectConfigurator - reflection-based configuration utility
+- SimpleDiagrammer - interactive visualizer of graphs
 
 Homepage
 --------
@@ -51,8 +53,8 @@ for details.
 Acknowledgements
 ----------------
 
-The XRouter project was realized as a Software Project at Mathematical-Physical
-Faculty of Charles University in Prague, Czech Republic.
+The XRouter project was realized as a Software Project at the Faculty of
+Mathematics and Physics of Charles University in Prague, Czech Republic.
 
 Many thanks to Mgr. Martin Nečaský, Ph.D. for supervising the Software Project.
 

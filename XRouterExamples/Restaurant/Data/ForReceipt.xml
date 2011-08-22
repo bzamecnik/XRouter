@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Receipt>
+  <Date>10.8.2011 14:35:22</Date>
+  <Table>2</Table>
+  <Items>
+    <Item Name="Guláš       ">
+      <Quantity>2</Quantity>
+      <TotalPrice>22</TotalPrice>
+    </Item>
+    <Item Name="Svijany 11  ">
+      <Quantity>2</Quantity>
+      <TotalPrice>46</TotalPrice>
+    </Item>
+  </Items>
+</Receipt>

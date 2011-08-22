@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using XRouter.Common;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common.Utils;
 using XRouter.Processor.MessageFlowBuilding;
@@ -12,7 +13,7 @@ namespace XRouter.Test.Integration
     /// <summary>
     /// Utilities for testing by hand. Each method is runnable separetely.
     /// </summary>
-    class HandUtils
+    class HandUtils : IDisposable
     {
         /// <summary>
         /// Path to original files - test configurations and data.
@@ -30,10 +31,10 @@ namespace XRouter.Test.Integration
         public HandUtils()
         {
             xrouterManager = new XRouterManager();
-            configManager = new ConfigurationManager(xrouterManager.BrokerProxy)
-            {
-                BasePath = OriginalsPath
-            };
+            //configManager = new ConfigurationManager(xrouterManager.ConsoleServerProxy)
+            //{
+            //    BasePath = OriginalsPath
+            //};
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace XRouter.Test.Integration
         //[Fact]
         public void LoadCurrentConfiguration()
         {
-            var configuration = xrouterManager.BrokerProxy.GetConfiguration();
+            var configuration = xrouterManager.ConsoleServerProxy.GetConfiguration();
             Console.WriteLine(configuration.Content.XDocument.ToString());
         }
 
@@ -84,9 +85,9 @@ namespace XRouter.Test.Integration
                 });
             var messageFlow = new MessageFlowConfiguration("sendToA", 1)
             {
-                Nodes = { sendToA, terminator, cbr },
-                RootNode = sendToA
+                Nodes = { sendToA, terminator, cbr }
             };
+            messageFlow.GetEntryNode().NextNode = sendToA;
             #endregion
 
             var xrm = configManager.LoadXrmItems(
@@ -132,5 +133,50 @@ namespace XRouter.Test.Integration
                 }
             }
         }
+
+        public void ConfigureWebServiceAdapter()
+        {
+            var httpServiceAdapter = new XRouter.Adapters.HttpServiceAdapter()
+            {
+                Uri = "http://localhost:8123/FloodConsumerWebService"
+            };
+            XDocument webServiceConfig = ObjectConfigurator.Configurator.SaveConfiguration(httpServiceAdapter);
+            //            XDocument webServiceConfig = XDocument.Parse(
+            //@"
+            //<objectConfig>
+            //  <item name='Uri'>localhost:8123</item>
+            //  <item name='AreInputTokensPersistent'>False</item>
+            //</objectConfig>
+            //");
+            var webService = new AdapterConfiguration(
+                "floodConsumerWebService", "gateway", "httpServiceAdapter", webServiceConfig);
+            XDocument config = new XDocument();
+            config.Add(new XElement("config"));
+            XSerializer.Serializer<AdapterConfiguration>(webService, config.Root);
+
+            Console.WriteLine(config.ToString().Replace('"', '\''));
+        }
+
+        public void SaveConfig()
+        {
+            var dataAccess = new XRouter.Data.MsSqlDataAccess();
+            dataAccess.Initialize("Server=192.168.10.1;Database=XRouter;User Id=XRouter_AccessDB;Password=XRouter;");
+            string[] configLines = System.IO.File.ReadAllLines(@"Debug\config.xml");
+            if (configLines[0].StartsWith("<?xml"))
+            {
+                configLines[0] = "";
+            }
+            string config = string.Join("\n", configLines);
+            dataAccess.SaveConfiguration(config);
+        }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            xrouterManager.Dispose();
+        }
+
+        #endregion
     }
 }

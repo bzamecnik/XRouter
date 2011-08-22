@@ -43,6 +43,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractLogReader.cs" />
     <Compile Include="AdapterConfiguration.cs" />
     <Compile Include="AdapterType.cs" />
     <Compile Include="ApplicationConfiguration.cs" />
@@ -50,7 +51,6 @@
     <Compile Include="ComponentInterfaces\IBrokerServiceForComponent.cs" />
     <Compile Include="ComponentInterfaces\IBrokerServiceForGateway.cs" />
     <Compile Include="ComponentInterfaces\IBrokerServiceForHost.cs" />
-    <Compile Include="ComponentInterfaces\IBrokerServiceForManagement.cs" />
     <Compile Include="ComponentInterfaces\IBrokerServiceForProcessor.cs" />
     <Compile Include="ComponentInterfaces\IGatewayService.cs" />
     <Compile Include="ComponentType.cs" />
@@ -60,15 +60,13 @@
     <Compile Include="EventLogEntry.cs" />
     <Compile Include="EventLogReader.cs" />
     <Compile Include="GatewayProvider.cs" />
-    <Compile Include="IComponentController.cs" />
     <Compile Include="ComponentInterfaces\IComponentService.cs" />
     <Compile Include="ComponentInterfaces\IProcessorService.cs" />
     <Compile Include="LogLevelFilters.cs" />
     <Compile Include="MessageFlowConfig\ActionType.cs" />
     <Compile Include="MessageFlowConfig\CbrNodeConfiguration.cs" />
+    <Compile Include="MessageFlowConfig\EntryNodeConfiguration.cs" />
     <Compile Include="MessageFlowConfig\TokenSelectionConfigurationItemType.cs" />
-    <Compile Include="Persistence\MemoryDataAccess.cs" />
-    <Compile Include="Persistence\PersistentStorage.cs" />
     <Compile Include="ProcessorProvider.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="LimitedConcurrencyLevelTaskScheduler.cs" />
@@ -98,15 +96,18 @@
     <ProjectReference Include="..\..\DaemonNT\DaemonNT\DaemonNT.csproj">
       <Project>{3CF25136-3BF3-4213-9FDC-1E80F2C75171}</Project>
       <Name>DaemonNT</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\ObjectConfigurator\ObjectConfigurator.csproj">
       <Project>{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}</Project>
       <Name>ObjectConfigurator</Name>
+      <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Data\XRouter.Data.csproj">
-      <Project>{873A6405-E524-4D55-B0F0-B125DE17655B}</Project>
-      <Name>XRouter.Data</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app-config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

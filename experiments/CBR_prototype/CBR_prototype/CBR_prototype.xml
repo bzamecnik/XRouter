@@ -1,6 +1,0 @@
-<cbr>
- <predicate id="p1..(0;10)" schematron-path="..\..\p1.xml"/> 
- <predicate id="p2..(10;20)" schematron-path="..\..\p2.xml"/> 
- <predicate id="p3..(20;30)" schematron-path="..\..\p3.xml"/>
- <predicate id="p4..(30;40)" schematron-path="..\..\p4.xml"/>
-</cbr>

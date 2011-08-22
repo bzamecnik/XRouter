@@ -1,5 +1,7 @@
 ﻿namespace DaemonNT.Logging
 {
+    using System;
+    using System.Security;
     using DaemonNT.Configuration;
 
     /// <summary>
@@ -45,7 +47,15 @@
             Logger logger = new Logger();
             logger.serviceName = serviceName;
             logger.isDebugMode = isDebugMode;
-            logger.Event = EventLogger.Create(serviceName, EventBufferSize);
+            try
+            {
+                logger.Event = EventLogger.Create(serviceName, EventBufferSize);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                throw new ApplicationException(
+                    "Cannot create event log. Try to run the program with administrator privileges.");
+            }
 
             return logger;
         }
@@ -55,8 +65,16 @@
 
         internal void CreateTraceLogger(TraceLoggerSettings settings)
         {
-            this.Trace = TraceLogger.Create(serviceName, settings.BufferSize,
-                this.isDebugMode, settings, this.Event);
+            try
+            {
+                this.Trace = TraceLogger.Create(serviceName, settings.BufferSize,
+                    this.isDebugMode, settings, this.Event);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                throw new ApplicationException(
+                    "Cannot create trace log. Try to run the program with administrator privileges.");
+            }
         }
 
         internal void Close(bool shutdown)

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<menu>
+  <validSinceDate>2011/07/27</validSinceDate>
+  <currency>CZK</currency>
+  <foods>
+    <food id="food0001" category="dinner">
+      <name>Svíčková    </name>
+      <description>Hovězí svíčková na smetaně s houskovými knedlíky</description>
+      <price>150</price>
+      <amount unit="kg">0.25</amount>
+    </food>
+    <food id="food0002" category="soup">
+      <name>Guláš       </name>
+      <description>Gulášová polévka</description>
+      <price>40</price>
+      <amount unit="l">0.5</amount>
+    </food>
+    <food id="food0003" category="appetizer">
+      <name>Utopenec    </name>
+      <description>Utopenec s chlebem a hořčicí</description>
+      <price>40</price>
+      <amount unit="kg">0.15</amount>
+    </food>
+    <food id="food0004" category="dinner">
+      <name>Šv. knedlíky</name>
+      <description>Švestkové knedlíky s tvarohem</description>
+      <price>40</price>
+      <amount unit="kg">0.15</amount>
+    </food>
+    <food id="food0005" category="dinner">
+      <name>Špagety     </name>
+      <description>Boloňské špagety</description>
+      <price>80</price>
+      <amount unit="kg">0.40</amount>
+    </food>
+    <food id="food0006" category="dinner">
+      <name>Rizoto      </name>
+      <description>Rizoto z hovězího masa posypané sýrem</description>
+      <price>70</price>
+      <amount unit="kg">0.40</amount>
+    </food>
+    <food id="food0007" category="dinner">
+      <name>Šunkofleky  </name>
+      <description>Zapečené těstoviny se šunkovým salámem</description>
+      <price>50</price>
+      <amount unit="kg">0.40</amount>
+    </food>
+    <food id="food0008" category="appetizer">
+      <name>Hlemýždi    </name>
+      <description>Nakládaní hlemýždi, extra slizcí</description>
+      <price>100</price>
+      <amount unit="kg">0.20</amount>
+    </food>
+    <food id="food0009" category="appetizer">
+      <name>Ústřice     </name>
+      <description>Čerstvé ústřice na citrónu</description>
+      <price>120</price>
+      <amount unit="kg">0.30</amount>
+    </food>
+  </foods>
+  <drinks>
+    <drink id="drink0001" category="water" alcoholic="false">
+      <name>Minerálka   </name>
+      <description>v láhvi</description>
+      <price>15</price>
+      <amount unit="l">0.5</amount>
+    </drink>
+    <drink id="drink0002" category="beer" alcoholic="true">
+      <name>Svijany 10% </name>
+      <description>točená</description>
+      <price>20</price>
+      <amount unit="l">0.5</amount>
+    </drink>
+    <drink id="drink0003" category="coffee" alcoholic="false">
+      <name>Espresso    </name>
+      <description></description>
+      <price>30</price>
+      <amount unit="l">0.1</amount>
+    </drink>
+    <drink id="drink0004" category="soft_drink" alcoholic="false">
+      <name>Kofola      </name>
+      <description>točená</description>
+      <price>25</price>
+      <amount unit="l">0.5</amount>
+    </drink>
+    <drink id="drink0005" category="wine" alcoholic="true">
+      <name>Rosé Špigle </name>
+      <description>Rosé Špigle-Bočky 2006</description>
+      <price>200</price>
+      <amount unit="l">0.75</amount>
+    </drink>
+  </drinks>
+</menu>

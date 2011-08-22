@@ -3,12 +3,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Xml;
 using System.Xml.Linq;
 using XRouter.Common;
 using XRouter.Common.ComponentInterfaces;
-using XRouter.Common.Persistence;
 using XRouter.Common.Xrm;
+using XRouter.Data;
 using wcf = System.ServiceModel;
 
 namespace XRouter.Broker
@@ -18,6 +17,10 @@ namespace XRouter.Broker
     /// the other components. It also provides a web service for XRouter
     /// management.
     /// </summary>
+    /// <remarks>
+    /// Application configuration is assumed not to change during run-time,
+    /// so it is cached and never updated after being loaded initially.
+    /// </remarks>
     [wcf.ServiceBehavior(InstanceContextMode = wcf.InstanceContextMode.Single)]
     public class BrokerService : IBrokerService, IBrokerServiceForDispatcher
     {
@@ -30,12 +33,9 @@ namespace XRouter.Broker
         private Dispatching.Dispatcher dispatcher;
         private XmlResourceManager xmlResourceManager;
 
+        private ApplicationConfiguration appConfigCache;
+
         private object syncLock = new object();
-
-        private wcf.ServiceHost hostForManagemenet;
-
-        private EventLogReader eventLogReader;
-        private TraceLogReader traceLogReader;
 
         public BrokerService()
         {
@@ -47,54 +47,29 @@ namespace XRouter.Broker
             ApplicationConfiguration config = GetConfiguration();
 
             #region Prepare componentsAccessors
-            foreach (GatewayProvider gatewayProvider in gatewayProviders) {
+            foreach (GatewayProvider gatewayProvider in gatewayProviders)
+            {
                 GatewayAccessor accessor = new GatewayAccessor(gatewayProvider.Name, gatewayProvider.Gateway, config);
                 componentsAccessors.AddOrUpdate(accessor.ComponentName, accessor, (key, oldValue) => accessor);
             }
-            foreach (ProcessorProvider processorProvider in processorProviders) {
+            foreach (ProcessorProvider processorProvider in processorProviders)
+            {
                 ProcessorAccessor accessor = new ProcessorAccessor(processorProvider.Name, processorProvider.Processor, config);
                 componentsAccessors.AddOrUpdate(accessor.ComponentName, accessor, (key, oldValue) => accessor);
             }
             #endregion
 
-            eventLogReader = new EventLogReader(LogDirectory);
-            traceLogReader = new TraceLogReader(LogDirectory);
-
             xmlResourceManager = new XmlResourceManager(storage);
             dispatcher = new Dispatching.Dispatcher(this);
-
-            #region Publish IBrokerServiceForManagement
-            // TODO: make the management service host:port configurable
-            hostForManagemenet = new wcf.ServiceHost(this, new Uri("http://localhost:9090/XRouter.ServiceForManagement"));
-            wcf.NetNamedPipeBinding binding = new wcf.NetNamedPipeBinding(wcf.NetNamedPipeSecurityMode.None) { MaxReceivedMessageSize = int.MaxValue };
-            binding.ReaderQuotas = new XmlDictionaryReaderQuotas() { MaxBytesPerRead = int.MaxValue, MaxArrayLength = int.MaxValue, MaxStringContentLength = int.MaxValue };
-
-            wcf.Description.ServiceMetadataBehavior smb = new wcf.Description.ServiceMetadataBehavior();
-            smb.HttpGetEnabled = true;
-            smb.HttpGetUrl = new Uri("http://localhost:9091/XRouter.ServiceForManagement");
-            hostForManagemenet.Description.Behaviors.Add(smb);
-
-            foreach (var b in hostForManagemenet.Description.Behaviors) {
-                if (b is wcf.Description.ServiceDebugBehavior) {
-                    var sdb = (wcf.Description.ServiceDebugBehavior)b;
-                    sdb.IncludeExceptionDetailInFaults = true;
-                }
-            }
-
-            // TODO: make the management service net pipe address configurable
-            hostForManagemenet.AddServiceEndpoint(typeof(IBrokerServiceForManagement), binding,
-                "net.pipe://localhost/XRouter.ServiceForManagement");
-
-            hostForManagemenet.Open();
-            #endregion
         }
 
         public void Stop()
         {
             // Make sure that all operations are completed and none of them will be running after this call
+            // TODO: this can potentially wait indefinitely, try cutting it
             Monitor.Enter(syncLock);
+            //Monitor.TryEnter(syncLock, new TimeSpan(0, 0, 0, 30));
             dispatcher.Stop();
-            hostForManagemenet.Close();
         }
 
         public ApplicationConfiguration GetConfiguration(XmlReduction reduction)
@@ -106,36 +81,26 @@ namespace XRouter.Broker
 
         public ApplicationConfiguration GetConfiguration()
         {
-            XDocument configXml = storage.GetApplicationConfiguration();
-            var result = new ApplicationConfiguration(configXml);
-            return result;
+            if (appConfigCache == null)
+            {
+                XDocument configXml = storage.GetApplicationConfiguration();
+                appConfigCache = new ApplicationConfiguration(configXml);
+            }
+            return appConfigCache;
         }
 
-        public void ChangeConfiguration(ApplicationConfiguration config)
+        public void UpdateConfiguration(ApplicationConfiguration config)
         {
+            appConfigCache = config;
             storage.SaveApplicationConfiguration(config.Content);
 
             // TODO: why not just iterate over componentsAccessors.Values?
             ComponentAccessor[] components = componentsAccessors.Values.ToArray();
-            foreach (var component in components) {
+            foreach (var component in components)
+            {
                 var reducedConfig = config.GetReducedConfiguration(component.ConfigurationReduction);
                 component.UpdateConfig(reducedConfig);
             }
-        }
-
-        public EventLogEntry[] GetEventLogEntries(DateTime minDate, DateTime maxDate, LogLevelFilters logLevelFilter, int pageSize, int pageNumber)
-        {
-            return eventLogReader.GetEntries(minDate, maxDate, logLevelFilter, pageSize, pageNumber);
-        }
-
-        public TraceLogEntry[] GetTraceLogEntries(DateTime minDate, DateTime maxDate, LogLevelFilters logLevelFilter, int pageSize, int pageNumber)
-        {
-            return traceLogReader.GetEntries(minDate, maxDate, logLevelFilter, pageSize, pageNumber);
-        }
-
-        public Token[] GetTokens(int pageSize, int pageNumber)
-        {
-            return storage.GetTokens(pageSize, pageNumber);
         }
 
         IEnumerable<ProcessorAccessor> IBrokerServiceForDispatcher.GetProcessors()
@@ -157,23 +122,26 @@ namespace XRouter.Broker
             return result;
         }
 
-        void IBrokerServiceForDispatcher.UpdateTokenAssignedProcessor(Guid tokenGuid, string assignedProcessor)
+        Token IBrokerServiceForDispatcher.UpdateTokenAssignedProcessor(Guid tokenGuid, string assignedProcessor)
         {
-            storage.UpdateToken(tokenGuid, delegate(Token token) {
+            return storage.UpdateToken(tokenGuid, delegate(Token token)
+            {
                 token.UpdateMessageFlowState(mfs => { mfs.AssignedProcessor = assignedProcessor; });
             });
         }
 
-        void IBrokerServiceForDispatcher.UpdateTokenMessageFlow(Guid tokenGuid, Guid messageFlowGuid)
+        Token IBrokerServiceForDispatcher.UpdateTokenMessageFlow(Guid tokenGuid, Guid messageFlowGuid)
         {
-            storage.UpdateToken(tokenGuid, delegate(Token token) {
+            return storage.UpdateToken(tokenGuid, delegate(Token token)
+            {
                 token.UpdateMessageFlowState(mfs => { mfs.MessageFlowGuid = messageFlowGuid; });
             });
         }
 
-        void IBrokerServiceForDispatcher.UpdateTokenLastResponseFromProcessor(Guid tokenGuid, DateTime lastResponse)
+        Token IBrokerServiceForDispatcher.UpdateTokenLastResponseFromProcessor(Guid tokenGuid, DateTime lastResponse)
         {
-            storage.UpdateToken(tokenGuid, delegate(Token token) {
+            return storage.UpdateToken(tokenGuid, delegate(Token token)
+            {
                 token.UpdateMessageFlowState(mfs => { mfs.LastResponseFromProcessor = lastResponse; });
             });
         }
@@ -194,12 +162,15 @@ namespace XRouter.Broker
             }
         }
 
-        public void UpdateTokenMessageFlowState(string updatingProcessorName, Guid tokenGuid, MessageFlowState messageFlowState)
+        public void UpdateTokenMessageFlowState(string updatingProcessorName, Token targetToken,
+            MessageFlowState messageFlowState)
         {
             lock (syncLock)
             {
-                storage.UpdateToken(tokenGuid, delegate(Token token) {
-                    if (messageFlowState.AssignedProcessor == updatingProcessorName) {
+                storage.UpdateToken(targetToken, delegate(Token token)
+                {
+                    if (messageFlowState.AssignedProcessor == updatingProcessorName)
+                    {
                         messageFlowState.LastResponseFromProcessor = DateTime.Now;
                         token.SetMessageFlowState(messageFlowState);
                     }
@@ -207,11 +178,12 @@ namespace XRouter.Broker
             }
         }
 
-        public void AddMessageToToken(string updatingProcessorName, Guid targetTokenGuid, string messageName, SerializableXDocument message)
+        public void AddMessageToToken(string updatingProcessorName, Token targetToken,
+            string messageName, SerializableXDocument message)
         {
             lock (syncLock)
             {
-                storage.UpdateToken(targetTokenGuid, delegate(Token token)
+                storage.UpdateToken(targetToken, delegate(Token token)
                 {
                     MessageFlowState messageflowState = token.GetMessageFlowState();
                     if (messageflowState.AssignedProcessor == updatingProcessorName)
@@ -223,12 +195,16 @@ namespace XRouter.Broker
             }
         }
 
-        public void AddExceptionToToken(string updatingProcessorName, Guid targetTokenGuid, string sourceNodeName, string message, string stackTrace)
+        public void AddExceptionToToken(string updatingProcessorName, Token targetToken,
+            string sourceNodeName, string message, string stackTrace)
         {
-            lock (syncLock) {
-                storage.UpdateToken(targetTokenGuid, delegate(Token token) {
+            lock (syncLock)
+            {
+                storage.UpdateToken(targetToken, delegate(Token token)
+                {
                     MessageFlowState messageflowState = token.GetMessageFlowState();
-                    if (messageflowState.AssignedProcessor == updatingProcessorName) {
+                    if (messageflowState.AssignedProcessor == updatingProcessorName)
+                    {
                         token.UpdateMessageFlowState(mfs => { mfs.LastResponseFromProcessor = DateTime.Now; });
                         token.AddException(sourceNodeName, message, stackTrace);
                     }
@@ -236,25 +212,31 @@ namespace XRouter.Broker
             }
         }
 
-        public void FinishToken(string updatingProcessorName, Guid tokenGuid, SerializableXDocument resultMessage)
+        public void FinishToken(string updatingProcessorName, Token targetToken,
+            SerializableXDocument resultMessage)
         {
             lock (syncLock)
             {
-                Token token = storage.GetToken(tokenGuid);
-                MessageFlowState messageflowState = token.GetMessageFlowState();
+                MessageFlowState messageflowState = targetToken.GetMessageFlowState();
                 if (messageflowState.AssignedProcessor == updatingProcessorName)
                 {
-                    storage.UpdateToken(tokenGuid, delegate(Token t) {
-                        t.UpdateMessageFlowState(mfs => { mfs.LastResponseFromProcessor = DateTime.Now; });
+                    storage.UpdateToken(targetToken, delegate(Token token)
+                    {
+                        token.UpdateMessageFlowState(mfs => { mfs.LastResponseFromProcessor = DateTime.Now; });
                     });
 
-                    XDocument sourceMetadata = token.GetSourceMetadata();
-                    string sourceGatewayName = token.GetSourceAddress().GatewayName;
-                    GatewayAccessor sourceGateway = componentsAccessors.Values.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == sourceGatewayName);
-                    sourceGateway.ReceiveReturn(tokenGuid, resultMessage, new SerializableXDocument(sourceMetadata));
+                    XDocument sourceMetadata = targetToken.GetSourceMetadata();
+                    var sourceAdress = targetToken.GetSourceAddress();
+                    if (sourceAdress != null)
+                    {
+                        string sourceGatewayName = sourceAdress.GatewayName;
+                        GatewayAccessor sourceGateway = componentsAccessors.Values.OfType<GatewayAccessor>().SingleOrDefault(gwa => gwa.ComponentName == sourceGatewayName);
+                        sourceGateway.ReceiveReturn(targetToken.Guid, resultMessage, new SerializableXDocument(sourceMetadata));
+                    }
 
-                    storage.UpdateToken(tokenGuid, delegate(Token t) {
-                        t.State = TokenState.Finished;
+                    storage.UpdateToken(targetToken, delegate(Token token)
+                    {
+                        token.State = TokenState.Finished;
                     });
                 }
             }
@@ -263,8 +245,10 @@ namespace XRouter.Broker
         public SerializableXDocument SendMessage(EndpointAddress address, SerializableXDocument message, SerializableXDocument metadata)
         {
             ComponentAccessor component;
-            if (componentsAccessors.TryGetValue(address.GatewayName, out component)) {
-                if (component is GatewayAccessor) {
+            if (componentsAccessors.TryGetValue(address.GatewayName, out component))
+            {
+                if (component is GatewayAccessor)
+                {
                     GatewayAccessor gateway = (GatewayAccessor)component;
                     SerializableXDocument result = gateway.SendMessageToOutputEndPoint(address, message, metadata);
                     return result;

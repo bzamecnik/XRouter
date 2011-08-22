@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security;
 using System.ServiceProcess;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -45,15 +46,16 @@ namespace DaemonNT
             Logger logger = null;
             try
             {
-                // create event logger
+                // create logger, including event logger
                 logger = Logger.Create(serviceName, true);
 
                 // load settings and initialize constructs
                 ServiceDebugHost serviceHost = null;
+                ServiceSettings serviceSettings;
+                serviceSettings = ConfigProvider.LoadServiceSettings(serviceName, ConfigFile);
+                logger.CreateTraceLogger(serviceSettings.TraceLoggerSettings);
                 try
                 {
-                    ServiceSettings serviceSettings = ConfigProvider.LoadServiceSettings(serviceName, ConfigFile);
-                    logger.CreateTraceLogger(serviceSettings.TraceLoggerSettings);
                     Service service = TypesProvider.CreateService(serviceSettings.TypeClass, serviceSettings.TypeAssembly);
                     serviceHost = new ServiceDebugHost(service, serviceName, serviceSettings, logger);
                 }
@@ -115,7 +117,8 @@ namespace DaemonNT
         /// <param name="serviceName">Service name</param>
         public void DebugStop(string serviceName)
         {
-            if (!serviceHosts.ContainsKey(serviceName)) {
+            if (!serviceHosts.ContainsKey(serviceName))
+            {
                 throw new ArgumentException(string.Format(
                     "Service '{0}' is not running.", serviceName), "serviceName");
             }
@@ -138,15 +141,15 @@ namespace DaemonNT
             bool shutdown = false;
             try
             {
-                // create logger
+                // create logger, including event logger
                 logger = Logger.Create(serviceName, false);
 
                 // load settings and initialize constructs
                 ServiceRuntimeHost serviceHost = null;
+                ServiceSettings serviceSettings = ConfigProvider.LoadServiceSettings(serviceName, ConfigFile);
+                logger.CreateTraceLogger(serviceSettings.TraceLoggerSettings);
                 try
                 {
-                    ServiceSettings serviceSettings = ConfigProvider.LoadServiceSettings(serviceName, ConfigFile);
-                    logger.CreateTraceLogger(serviceSettings.TraceLoggerSettings);
                     Service service = TypesProvider.CreateService(serviceSettings.TypeClass, serviceSettings.TypeAssembly);
                     serviceHost = new ServiceRuntimeHost(service, serviceName, serviceSettings, logger);
                 }

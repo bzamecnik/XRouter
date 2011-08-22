@@ -1,7 +1,0 @@
-Int32;70;83
-String_2;274;208
-String_1;275;154
-String;280;100
-String[];173;147
-List`1;86;144
-List<String>;47;148

@@ -36,3 +36,4 @@ StyleCop.Cache
 docs/XRouter/*
 docs/SchemaTron/*
 docs/DaemonNT/*
+*.aux

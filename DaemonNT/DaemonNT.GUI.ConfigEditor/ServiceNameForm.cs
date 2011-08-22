@@ -9,20 +9,22 @@ using System.Windows.Forms;
 
 namespace DaemonNT.GUI.ConfigEditor
 {
-    public partial class ServiceNameForm : Form
+    public partial class UniqueNameForm : Form
     {
-        public string ServiceName { get; set; }
+        public string EditedName { get; set; }
         public IList<string> ExistingNames { get; set; }
 
-        public ServiceNameForm()
+        public UniqueNameForm(string formTitle, string message)
         {
             InitializeComponent();
+            Text = formTitle;
+            messageLabel.Text = message;
             ExistingNames = new List<string>();
         }
 
         private void serviceNameForm_Load(object sender, EventArgs e)
         {
-            serviceNameTextBox.Text = ServiceName;
+            serviceNameTextBox.Text = EditedName;
             serviceNameTextBox.Focus();
             EnableOkButtonOnGoodServiceName();
         }
@@ -31,7 +33,7 @@ namespace DaemonNT.GUI.ConfigEditor
         {
             if (this.DialogResult == System.Windows.Forms.DialogResult.OK)
             {
-                ServiceName = serviceNameTextBox.Text;
+                EditedName = serviceNameTextBox.Text;
             }
         }
 

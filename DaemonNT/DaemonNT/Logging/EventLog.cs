@@ -51,7 +51,9 @@ namespace DaemonNT.Logging
                     throw new ArgumentException(String.Format("Unsupported log type '{0}'", logTypeStr));
             }
 
-            return string.Format("{0}\t{1}\t{2}", dateTimeStr, logTypeStr, this.Message);
+            // the event log record must not span multiple lines!
+            string message = this.Message.Replace('\n', ' ').Replace('\r', ' ');
+            return string.Format("{0}\t{1}\t{2}", dateTimeStr, logTypeStr, message);
         }
 
         public override string ToString()

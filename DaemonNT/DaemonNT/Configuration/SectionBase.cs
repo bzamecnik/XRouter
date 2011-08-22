@@ -52,5 +52,10 @@
                 return sections.Keys;
             }
         }
+
+        public void RemoveSection(string sectionName)
+        {
+            sections.Remove(sectionName);
+        }
     }
 }

@@ -48,10 +48,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationManager.cs" />
-    <Compile Include="DaemonNtDebugXRouterRunner.cs" />
-    <Compile Include="IXRouterRunner.cs" />
+    <Compile Include="DaemonNtDebugRunner.cs" />
+    <Compile Include="IServiceRunner.cs" />
     <Compile Include="LogToFileWebService.cs" />
-    <Compile Include="ProcessXRouterRunner.cs" />
+    <Compile Include="ProcessRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextGenerator.cs" />
     <Compile Include="ThreadXRouterRunner.cs" />
@@ -67,6 +67,11 @@
     <ProjectReference Include="..\Common\XRouter.Common.csproj">
       <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
       <Name>XRouter.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Manager\XRouter.Manager.csproj">
+      <Project>{65687946-3002-4E95-8F35-A98EFDB615FD}</Project>
+      <Name>XRouter.Manager</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Processor\XRouter.Processor.csproj">

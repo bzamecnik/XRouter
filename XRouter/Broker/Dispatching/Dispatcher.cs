@@ -29,7 +29,7 @@ namespace XRouter.Broker.Dispatching
         private object tokenDispatchingLock = new object();
 
         private Task backgroundCheckings;
-        private bool isStopping;
+        private volatile bool isStopping;
 
         internal Dispatcher(IBrokerServiceForDispatcher brokerService)
         {
@@ -37,6 +37,8 @@ namespace XRouter.Broker.Dispatching
 
             tokenDispatchingTaskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(
                 MaxTokenDispatchingConcurrencyLevel));
+            // NOTE: the thread must not die on and exceptions are handled inside
+            // so it's not wrapped using TraceLog.WrapWithExceptionLogging()
             backgroundCheckings = Task.Factory.StartNew(StartBackgroundCheckings,
                 TaskCreationOptions.LongRunning);
         }
@@ -54,10 +56,10 @@ namespace XRouter.Broker.Dispatching
 
         private void DispatchAsync(Guid tokenGuid, Func<ProcessorAccessor, bool> filter = null)
         {
-            tokenDispatchingTaskFactory.StartNew(delegate
-            {
-                Dispatch(tokenGuid, filter);
-            });
+            tokenDispatchingTaskFactory.StartNew(
+                TraceLog.WrapWithExceptionLogging(
+                    delegate { Dispatch(tokenGuid, filter); })
+            );
         }
 
         private void Dispatch(Guid tokenGuid, Func<ProcessorAccessor, bool> filter = null)
@@ -86,7 +88,8 @@ namespace XRouter.Broker.Dispatching
                     {
                         Token token = brokerService.GetToken(tokenGuid);
                         MessageFlowState messageflowState = token.GetMessageFlowState();
-                        if (messageflowState.AssignedProcessor != null) {
+                        if (messageflowState.AssignedProcessor != null)
+                        {
                             return; // Token is already dispatched
                         }
 
@@ -94,23 +97,25 @@ namespace XRouter.Broker.Dispatching
                         if (messageflowState.MessageFlowGuid == new Guid())
                         {
                             Guid messageFlowGuid = config.GetCurrentMessageFlowGuid();
-                            brokerService.UpdateTokenMessageFlow(tokenGuid, messageFlowGuid);
-                            token.UpdateMessageFlowState(mfs => { mfs.MessageFlowGuid = messageFlowGuid; });
+                            token = brokerService.UpdateTokenMessageFlow(tokenGuid, messageFlowGuid);
                         }
                         try
                         {
                             TraceLog.Info(string.Format(
                                 "Dispatcher assigning token '{0}' to processor '{1}'",
                                 token.Guid, processor.ComponentName));
+                            token = brokerService.UpdateTokenLastResponseFromProcessor(tokenGuid, DateTime.Now);
+                            token = brokerService.UpdateTokenAssignedProcessor(tokenGuid, processor.ComponentName);
+                            token.State = TokenState.InProcessor;
                             processor.AddWork(token);
                         }
                         catch
                         {
+                            // NOTE: token retains the Received state
+                            brokerService.UpdateTokenAssignedProcessor(tokenGuid, null);
                             continue; // if adding token to processor fails, try next one
                         }
-                        brokerService.UpdateTokenLastResponseFromProcessor(tokenGuid, DateTime.Now);
-                        brokerService.UpdateTokenAssignedProcessor(tokenGuid, processor.ComponentName);
-                        return;
+                        return; // token has been successfully dispatched
                     }
                 }
             }

@@ -1,9 +1,0 @@
-Sender2->Broadcaster_Input1;117;551
-Sender2;11;326
-Display2;662;321
-Broadcaster_Output1->Display2;552;579
-Display1;663;73
-Broadcaster_Output0->Display1;490;8
-Broadcaster;391;200
-Sender1->Broadcaster_Input0;109;12
-Sender1;10;77

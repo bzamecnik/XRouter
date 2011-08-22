@@ -1,0 +1,38 @@
+Je to jen ConsoleApplication (musis ji ale spustit jako admin), ktera vyuziva App.config, kde je pripravene nastaveni WCF-ky (napr. port, na kterem posloucha).
+
+Abys mohl poslat sluzbe zpravu z XRouter, tak pro Service.SaveOrder musis nakonfigurovat HTTP (tj. vyuzijes adapter HttpClient):
+ContentType: text/xml; charset=utf-8
+SOAPAction: http://tempuri.org/IService/SaveOrder
+Uri: adresa, na ktere WCF posloucha, napr. http://localhost:8080/
+
+A jako XML tam poslat nasledujici SOAP (tj. musis ten svuj Order do toho zabalit):
+
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">  
+  <s:Body>
+    <SaveOrder xmlns="http://tempuri.org/">
+      <order xmlns:i="http://schemas.datacontract.org/2004/07/XRouterWS">
+        <i:Item>Svijany</i:Item>
+        <i:Table>4</i:Table>
+      </order>     
+    </SaveOrder>
+  </s:Body>
+</s:Envelope>
+
+Podobne, abys poslal zpravu pro Service.GetReceipt tak musis nakonfigurovat HTTP:
+ContentType: text/xml; charset=utf-8
+SOAPAction: http://tempuri.org/IService/GetReceipt
+Uri: adresa, na ktere WCF posloucha, napr. http://localhost:8080/
+
+A jako XML tam poslat nasledujici SOAP:
+
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"> 
+  <s:Body>
+    <GetReceipt xmlns="http://tempuri.org/">
+      <payment xmlns:i="http://schemas.datacontract.org/2004/07/XRouterWS">
+        <i:Table>4</i:Table>
+      </payment>
+    </GetReceipt>
+  </s:Body>
+</s:Envelope>
+
+Pri kazdem z volani se ti vrati do tokenu nejaka SOAP odpoved. V prvnim pripade pouze informace o doruceni. Ve druhem pripade data Receipt.

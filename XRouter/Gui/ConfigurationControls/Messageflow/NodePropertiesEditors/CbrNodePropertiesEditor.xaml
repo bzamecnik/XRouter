@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors.CbrNodePropertiesEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:XRouter.Gui.CommonControls"
+             xmlns:src="clr-namespace:XRouter.Gui.ConfigurationControls.Messageflow"
+             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="500">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSkyBlue" Offset="-1" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="15 5 0 5" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="13">Name:</TextBlock>
+        <TextBox Grid.Row="0" Grid.Column="1" Name="uiName" LostFocus="uiName_LostFocus" KeyDown="uiName_KeyDown" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="8 10 10 10" />
+
+        <Border Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSkyBlue" Offset="-1" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <TextBlock Grid.Row="1" Grid.Column="0" Margin="15 5 0 5" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="13">Tested message:</TextBlock>
+        <controls:TokenSelectionEditor Grid.Row="1" Grid.Column="1" x:Name="uiTestedMessage" Margin="10" />
+
+        <Border Grid.Row="2" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightBlue" Margin="5" >
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSkyBlue" Offset="-1" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <TextBlock Grid.Row="2" Grid.Column="0" Margin="15 5 0 5" FontWeight="Bold" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center">Default target:</TextBlock>
+        <src:TargetNodeSelector Grid.Row="2" Grid.Column="1" x:Name="uiDefaultTargetSelector" Margin="8 10 10 10" />
+
+        <Border Grid.Row="3" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSkyBlue" Offset="-1" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+            <StackPanel>
+                <TextBlock Margin="10 10 10 5" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center">Branches</TextBlock>
+                <controls:ListEditor x:Name="uiBranches" Margin="5 0 5 5" />
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="4" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSkyBlue" Offset="-1" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Margin="10 10 10 0" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center">Testing</TextBlock>
+                <TextBlock Grid.Row="1" Margin="10 0 10 5" VerticalAlignment="Center">Enter xml you want to test:</TextBlock>
+                <avalonEdit:TextEditor Grid.Row="2" Name="uiTestXml" FontSize="10pt" FontFamily="Courier New" Margin="5 0 5 5" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                <Button Grid.Row="3" Click="TestXml_Click" HorizontalAlignment="Right" Padding="10 2 10 2" Margin="5 0 5 5">Evaluate</Button>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

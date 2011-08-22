@@ -73,6 +73,8 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
                 if (current.Velocity.Length >= 1) {
                     // apply velocity to node position
                     current.NextPosition = currentPosition + current.Velocity;
+                } else {
+                    current.NextPosition = currentPosition;
                 }
             }
 
