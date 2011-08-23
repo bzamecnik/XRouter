@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Restaurant.RestaurantDataCreation
+namespace XRouter.Examples.Restaurant.DataGenerator
 {
     class Program
     {
@@ -18,7 +18,12 @@ namespace Restaurant.RestaurantDataCreation
             int maxFoodID = 9;
             int maxDrinkID = 5;
 
-            string savePath = @"..\..\..\Data/Generated\";
+            string savePath = @"Data\Generated\";
+
+            if (!Directory.Exists(savePath))
+            {
+                Directory.CreateDirectory(savePath);
+            }
 
             Random random = new Random();
 
@@ -56,7 +61,7 @@ namespace Restaurant.RestaurantDataCreation
                 doc.Add(payment);
                 doc.Save(savePath + "paymentForTable" + table.ToString().PadLeft(2, '0') + ".xml");
             }
-            Console.WriteLine("Payments hace been generated");
+            Console.WriteLine("Payments have been generated");
 
             Console.WriteLine("Press a key...");
             Console.ReadKey();

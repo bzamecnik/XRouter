@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ServiceModel;
+﻿using System.ServiceModel;
 
-namespace XRouterWS
+namespace XRouter.Examples.Restaurant.RestaurantService
 {
     [ServiceContract]
     public interface IService

@@ -1,9 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataGenerator", "DataGenerator\DataGenerator.csproj", "{E522CB08-1658-4481-9CD0-4C257A04C940}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Examples.Restaurant.DataGenerator", "DataGenerator\XRouter.Examples.Restaurant.DataGenerator.csproj", "{E522CB08-1658-4481-9CD0-4C257A04C940}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantWS", "RestaurantWS\RestaurantWS.csproj", "{C1C9AAD9-8163-4A21-BDE1-245348985BB7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRouter.Examples.Restaurant.RestaurantService", "RestaurantService\XRouter.Examples.Restaurant.RestaurantService.csproj", "{C1C9AAD9-8163-4A21-BDE1-245348985BB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
