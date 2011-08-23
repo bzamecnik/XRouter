@@ -4,8 +4,8 @@
     <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
       <s:Body>
         <GetReceipt xmlns="http://tempuri.org/">
-          <payment xmlns:i="http://schemas.datacontract.org/2004/07/XRouterWS">
-            <i:table><xsl:value-of select="//table" /></i:table>
+          <payment xmlns:i="http://schemas.datacontract.org/2004/07/XRouter.Examples.Restaurant.RestaurantService">
+            <i:Table><xsl:value-of select="//table" /></i:Table>
           </payment>
         </GetReceipt>
       </s:Body>
