@@ -56,6 +56,11 @@ namespace XRouter.Adapters
 
                 foreach (var enpointNameAndPath in inputEndpointToPathMap)
                 {
+                    if (!IsRunning)
+                    {
+                        return;
+                    }
+
                     string enpointName = enpointNameAndPath.Key;
                     string path = enpointNameAndPath.Value;
 
