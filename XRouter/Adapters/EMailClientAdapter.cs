@@ -93,8 +93,7 @@ namespace XRouter.Adapters
             string attachmentName = null;
             if (metadata == null)
             {
-                // TODO: use ArgumentNullException instead
-                throw new InvalidOperationException("Metadata argument must not be null.");
+                throw new ArgumentNullException("Metadata argument must not be null.");
             }
 
             attachmentName = metadata.Root.Value;
