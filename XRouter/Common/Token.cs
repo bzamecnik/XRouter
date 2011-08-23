@@ -31,13 +31,18 @@ namespace XRouter.Common
         public DateTime Created {
             get {
                 lock (SyncLock) {
-                    DateTime result = DateTime.Parse(GetTokenAttribute("created"), System.Globalization.CultureInfo.InvariantCulture);
+                    DateTime result;
+                    if (!DateTime.TryParse(GetTokenAttribute("created"), System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                    {
+                        return DateTime.MinValue;
+                    }
+
                     return result;
                 }
             }
             private set {
                 lock (SyncLock) {
-                   SetTokenAttribute("state", value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    SetTokenAttribute("created", value.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
         }
@@ -45,7 +50,12 @@ namespace XRouter.Common
         public DateTime Received {
             get {
                 lock (SyncLock) {
-                    DateTime result = DateTime.Parse(GetTokenAttribute("received"), System.Globalization.CultureInfo.InvariantCulture);
+                    DateTime result;
+                    if (!DateTime.TryParse(GetTokenAttribute("received"), System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                    {
+                        return DateTime.MinValue;
+                    }
+
                     return result;
                 }
             }
@@ -59,7 +69,12 @@ namespace XRouter.Common
         public DateTime Dispatched {
             get {
                 lock (SyncLock) {
-                    DateTime result = DateTime.Parse(GetTokenAttribute("dispatched"), System.Globalization.CultureInfo.InvariantCulture);
+                    DateTime result;
+                    if (!DateTime.TryParse(GetTokenAttribute("dispatched"), System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                    {
+                        return DateTime.MinValue;
+                    }
+
                     return result;
                 }
             }
@@ -72,8 +87,14 @@ namespace XRouter.Common
 
         public DateTime Finished {
             get {
-                lock (SyncLock) {
-                    DateTime result = DateTime.Parse(GetTokenAttribute("finished"), System.Globalization.CultureInfo.InvariantCulture);
+                lock (SyncLock)
+                {
+                    DateTime result;
+                    if (!DateTime.TryParse(GetTokenAttribute("finished"), System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                    {
+                        return DateTime.MinValue;
+                    }
+
                     return result;
                 }
             }
