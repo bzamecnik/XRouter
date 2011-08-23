@@ -53,7 +53,8 @@
         private void TestLogDirectoryWritable()
         {
             string testFile = Path.Combine(this.directory, Path.GetRandomFileName());
-            using (File.Create(testFile)) ;
+            // create a file an immediately dispose handle to its stream
+            using (File.Create(testFile)) { }
             File.Delete(testFile);
         }
 
