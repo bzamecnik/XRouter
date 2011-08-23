@@ -28,6 +28,9 @@ OutputDir=installer
 OutputBaseFilename=xrouter-setup{#OutputBaseFilenamePostfix}
 Compression=lzma
 SolidCompression=yes
+SetupIconFile=XRouter\Gui\Resources\xrouter.ico
+WizardImageFile=installer\xrouter-logo-1.0-innosetup-164-314.bmp
+WizardSmallImageFile=installer\xrouter-logo-1.0-innosetup-55x55.bmp
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
