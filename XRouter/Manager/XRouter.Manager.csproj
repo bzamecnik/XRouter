@@ -50,7 +50,6 @@
     <Compile Include="Reporter.cs" />
     <Compile Include="Watcher.cs" />
     <Compile Include="StoragesInfo.cs" />
-    <Compile Include="TestService.cs" />
     <Compile Include="XRouterManagerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
