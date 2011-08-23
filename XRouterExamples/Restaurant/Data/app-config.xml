@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <components>
     <gateway name="gateway">
@@ -18,6 +18,27 @@
     &lt;/pair&gt;
   &lt;/item&gt;
   &lt;item name="outputEndpointToPathMap" /&gt;
+&lt;/objectConfig&gt;</XmlContent>
+            </Configuration>
+            <GatewayName z:Id="6">gateway</GatewayName>
+          </AdapterConfiguration>
+        </adapter>
+        <adapter name="Tisk">
+          <AdapterConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="1">
+            <AdapterName z:Id="2">Tisk</AdapterName>
+            <AdapterTypeName z:Id="3">Directory I/O adapter</AdapterTypeName>
+            <Configuration z:Id="4">
+              <XmlContent z:Id="5">&lt;objectConfig&gt;
+  &lt;item name="AreInputTokensPersistent"&gt;False&lt;/item&gt;
+  &lt;item name="checkingIntervalInSeconds"&gt;0.1&lt;/item&gt;
+  &lt;item name="inputEndpointToPathMap" /&gt;
+  &lt;item name="outputEndpointToPathMap"&gt;
+    &lt;pair&gt;
+      &lt;key&gt;Tisk&lt;/key&gt;
+      &lt;value&gt;c:\XRouter\DemoRestaurant\Tisk&lt;/value&gt;
+    &lt;/pair&gt;
+  &lt;/item&gt;
+  &lt;item name="saveOnlyText"&gt;True&lt;/item&gt;
 &lt;/objectConfig&gt;</XmlContent>
             </Configuration>
             <GatewayName z:Id="6">gateway</GatewayName>
@@ -50,27 +71,6 @@
   &lt;item name="SOAPAction"&gt;http://tempuri.org/IService/SaveOrder&lt;/item&gt;
   &lt;item name="TimeOut"&gt;60&lt;/item&gt;
   &lt;item name="AreInputTokensPersistent"&gt;False&lt;/item&gt;
-&lt;/objectConfig&gt;</XmlContent>
-            </Configuration>
-            <GatewayName z:Id="6">gateway</GatewayName>
-          </AdapterConfiguration>
-        </adapter>
-        <adapter name="Tisk">
-          <AdapterConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="1">
-            <AdapterName z:Id="2">Tisk</AdapterName>
-            <AdapterTypeName z:Id="3">Directory I/O adapter</AdapterTypeName>
-            <Configuration z:Id="4">
-              <XmlContent z:Id="5">&lt;objectConfig&gt;
-  &lt;item name="AreInputTokensPersistent"&gt;False&lt;/item&gt;
-  &lt;item name="checkingIntervalInSeconds"&gt;0.1&lt;/item&gt;
-  &lt;item name="inputEndpointToPathMap" /&gt;
-  &lt;item name="outputEndpointToPathMap"&gt;
-    &lt;pair&gt;
-      &lt;key&gt;Tisk&lt;/key&gt;
-      &lt;value&gt;c:\XRouter\DemoRestaurant\Tisk&lt;/value&gt;
-    &lt;/pair&gt;
-  &lt;/item&gt;
-  &lt;item name="saveOnlyText"&gt;True&lt;/item&gt;
 &lt;/objectConfig&gt;</XmlContent>
             </Configuration>
             <GatewayName z:Id="6">gateway</GatewayName>
@@ -237,7 +237,7 @@
                 <Name z:Id="6">Uri</Name>
                 <Owner z:Ref="1" i:nil="true" />
                 <SerializedDefaultValue z:Id="7">
-                  <defaultValue xmlns="">http://localhost:8011/</defaultValue>
+                  <defaultValue xmlns="">http://localhost:8080/</defaultValue>
                 </SerializedDefaultValue>
                 <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="8" i:type="d5p1:BasicItemType">
                   <d5p1:ClrTypeFullName z:Id="9">System.String</d5p1:ClrTypeFullName>
@@ -682,7 +682,7 @@
       </class-metadata>
     </action-type>
   </action-types>
-  <messageflows current="0612a491-e309-4429-8951-dc7f49073a94">
+  <messageflows current="84a36522-3588-40c1-883f-b0b4f523d797">
     <messageflow guid="d77b24b8-9333-457b-92e8-dd1624f3e9ce">
       <MessageFlowConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig" z:Id="1">
         <Guid>d77b24b8-9333-457b-92e8-dd1624f3e9ce</Guid>
@@ -6884,7 +6884,7 @@
       </MessageFlowConfiguration>
     </messageflow>
     <messageflow guid="0612a491-e309-4429-8951-dc7f49073a94">
-      <MessageFlowConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" z:Id="1" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig">
+      <MessageFlowConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig" z:Id="1">
         <Guid>0612a491-e309-4429-8951-dc7f49073a94</Guid>
         <Name z:Id="2">default</Name>
         <Nodes z:Id="3" z:Size="12">
@@ -6954,7 +6954,7 @@
                         <_name z:Id="26">Objednáno</_name>
                         <IsReturningOutput>false</IsReturningOutput>
                         <ResultMessageSelection z:Id="27">
-                          <SelectionPattern z:Id="28"></SelectionPattern>
+                          <SelectionPattern z:Id="28" />
                         </ResultMessageSelection>
                       </NextNode>
                     </NextNode>
@@ -7114,6 +7114,1854 @@
         <Version>43</Version>
       </MessageFlowConfiguration>
     </messageflow>
+    <messageflow guid="ea2e787f-366f-4282-901a-5bb474733f3f">
+      <MessageFlowConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig" z:Id="1">
+        <Guid>ea2e787f-366f-4282-901a-5bb474733f3f</Guid>
+        <Name z:Id="2">default</Name>
+        <Nodes z:Id="3" z:Size="12">
+          <NodeConfiguration z:Id="4" i:type="EntryNodeConfiguration">
+            <Location xmlns:d4p1="http://schemas.datacontract.org/2004/07/System.Windows">
+              <d4p1:_x>-601.28796387167085</d4p1:_x>
+              <d4p1:_y>-90.6451080240782</d4p1:_y>
+            </Location>
+            <_name z:Id="5">Pokladna</_name>
+            <NextNode z:Id="6" i:type="CbrNodeConfiguration">
+              <Location xmlns:d5p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                <d5p1:_x>-416.26049967736674</d5p1:_x>
+                <d5p1:_y>-89.543965352703381</d5p1:_y>
+              </Location>
+              <_name z:Id="7">Typ</_name>
+              <Branches xmlns:d5p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" z:Id="8" z:Size="2">
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="9">
+                    <d7p1:XPath z:Id="10">/group[@name='Restaurant']/item[@name='Schematron Order']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="11" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-233.20199017208111</d8p1:_x>
+                      <d8p1:_y>-84.574234426785736</d8p1:_y>
+                    </Location>
+                    <_name z:Id="12">Příprava odesílaní objednávky</_name>
+                    <Actions z:Id="13" z:Size="1">
+                      <ActionConfiguration z:Id="14">
+                        <ActionTypeName z:Id="15">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="16">
+                          <d10p1:XmlContent z:Id="17">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Order']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//order&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;orderToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="18" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>8.5894792270269349</d9p1:_x>
+                        <d9p1:_y>-80.303731701671708</d9p1:_y>
+                      </Location>
+                      <_name z:Id="19">Objednávka</_name>
+                      <Actions z:Id="20" z:Size="1">
+                        <ActionConfiguration z:Id="21">
+                          <ActionTypeName z:Id="22">Message sender</ActionTypeName>
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="23">
+                            <d11p1:XmlContent z:Id="24">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Objednávka&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$orderToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="25" i:type="TerminatorNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>191.64196844496678</d10p1:_x>
+                          <d10p1:_y>-90.783614437400786</d10p1:_y>
+                        </Location>
+                        <_name z:Id="26">Objednáno</_name>
+                        <IsReturningOutput>false</IsReturningOutput>
+                        <ResultMessageSelection z:Id="27">
+                          <SelectionPattern z:Id="28" />
+                        </ResultMessageSelection>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="29">
+                    <d7p1:XPath z:Id="30">/group[@name='Restaurant']/item[@name='Schematron Payment']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="31" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-459.723971115322</d8p1:_x>
+                      <d8p1:_y>-254.46267780369814</d8p1:_y>
+                    </Location>
+                    <_name z:Id="32">Příprava odesílaní platby</_name>
+                    <Actions z:Id="33" z:Size="1">
+                      <ActionConfiguration z:Id="34">
+                        <ActionTypeName z:Id="35">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="36">
+                          <d10p1:XmlContent z:Id="37">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Payment']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//payment&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;paymentToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="38" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>-242.38100478054832</d9p1:_x>
+                        <d9p1:_y>-259.99508845843138</d9p1:_y>
+                      </Location>
+                      <_name z:Id="39">Platba</_name>
+                      <Actions z:Id="40" z:Size="1">
+                        <ActionConfiguration z:Id="41">
+                          <ActionTypeName z:Ref="22" i:nil="true" />
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="42">
+                            <d11p1:XmlContent z:Id="43">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Platba&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$paymentToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;receiptData&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="44" i:type="ActionNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>-59.197978858470975</d10p1:_x>
+                          <d10p1:_y>-255.6136600716668</d10p1:_y>
+                        </Location>
+                        <_name z:Id="45">Extrakce dat pro účtenku</_name>
+                        <Actions z:Id="46" z:Size="1">
+                          <ActionConfiguration z:Id="47">
+                            <ActionTypeName z:Id="48">Xslt transformer</ActionTypeName>
+                            <Configuration xmlns:d12p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="49">
+                              <d12p1:XmlContent z:Id="50">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt ReceiptData']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptData&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receiptDataExtracted&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d12p1:XmlContent>
+                            </Configuration>
+                          </ActionConfiguration>
+                        </Actions>
+                        <NextNode z:Id="51" i:type="ActionNodeConfiguration">
+                          <Location xmlns:d11p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                            <d11p1:_x>158.71475488167187</d11p1:_x>
+                            <d11p1:_y>-252.66721263227882</d11p1:_y>
+                          </Location>
+                          <_name z:Id="52">Tvorba účtenky</_name>
+                          <Actions z:Id="53" z:Size="1">
+                            <ActionConfiguration z:Id="54">
+                              <ActionTypeName z:Ref="48" i:nil="true" />
+                              <Configuration xmlns:d13p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="55">
+                                <d13p1:XmlContent z:Id="56">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt MakeReceipt']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptDataExtracted&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receipt&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d13p1:XmlContent>
+                              </Configuration>
+                            </ActionConfiguration>
+                          </Actions>
+                          <NextNode z:Id="57" i:type="ActionNodeConfiguration">
+                            <Location xmlns:d12p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                              <d12p1:_x>346.04917121968117</d12p1:_x>
+                              <d12p1:_y>-251.17531627962521</d12p1:_y>
+                            </Location>
+                            <_name z:Id="58">Tisk</_name>
+                            <Actions z:Id="59" z:Size="1">
+                              <ActionConfiguration z:Id="60">
+                                <ActionTypeName z:Ref="22" i:nil="true" />
+                                <Configuration xmlns:d14p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="61">
+                                  <d14p1:XmlContent z:Id="62">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$receipt&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d14p1:XmlContent>
+                                </Configuration>
+                              </ActionConfiguration>
+                            </Actions>
+                            <NextNode z:Id="63" i:type="TerminatorNodeConfiguration">
+                              <Location xmlns:d13p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                                <d13p1:_x>496.3827139008049</d13p1:_x>
+                                <d13p1:_y>-249.06741487763941</d13p1:_y>
+                              </Location>
+                              <_name z:Id="64">Vytištěno</_name>
+                              <IsReturningOutput>false</IsReturningOutput>
+                              <ResultMessageSelection z:Id="65">
+                                <SelectionPattern z:Ref="28" i:nil="true" />
+                              </ResultMessageSelection>
+                            </NextNode>
+                          </NextNode>
+                        </NextNode>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+              </Branches>
+              <DefaultTarget z:Id="66" i:type="TerminatorNodeConfiguration">
+                <Location xmlns:d6p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                  <d6p1:_x>-448.03169476296193</d6p1:_x>
+                  <d6p1:_y>56.823128227030622</d6p1:_y>
+                </Location>
+                <_name z:Id="67">Špatná objednávka</_name>
+                <IsReturningOutput>false</IsReturningOutput>
+                <ResultMessageSelection z:Id="68">
+                  <SelectionPattern z:Ref="28" i:nil="true" />
+                </ResultMessageSelection>
+              </DefaultTarget>
+              <TestedSelection z:Id="69">
+                <SelectionPattern z:Id="70">$input</SelectionPattern>
+              </TestedSelection>
+            </NextNode>
+          </NodeConfiguration>
+          <NodeConfiguration z:Ref="6" i:nil="true" />
+          <NodeConfiguration z:Ref="18" i:nil="true" />
+          <NodeConfiguration z:Ref="38" i:nil="true" />
+          <NodeConfiguration z:Ref="66" i:nil="true" />
+          <NodeConfiguration z:Ref="57" i:nil="true" />
+          <NodeConfiguration z:Ref="11" i:nil="true" />
+          <NodeConfiguration z:Ref="31" i:nil="true" />
+          <NodeConfiguration z:Ref="44" i:nil="true" />
+          <NodeConfiguration z:Ref="51" i:nil="true" />
+          <NodeConfiguration z:Ref="63" i:nil="true" />
+          <NodeConfiguration z:Ref="25" i:nil="true" />
+        </Nodes>
+        <Version>44</Version>
+      </MessageFlowConfiguration>
+    </messageflow>
+    <messageflow guid="822ebf16-41a5-4047-8c80-1dd566bb57d2">
+      <MessageFlowConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig" z:Id="1">
+        <Guid>822ebf16-41a5-4047-8c80-1dd566bb57d2</Guid>
+        <Name z:Id="2">default</Name>
+        <Nodes z:Id="3" z:Size="12">
+          <NodeConfiguration z:Id="4" i:type="EntryNodeConfiguration">
+            <Location xmlns:d4p1="http://schemas.datacontract.org/2004/07/System.Windows">
+              <d4p1:_x>-601.28796387167085</d4p1:_x>
+              <d4p1:_y>-90.6451080240782</d4p1:_y>
+            </Location>
+            <_name z:Id="5">Pokladna</_name>
+            <NextNode z:Id="6" i:type="CbrNodeConfiguration">
+              <Location xmlns:d5p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                <d5p1:_x>-416.26049967736674</d5p1:_x>
+                <d5p1:_y>-89.543965352703381</d5p1:_y>
+              </Location>
+              <_name z:Id="7">Typ</_name>
+              <Branches xmlns:d5p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" z:Id="8" z:Size="2">
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="9">
+                    <d7p1:XPath z:Id="10">/group[@name='Restaurant']/item[@name='Schematron Order']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="11" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-233.20199017208111</d8p1:_x>
+                      <d8p1:_y>-84.574234426785736</d8p1:_y>
+                    </Location>
+                    <_name z:Id="12">Příprava odesílaní objednávky</_name>
+                    <Actions z:Id="13" z:Size="1">
+                      <ActionConfiguration z:Id="14">
+                        <ActionTypeName z:Id="15">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="16">
+                          <d10p1:XmlContent z:Id="17">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Order']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//order&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;orderToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="18" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>8.5894792270269349</d9p1:_x>
+                        <d9p1:_y>-80.303731701671708</d9p1:_y>
+                      </Location>
+                      <_name z:Id="19">Objednávka</_name>
+                      <Actions z:Id="20" z:Size="1">
+                        <ActionConfiguration z:Id="21">
+                          <ActionTypeName z:Id="22">Message sender</ActionTypeName>
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="23">
+                            <d11p1:XmlContent z:Id="24">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Objednávka&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$orderToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="25" i:type="TerminatorNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>191.64196844496678</d10p1:_x>
+                          <d10p1:_y>-90.783614437400786</d10p1:_y>
+                        </Location>
+                        <_name z:Id="26">Objednáno</_name>
+                        <IsReturningOutput>false</IsReturningOutput>
+                        <ResultMessageSelection z:Id="27">
+                          <SelectionPattern z:Id="28" />
+                        </ResultMessageSelection>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="29">
+                    <d7p1:XPath z:Id="30">/group[@name='Restaurant']/item[@name='Schematron Payment']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="31" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-459.723971115322</d8p1:_x>
+                      <d8p1:_y>-254.46267780369814</d8p1:_y>
+                    </Location>
+                    <_name z:Id="32">Příprava odesílaní platby</_name>
+                    <Actions z:Id="33" z:Size="1">
+                      <ActionConfiguration z:Id="34">
+                        <ActionTypeName z:Id="35">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="36">
+                          <d10p1:XmlContent z:Id="37">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Payment']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//payment&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;paymentToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="38" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>-242.38100478054832</d9p1:_x>
+                        <d9p1:_y>-259.99508845843138</d9p1:_y>
+                      </Location>
+                      <_name z:Id="39">Platba</_name>
+                      <Actions z:Id="40" z:Size="1">
+                        <ActionConfiguration z:Id="41">
+                          <ActionTypeName z:Ref="22" i:nil="true" />
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="42">
+                            <d11p1:XmlContent z:Id="43">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Platba&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$paymentToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;receiptData&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="44" i:type="ActionNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>-59.197978858470975</d10p1:_x>
+                          <d10p1:_y>-255.6136600716668</d10p1:_y>
+                        </Location>
+                        <_name z:Id="45">Extrakce dat pro účtenku</_name>
+                        <Actions z:Id="46" z:Size="1">
+                          <ActionConfiguration z:Id="47">
+                            <ActionTypeName z:Id="48">Xslt transformer</ActionTypeName>
+                            <Configuration xmlns:d12p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="49">
+                              <d12p1:XmlContent z:Id="50">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt ReceiptData']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptData&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receiptDataExtracted&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d12p1:XmlContent>
+                            </Configuration>
+                          </ActionConfiguration>
+                        </Actions>
+                        <NextNode z:Id="51" i:type="ActionNodeConfiguration">
+                          <Location xmlns:d11p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                            <d11p1:_x>158.71475488167187</d11p1:_x>
+                            <d11p1:_y>-252.66721263227882</d11p1:_y>
+                          </Location>
+                          <_name z:Id="52">Tvorba účtenky</_name>
+                          <Actions z:Id="53" z:Size="1">
+                            <ActionConfiguration z:Id="54">
+                              <ActionTypeName z:Ref="48" i:nil="true" />
+                              <Configuration xmlns:d13p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="55">
+                                <d13p1:XmlContent z:Id="56">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt MakeReceipt']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptDataExtracted&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receipt&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d13p1:XmlContent>
+                              </Configuration>
+                            </ActionConfiguration>
+                          </Actions>
+                          <NextNode z:Id="57" i:type="ActionNodeConfiguration">
+                            <Location xmlns:d12p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                              <d12p1:_x>346.04917121968117</d12p1:_x>
+                              <d12p1:_y>-251.17531627962521</d12p1:_y>
+                            </Location>
+                            <_name z:Id="58">Tisk</_name>
+                            <Actions z:Id="59" z:Size="1">
+                              <ActionConfiguration z:Id="60">
+                                <ActionTypeName z:Ref="22" i:nil="true" />
+                                <Configuration xmlns:d14p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="61">
+                                  <d14p1:XmlContent z:Id="62">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$receipt&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d14p1:XmlContent>
+                                </Configuration>
+                              </ActionConfiguration>
+                            </Actions>
+                            <NextNode z:Id="63" i:type="TerminatorNodeConfiguration">
+                              <Location xmlns:d13p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                                <d13p1:_x>496.3827139008049</d13p1:_x>
+                                <d13p1:_y>-249.06741487763941</d13p1:_y>
+                              </Location>
+                              <_name z:Id="64">Vytištěno</_name>
+                              <IsReturningOutput>false</IsReturningOutput>
+                              <ResultMessageSelection z:Id="65">
+                                <SelectionPattern z:Ref="28" i:nil="true" />
+                              </ResultMessageSelection>
+                            </NextNode>
+                          </NextNode>
+                        </NextNode>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+              </Branches>
+              <DefaultTarget z:Id="66" i:type="TerminatorNodeConfiguration">
+                <Location xmlns:d6p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                  <d6p1:_x>-448.03169476296193</d6p1:_x>
+                  <d6p1:_y>56.823128227030622</d6p1:_y>
+                </Location>
+                <_name z:Id="67">Špatná objednávka</_name>
+                <IsReturningOutput>false</IsReturningOutput>
+                <ResultMessageSelection z:Id="68">
+                  <SelectionPattern z:Ref="28" i:nil="true" />
+                </ResultMessageSelection>
+              </DefaultTarget>
+              <TestedSelection z:Id="69">
+                <SelectionPattern z:Id="70">$input</SelectionPattern>
+              </TestedSelection>
+            </NextNode>
+          </NodeConfiguration>
+          <NodeConfiguration z:Ref="6" i:nil="true" />
+          <NodeConfiguration z:Ref="18" i:nil="true" />
+          <NodeConfiguration z:Ref="38" i:nil="true" />
+          <NodeConfiguration z:Ref="66" i:nil="true" />
+          <NodeConfiguration z:Ref="57" i:nil="true" />
+          <NodeConfiguration z:Ref="11" i:nil="true" />
+          <NodeConfiguration z:Ref="31" i:nil="true" />
+          <NodeConfiguration z:Ref="44" i:nil="true" />
+          <NodeConfiguration z:Ref="51" i:nil="true" />
+          <NodeConfiguration z:Ref="63" i:nil="true" />
+          <NodeConfiguration z:Ref="25" i:nil="true" />
+        </Nodes>
+        <Version>45</Version>
+      </MessageFlowConfiguration>
+    </messageflow>
+    <messageflow guid="d6f0a780-5996-4ee3-a728-cfc26349c85a">
+      <MessageFlowConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig" z:Id="1">
+        <Guid>d6f0a780-5996-4ee3-a728-cfc26349c85a</Guid>
+        <Name z:Id="2">default</Name>
+        <Nodes z:Id="3" z:Size="12">
+          <NodeConfiguration z:Id="4" i:type="EntryNodeConfiguration">
+            <Location xmlns:d4p1="http://schemas.datacontract.org/2004/07/System.Windows">
+              <d4p1:_x>-601.28796387167085</d4p1:_x>
+              <d4p1:_y>-90.6451080240782</d4p1:_y>
+            </Location>
+            <_name z:Id="5">Pokladna</_name>
+            <NextNode z:Id="6" i:type="CbrNodeConfiguration">
+              <Location xmlns:d5p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                <d5p1:_x>-416.26049967736674</d5p1:_x>
+                <d5p1:_y>-89.543965352703381</d5p1:_y>
+              </Location>
+              <_name z:Id="7">Typ</_name>
+              <Branches xmlns:d5p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" z:Id="8" z:Size="2">
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="9">
+                    <d7p1:XPath z:Id="10">/group[@name='Restaurant']/item[@name='Schematron Order']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="11" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-233.20199017208111</d8p1:_x>
+                      <d8p1:_y>-84.574234426785736</d8p1:_y>
+                    </Location>
+                    <_name z:Id="12">Příprava odesílaní objednávky</_name>
+                    <Actions z:Id="13" z:Size="1">
+                      <ActionConfiguration z:Id="14">
+                        <ActionTypeName z:Id="15">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="16">
+                          <d10p1:XmlContent z:Id="17">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Order']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//order&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;orderToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="18" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>8.5894792270269349</d9p1:_x>
+                        <d9p1:_y>-80.303731701671708</d9p1:_y>
+                      </Location>
+                      <_name z:Id="19">Objednávka</_name>
+                      <Actions z:Id="20" z:Size="1">
+                        <ActionConfiguration z:Id="21">
+                          <ActionTypeName z:Id="22">Message sender</ActionTypeName>
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="23">
+                            <d11p1:XmlContent z:Id="24">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Objednávka&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$orderToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="25" i:type="TerminatorNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>191.64196844496678</d10p1:_x>
+                          <d10p1:_y>-90.783614437400786</d10p1:_y>
+                        </Location>
+                        <_name z:Id="26">Objednáno</_name>
+                        <IsReturningOutput>false</IsReturningOutput>
+                        <ResultMessageSelection z:Id="27">
+                          <SelectionPattern z:Id="28" />
+                        </ResultMessageSelection>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="29">
+                    <d7p1:XPath z:Id="30">/group[@name='Restaurant']/item[@name='Schematron Payment']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="31" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-459.723971115322</d8p1:_x>
+                      <d8p1:_y>-254.46267780369814</d8p1:_y>
+                    </Location>
+                    <_name z:Id="32">Příprava odesílaní platby</_name>
+                    <Actions z:Id="33" z:Size="1">
+                      <ActionConfiguration z:Id="34">
+                        <ActionTypeName z:Id="35">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="36">
+                          <d10p1:XmlContent z:Id="37">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Payment']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//payment&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;paymentToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="38" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>-242.38100478054832</d9p1:_x>
+                        <d9p1:_y>-259.99508845843138</d9p1:_y>
+                      </Location>
+                      <_name z:Id="39">Platba</_name>
+                      <Actions z:Id="40" z:Size="1">
+                        <ActionConfiguration z:Id="41">
+                          <ActionTypeName z:Ref="22" i:nil="true" />
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="42">
+                            <d11p1:XmlContent z:Id="43">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Platba&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$paymentToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;receiptData&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="44" i:type="ActionNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>-59.197978858470975</d10p1:_x>
+                          <d10p1:_y>-255.6136600716668</d10p1:_y>
+                        </Location>
+                        <_name z:Id="45">Extrakce dat pro účtenku</_name>
+                        <Actions z:Id="46" z:Size="1">
+                          <ActionConfiguration z:Id="47">
+                            <ActionTypeName z:Id="48">Xslt transformer</ActionTypeName>
+                            <Configuration xmlns:d12p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="49">
+                              <d12p1:XmlContent z:Id="50">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt ReceiptData']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptData&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receiptDataExtracted&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d12p1:XmlContent>
+                            </Configuration>
+                          </ActionConfiguration>
+                        </Actions>
+                        <NextNode z:Id="51" i:type="ActionNodeConfiguration">
+                          <Location xmlns:d11p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                            <d11p1:_x>158.71475488167187</d11p1:_x>
+                            <d11p1:_y>-252.66721263227882</d11p1:_y>
+                          </Location>
+                          <_name z:Id="52">Tvorba účtenky</_name>
+                          <Actions z:Id="53" z:Size="1">
+                            <ActionConfiguration z:Id="54">
+                              <ActionTypeName z:Ref="48" i:nil="true" />
+                              <Configuration xmlns:d13p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="55">
+                                <d13p1:XmlContent z:Id="56">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt MakeReceipt']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptDataExtracted&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receipt&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d13p1:XmlContent>
+                              </Configuration>
+                            </ActionConfiguration>
+                          </Actions>
+                          <NextNode z:Id="57" i:type="ActionNodeConfiguration">
+                            <Location xmlns:d12p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                              <d12p1:_x>346.04917121968117</d12p1:_x>
+                              <d12p1:_y>-251.17531627962521</d12p1:_y>
+                            </Location>
+                            <_name z:Id="58">Tisk</_name>
+                            <Actions z:Id="59" z:Size="1">
+                              <ActionConfiguration z:Id="60">
+                                <ActionTypeName z:Ref="22" i:nil="true" />
+                                <Configuration xmlns:d14p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="61">
+                                  <d14p1:XmlContent z:Id="62">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$receipt&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d14p1:XmlContent>
+                                </Configuration>
+                              </ActionConfiguration>
+                            </Actions>
+                            <NextNode z:Id="63" i:type="TerminatorNodeConfiguration">
+                              <Location xmlns:d13p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                                <d13p1:_x>496.3827139008049</d13p1:_x>
+                                <d13p1:_y>-249.06741487763941</d13p1:_y>
+                              </Location>
+                              <_name z:Id="64">Vytištěno</_name>
+                              <IsReturningOutput>false</IsReturningOutput>
+                              <ResultMessageSelection z:Id="65">
+                                <SelectionPattern z:Ref="28" i:nil="true" />
+                              </ResultMessageSelection>
+                            </NextNode>
+                          </NextNode>
+                        </NextNode>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+              </Branches>
+              <DefaultTarget z:Id="66" i:type="TerminatorNodeConfiguration">
+                <Location xmlns:d6p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                  <d6p1:_x>-448.03169476296193</d6p1:_x>
+                  <d6p1:_y>56.823128227030622</d6p1:_y>
+                </Location>
+                <_name z:Id="67">Špatná objednávka</_name>
+                <IsReturningOutput>false</IsReturningOutput>
+                <ResultMessageSelection z:Id="68">
+                  <SelectionPattern z:Ref="28" i:nil="true" />
+                </ResultMessageSelection>
+              </DefaultTarget>
+              <TestedSelection z:Id="69">
+                <SelectionPattern z:Id="70">$input</SelectionPattern>
+              </TestedSelection>
+            </NextNode>
+          </NodeConfiguration>
+          <NodeConfiguration z:Ref="6" i:nil="true" />
+          <NodeConfiguration z:Ref="18" i:nil="true" />
+          <NodeConfiguration z:Ref="38" i:nil="true" />
+          <NodeConfiguration z:Ref="66" i:nil="true" />
+          <NodeConfiguration z:Ref="57" i:nil="true" />
+          <NodeConfiguration z:Ref="11" i:nil="true" />
+          <NodeConfiguration z:Ref="31" i:nil="true" />
+          <NodeConfiguration z:Ref="44" i:nil="true" />
+          <NodeConfiguration z:Ref="51" i:nil="true" />
+          <NodeConfiguration z:Ref="63" i:nil="true" />
+          <NodeConfiguration z:Ref="25" i:nil="true" />
+        </Nodes>
+        <Version>46</Version>
+      </MessageFlowConfiguration>
+    </messageflow>
+    <messageflow guid="7d291597-bd29-4620-8d0a-fe48fe31f071">
+      <MessageFlowConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig" z:Id="1">
+        <Guid>7d291597-bd29-4620-8d0a-fe48fe31f071</Guid>
+        <Name z:Id="2">default</Name>
+        <Nodes z:Id="3" z:Size="12">
+          <NodeConfiguration z:Id="4" i:type="EntryNodeConfiguration">
+            <Location xmlns:d4p1="http://schemas.datacontract.org/2004/07/System.Windows">
+              <d4p1:_x>-601.28796387167085</d4p1:_x>
+              <d4p1:_y>-90.6451080240782</d4p1:_y>
+            </Location>
+            <_name z:Id="5">Pokladna</_name>
+            <NextNode z:Id="6" i:type="CbrNodeConfiguration">
+              <Location xmlns:d5p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                <d5p1:_x>-416.26049967736674</d5p1:_x>
+                <d5p1:_y>-89.543965352703381</d5p1:_y>
+              </Location>
+              <_name z:Id="7">Typ</_name>
+              <Branches xmlns:d5p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" z:Id="8" z:Size="2">
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="9">
+                    <d7p1:XPath z:Id="10">/group[@name='Restaurant']/item[@name='Schematron Order']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="11" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-233.20199017208111</d8p1:_x>
+                      <d8p1:_y>-84.574234426785736</d8p1:_y>
+                    </Location>
+                    <_name z:Id="12">Příprava odesílaní objednávky</_name>
+                    <Actions z:Id="13" z:Size="1">
+                      <ActionConfiguration z:Id="14">
+                        <ActionTypeName z:Id="15">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="16">
+                          <d10p1:XmlContent z:Id="17">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Order']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//order&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;orderToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="18" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>8.5894792270269349</d9p1:_x>
+                        <d9p1:_y>-80.303731701671708</d9p1:_y>
+                      </Location>
+                      <_name z:Id="19">Objednávka</_name>
+                      <Actions z:Id="20" z:Size="1">
+                        <ActionConfiguration z:Id="21">
+                          <ActionTypeName z:Id="22">Message sender</ActionTypeName>
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="23">
+                            <d11p1:XmlContent z:Id="24">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Objednávka&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$orderToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="25" i:type="TerminatorNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>191.64196844496678</d10p1:_x>
+                          <d10p1:_y>-90.783614437400786</d10p1:_y>
+                        </Location>
+                        <_name z:Id="26">Objednáno</_name>
+                        <IsReturningOutput>false</IsReturningOutput>
+                        <ResultMessageSelection z:Id="27">
+                          <SelectionPattern z:Id="28" />
+                        </ResultMessageSelection>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="29">
+                    <d7p1:XPath z:Id="30">/group[@name='Restaurant']/item[@name='Schematron Payment']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="31" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-459.723971115322</d8p1:_x>
+                      <d8p1:_y>-254.46267780369814</d8p1:_y>
+                    </Location>
+                    <_name z:Id="32">Příprava odesílaní platby</_name>
+                    <Actions z:Id="33" z:Size="1">
+                      <ActionConfiguration z:Id="34">
+                        <ActionTypeName z:Id="35">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="36">
+                          <d10p1:XmlContent z:Id="37">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Payment']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//payment&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;paymentToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="38" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>-242.38100478054832</d9p1:_x>
+                        <d9p1:_y>-259.99508845843138</d9p1:_y>
+                      </Location>
+                      <_name z:Id="39">Platba</_name>
+                      <Actions z:Id="40" z:Size="1">
+                        <ActionConfiguration z:Id="41">
+                          <ActionTypeName z:Ref="22" i:nil="true" />
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="42">
+                            <d11p1:XmlContent z:Id="43">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Platba&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$paymentToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;receiptData&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="44" i:type="ActionNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>-59.197978858470975</d10p1:_x>
+                          <d10p1:_y>-255.6136600716668</d10p1:_y>
+                        </Location>
+                        <_name z:Id="45">Extrakce dat pro účtenku</_name>
+                        <Actions z:Id="46" z:Size="1">
+                          <ActionConfiguration z:Id="47">
+                            <ActionTypeName z:Id="48">Xslt transformer</ActionTypeName>
+                            <Configuration xmlns:d12p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="49">
+                              <d12p1:XmlContent z:Id="50">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt ReceiptData']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptData&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receiptDataExtracted&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d12p1:XmlContent>
+                            </Configuration>
+                          </ActionConfiguration>
+                        </Actions>
+                        <NextNode z:Id="51" i:type="ActionNodeConfiguration">
+                          <Location xmlns:d11p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                            <d11p1:_x>158.71475488167187</d11p1:_x>
+                            <d11p1:_y>-252.66721263227882</d11p1:_y>
+                          </Location>
+                          <_name z:Id="52">Tvorba účtenky</_name>
+                          <Actions z:Id="53" z:Size="1">
+                            <ActionConfiguration z:Id="54">
+                              <ActionTypeName z:Ref="48" i:nil="true" />
+                              <Configuration xmlns:d13p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="55">
+                                <d13p1:XmlContent z:Id="56">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt MakeReceipt']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptDataExtracted&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receipt&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d13p1:XmlContent>
+                              </Configuration>
+                            </ActionConfiguration>
+                          </Actions>
+                          <NextNode z:Id="57" i:type="ActionNodeConfiguration">
+                            <Location xmlns:d12p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                              <d12p1:_x>346.04917121968117</d12p1:_x>
+                              <d12p1:_y>-251.17531627962521</d12p1:_y>
+                            </Location>
+                            <_name z:Id="58">Tisk</_name>
+                            <Actions z:Id="59" z:Size="1">
+                              <ActionConfiguration z:Id="60">
+                                <ActionTypeName z:Ref="22" i:nil="true" />
+                                <Configuration xmlns:d14p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="61">
+                                  <d14p1:XmlContent z:Id="62">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$receipt&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d14p1:XmlContent>
+                                </Configuration>
+                              </ActionConfiguration>
+                            </Actions>
+                            <NextNode z:Id="63" i:type="TerminatorNodeConfiguration">
+                              <Location xmlns:d13p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                                <d13p1:_x>496.3827139008049</d13p1:_x>
+                                <d13p1:_y>-249.06741487763941</d13p1:_y>
+                              </Location>
+                              <_name z:Id="64">Vytištěno</_name>
+                              <IsReturningOutput>false</IsReturningOutput>
+                              <ResultMessageSelection z:Id="65">
+                                <SelectionPattern z:Ref="28" i:nil="true" />
+                              </ResultMessageSelection>
+                            </NextNode>
+                          </NextNode>
+                        </NextNode>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+              </Branches>
+              <DefaultTarget z:Id="66" i:type="TerminatorNodeConfiguration">
+                <Location xmlns:d6p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                  <d6p1:_x>-448.03169476296193</d6p1:_x>
+                  <d6p1:_y>56.823128227030622</d6p1:_y>
+                </Location>
+                <_name z:Id="67">Špatná objednávka</_name>
+                <IsReturningOutput>false</IsReturningOutput>
+                <ResultMessageSelection z:Id="68">
+                  <SelectionPattern z:Ref="28" i:nil="true" />
+                </ResultMessageSelection>
+              </DefaultTarget>
+              <TestedSelection z:Id="69">
+                <SelectionPattern z:Id="70">$input</SelectionPattern>
+              </TestedSelection>
+            </NextNode>
+          </NodeConfiguration>
+          <NodeConfiguration z:Ref="6" i:nil="true" />
+          <NodeConfiguration z:Ref="18" i:nil="true" />
+          <NodeConfiguration z:Ref="38" i:nil="true" />
+          <NodeConfiguration z:Ref="66" i:nil="true" />
+          <NodeConfiguration z:Ref="57" i:nil="true" />
+          <NodeConfiguration z:Ref="11" i:nil="true" />
+          <NodeConfiguration z:Ref="31" i:nil="true" />
+          <NodeConfiguration z:Ref="44" i:nil="true" />
+          <NodeConfiguration z:Ref="51" i:nil="true" />
+          <NodeConfiguration z:Ref="63" i:nil="true" />
+          <NodeConfiguration z:Ref="25" i:nil="true" />
+        </Nodes>
+        <Version>47</Version>
+      </MessageFlowConfiguration>
+    </messageflow>
+    <messageflow guid="01c46269-5ff3-4004-9a5f-87d8423c817b">
+      <MessageFlowConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig" z:Id="1">
+        <Guid>01c46269-5ff3-4004-9a5f-87d8423c817b</Guid>
+        <Name z:Id="2">default</Name>
+        <Nodes z:Id="3" z:Size="12">
+          <NodeConfiguration z:Id="4" i:type="EntryNodeConfiguration">
+            <Location xmlns:d4p1="http://schemas.datacontract.org/2004/07/System.Windows">
+              <d4p1:_x>-601.28796387167085</d4p1:_x>
+              <d4p1:_y>-90.6451080240782</d4p1:_y>
+            </Location>
+            <_name z:Id="5">Pokladna</_name>
+            <NextNode z:Id="6" i:type="CbrNodeConfiguration">
+              <Location xmlns:d5p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                <d5p1:_x>-416.26049967736674</d5p1:_x>
+                <d5p1:_y>-89.543965352703381</d5p1:_y>
+              </Location>
+              <_name z:Id="7">Typ</_name>
+              <Branches xmlns:d5p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" z:Id="8" z:Size="2">
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="9">
+                    <d7p1:XPath z:Id="10">/group[@name='Restaurant']/item[@name='Schematron Order']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="11" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-233.20199017208111</d8p1:_x>
+                      <d8p1:_y>-84.574234426785736</d8p1:_y>
+                    </Location>
+                    <_name z:Id="12">Příprava odesílaní objednávky</_name>
+                    <Actions z:Id="13" z:Size="1">
+                      <ActionConfiguration z:Id="14">
+                        <ActionTypeName z:Id="15">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="16">
+                          <d10p1:XmlContent z:Id="17">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Order']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//order&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;orderToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="18" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>8.5894792270269349</d9p1:_x>
+                        <d9p1:_y>-80.303731701671708</d9p1:_y>
+                      </Location>
+                      <_name z:Id="19">Objednávka</_name>
+                      <Actions z:Id="20" z:Size="1">
+                        <ActionConfiguration z:Id="21">
+                          <ActionTypeName z:Id="22">Message sender</ActionTypeName>
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="23">
+                            <d11p1:XmlContent z:Id="24">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Objednávka&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$orderToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="25" i:type="TerminatorNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>191.64196844496678</d10p1:_x>
+                          <d10p1:_y>-90.783614437400786</d10p1:_y>
+                        </Location>
+                        <_name z:Id="26">Objednáno</_name>
+                        <IsReturningOutput>false</IsReturningOutput>
+                        <ResultMessageSelection z:Id="27">
+                          <SelectionPattern z:Id="28" />
+                        </ResultMessageSelection>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="29">
+                    <d7p1:XPath z:Id="30">/group[@name='Restaurant']/item[@name='Schematron Payment']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="31" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-459.723971115322</d8p1:_x>
+                      <d8p1:_y>-254.46267780369814</d8p1:_y>
+                    </Location>
+                    <_name z:Id="32">Příprava odesílaní platby</_name>
+                    <Actions z:Id="33" z:Size="1">
+                      <ActionConfiguration z:Id="34">
+                        <ActionTypeName z:Id="35">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="36">
+                          <d10p1:XmlContent z:Id="37">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Payment']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//payment&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;paymentToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="38" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>-242.38100478054832</d9p1:_x>
+                        <d9p1:_y>-259.99508845843138</d9p1:_y>
+                      </Location>
+                      <_name z:Id="39">Platba</_name>
+                      <Actions z:Id="40" z:Size="1">
+                        <ActionConfiguration z:Id="41">
+                          <ActionTypeName z:Ref="22" i:nil="true" />
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="42">
+                            <d11p1:XmlContent z:Id="43">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Platba&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$paymentToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;receiptData&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="44" i:type="ActionNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>-59.197978858470975</d10p1:_x>
+                          <d10p1:_y>-255.6136600716668</d10p1:_y>
+                        </Location>
+                        <_name z:Id="45">Extrakce dat pro účtenku</_name>
+                        <Actions z:Id="46" z:Size="1">
+                          <ActionConfiguration z:Id="47">
+                            <ActionTypeName z:Id="48">Xslt transformer</ActionTypeName>
+                            <Configuration xmlns:d12p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="49">
+                              <d12p1:XmlContent z:Id="50">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt ReceiptData']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptData&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receiptDataExtracted&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d12p1:XmlContent>
+                            </Configuration>
+                          </ActionConfiguration>
+                        </Actions>
+                        <NextNode z:Id="51" i:type="ActionNodeConfiguration">
+                          <Location xmlns:d11p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                            <d11p1:_x>158.71475488167187</d11p1:_x>
+                            <d11p1:_y>-252.66721263227882</d11p1:_y>
+                          </Location>
+                          <_name z:Id="52">Tvorba účtenky</_name>
+                          <Actions z:Id="53" z:Size="1">
+                            <ActionConfiguration z:Id="54">
+                              <ActionTypeName z:Ref="48" i:nil="true" />
+                              <Configuration xmlns:d13p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="55">
+                                <d13p1:XmlContent z:Id="56">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt MakeReceipt']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptDataExtracted&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receipt&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d13p1:XmlContent>
+                              </Configuration>
+                            </ActionConfiguration>
+                          </Actions>
+                          <NextNode z:Id="57" i:type="ActionNodeConfiguration">
+                            <Location xmlns:d12p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                              <d12p1:_x>346.04917121968117</d12p1:_x>
+                              <d12p1:_y>-251.17531627962521</d12p1:_y>
+                            </Location>
+                            <_name z:Id="58">Tisk</_name>
+                            <Actions z:Id="59" z:Size="1">
+                              <ActionConfiguration z:Id="60">
+                                <ActionTypeName z:Ref="22" i:nil="true" />
+                                <Configuration xmlns:d14p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="61">
+                                  <d14p1:XmlContent z:Id="62">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$receipt&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d14p1:XmlContent>
+                                </Configuration>
+                              </ActionConfiguration>
+                            </Actions>
+                            <NextNode z:Id="63" i:type="TerminatorNodeConfiguration">
+                              <Location xmlns:d13p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                                <d13p1:_x>496.3827139008049</d13p1:_x>
+                                <d13p1:_y>-249.06741487763941</d13p1:_y>
+                              </Location>
+                              <_name z:Id="64">Vytištěno</_name>
+                              <IsReturningOutput>false</IsReturningOutput>
+                              <ResultMessageSelection z:Id="65">
+                                <SelectionPattern z:Ref="28" i:nil="true" />
+                              </ResultMessageSelection>
+                            </NextNode>
+                          </NextNode>
+                        </NextNode>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+              </Branches>
+              <DefaultTarget z:Id="66" i:type="TerminatorNodeConfiguration">
+                <Location xmlns:d6p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                  <d6p1:_x>-448.03169476296193</d6p1:_x>
+                  <d6p1:_y>56.823128227030622</d6p1:_y>
+                </Location>
+                <_name z:Id="67">Špatná objednávka</_name>
+                <IsReturningOutput>false</IsReturningOutput>
+                <ResultMessageSelection z:Id="68">
+                  <SelectionPattern z:Ref="28" i:nil="true" />
+                </ResultMessageSelection>
+              </DefaultTarget>
+              <TestedSelection z:Id="69">
+                <SelectionPattern z:Id="70">$input</SelectionPattern>
+              </TestedSelection>
+            </NextNode>
+          </NodeConfiguration>
+          <NodeConfiguration z:Ref="6" i:nil="true" />
+          <NodeConfiguration z:Ref="18" i:nil="true" />
+          <NodeConfiguration z:Ref="38" i:nil="true" />
+          <NodeConfiguration z:Ref="66" i:nil="true" />
+          <NodeConfiguration z:Ref="57" i:nil="true" />
+          <NodeConfiguration z:Ref="11" i:nil="true" />
+          <NodeConfiguration z:Ref="31" i:nil="true" />
+          <NodeConfiguration z:Ref="44" i:nil="true" />
+          <NodeConfiguration z:Ref="51" i:nil="true" />
+          <NodeConfiguration z:Ref="63" i:nil="true" />
+          <NodeConfiguration z:Ref="25" i:nil="true" />
+        </Nodes>
+        <Version>48</Version>
+      </MessageFlowConfiguration>
+    </messageflow>
+    <messageflow guid="9d122bdc-9e62-4183-ba00-6c21e9dca462">
+      <MessageFlowConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig" z:Id="1">
+        <Guid>9d122bdc-9e62-4183-ba00-6c21e9dca462</Guid>
+        <Name z:Id="2">default</Name>
+        <Nodes z:Id="3" z:Size="12">
+          <NodeConfiguration z:Id="4" i:type="EntryNodeConfiguration">
+            <Location xmlns:d4p1="http://schemas.datacontract.org/2004/07/System.Windows">
+              <d4p1:_x>-601.28796387167085</d4p1:_x>
+              <d4p1:_y>-90.6451080240782</d4p1:_y>
+            </Location>
+            <_name z:Id="5">Pokladna</_name>
+            <NextNode z:Id="6" i:type="CbrNodeConfiguration">
+              <Location xmlns:d5p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                <d5p1:_x>-416.26049967736674</d5p1:_x>
+                <d5p1:_y>-89.543965352703381</d5p1:_y>
+              </Location>
+              <_name z:Id="7">Typ</_name>
+              <Branches xmlns:d5p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" z:Id="8" z:Size="2">
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="9">
+                    <d7p1:XPath z:Id="10">/group[@name='Restaurant']/item[@name='Schematron Order']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="11" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-233.20199017208111</d8p1:_x>
+                      <d8p1:_y>-84.574234426785736</d8p1:_y>
+                    </Location>
+                    <_name z:Id="12">Příprava odesílaní objednávky</_name>
+                    <Actions z:Id="13" z:Size="1">
+                      <ActionConfiguration z:Id="14">
+                        <ActionTypeName z:Id="15">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="16">
+                          <d10p1:XmlContent z:Id="17">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Order']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//order&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;orderToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="18" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>8.5894792270269349</d9p1:_x>
+                        <d9p1:_y>-80.303731701671708</d9p1:_y>
+                      </Location>
+                      <_name z:Id="19">Objednávka</_name>
+                      <Actions z:Id="20" z:Size="1">
+                        <ActionConfiguration z:Id="21">
+                          <ActionTypeName z:Id="22">Message sender</ActionTypeName>
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="23">
+                            <d11p1:XmlContent z:Id="24">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Objednávka&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$orderToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="25" i:type="TerminatorNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>191.64196844496678</d10p1:_x>
+                          <d10p1:_y>-90.783614437400786</d10p1:_y>
+                        </Location>
+                        <_name z:Id="26">Objednáno</_name>
+                        <IsReturningOutput>false</IsReturningOutput>
+                        <ResultMessageSelection z:Id="27">
+                          <SelectionPattern z:Id="28" />
+                        </ResultMessageSelection>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="29">
+                    <d7p1:XPath z:Id="30">/group[@name='Restaurant']/item[@name='Schematron Payment']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="31" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-459.723971115322</d8p1:_x>
+                      <d8p1:_y>-254.46267780369814</d8p1:_y>
+                    </Location>
+                    <_name z:Id="32">Příprava odesílaní platby</_name>
+                    <Actions z:Id="33" z:Size="1">
+                      <ActionConfiguration z:Id="34">
+                        <ActionTypeName z:Id="35">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="36">
+                          <d10p1:XmlContent z:Id="37">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Payment']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//payment&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;paymentToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="38" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>-242.38100478054832</d9p1:_x>
+                        <d9p1:_y>-259.99508845843138</d9p1:_y>
+                      </Location>
+                      <_name z:Id="39">Platba</_name>
+                      <Actions z:Id="40" z:Size="1">
+                        <ActionConfiguration z:Id="41">
+                          <ActionTypeName z:Ref="22" i:nil="true" />
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="42">
+                            <d11p1:XmlContent z:Id="43">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Platba&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$paymentToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;receiptData&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="44" i:type="ActionNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>-59.197978858470975</d10p1:_x>
+                          <d10p1:_y>-255.6136600716668</d10p1:_y>
+                        </Location>
+                        <_name z:Id="45">Extrakce dat pro účtenku</_name>
+                        <Actions z:Id="46" z:Size="1">
+                          <ActionConfiguration z:Id="47">
+                            <ActionTypeName z:Id="48">Xslt transformer</ActionTypeName>
+                            <Configuration xmlns:d12p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="49">
+                              <d12p1:XmlContent z:Id="50">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt ReceiptData']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptData&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receiptDataExtracted&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d12p1:XmlContent>
+                            </Configuration>
+                          </ActionConfiguration>
+                        </Actions>
+                        <NextNode z:Id="51" i:type="ActionNodeConfiguration">
+                          <Location xmlns:d11p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                            <d11p1:_x>158.71475488167187</d11p1:_x>
+                            <d11p1:_y>-252.66721263227882</d11p1:_y>
+                          </Location>
+                          <_name z:Id="52">Tvorba účtenky</_name>
+                          <Actions z:Id="53" z:Size="1">
+                            <ActionConfiguration z:Id="54">
+                              <ActionTypeName z:Ref="48" i:nil="true" />
+                              <Configuration xmlns:d13p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="55">
+                                <d13p1:XmlContent z:Id="56">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt MakeReceipt']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptDataExtracted&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receipt&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d13p1:XmlContent>
+                              </Configuration>
+                            </ActionConfiguration>
+                          </Actions>
+                          <NextNode z:Id="57" i:type="ActionNodeConfiguration">
+                            <Location xmlns:d12p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                              <d12p1:_x>346.04917121968117</d12p1:_x>
+                              <d12p1:_y>-251.17531627962521</d12p1:_y>
+                            </Location>
+                            <_name z:Id="58">Tisk</_name>
+                            <Actions z:Id="59" z:Size="1">
+                              <ActionConfiguration z:Id="60">
+                                <ActionTypeName z:Ref="22" i:nil="true" />
+                                <Configuration xmlns:d14p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="61">
+                                  <d14p1:XmlContent z:Id="62">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$receipt&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d14p1:XmlContent>
+                                </Configuration>
+                              </ActionConfiguration>
+                            </Actions>
+                            <NextNode z:Id="63" i:type="TerminatorNodeConfiguration">
+                              <Location xmlns:d13p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                                <d13p1:_x>496.3827139008049</d13p1:_x>
+                                <d13p1:_y>-249.06741487763941</d13p1:_y>
+                              </Location>
+                              <_name z:Id="64">Vytištěno</_name>
+                              <IsReturningOutput>false</IsReturningOutput>
+                              <ResultMessageSelection z:Id="65">
+                                <SelectionPattern z:Ref="28" i:nil="true" />
+                              </ResultMessageSelection>
+                            </NextNode>
+                          </NextNode>
+                        </NextNode>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+              </Branches>
+              <DefaultTarget z:Id="66" i:type="TerminatorNodeConfiguration">
+                <Location xmlns:d6p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                  <d6p1:_x>-448.03169476296193</d6p1:_x>
+                  <d6p1:_y>56.823128227030622</d6p1:_y>
+                </Location>
+                <_name z:Id="67">Špatná objednávka</_name>
+                <IsReturningOutput>false</IsReturningOutput>
+                <ResultMessageSelection z:Id="68">
+                  <SelectionPattern z:Ref="28" i:nil="true" />
+                </ResultMessageSelection>
+              </DefaultTarget>
+              <TestedSelection z:Id="69">
+                <SelectionPattern z:Id="70">$input</SelectionPattern>
+              </TestedSelection>
+            </NextNode>
+          </NodeConfiguration>
+          <NodeConfiguration z:Ref="6" i:nil="true" />
+          <NodeConfiguration z:Ref="18" i:nil="true" />
+          <NodeConfiguration z:Ref="38" i:nil="true" />
+          <NodeConfiguration z:Ref="66" i:nil="true" />
+          <NodeConfiguration z:Ref="57" i:nil="true" />
+          <NodeConfiguration z:Ref="11" i:nil="true" />
+          <NodeConfiguration z:Ref="31" i:nil="true" />
+          <NodeConfiguration z:Ref="44" i:nil="true" />
+          <NodeConfiguration z:Ref="51" i:nil="true" />
+          <NodeConfiguration z:Ref="63" i:nil="true" />
+          <NodeConfiguration z:Ref="25" i:nil="true" />
+        </Nodes>
+        <Version>49</Version>
+      </MessageFlowConfiguration>
+    </messageflow>
+    <messageflow guid="2035618d-daf9-4797-9172-3413bc9a4ecb">
+      <MessageFlowConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig" z:Id="1">
+        <Guid>2035618d-daf9-4797-9172-3413bc9a4ecb</Guid>
+        <Name z:Id="2">default</Name>
+        <Nodes z:Id="3" z:Size="12">
+          <NodeConfiguration z:Id="4" i:type="EntryNodeConfiguration">
+            <Location xmlns:d4p1="http://schemas.datacontract.org/2004/07/System.Windows">
+              <d4p1:_x>-601.28796387167085</d4p1:_x>
+              <d4p1:_y>-90.6451080240782</d4p1:_y>
+            </Location>
+            <_name z:Id="5">Pokladna</_name>
+            <NextNode z:Id="6" i:type="CbrNodeConfiguration">
+              <Location xmlns:d5p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                <d5p1:_x>-416.26049967736674</d5p1:_x>
+                <d5p1:_y>-89.543965352703381</d5p1:_y>
+              </Location>
+              <_name z:Id="7">Typ</_name>
+              <Branches xmlns:d5p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" z:Id="8" z:Size="2">
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="9">
+                    <d7p1:XPath z:Id="10">/group[@name='Restaurant']/item[@name='Schematron Order']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="11" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-233.20199017208111</d8p1:_x>
+                      <d8p1:_y>-84.574234426785736</d8p1:_y>
+                    </Location>
+                    <_name z:Id="12">Příprava odesílaní objednávky</_name>
+                    <Actions z:Id="13" z:Size="1">
+                      <ActionConfiguration z:Id="14">
+                        <ActionTypeName z:Id="15">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="16">
+                          <d10p1:XmlContent z:Id="17">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Order']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//order&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;orderToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="18" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>8.5894792270269349</d9p1:_x>
+                        <d9p1:_y>-80.303731701671708</d9p1:_y>
+                      </Location>
+                      <_name z:Id="19">Objednávka</_name>
+                      <Actions z:Id="20" z:Size="1">
+                        <ActionConfiguration z:Id="21">
+                          <ActionTypeName z:Id="22">Message sender</ActionTypeName>
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="23">
+                            <d11p1:XmlContent z:Id="24">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Objednávka&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$orderToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="25" i:type="TerminatorNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>191.64196844496678</d10p1:_x>
+                          <d10p1:_y>-90.783614437400786</d10p1:_y>
+                        </Location>
+                        <_name z:Id="26">Objednáno</_name>
+                        <IsReturningOutput>false</IsReturningOutput>
+                        <ResultMessageSelection z:Id="27">
+                          <SelectionPattern z:Id="28" />
+                        </ResultMessageSelection>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="29">
+                    <d7p1:XPath z:Id="30">/group[@name='Restaurant']/item[@name='Schematron Payment']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="31" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-459.723971115322</d8p1:_x>
+                      <d8p1:_y>-254.46267780369814</d8p1:_y>
+                    </Location>
+                    <_name z:Id="32">Příprava odesílaní platby</_name>
+                    <Actions z:Id="33" z:Size="1">
+                      <ActionConfiguration z:Id="34">
+                        <ActionTypeName z:Id="35">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="36">
+                          <d10p1:XmlContent z:Id="37">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Payment']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//payment&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;paymentToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="38" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>-242.38100478054832</d9p1:_x>
+                        <d9p1:_y>-259.99508845843138</d9p1:_y>
+                      </Location>
+                      <_name z:Id="39">Platba</_name>
+                      <Actions z:Id="40" z:Size="1">
+                        <ActionConfiguration z:Id="41">
+                          <ActionTypeName z:Ref="22" i:nil="true" />
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="42">
+                            <d11p1:XmlContent z:Id="43">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Platba&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$paymentToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;receiptData&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="44" i:type="ActionNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>-59.197978858470975</d10p1:_x>
+                          <d10p1:_y>-255.6136600716668</d10p1:_y>
+                        </Location>
+                        <_name z:Id="45">Extrakce dat pro účtenku</_name>
+                        <Actions z:Id="46" z:Size="1">
+                          <ActionConfiguration z:Id="47">
+                            <ActionTypeName z:Id="48">Xslt transformer</ActionTypeName>
+                            <Configuration xmlns:d12p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="49">
+                              <d12p1:XmlContent z:Id="50">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt ReceiptData']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptData&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receiptDataExtracted&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d12p1:XmlContent>
+                            </Configuration>
+                          </ActionConfiguration>
+                        </Actions>
+                        <NextNode z:Id="51" i:type="ActionNodeConfiguration">
+                          <Location xmlns:d11p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                            <d11p1:_x>158.71475488167187</d11p1:_x>
+                            <d11p1:_y>-252.66721263227882</d11p1:_y>
+                          </Location>
+                          <_name z:Id="52">Tvorba účtenky</_name>
+                          <Actions z:Id="53" z:Size="1">
+                            <ActionConfiguration z:Id="54">
+                              <ActionTypeName z:Ref="48" i:nil="true" />
+                              <Configuration xmlns:d13p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="55">
+                                <d13p1:XmlContent z:Id="56">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt MakeReceipt']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptDataExtracted&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receipt&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d13p1:XmlContent>
+                              </Configuration>
+                            </ActionConfiguration>
+                          </Actions>
+                          <NextNode z:Id="57" i:type="ActionNodeConfiguration">
+                            <Location xmlns:d12p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                              <d12p1:_x>346.04917121968117</d12p1:_x>
+                              <d12p1:_y>-251.17531627962521</d12p1:_y>
+                            </Location>
+                            <_name z:Id="58">Tisk</_name>
+                            <Actions z:Id="59" z:Size="1">
+                              <ActionConfiguration z:Id="60">
+                                <ActionTypeName z:Ref="22" i:nil="true" />
+                                <Configuration xmlns:d14p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="61">
+                                  <d14p1:XmlContent z:Id="62">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$receipt&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d14p1:XmlContent>
+                                </Configuration>
+                              </ActionConfiguration>
+                            </Actions>
+                            <NextNode z:Id="63" i:type="TerminatorNodeConfiguration">
+                              <Location xmlns:d13p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                                <d13p1:_x>496.3827139008049</d13p1:_x>
+                                <d13p1:_y>-249.06741487763941</d13p1:_y>
+                              </Location>
+                              <_name z:Id="64">Vytištěno</_name>
+                              <IsReturningOutput>false</IsReturningOutput>
+                              <ResultMessageSelection z:Id="65">
+                                <SelectionPattern z:Ref="28" i:nil="true" />
+                              </ResultMessageSelection>
+                            </NextNode>
+                          </NextNode>
+                        </NextNode>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+              </Branches>
+              <DefaultTarget z:Id="66" i:type="TerminatorNodeConfiguration">
+                <Location xmlns:d6p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                  <d6p1:_x>-448.03169476296193</d6p1:_x>
+                  <d6p1:_y>56.823128227030622</d6p1:_y>
+                </Location>
+                <_name z:Id="67">Špatná objednávka</_name>
+                <IsReturningOutput>false</IsReturningOutput>
+                <ResultMessageSelection z:Id="68">
+                  <SelectionPattern z:Ref="28" i:nil="true" />
+                </ResultMessageSelection>
+              </DefaultTarget>
+              <TestedSelection z:Id="69">
+                <SelectionPattern z:Id="70">$input</SelectionPattern>
+              </TestedSelection>
+            </NextNode>
+          </NodeConfiguration>
+          <NodeConfiguration z:Ref="6" i:nil="true" />
+          <NodeConfiguration z:Ref="18" i:nil="true" />
+          <NodeConfiguration z:Ref="38" i:nil="true" />
+          <NodeConfiguration z:Ref="66" i:nil="true" />
+          <NodeConfiguration z:Ref="57" i:nil="true" />
+          <NodeConfiguration z:Ref="11" i:nil="true" />
+          <NodeConfiguration z:Ref="31" i:nil="true" />
+          <NodeConfiguration z:Ref="44" i:nil="true" />
+          <NodeConfiguration z:Ref="51" i:nil="true" />
+          <NodeConfiguration z:Ref="63" i:nil="true" />
+          <NodeConfiguration z:Ref="25" i:nil="true" />
+        </Nodes>
+        <Version>50</Version>
+      </MessageFlowConfiguration>
+    </messageflow>
+    <messageflow guid="84a36522-3588-40c1-883f-b0b4f523d797">
+      <MessageFlowConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" z:Id="1" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig">
+        <Guid>84a36522-3588-40c1-883f-b0b4f523d797</Guid>
+        <Name z:Id="2">default</Name>
+        <Nodes z:Id="3" z:Size="12">
+          <NodeConfiguration z:Id="4" i:type="EntryNodeConfiguration">
+            <Location xmlns:d4p1="http://schemas.datacontract.org/2004/07/System.Windows">
+              <d4p1:_x>-601.28796387167085</d4p1:_x>
+              <d4p1:_y>-90.6451080240782</d4p1:_y>
+            </Location>
+            <_name z:Id="5">Pokladna</_name>
+            <NextNode z:Id="6" i:type="CbrNodeConfiguration">
+              <Location xmlns:d5p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                <d5p1:_x>-416.26049967736674</d5p1:_x>
+                <d5p1:_y>-89.543965352703381</d5p1:_y>
+              </Location>
+              <_name z:Id="7">Typ</_name>
+              <Branches xmlns:d5p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" z:Id="8" z:Size="2">
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="9">
+                    <d7p1:XPath z:Id="10">/group[@name='Restaurant']/item[@name='Schematron Order']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="11" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-233.20199017208111</d8p1:_x>
+                      <d8p1:_y>-84.574234426785736</d8p1:_y>
+                    </Location>
+                    <_name z:Id="12">Příprava odesílaní objednávky</_name>
+                    <Actions z:Id="13" z:Size="1">
+                      <ActionConfiguration z:Id="14">
+                        <ActionTypeName z:Id="15">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="16">
+                          <d10p1:XmlContent z:Id="17">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Order']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//order&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;orderToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="18" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>8.5894792270269349</d9p1:_x>
+                        <d9p1:_y>-80.303731701671708</d9p1:_y>
+                      </Location>
+                      <_name z:Id="19">Objednávka</_name>
+                      <Actions z:Id="20" z:Size="1">
+                        <ActionConfiguration z:Id="21">
+                          <ActionTypeName z:Id="22">Message sender</ActionTypeName>
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="23">
+                            <d11p1:XmlContent z:Id="24">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Objednávka&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$orderToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="25" i:type="TerminatorNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>191.64196844496678</d10p1:_x>
+                          <d10p1:_y>-90.783614437400786</d10p1:_y>
+                        </Location>
+                        <_name z:Id="26">Objednáno</_name>
+                        <IsReturningOutput>false</IsReturningOutput>
+                        <ResultMessageSelection z:Id="27">
+                          <SelectionPattern z:Id="28"></SelectionPattern>
+                        </ResultMessageSelection>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="29">
+                    <d7p1:XPath z:Id="30">/group[@name='Restaurant']/item[@name='Schematron Payment']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="31" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-459.723971115322</d8p1:_x>
+                      <d8p1:_y>-254.46267780369814</d8p1:_y>
+                    </Location>
+                    <_name z:Id="32">Příprava odesílaní platby</_name>
+                    <Actions z:Id="33" z:Size="1">
+                      <ActionConfiguration z:Id="34">
+                        <ActionTypeName z:Id="35">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="36">
+                          <d10p1:XmlContent z:Id="37">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Payment']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//payment&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;paymentToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="38" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>-242.38100478054832</d9p1:_x>
+                        <d9p1:_y>-259.99508845843138</d9p1:_y>
+                      </Location>
+                      <_name z:Id="39">Platba</_name>
+                      <Actions z:Id="40" z:Size="1">
+                        <ActionConfiguration z:Id="41">
+                          <ActionTypeName z:Ref="22" i:nil="true" />
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="42">
+                            <d11p1:XmlContent z:Id="43">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Platba&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$paymentToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;receiptData&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="44" i:type="ActionNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>-59.197978858470975</d10p1:_x>
+                          <d10p1:_y>-255.6136600716668</d10p1:_y>
+                        </Location>
+                        <_name z:Id="45">Extrakce dat pro účtenku</_name>
+                        <Actions z:Id="46" z:Size="1">
+                          <ActionConfiguration z:Id="47">
+                            <ActionTypeName z:Id="48">Xslt transformer</ActionTypeName>
+                            <Configuration xmlns:d12p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="49">
+                              <d12p1:XmlContent z:Id="50">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt ReceiptData']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptData&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receiptDataExtracted&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d12p1:XmlContent>
+                            </Configuration>
+                          </ActionConfiguration>
+                        </Actions>
+                        <NextNode z:Id="51" i:type="ActionNodeConfiguration">
+                          <Location xmlns:d11p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                            <d11p1:_x>158.71475488167187</d11p1:_x>
+                            <d11p1:_y>-252.66721263227882</d11p1:_y>
+                          </Location>
+                          <_name z:Id="52">Tvorba účtenky</_name>
+                          <Actions z:Id="53" z:Size="1">
+                            <ActionConfiguration z:Id="54">
+                              <ActionTypeName z:Ref="48" i:nil="true" />
+                              <Configuration xmlns:d13p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="55">
+                                <d13p1:XmlContent z:Id="56">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt MakeReceipt']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptDataExtracted&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receipt&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d13p1:XmlContent>
+                              </Configuration>
+                            </ActionConfiguration>
+                          </Actions>
+                          <NextNode z:Id="57" i:type="ActionNodeConfiguration">
+                            <Location xmlns:d12p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                              <d12p1:_x>346.04917121968117</d12p1:_x>
+                              <d12p1:_y>-251.17531627962521</d12p1:_y>
+                            </Location>
+                            <_name z:Id="58">Tisk</_name>
+                            <Actions z:Id="59" z:Size="1">
+                              <ActionConfiguration z:Id="60">
+                                <ActionTypeName z:Ref="22" i:nil="true" />
+                                <Configuration xmlns:d14p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="61">
+                                  <d14p1:XmlContent z:Id="62">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$receipt&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d14p1:XmlContent>
+                                </Configuration>
+                              </ActionConfiguration>
+                            </Actions>
+                            <NextNode z:Id="63" i:type="TerminatorNodeConfiguration">
+                              <Location xmlns:d13p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                                <d13p1:_x>496.3827139008049</d13p1:_x>
+                                <d13p1:_y>-249.06741487763941</d13p1:_y>
+                              </Location>
+                              <_name z:Id="64">Vytištěno</_name>
+                              <IsReturningOutput>false</IsReturningOutput>
+                              <ResultMessageSelection z:Id="65">
+                                <SelectionPattern z:Ref="28" i:nil="true" />
+                              </ResultMessageSelection>
+                            </NextNode>
+                          </NextNode>
+                        </NextNode>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+              </Branches>
+              <DefaultTarget z:Id="66" i:type="TerminatorNodeConfiguration">
+                <Location xmlns:d6p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                  <d6p1:_x>-448.03169476296193</d6p1:_x>
+                  <d6p1:_y>56.823128227030622</d6p1:_y>
+                </Location>
+                <_name z:Id="67">Špatná objednávka</_name>
+                <IsReturningOutput>false</IsReturningOutput>
+                <ResultMessageSelection z:Id="68">
+                  <SelectionPattern z:Ref="28" i:nil="true" />
+                </ResultMessageSelection>
+              </DefaultTarget>
+              <TestedSelection z:Id="69">
+                <SelectionPattern z:Id="70">$input</SelectionPattern>
+              </TestedSelection>
+            </NextNode>
+          </NodeConfiguration>
+          <NodeConfiguration z:Ref="6" i:nil="true" />
+          <NodeConfiguration z:Ref="18" i:nil="true" />
+          <NodeConfiguration z:Ref="38" i:nil="true" />
+          <NodeConfiguration z:Ref="66" i:nil="true" />
+          <NodeConfiguration z:Ref="57" i:nil="true" />
+          <NodeConfiguration z:Ref="11" i:nil="true" />
+          <NodeConfiguration z:Ref="31" i:nil="true" />
+          <NodeConfiguration z:Ref="44" i:nil="true" />
+          <NodeConfiguration z:Ref="51" i:nil="true" />
+          <NodeConfiguration z:Ref="63" i:nil="true" />
+          <NodeConfiguration z:Ref="25" i:nil="true" />
+        </Nodes>
+        <Version>51</Version>
+      </MessageFlowConfiguration>
+    </messageflow>
   </messageflows>
   <xml-resource-storage>
     <group name="Restaurant">
@@ -7142,13 +8990,13 @@
             <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
               <s:Body>
                 <SaveOrder xmlns="http://tempuri.org/">
-                  <order xmlns:i="http://schemas.datacontract.org/2004/07/XRouterWS">
-                    <i:item>
+                  <order xmlns:i="http://schemas.datacontract.org/2004/07/XRouter.Examples.Restaurant.RestaurantService">
+                    <i:Item>
                       <xsl:value-of select="//item" />
-                    </i:item>
-                    <i:table>
+                    </i:Item>
+                    <i:Table>
                       <xsl:value-of select="//table" />
-                    </i:table>
+                    </i:Table>
                   </order>
                 </SaveOrder>
               </s:Body>
@@ -7163,10 +9011,10 @@
             <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
               <s:Body>
                 <GetReceipt xmlns="http://tempuri.org/">
-                  <payment xmlns:i="http://schemas.datacontract.org/2004/07/XRouterWS">
-                    <i:table>
+                  <payment xmlns:i="http://schemas.datacontract.org/2004/07/XRouter.Examples.Restaurant.RestaurantService">
+                    <i:Table>
                       <xsl:value-of select="//table" />
-                    </i:table>
+                    </i:Table>
                   </payment>
                 </GetReceipt>
               </s:Body>
@@ -7193,16 +9041,16 @@
           <xsl:template match="/">
     
     Restaurace MFF                  Účet pro
-    Malá Strana, Praha 1            stůl č. <xsl:value-of select="//table" />
+    Malá Strana, Praha 1            stůl č. <xsl:value-of select="//Table" />
     
-    Vydáno: <xsl:value-of select="//date" />
+    Vydáno: <xsl:value-of select="//Date" />
     ------------------------------------------
     
-    <xsl:for-each select="//item"><xsl:value-of select="./name" /> (<xsl:value-of select="./quantity" />X) .............. <xsl:value-of select="./totalPrice" />,00 Kč
+    <xsl:for-each select="//Item"><xsl:value-of select="./Name" /> (<xsl:value-of select="./Quantity" />X) .............. <xsl:value-of select="./TotalPrice" />,00 Kč
     </xsl:for-each>
     ------------------------------------------
 
-    Celkem (vč. DPH): .............. <xsl:value-of select="sum(//totalPrice)" />,00 Kč
+    Celkem (vč. DPH): .............. <xsl:value-of select="sum(//TotalPrice)" />,00 Kč
 
     Děkujeme za Vaši návštěvu!
 
