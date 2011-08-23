@@ -91,7 +91,6 @@ namespace XRouter.Data
 
         public void SaveToken(Token token)
         {
-            string tokenXml = token.Content.XDocument.ToString();
             dataAccess.SaveToken(token);
         }
 

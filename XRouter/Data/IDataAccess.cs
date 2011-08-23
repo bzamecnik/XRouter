@@ -56,12 +56,9 @@ namespace XRouter.Data
         /// Saves the token identified by its GUID with a given content.
         /// </summary>
         /// <remarks>
-        /// It adds or replaces the token.
+        /// It adds a new or modified token (history iskept).
         /// </remarks>
-        /// <param name="tokenGuid">unique identifier of the token</param>
-        /// <param name="tokenXml">token XML content</param>
-        void SaveToken(Guid tokenGuid, string tokenXml);
-
+        /// <param name="token">token XML content</param>
         void SaveToken(Token token);
 
         // TODO: what about the order of tokens?
