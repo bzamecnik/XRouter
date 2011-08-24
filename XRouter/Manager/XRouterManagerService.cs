@@ -29,7 +29,7 @@ namespace XRouter.Manager
             XRouter.Common.EventLog.Initialize(this.Logger);
 
             // managedService (required)   
-            string serviceName = args.Settings.Parameters["managedServiceName"];
+            string serviceName = args.Settings.Parameters["managedServiceName"].Trim();
             if (serviceName == null)
             {
                 throw new ArgumentNullException("managedServiceName");
@@ -79,14 +79,14 @@ namespace XRouter.Manager
         private static EMailSender CreateEmailSender(OnStartServiceArgs args)
         {
             // SMTP host
-            string smtpHost = args.Settings["email"].Parameters["smtpHost"];
+            string smtpHost = args.Settings["email"].Parameters["smtpHost"].Trim();
             if (smtpHost == null)
             {
                 throw new ArgumentNullException("smtpHost");
             }
 
             // SMTP port (optional)
-            string smtpPort = args.Settings["email"].Parameters["smtpPort"];
+            string smtpPort = args.Settings["email"].Parameters["smtpPort"].Trim();
             int? port = null;
             if (smtpPort != null)
             {
@@ -94,7 +94,7 @@ namespace XRouter.Manager
             }
 
             // From
-            string from = args.Settings["email"].Parameters["from"];
+            string from = args.Settings["email"].Parameters["from"].Trim();
             if (from == null)
             {
                 throw new ArgumentNullException("from");
@@ -102,7 +102,7 @@ namespace XRouter.Manager
             System.Net.Mail.MailAddress fromAddress = new System.Net.Mail.MailAddress(from);
 
             // To
-            string to = args.Settings["email"].Parameters["to"];
+            string to = args.Settings["email"].Parameters["to"].Trim();
             if (to == null)
             {
                 throw new ArgumentNullException("to");
@@ -125,14 +125,14 @@ namespace XRouter.Manager
             }
 
             // Connection String
-            string connectionString = args.Settings["storages"].Parameters["connectionString"];
+            string connectionString = args.Settings["storages"].Parameters["connectionString"].Trim();
             if (connectionString == null)
             {
                 throw new ArgumentNullException("connectionString");
             }
 
             // Logs
-            string logs = args.Settings["storages"].Parameters["logs"];
+            string logs = args.Settings["storages"].Parameters["logs"].Trim();
 
             return new StoragesInfo(connectionString, logs);
         }
@@ -157,7 +157,7 @@ namespace XRouter.Manager
             }
 
             // Time (required)
-            string time = args.Settings["reporter"].Parameters["time"];
+            string time = args.Settings["reporter"].Parameters["time"].Trim();
             if (time == null)
             {
                 throw new ArgumentNullException("time");
@@ -185,7 +185,7 @@ namespace XRouter.Manager
             }
 
             // Auto-restart enabled (required)
-            string autoRestartEnabledStr = args.Settings["watcher"].Parameters["autoStartEnabled"];
+            string autoRestartEnabledStr = args.Settings["watcher"].Parameters["autoStartEnabled"].Trim();
             if (autoRestartEnabledStr == null)
             {
                 throw new ArgumentNullException("autoStartEnabled");
@@ -215,14 +215,14 @@ namespace XRouter.Manager
             }
 
             // Web service URI (required)
-            string uri = args.Settings["console"].Parameters["uri"];
+            string uri = args.Settings["console"].Parameters["uri"].Trim();
             if (uri == null)
             {
                 throw new ArgumentNullException("uri");
             }
 
             // Metadata web service URI (required)
-            string metadataUri = args.Settings["console"].Parameters["metadataUri"];
+            string metadataUri = args.Settings["console"].Parameters["metadataUri"].Trim();
             if (uri == null)
             {
                 throw new ArgumentNullException("metadataUri");
