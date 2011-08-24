@@ -129,6 +129,10 @@ namespace XRouter.Adapters
 
         public override XDocument SendMessage(string endpointName, XDocument message, XDocument metadata)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException("message");
+            }
             string targetPath;
             if (outputEndpointToPathMap.TryGetValue(endpointName, out targetPath))
             {
