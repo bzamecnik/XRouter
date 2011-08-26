@@ -28,6 +28,9 @@ OutputDir=installer
 OutputBaseFilename=xrouter-setup{#OutputBaseFilenamePostfix}
 Compression=lzma
 SolidCompression=yes
+SetupIconFile=XRouter\Gui\Resources\xrouter.ico
+WizardImageFile=installer\xrouter-logo-1.0-innosetup-164-314.bmp
+WizardSmallImageFile=installer\xrouter-logo-1.0-innosetup-55x55.bmp
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -43,9 +46,13 @@ Name: "sw\daemonNt\Console"; Description: "DaemonNT Console"; Types: full compac
 Name: "sw\daemonNt\Gui"; Description: "DaemonNT GUI"; Types: full
 Name: "docs"; Description: "Documentation"; Types: full
 Name: "examples"; Description: "Examples"; Types: full
+Name: "examples\restaurant"; Description: "Restaurant"; Types: full
 
 [Dirs]
 Name: "{app}\Logs"; Components: sw\xRouter
+Name: "C:\XRouter\DemoRestaurant"; Components: examples\restaurant
+Name: "C:\XRouter\DemoRestaurant\Pokladna"; Components: examples\restaurant
+Name: "C:\XRouter\DemoRestaurant\Tisk"; Components: examples\restaurant
 
 [Files]
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
@@ -75,6 +82,11 @@ Source: "docs\XRouter\*"; Excludes: "dummy.txt,*.chw"; DestDir: "{app}\Documenta
 Source: "docs\DaemonNT\*"; Excludes: "dummy.txt,*.chw"; DestDir: "{app}\Documentation\DaemonNT"; Components: docs
 Source: "docs\SchemaTron\*"; Excludes: "dummy.txt,*.chw"; DestDir: "{app}\Documentation\SchemaTron"; Components: docs
 
+Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.exe"; Excludes: "*vshost*"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion; Components: examples\restaurant
+;Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.dll"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion; Components: examples\restaurant
+Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.exe.config"; Excludes: "*vshost*"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion; Components: examples\restaurant
+Source: "XRouterExamples\Restaurant\Data\*"; DestDir: "{app}\Examples\Restaurant\Data"; Flags: ignoreversion recursesubdirs; Components: examples\restaurant
+
 [Icons]
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
@@ -90,3 +102,5 @@ Name: "{group}\XRouter Manager\Install XRouter Manager as Windows Service"; File
 Name: "{group}\XRouter Manager\Uninstall XRouter Manager as Windows Service"; Filename: "{app}\DaemonNT.exe"; WorkingDir: "{app}"; Parameters: "uninstall {#XRouterManagerServiceName}"
 Name: "{group}\XRouter Manager\Start XRouter Manager as Windows Service"; Filename: "{app}\DaemonNT.exe"; WorkingDir: "{app}"; Parameters: "start {#XRouterManagerServiceName}"
 Name: "{group}\XRouter Manager\Stop XRouter Manager as Windows Service"; Filename: "{app}\DaemonNT.exe"; WorkingDir: "{app}"; Parameters: "stop {#XRouterManagerServiceName}"
+
+Name: "{app}\Application Links"; Filename: "{group}"

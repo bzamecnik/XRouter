@@ -62,23 +62,27 @@ namespace XRouter.Data
             return config;
         }
 
-        public void SaveToken(Guid tokenGuid, string tokenXml)
-        {
-            ExecuteProcedure("SaveToken",
-                new SqlParameter[]
-                {
-                    new SqlParameter("MessageGUID", tokenGuid),
-                    new SqlParameter("Token", tokenXml)
-                }).Close();
-        }
-
         public void SaveToken(Token token)
         {
             string tokenXml = token.Content.XDocument.ToString();
             string inputMessage = token.GetMessage("input").ToString();
-            //TODO
-
-            SaveToken(token.Guid, tokenXml);
+            EndpointAddress endpointAddress = token.GetSourceAddress();
+            
+            ExecuteProcedure("SaveToken",
+                new SqlParameter[]
+                {
+                    new SqlParameter("InputGUID", token.Guid),
+                    new SqlParameter("Token", tokenXml),
+                    new SqlParameter("TokenState", token.State.ToString()),
+                    new SqlParameter("Message", inputMessage),
+                    (token.Created == DateTime.MinValue ? new SqlParameter("Created", DBNull.Value): new SqlParameter("Created", token.Created)),
+                    (token.Received == DateTime.MinValue ? new SqlParameter("Received", DBNull.Value): new SqlParameter("Received", token.Received)),
+                    (token.Dispatched == DateTime.MinValue ? new SqlParameter("Dispatched", DBNull.Value): new SqlParameter("Dispatched", token.Dispatched)),
+                    (token.Finished == DateTime.MinValue ? new SqlParameter("Finished", DBNull.Value): new SqlParameter("Finished", token.Finished)),
+                    new SqlParameter("IsPersistent", token.IsPersistent),
+                    new SqlParameter("AdapterName", endpointAddress.AdapterName),
+                    new SqlParameter("EndpointName", endpointAddress.EndpointName)
+                }).Close();
         }
 
         public string LoadToken(Guid tokenGuid)
@@ -88,7 +92,7 @@ namespace XRouter.Data
             Response response = ExecuteProcedure("GetToken",
                 new SqlParameter[]
                 {
-                    new SqlParameter("MessageGUID", tokenGuid)
+                    new SqlParameter("InputGUID", tokenGuid)
                 });
             if (response.sqlDataReader.Read())
             {
@@ -162,7 +166,7 @@ namespace XRouter.Data
             }
             catch (Exception)
             {
-                throw; //TODO - specialized exception?
+                throw;
             }
 
             return new Response(sqlConnection, sqlDataReader);

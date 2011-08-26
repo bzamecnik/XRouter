@@ -54,7 +54,7 @@ namespace XRouter.Data
             }
         }
 
-        public void SaveToken(Guid tokenGuid, string tokenXml)
+        private void SaveToken(Guid tokenGuid, string tokenXml)
         {
             lock (storageLock) {
                 if (tokens.ContainsKey(tokenGuid)) {

@@ -1,15 +1,15 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("XRouter.Examples.Restaurant.DataGenerator")]
+[assembly: AssemblyTitle("XRouter.Adapters.Test")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("The XRouter Team")]
-[assembly: AssemblyProduct("XRouter.Examples")]
+[assembly: AssemblyProduct("XRouter")]
 [assembly: AssemblyCopyright("Copyright © The XRouter Team 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("298c2d4f-e1a1-4972-a785-b66c5ac1fb1c")]
+[assembly: Guid("2f3aadd5-5a5a-4d85-add4-1bd09e7eb354")]
 
 // Version information for an assembly consists of the following four values:
 //

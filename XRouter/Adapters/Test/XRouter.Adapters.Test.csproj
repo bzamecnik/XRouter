@@ -5,19 +5,20 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{65687946-3002-4E95-8F35-A98EFDB615FD}</ProjectGuid>
+    <ProjectGuid>{3E26810C-49B3-4720-A729-755094D63278}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XRouter.Manager</RootNamespace>
-    <AssemblyName>XRouter.Manager</AssemblyName>
+    <RootNamespace>XRouter.Adapters.Test</RootNamespace>
+    <AssemblyName>XRouter.Adapters.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\Release\</OutputPath>
+    <OutputPath>..\..\..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,40 +34,30 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\..\Lib\ThirdParty\xUnit-1.8\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleServer.cs" />
-    <Compile Include="ConsoleServerProxyProvider.cs" />
-    <Compile Include="EMailSender.cs" />
-    <Compile Include="IConsoleServer.cs" />
-    <Compile Include="Reporter.cs" />
-    <Compile Include="Watcher.cs" />
-    <Compile Include="StoragesInfo.cs" />
-    <Compile Include="XRouterManagerService.cs" />
+    <Compile Include="EMailClientAdapterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DaemonNT\DaemonNT\DaemonNT.csproj">
-      <Project>{3CF25136-3BF3-4213-9FDC-1E80F2C75171}</Project>
-      <Name>DaemonNT</Name>
-      <Private>False</Private>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Gateway\XRouter.Gateway.csproj">
+      <Project>{67A83368-80F1-467D-950A-64DD5F1EAD6C}</Project>
+      <Name>XRouter.Gateway</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common\XRouter.Common.csproj">
-      <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
-      <Name>XRouter.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\Data\XRouter.Data.csproj">
-      <Project>{873A6405-E524-4D55-B0F0-B125DE17655B}</Project>
-      <Name>XRouter.Data</Name>
+    <ProjectReference Include="..\XRouter.Adapters.csproj">
+      <Project>{22D3C3BC-6341-4909-A5C1-CA8BE1455770}</Project>
+      <Name>XRouter.Adapters</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

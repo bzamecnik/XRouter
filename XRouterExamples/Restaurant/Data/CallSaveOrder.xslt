@@ -7,9 +7,9 @@
     <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
       <s:Body>
         <SaveOrder xmlns="http://tempuri.org/">
-          <order xmlns:i="http://schemas.datacontract.org/2004/07/XRouterWS">
-            <i:item><xsl:value-of select="//item"/></i:item>
-            <i:table><xsl:value-of select="//table"/></i:table>
+          <order xmlns:i="http://schemas.datacontract.org/2004/07/XRouter.Examples.Restaurant.RestaurantService">
+            <i:Item><xsl:value-of select="//item"/></i:Item>
+            <i:Table><xsl:value-of select="//iable"/></i:Table>
           </order>
         </SaveOrder>
       </s:Body>

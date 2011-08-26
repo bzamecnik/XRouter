@@ -56,6 +56,11 @@ namespace XRouter.Adapters
 
                 foreach (var enpointNameAndPath in inputEndpointToPathMap)
                 {
+                    if (!IsRunning)
+                    {
+                        return;
+                    }
+
                     string enpointName = enpointNameAndPath.Key;
                     string path = enpointNameAndPath.Value;
 
@@ -107,10 +112,7 @@ namespace XRouter.Adapters
                                 continue;
                             }
 
-                            // tady by bylo dobre, aby nedochazelo ke ztrate nebo rozmnozovani zprav
-                            // navrhuji udelat to, ze jakmile bude zprava ulozena v databazi, tak adpter dostane notifikaci
-                            // a zavola se nasledujici prikaz (takova notifikace se muze hodit i u synchronnich adapteru, 
-                            // ale u WebServices to neni nutne
+                            // NOTE: if ReceiveMessage*() fails the file is not deleted
 
                             File.Delete(newFilePath);
                         }
@@ -127,6 +129,10 @@ namespace XRouter.Adapters
 
         public override XDocument SendMessage(string endpointName, XDocument message, XDocument metadata)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException("message");
+            }
             string targetPath;
             if (outputEndpointToPathMap.TryGetValue(endpointName, out targetPath))
             {
@@ -134,12 +140,10 @@ namespace XRouter.Adapters
 
                 if ((metadata != null) && (metadata.Root != null))
                 {
-                    // tohle by bylo dobre, ale chtelo by to, aby tam uzivatel mohl specifikovat substituce (poresime osobne)                    
                     fileName = metadata.Element(XName.Get("file-metadata")).Attribute(XName.Get("filename")).Value;
                 }
                 else
                 {
-                    // tady poresime ziskani defaultniho jednoznacneho 
                     fileName = string.Format("{0}_{1}.xml", DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss"), Guid.NewGuid().ToString());
                 }
 
@@ -152,7 +156,8 @@ namespace XRouter.Adapters
                     output = message.ToString();
                 }
 
-                // tady musime zase osetrit to, aby se neprepisovaly zpravy, udelame to generovanim jednoznacnych nazvu souboru
+                // TODO: generate unique file name (in case the file with the
+                // same name already exists)
                 File.WriteAllText(Path.Combine(targetPath, fileName), output);
             }
             else

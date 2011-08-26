@@ -1,0 +1,1014 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <components>
+    <gateway name="gateway">
+      <adapters>
+        <adapter name="Pokladna">
+          <AdapterConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="1">
+            <AdapterName z:Id="2">Pokladna</AdapterName>
+            <AdapterTypeName z:Id="3">Directory I/O adapter</AdapterTypeName>
+            <Configuration z:Id="4">
+              <XmlContent z:Id="5">&lt;objectConfig&gt;
+  &lt;item name="AreInputTokensPersistent"&gt;False&lt;/item&gt;
+  &lt;item name="checkingIntervalInSeconds"&gt;0.1&lt;/item&gt;
+  &lt;item name="inputEndpointToPathMap"&gt;
+    &lt;pair&gt;
+      &lt;key&gt;Pokladna&lt;/key&gt;
+      &lt;value&gt;c:\XRouter\DemoRestaurant\Pokladna&lt;/value&gt;
+    &lt;/pair&gt;
+  &lt;/item&gt;
+  &lt;item name="outputEndpointToPathMap" /&gt;
+&lt;/objectConfig&gt;</XmlContent>
+            </Configuration>
+            <GatewayName z:Id="6">gateway</GatewayName>
+          </AdapterConfiguration>
+        </adapter>
+        <adapter name="Tisk">
+          <AdapterConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="1">
+            <AdapterName z:Id="2">Tisk</AdapterName>
+            <AdapterTypeName z:Id="3">Directory I/O adapter</AdapterTypeName>
+            <Configuration z:Id="4">
+              <XmlContent z:Id="5">&lt;objectConfig&gt;
+  &lt;item name="AreInputTokensPersistent"&gt;False&lt;/item&gt;
+  &lt;item name="checkingIntervalInSeconds"&gt;0.1&lt;/item&gt;
+  &lt;item name="inputEndpointToPathMap" /&gt;
+  &lt;item name="outputEndpointToPathMap"&gt;
+    &lt;pair&gt;
+      &lt;key&gt;Tisk&lt;/key&gt;
+      &lt;value&gt;c:\XRouter\DemoRestaurant\Tisk&lt;/value&gt;
+    &lt;/pair&gt;
+  &lt;/item&gt;
+  &lt;item name="saveOnlyText"&gt;True&lt;/item&gt;
+&lt;/objectConfig&gt;</XmlContent>
+            </Configuration>
+            <GatewayName z:Id="6">gateway</GatewayName>
+          </AdapterConfiguration>
+        </adapter>
+        <adapter name="Platba">
+          <AdapterConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="1">
+            <AdapterName z:Id="2">Platba</AdapterName>
+            <AdapterTypeName z:Id="3">Web client adapter</AdapterTypeName>
+            <Configuration z:Id="4">
+              <XmlContent z:Id="5">&lt;objectConfig&gt;
+  &lt;item name="Uri"&gt;http://localhost:8011/&lt;/item&gt;
+  &lt;item name="ContentType"&gt;text/xml; charset=utf-8&lt;/item&gt;
+  &lt;item name="SOAPAction"&gt;http://tempuri.org/IService/GetReceipt&lt;/item&gt;
+  &lt;item name="TimeOut"&gt;60&lt;/item&gt;
+  &lt;item name="AreInputTokensPersistent"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</XmlContent>
+            </Configuration>
+            <GatewayName z:Id="6">gateway</GatewayName>
+          </AdapterConfiguration>
+        </adapter>
+        <adapter name="Objednávka">
+          <AdapterConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="1">
+            <AdapterName z:Id="2">Objednávka</AdapterName>
+            <AdapterTypeName z:Id="3">Web client adapter</AdapterTypeName>
+            <Configuration z:Id="4">
+              <XmlContent z:Id="5">&lt;objectConfig&gt;
+  &lt;item name="Uri"&gt;http://localhost:8011/&lt;/item&gt;
+  &lt;item name="ContentType"&gt;text/xml; charset=utf-8&lt;/item&gt;
+  &lt;item name="SOAPAction"&gt;http://tempuri.org/IService/SaveOrder&lt;/item&gt;
+  &lt;item name="TimeOut"&gt;60&lt;/item&gt;
+  &lt;item name="AreInputTokensPersistent"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</XmlContent>
+            </Configuration>
+            <GatewayName z:Id="6">gateway</GatewayName>
+          </AdapterConfiguration>
+        </adapter>
+      </adapters>
+    </gateway>
+    <processor name="processor" concurrent-threads="4" />
+  </components>
+  <dispatcher nonrunning-processor-response-timeout="60" />
+  <adapter-types>
+    <adapter-type name="E-mail client adapter" clr-type="XRouter.Adapters.EMailClientAdapter,XRouter.Adapters.dll">
+      <class-metadata>
+        <ClassMetadata xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/ObjectConfigurator" z:Id="1">
+          <ClrTypeFullName z:Id="2">XRouter.Adapters.EMailClientAdapter</ClrTypeFullName>
+          <ConfigurableItems xmlns:d2p1="http://schemas.datacontract.org/2004/07/System.Collections.ObjectModel" z:Id="3">
+            <d2p1:list z:Id="4" z:Size="8">
+              <ItemMetadata z:Id="5">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="6">SmtpHost</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="7">
+                  <defaultValue xmlns="" />
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="8" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="9">System.String</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription z:Id="10">Host-name or IP adress of the SMTP server.</UserDescription>
+                <UserName z:Id="11">SMTP host</UserName>
+                <Validators z:Id="12">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="13" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="14">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="15">SmtpPort</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="16">
+                  <defaultValue xmlns="">0</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="17" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="18">System.Int32</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription z:Id="19">Port where the SMTP server listens.</UserDescription>
+                <UserName z:Id="20">SMTP port</UserName>
+                <Validators z:Id="21">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="22" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="23">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="24">From</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="25">
+                  <defaultValue xmlns="">@</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="26" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Ref="9" i:nil="true" />
+                </Type>
+                <UserDescription z:Id="27">Source address of the e-mail message sender.</UserDescription>
+                <UserName z:Id="28">Sender address</UserName>
+                <Validators z:Id="29">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="30" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="31">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="32">FromDisplayName</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="33">
+                  <defaultValue xmlns="">XRouter</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="34" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Ref="9" i:nil="true" />
+                </Type>
+                <UserDescription z:Id="35">Display name of the e-mail message sender.</UserDescription>
+                <UserName z:Id="36">Sender name</UserName>
+                <Validators z:Id="37">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="38" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="39">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="40">Subject</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="41">
+                  <defaultValue xmlns="" />
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="42" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Ref="9" i:nil="true" />
+                </Type>
+                <UserDescription z:Id="43">The subject line of the e-mail message.</UserDescription>
+                <UserName z:Id="44">Subject</UserName>
+                <Validators z:Id="45">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="46" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="47">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="48">Body</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="49">
+                  <defaultValue xmlns="" />
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="50" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Ref="9" i:nil="true" />
+                </Type>
+                <UserDescription z:Id="51">The message body.</UserDescription>
+                <UserName z:Id="52">Body</UserName>
+                <Validators z:Id="53">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="54" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="55">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="56">To</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="57">
+                  <defaultValue xmlns="">
+                    <element>@</element>
+                  </defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="58" i:type="d5p1:CollectionItemType">
+                  <d5p1:ClrTypeFullName z:Id="59">System.Collections.Generic.List`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</d5p1:ClrTypeFullName>
+                  <d5p1:ElementType z:Id="60" i:type="d5p1:BasicItemType">
+                    <d5p1:ClrTypeFullName z:Ref="9" i:nil="true" />
+                  </d5p1:ElementType>
+                </Type>
+                <UserDescription z:Id="61">A list of e-mail addresses of recipients of this e-mail message.</UserDescription>
+                <UserName z:Id="62">Recipients</UserName>
+                <Validators z:Id="63">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="64" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="65">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="66">AreInputTokensPersistent</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="67">
+                  <defaultValue xmlns="">False</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="68" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="69">System.Boolean</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription z:Id="70">If checked, tokens created from this adapter will be persistently stored in database after each action in messageflow.</UserDescription>
+                <UserName z:Id="71">Persist input tokens</UserName>
+                <Validators z:Id="72">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="73" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+            </d2p1:list>
+          </ConfigurableItems>
+        </ClassMetadata>
+      </class-metadata>
+    </adapter-type>
+    <adapter-type name="Web client adapter" clr-type="XRouter.Adapters.HttpClientAdapter,XRouter.Adapters.dll">
+      <class-metadata>
+        <ClassMetadata xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/ObjectConfigurator" z:Id="1">
+          <ClrTypeFullName z:Id="2">XRouter.Adapters.HttpClientAdapter</ClrTypeFullName>
+          <ConfigurableItems xmlns:d2p1="http://schemas.datacontract.org/2004/07/System.Collections.ObjectModel" z:Id="3">
+            <d2p1:list z:Id="4" z:Size="5">
+              <ItemMetadata z:Id="5">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="6">Uri</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="7">
+                  <defaultValue xmlns="">http://localhost:8080/</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="8" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="9">System.String</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription z:Id="10">URI of the target web service. Example: 'http://www.example.com:8080/path/'.</UserDescription>
+                <UserName z:Id="11">Target URI</UserName>
+                <Validators z:Id="12">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="13" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="14">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="15">ContentType</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="16">
+                  <defaultValue xmlns="">text/xml; charset=utf-8</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="17" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Ref="9" i:nil="true" />
+                </Type>
+                <UserDescription z:Id="18" />
+                <UserName z:Id="19">Content type</UserName>
+                <Validators z:Id="20">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="21" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="22">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="23">SOAPAction</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="24">
+                  <defaultValue xmlns="" />
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="25" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Ref="9" i:nil="true" />
+                </Type>
+                <UserDescription z:Id="26" />
+                <UserName z:Id="27">SOAP action</UserName>
+                <Validators z:Id="28">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="29" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="30">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="31">TimeOut</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="32">
+                  <defaultValue xmlns="">60</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="33" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="34">System.Int32</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription z:Id="35">Timeout in seconds.</UserDescription>
+                <UserName z:Id="36">Timeout</UserName>
+                <Validators z:Id="37">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="38" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="39">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="40">AreInputTokensPersistent</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="41">
+                  <defaultValue xmlns="">False</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="42" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="43">System.Boolean</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription z:Id="44">If checked, tokens created from this adapter will be persistently stored in database after each action in messageflow.</UserDescription>
+                <UserName z:Id="45">Persist input tokens</UserName>
+                <Validators z:Id="46">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="47" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+            </d2p1:list>
+          </ConfigurableItems>
+        </ClassMetadata>
+      </class-metadata>
+    </adapter-type>
+    <adapter-type name="Web service adapter" clr-type="XRouter.Adapters.HttpServiceAdapter,XRouter.Adapters.dll">
+      <class-metadata>
+        <ClassMetadata xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/ObjectConfigurator" z:Id="1">
+          <ClrTypeFullName z:Id="2">XRouter.Adapters.HttpServiceAdapter</ClrTypeFullName>
+          <ConfigurableItems xmlns:d2p1="http://schemas.datacontract.org/2004/07/System.Collections.ObjectModel" z:Id="3">
+            <d2p1:list z:Id="4" z:Size="2">
+              <ItemMetadata z:Id="5">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="6">Uri</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="7">
+                  <defaultValue xmlns="">http://localhost:8080/</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="8" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="9">System.String</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription z:Id="10">It is composed of a scheme (http), host name, (optional) port, and (optional) path. Example: 'http://www.example.com:8080/path/'.</UserDescription>
+                <UserName z:Id="11">Listener URI prefix</UserName>
+                <Validators z:Id="12">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="13" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="14">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="15">AreInputTokensPersistent</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="16">
+                  <defaultValue xmlns="">False</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="17" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="18">System.Boolean</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription z:Id="19">If checked, tokens created from this adapter will be persistently stored in database after each action in messageflow.</UserDescription>
+                <UserName z:Id="20">Persist input tokens</UserName>
+                <Validators z:Id="21">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="22" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+            </d2p1:list>
+          </ConfigurableItems>
+        </ClassMetadata>
+      </class-metadata>
+    </adapter-type>
+    <adapter-type name="Directory I/O adapter" clr-type="XRouter.Adapters.DirectoryAdapter,XRouter.Adapters.dll">
+      <class-metadata>
+        <ClassMetadata xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/ObjectConfigurator" z:Id="1">
+          <ClrTypeFullName z:Id="2">XRouter.Adapters.DirectoryAdapter</ClrTypeFullName>
+          <ConfigurableItems xmlns:d2p1="http://schemas.datacontract.org/2004/07/System.Collections.ObjectModel" z:Id="3">
+            <d2p1:list z:Id="4" z:Size="5">
+              <ItemMetadata z:Id="5">
+                <MemberKind>Property</MemberKind>
+                <Name z:Id="6">AreInputTokensPersistent</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="7">
+                  <defaultValue xmlns="">False</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="8" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="9">System.Boolean</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription z:Id="10">If checked the message flow state of each token originated from this adapter will be persistently stored (eg. in a database) after performing each step in the message flow processing.</UserDescription>
+                <UserName z:Id="11">Persist input tokens</UserName>
+                <Validators z:Id="12">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="13" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="14">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="15">checkingIntervalInSeconds</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="16">
+                  <defaultValue xmlns="">0.1</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="17" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="18">System.Double</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription i:nil="true" />
+                <UserName z:Id="19">Checking interval (in seconds)</UserName>
+                <Validators z:Id="20">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="21" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="22">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="23">inputEndpointToPathMap</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="24">
+                  <defaultValue xmlns="">
+                    <pair>
+                      <key>In</key>
+                      <value>C:\XRouterTest\In</value>
+                    </pair>
+                  </defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="25" i:type="d5p1:DictionaryItemType">
+                  <d5p1:ClrTypeFullName z:Id="26">System.Collections.Concurrent.ConcurrentDictionary`2[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</d5p1:ClrTypeFullName>
+                  <d5p1:KeyType z:Id="27" i:type="d5p1:BasicItemType">
+                    <d5p1:ClrTypeFullName z:Id="28">System.String</d5p1:ClrTypeFullName>
+                  </d5p1:KeyType>
+                  <d5p1:ValueType z:Id="29" i:type="d5p1:BasicItemType">
+                    <d5p1:ClrTypeFullName z:Ref="28" i:nil="true" />
+                  </d5p1:ValueType>
+                </Type>
+                <UserDescription i:nil="true" />
+                <UserName z:Id="30">Input directories</UserName>
+                <Validators z:Id="31">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="32" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="33">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="34">outputEndpointToPathMap</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="35">
+                  <defaultValue xmlns="">
+                    <pair>
+                      <key>OutA</key>
+                      <value>C:\XRouterTest\OutA</value>
+                    </pair>
+                    <pair>
+                      <key>OutB</key>
+                      <value>C:\XRouterTest\OutB</value>
+                    </pair>
+                    <pair>
+                      <key>OutC</key>
+                      <value>C:\XRouterTest\OutC</value>
+                    </pair>
+                  </defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="36" i:type="d5p1:DictionaryItemType">
+                  <d5p1:ClrTypeFullName z:Ref="26" i:nil="true" />
+                  <d5p1:KeyType z:Id="37" i:type="d5p1:BasicItemType">
+                    <d5p1:ClrTypeFullName z:Ref="28" i:nil="true" />
+                  </d5p1:KeyType>
+                  <d5p1:ValueType z:Id="38" i:type="d5p1:BasicItemType">
+                    <d5p1:ClrTypeFullName z:Ref="28" i:nil="true" />
+                  </d5p1:ValueType>
+                </Type>
+                <UserDescription i:nil="true" />
+                <UserName z:Id="39">Output directories</UserName>
+                <Validators z:Id="40">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="41" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="42">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="43">saveOnlyText</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="44">
+                  <defaultValue xmlns="">False</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="45" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Ref="9" i:nil="true" />
+                </Type>
+                <UserDescription i:nil="true" />
+                <UserName z:Id="46">Save only text</UserName>
+                <Validators z:Id="47">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="48" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+            </d2p1:list>
+          </ConfigurableItems>
+        </ClassMetadata>
+      </class-metadata>
+    </adapter-type>
+  </adapter-types>
+  <action-types>
+    <action-type name="Message sender" clr-type="XRouter.Processor.BuiltInActions.SendMessageAction,XRouter.Processor.dll">
+      <class-metadata>
+        <ClassMetadata xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/ObjectConfigurator" z:Id="1">
+          <ClrTypeFullName z:Id="2">XRouter.Processor.BuiltInActions.SendMessageAction</ClrTypeFullName>
+          <ConfigurableItems xmlns:d2p1="http://schemas.datacontract.org/2004/07/System.Collections.ObjectModel" z:Id="3">
+            <d2p1:list z:Id="4" z:Size="7">
+              <ItemMetadata z:Id="5">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="6">targetGatewayName</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="7">
+                  <defaultValue xmlns="">gateway</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="8" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="9">System.String</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription i:nil="true" />
+                <UserName z:Id="10">Taget gateway</UserName>
+                <Validators z:Id="11">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="12" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="13">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="14">targetAdapterName</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="15">
+                  <defaultValue xmlns="">directoryAdapter</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="16" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Ref="9" i:nil="true" />
+                </Type>
+                <UserDescription i:nil="true" />
+                <UserName z:Id="17">Target adapter</UserName>
+                <Validators z:Id="18">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="19" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="20">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="21">targetEndpointName</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="22">
+                  <defaultValue xmlns="">output</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="23" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Ref="9" i:nil="true" />
+                </Type>
+                <UserDescription i:nil="true" />
+                <UserName z:Id="24">Target endpoint</UserName>
+                <Validators z:Id="25">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="26" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="27">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="28">messageSelection</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="29">
+                  <defaultValue xmlns="">token/messages/message[@name='input']/*[1]</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="30" i:type="d5p1:CustomItemType">
+                  <d5p1:ClrTypeFullName z:Id="31">XRouter.Common.MessageFlowConfig.TokenSelection</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription i:nil="true" />
+                <UserName z:Id="32">Message</UserName>
+                <Validators z:Id="33">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="34" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="35">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="36">metadataSelection</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="37">
+                  <defaultValue xmlns="">token/source-metadata/file-metadata</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="38" i:type="d5p1:CustomItemType">
+                  <d5p1:ClrTypeFullName z:Ref="31" i:nil="true" />
+                </Type>
+                <UserDescription i:nil="true" />
+                <UserName z:Id="39">Metadata</UserName>
+                <Validators z:Id="40">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="41" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="42">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="43">resultMessageName</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="44">
+                  <defaultValue xmlns="" />
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="45" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Ref="9" i:nil="true" />
+                </Type>
+                <UserDescription i:nil="true" />
+                <UserName z:Id="46">Result message name</UserName>
+                <Validators z:Id="47">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="48" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="49">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="50">timeoutInSeconds</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="51">
+                  <defaultValue xmlns="">30</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="52" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="53">System.Int32</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription i:nil="true" />
+                <UserName z:Id="54">Timeout (in seconds)</UserName>
+                <Validators z:Id="55">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="56" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+            </d2p1:list>
+          </ConfigurableItems>
+        </ClassMetadata>
+      </class-metadata>
+    </action-type>
+    <action-type name="Xslt transformer" clr-type="XRouter.Processor.BuiltInActions.XsltTransformationAction,XRouter.Processor.dll">
+      <class-metadata>
+        <ClassMetadata xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/ObjectConfigurator" z:Id="1">
+          <ClrTypeFullName z:Id="2">XRouter.Processor.BuiltInActions.XsltTransformationAction</ClrTypeFullName>
+          <ConfigurableItems xmlns:d2p1="http://schemas.datacontract.org/2004/07/System.Collections.ObjectModel" z:Id="3">
+            <d2p1:list z:Id="4" z:Size="4">
+              <ItemMetadata z:Id="5">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="6">xlstUri</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="7">
+                  <defaultValue xmlns="">//item[@name='xslt']</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="8" i:type="d5p1:CustomItemType">
+                  <d5p1:ClrTypeFullName z:Id="9">XRouter.Common.Xrm.XrmUri</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription z:Id="10">XRM URI of the XSLT (XPath for selecting the XSLT from XRM)</UserDescription>
+                <UserName z:Id="11">XSLT</UserName>
+                <Validators z:Id="12">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="13" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="14">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="15">inputMessageSelection</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="16">
+                  <defaultValue xmlns="">token/messages/message[@name='input']/*[1]</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="17" i:type="d5p1:CustomItemType">
+                  <d5p1:ClrTypeFullName z:Id="18">XRouter.Common.MessageFlowConfig.TokenSelection</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription z:Id="19">XPath for selecting the input message from a token</UserDescription>
+                <UserName z:Id="20">Input message</UserName>
+                <Validators z:Id="21">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="22" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="23">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="24">outputMessageName</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="25">
+                  <defaultValue xmlns="">output</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="26" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="27">System.String</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription i:nil="true" />
+                <UserName z:Id="28">Output message name</UserName>
+                <Validators z:Id="29">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="30" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+              <ItemMetadata z:Id="31">
+                <MemberKind>Field</MemberKind>
+                <Name z:Id="32">isXsltTrusted</Name>
+                <Owner z:Ref="1" i:nil="true" />
+                <SerializedDefaultValue z:Id="33">
+                  <defaultValue xmlns="">False</defaultValue>
+                </SerializedDefaultValue>
+                <Type xmlns:d5p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ItemTypes" z:Id="34" i:type="d5p1:BasicItemType">
+                  <d5p1:ClrTypeFullName z:Id="35">System.Boolean</d5p1:ClrTypeFullName>
+                </Type>
+                <UserDescription z:Id="36">Allows embedded script blocks and the XSLT document() function. These are optional features which can be exploited by a malicious user. Allow it only if the XSLT comes from a trusted source.</UserDescription>
+                <UserName z:Id="37">Is XSLT trusted</UserName>
+                <Validators z:Id="38">
+                  <d2p1:list xmlns:d6p1="http://schemas.datacontract.org/2004/07/ObjectConfigurator.ValueValidators" z:Id="39" z:Size="0" />
+                </Validators>
+              </ItemMetadata>
+            </d2p1:list>
+          </ConfigurableItems>
+        </ClassMetadata>
+      </class-metadata>
+    </action-type>
+  </action-types>
+  <messageflows current="5a15346a-9b0b-4028-908b-5e451624abbe">
+    <messageflow guid="5a15346a-9b0b-4028-908b-5e451624abbe">
+      <MessageFlowConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" z:Id="1" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/XRouter.Common.MessageFlowConfig">
+        <Guid>5a15346a-9b0b-4028-908b-5e451624abbe</Guid>
+        <Name z:Id="2">default</Name>
+        <Nodes z:Id="3" z:Size="12">
+          <NodeConfiguration z:Id="4" i:type="EntryNodeConfiguration">
+            <Location xmlns:d4p1="http://schemas.datacontract.org/2004/07/System.Windows">
+              <d4p1:_x>-601.28796387167085</d4p1:_x>
+              <d4p1:_y>-90.6451080240782</d4p1:_y>
+            </Location>
+            <_name z:Id="5">Pokladna</_name>
+            <NextNode z:Id="6" i:type="CbrNodeConfiguration">
+              <Location xmlns:d5p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                <d5p1:_x>-416.26049967736674</d5p1:_x>
+                <d5p1:_y>-89.543965352703381</d5p1:_y>
+              </Location>
+              <_name z:Id="7">Typ</_name>
+              <Branches xmlns:d5p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" z:Id="8" z:Size="2">
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="9">
+                    <d7p1:XPath z:Id="10">/group[@name='Restaurant']/item[@name='Schematron Order']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="11" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-229.6823609502425</d8p1:_x>
+                      <d8p1:_y>-83.72112999058568</d8p1:_y>
+                    </Location>
+                    <_name z:Id="12">Příprava odesílaní objednávky</_name>
+                    <Actions z:Id="13" z:Size="1">
+                      <ActionConfiguration z:Id="14">
+                        <ActionTypeName z:Id="15">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="16">
+                          <d10p1:XmlContent z:Id="17">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Order']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//order&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;orderToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="18" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>5.2804381913790737</d9p1:_x>
+                        <d9p1:_y>-79.451145429278213</d9p1:_y>
+                      </Location>
+                      <_name z:Id="19">Objednávka</_name>
+                      <Actions z:Id="20" z:Size="1">
+                        <ActionConfiguration z:Id="21">
+                          <ActionTypeName z:Id="22">Message sender</ActionTypeName>
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="23">
+                            <d11p1:XmlContent z:Id="24">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Objednávka&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$orderToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="25" i:type="TerminatorNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>191.64196844496678</d10p1:_x>
+                          <d10p1:_y>-90.783614437400786</d10p1:_y>
+                        </Location>
+                        <_name z:Id="26">Objednáno</_name>
+                        <IsReturningOutput>false</IsReturningOutput>
+                        <ResultMessageSelection z:Id="27">
+                          <SelectionPattern z:Id="28"></SelectionPattern>
+                        </ResultMessageSelection>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                <d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+                  <d5p1:Key xmlns:d7p1="http://schemas.datacontract.org/2004/07/XRouter.Common.Xrm" z:Id="29">
+                    <d7p1:XPath z:Id="30">/group[@name='Restaurant']/item[@name='Schematron Payment']</d7p1:XPath>
+                  </d5p1:Key>
+                  <d5p1:Value z:Id="31" i:type="ActionNodeConfiguration">
+                    <Location xmlns:d8p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                      <d8p1:_x>-453.96521914653391</d8p1:_x>
+                      <d8p1:_y>-256.40107077030206</d8p1:_y>
+                    </Location>
+                    <_name z:Id="32">Příprava odesílaní platby</_name>
+                    <Actions z:Id="33" z:Size="1">
+                      <ActionConfiguration z:Id="34">
+                        <ActionTypeName z:Id="35">Xslt transformer</ActionTypeName>
+                        <Configuration xmlns:d10p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="36">
+                          <d10p1:XmlContent z:Id="37">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt Payment']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;//payment&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;paymentToSend&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d10p1:XmlContent>
+                        </Configuration>
+                      </ActionConfiguration>
+                    </Actions>
+                    <NextNode z:Id="38" i:type="ActionNodeConfiguration">
+                      <Location xmlns:d9p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                        <d9p1:_x>-243.54571759919662</d9p1:_x>
+                        <d9p1:_y>-261.26534153031855</d9p1:_y>
+                      </Location>
+                      <_name z:Id="39">Platba</_name>
+                      <Actions z:Id="40" z:Size="1">
+                        <ActionConfiguration z:Id="41">
+                          <ActionTypeName z:Ref="22" i:nil="true" />
+                          <Configuration xmlns:d11p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="42">
+                            <d11p1:XmlContent z:Id="43">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Platba&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$paymentToSend&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;receiptData&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d11p1:XmlContent>
+                          </Configuration>
+                        </ActionConfiguration>
+                      </Actions>
+                      <NextNode z:Id="44" i:type="ActionNodeConfiguration">
+                        <Location xmlns:d10p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                          <d10p1:_x>-55.861355880411772</d10p1:_x>
+                          <d10p1:_y>-256.17117535422824</d10p1:_y>
+                        </Location>
+                        <_name z:Id="45">Extrakce dat pro účtenku</_name>
+                        <Actions z:Id="46" z:Size="1">
+                          <ActionConfiguration z:Id="47">
+                            <ActionTypeName z:Id="48">Xslt transformer</ActionTypeName>
+                            <Configuration xmlns:d12p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="49">
+                              <d12p1:XmlContent z:Id="50">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt ReceiptData']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptData&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receiptDataExtracted&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d12p1:XmlContent>
+                            </Configuration>
+                          </ActionConfiguration>
+                        </Actions>
+                        <NextNode z:Id="51" i:type="ActionNodeConfiguration">
+                          <Location xmlns:d11p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                            <d11p1:_x>155.27331142647159</d11p1:_x>
+                            <d11p1:_y>-253.32696533176596</d11p1:_y>
+                          </Location>
+                          <_name z:Id="52">Tvorba účtenky</_name>
+                          <Actions z:Id="53" z:Size="1">
+                            <ActionConfiguration z:Id="54">
+                              <ActionTypeName z:Ref="48" i:nil="true" />
+                              <Configuration xmlns:d13p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="55">
+                                <d13p1:XmlContent z:Id="56">&lt;objectConfig&gt;
+  &lt;item name="xlstUri"&gt;/group[@name='Restaurant']/item[@name='Xslt MakeReceipt']&lt;/item&gt;
+  &lt;item name="inputMessageSelection"&gt;$receiptDataExtracted&lt;/item&gt;
+  &lt;item name="outputMessageName"&gt;receipt&lt;/item&gt;
+  &lt;item name="isXsltTrusted"&gt;False&lt;/item&gt;
+&lt;/objectConfig&gt;</d13p1:XmlContent>
+                              </Configuration>
+                            </ActionConfiguration>
+                          </Actions>
+                          <NextNode z:Id="57" i:type="ActionNodeConfiguration">
+                            <Location xmlns:d12p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                              <d12p1:_x>344.00381425136266</d12p1:_x>
+                              <d12p1:_y>-251.57589078294768</d12p1:_y>
+                            </Location>
+                            <_name z:Id="58">Tisk</_name>
+                            <Actions z:Id="59" z:Size="1">
+                              <ActionConfiguration z:Id="60">
+                                <ActionTypeName z:Ref="22" i:nil="true" />
+                                <Configuration xmlns:d14p1="http://schemas.datacontract.org/2004/07/XRouter.Common" z:Id="61">
+                                  <d14p1:XmlContent z:Id="62">&lt;objectConfig&gt;
+  &lt;item name="targetGatewayName"&gt;gateway&lt;/item&gt;
+  &lt;item name="targetAdapterName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="targetEndpointName"&gt;Tisk&lt;/item&gt;
+  &lt;item name="messageSelection"&gt;$receipt&lt;/item&gt;
+  &lt;item name="metadataSelection"&gt;&lt;/item&gt;
+  &lt;item name="resultMessageName"&gt;&lt;/item&gt;
+  &lt;item name="timeoutInSeconds"&gt;30&lt;/item&gt;
+&lt;/objectConfig&gt;</d14p1:XmlContent>
+                                </Configuration>
+                              </ActionConfiguration>
+                            </Actions>
+                            <NextNode z:Id="63" i:type="TerminatorNodeConfiguration">
+                              <Location xmlns:d13p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                                <d13p1:_x>496.3827139008049</d13p1:_x>
+                                <d13p1:_y>-249.06741487763941</d13p1:_y>
+                              </Location>
+                              <_name z:Id="64">Vytištěno</_name>
+                              <IsReturningOutput>false</IsReturningOutput>
+                              <ResultMessageSelection z:Id="65">
+                                <SelectionPattern z:Ref="28" i:nil="true" />
+                              </ResultMessageSelection>
+                            </NextNode>
+                          </NextNode>
+                        </NextNode>
+                      </NextNode>
+                    </NextNode>
+                  </d5p1:Value>
+                </d5p1:KeyValueOfXrmUriNodeConfigurationL2ieEqSk>
+              </Branches>
+              <DefaultTarget z:Id="66" i:type="TerminatorNodeConfiguration">
+                <Location xmlns:d6p1="http://schemas.datacontract.org/2004/07/System.Windows">
+                  <d6p1:_x>-448.03169476296193</d6p1:_x>
+                  <d6p1:_y>56.823128227030622</d6p1:_y>
+                </Location>
+                <_name z:Id="67">Špatná objednávka</_name>
+                <IsReturningOutput>false</IsReturningOutput>
+                <ResultMessageSelection z:Id="68">
+                  <SelectionPattern z:Ref="28" i:nil="true" />
+                </ResultMessageSelection>
+              </DefaultTarget>
+              <TestedSelection z:Id="69">
+                <SelectionPattern z:Id="70">$input</SelectionPattern>
+              </TestedSelection>
+            </NextNode>
+          </NodeConfiguration>
+          <NodeConfiguration z:Ref="6" i:nil="true" />
+          <NodeConfiguration z:Ref="18" i:nil="true" />
+          <NodeConfiguration z:Ref="38" i:nil="true" />
+          <NodeConfiguration z:Ref="66" i:nil="true" />
+          <NodeConfiguration z:Ref="57" i:nil="true" />
+          <NodeConfiguration z:Ref="11" i:nil="true" />
+          <NodeConfiguration z:Ref="31" i:nil="true" />
+          <NodeConfiguration z:Ref="44" i:nil="true" />
+          <NodeConfiguration z:Ref="51" i:nil="true" />
+          <NodeConfiguration z:Ref="63" i:nil="true" />
+          <NodeConfiguration z:Ref="25" i:nil="true" />
+        </Nodes>
+        <Version>53</Version>
+      </MessageFlowConfiguration>
+    </messageflow>
+  </messageflows>
+  <xml-resource-storage>
+    <group name="Restaurant">
+      <item name="Schematron Order" type="Schematron">
+        <schema xmlns="http://purl.oclc.org/dsdl/schematron" queryBinding="xpath">
+          <pattern>
+            <rule context="/">
+              <assert test="order" />
+            </rule>
+          </pattern>
+        </schema>
+      </item>
+      <item name="Schematron Payment" type="Schematron">
+        <schema xmlns="http://purl.oclc.org/dsdl/schematron" queryBinding="xpath">
+          <pattern>
+            <rule context="/">
+              <assert test="payment" />
+            </rule>
+          </pattern>
+        </schema>
+      </item>
+      <item name="Xslt Order" type="Xslt">
+        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" version="1.0" exclude-result-prefixes="msxsl">
+          <xsl:output method="xml" encoding="utf-8" />
+          <xsl:template match="/">
+            <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+              <s:Body>
+                <SaveOrder xmlns="http://tempuri.org/">
+                  <order xmlns:i="http://schemas.datacontract.org/2004/07/XRouter.Examples.Restaurant.RestaurantService">
+                    <i:Item>
+                      <xsl:value-of select="//item" />
+                    </i:Item>
+                    <i:Table>
+                      <xsl:value-of select="//table" />
+                    </i:Table>
+                  </order>
+                </SaveOrder>
+              </s:Body>
+            </s:Envelope>
+          </xsl:template>
+        </xsl:stylesheet>
+      </item>
+      <item name="Xslt Payment" type="Xslt">
+        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" version="1.0" exclude-result-prefixes="msxsl">
+          <xsl:output method="xml" encoding="utf-8" />
+          <xsl:template match="/">
+            <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+              <s:Body>
+                <GetReceipt xmlns="http://tempuri.org/">
+                  <payment xmlns:i="http://schemas.datacontract.org/2004/07/XRouter.Examples.Restaurant.RestaurantService">
+                    <i:Table>
+                      <xsl:value-of select="//table" />
+                    </i:Table>
+                  </payment>
+                </GetReceipt>
+              </s:Body>
+            </s:Envelope>
+          </xsl:template>
+        </xsl:stylesheet>
+      </item>
+      <item name="Xslt ReceiptData" type="Xslt">
+        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" version="1.0" exclude-result-prefixes="msxsl">
+          <xsl:output method="xml" encoding="windows-1250" />
+          <xsl:template match="/">
+            <xsl:apply-templates select="//*[local-name(.)='GetReceiptResult']" />
+          </xsl:template>
+          <xsl:template match="*">
+            <xsl:element name="{local-name(.)}">
+              <xsl:apply-templates />
+            </xsl:element>
+          </xsl:template>
+        </xsl:stylesheet>
+      </item>
+      <item name="Xslt MakeReceipt" type="Xslt">
+        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" version="1.0" exclude-result-prefixes="msxsl">
+          <xsl:output method="text" encoding="windows-1250" />
+          <xsl:template match="/">
+    
+    Restaurace MFF                  Účet pro
+    Malá Strana, Praha 1            stůl č. <xsl:value-of select="//Table" />
+    
+    Vydáno: <xsl:value-of select="//Date" />
+    ------------------------------------------
+    
+    <xsl:for-each select="//Item"><xsl:value-of select="./Name" /> (<xsl:value-of select="./Quantity" />X) .............. <xsl:value-of select="./TotalPrice" />,00 Kč
+    </xsl:for-each>
+    ------------------------------------------
+
+    Celkem (vč. DPH): .............. <xsl:value-of select="sum(//TotalPrice)" />,00 Kč
+
+    Děkujeme za Vaši návštěvu!
+
+  </xsl:template>
+        </xsl:stylesheet>
+      </item>
+    </group>
+  </xml-resource-storage>
+</configuration>

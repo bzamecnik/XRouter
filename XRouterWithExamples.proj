@@ -1,0 +1,6 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target Name="Build">
+        <MSBuild Projects="XRouter\XRouter.sln"/>
+        <MSBuild Projects="XRouterExamples\Restaurant\XRouter.Examples.Restaurant.sln"/>
+    </Target>
+</Project>
