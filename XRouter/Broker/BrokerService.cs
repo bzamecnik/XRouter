@@ -127,6 +127,13 @@ namespace XRouter.Broker
             return storage.UpdateToken(tokenGuid, delegate(Token token)
             {
                 token.UpdateMessageFlowState(mfs => { mfs.AssignedProcessor = assignedProcessor; });
+                if (token.State != TokenState.Finished) {
+                    if (assignedProcessor != null) {
+                        token.State = TokenState.InProcessor;
+                    } else {
+                        token.State = TokenState.Received;
+                    }
+                }
             });
         }
 
