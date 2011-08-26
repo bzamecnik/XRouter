@@ -44,6 +44,9 @@ Name: "sw\xRouter\Gui"; Description: "XRouter GUI"; Types: full
 Name: "sw\daemonNt"; Description: "DaemonNT"; Types: full
 Name: "sw\daemonNt\Console"; Description: "DaemonNT Console"; Types: full compact
 Name: "sw\daemonNt\Gui"; Description: "DaemonNT GUI"; Types: full
+Name: "sw\schemaTron"; Description: "SchemaTron"; Types: full
+Name: "sw\schemaTron\console"; Description: "SchemaTron console"; Types: full
+
 Name: "docs"; Description: "Documentation"; Types: full
 Name: "examples"; Description: "Examples"; Types: full
 Name: "examples\restaurant"; Description: "Restaurant"; Types: full
@@ -62,7 +65,8 @@ Source: "bin\{#BuildType}\DaemonNT.xml"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "bin\{#BuildType}\ICSharpCode.AvalonEdit.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter\Gui
 Source: "bin\{#BuildType}\ObjectConfigurator.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
 Source: "bin\{#BuildType}\RibbonControlsLibrary.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter\Gui
-Source: "bin\{#BuildType}\SchemaTron.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw
+Source: "bin\{#BuildType}\SchemaTron.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\schemaTron sw\xRouter sw\daemonNt
+Source: "bin\{#BuildType}\SchemaTron.Console.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\schemaTron\console
 Source: "bin\{#BuildType}\SimpleDiagrammer.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
 Source: "bin\{#BuildType}\XRouter.Adapters.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
 Source: "bin\{#BuildType}\XRouter.Broker.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
