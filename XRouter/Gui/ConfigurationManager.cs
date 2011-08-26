@@ -3,36 +3,69 @@ using XRouter.Gui.ConfigurationControls.Gateway;
 using XRouter.Gui.ConfigurationControls.Messageflow;
 using XRouter.Gui.ConfigurationControls.Processor;
 using XRouter.Manager;
+using System.Xml.Linq;
+using System;
+using System.Windows;
 
 namespace XRouter.Gui
 {
     class ConfigurationManager
     {
-        public static readonly string DefaultConsoleServerUri =
+        private static readonly string DefaultConsoleServerUri =
             "http://localhost:9090/XRouter.ConsoleService/ConsoleServer";
-        public string ConsoleServerUri { get; set; }
+
+        public string DefaultConsoleServerAddress {
+            get {
+                string result= System.Configuration.ConfigurationManager.AppSettings.Get("consoleServerUri");
+                if (result == null) {
+                    result = DefaultConsoleServerUri;
+                }
+                return result;
+            }
+        }
 
         public IConsoleServer ConsoleServer { get; private set; }
-        public ApplicationConfiguration Configuration { get; set; }
+        public ApplicationConfiguration Configuration { get; private set; }
 
         public ConfigurationManager()
         {
-            string uri = System.Configuration.ConfigurationManager.AppSettings.Get("consoleServerUri");
-            if (uri == null)
-            {
-                uri = DefaultConsoleServerUri;
+        }
+
+        public bool Connect(string consoleServerUri, bool throwOnError)
+        {
+            try {
+                ConsoleServer = ConsoleServerProxyProvider.GetConsoleServerProxy(consoleServerUri);
+                ConsoleServer.GetXRouterServiceStatus();
+                return true;
+            } catch (Exception ex) {
+                if (throwOnError) {
+                    throw;
+                } else {
+                    string message = string.Format(
+@"It is not possible to connect to XRouter Manager server at:
+{0}.
+Details:
+{1}", consoleServerUri, ex.Message);
+                    MessageBox.Show(ex.Message, "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
             }
-            ConsoleServerUri = uri;
         }
 
-        public void Connect()
+        public bool DownloadConfiguration(bool throwOnError)
         {
-            ConsoleServer = ConsoleServerProxyProvider.GetConsoleServerProxy(ConsoleServerUri);
-        }
-
-        public void LoadConfigurationFromServer()
-        {
-            Configuration = ConsoleServer.GetConfiguration();
+            try {
+                Configuration = ConsoleServer.GetConfiguration();
+                return true;
+            } catch (Exception ex) {
+                if (throwOnError) {
+                    throw;
+                } else {
+                    string message = string.Format("Cannot download configuration from XRouter manager: " + ex.Message);
+                    MessageBox.Show(ex.Message, "Operation failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+            }
 
             ////TODO: remove
             //Configuration.AddAdapterType(new AdapterType(
@@ -45,9 +78,42 @@ namespace XRouter.Gui
             //    new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.HttpClientAdapter))));
         }
 
-        public void SaveConfigurationToServer()
+        public bool UploadConfiguration(bool throwOnError)
         {
-            ConsoleServer.ChangeConfiguration(Configuration);
+            try {
+                ConsoleServer.ChangeConfiguration(Configuration);
+                return true;
+            } catch (Exception ex) {
+                if (throwOnError) {
+                    throw;
+                } else {
+                    string message = string.Format("Cannot upload configuration to XRouter manager: " + ex.Message);
+                    MessageBox.Show(ex.Message, "Operation failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+            }
+        }
+
+        public void ClearConfiguration()
+        {
+            XDocument xConfig = XDocument.Parse(ApplicationConfiguration.InitialContent);
+            Configuration = new ApplicationConfiguration(xConfig);
+        }
+
+        public bool ReadConfiguration(XDocument xConfig, bool throwOnError)
+        {
+            try {
+                Configuration = new ApplicationConfiguration(xConfig);
+                return true;
+            } catch (Exception ex) {
+                if (throwOnError) {
+                    throw;
+                } else {
+                    string message = string.Format("Cannot read configuration: " + ex.Message);
+                    MessageBox.Show(ex.Message, "Operation failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+            }
         }
 
         public ConfigurationTreeItem CreateConfigurationTreeRoot()

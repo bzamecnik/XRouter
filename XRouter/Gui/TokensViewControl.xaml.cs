@@ -34,7 +34,11 @@ namespace XRouter.Gui
         internal void Initialize(ConfigurationManager configManager)
         {
             ConfigManager = configManager;
+        }
 
+        public void UpdateTokens()
+        {
+            currentPage = 1;
             LoadTokens();
         }
 

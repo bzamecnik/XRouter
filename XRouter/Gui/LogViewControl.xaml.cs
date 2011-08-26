@@ -35,6 +35,11 @@ namespace XRouter.Gui
         internal void Initialize(LogRowsProvider rowsProvider)
         {
             this.rowsProvider = rowsProvider;
+        }
+
+        public void UpdateLogs()
+        {
+            currentPage = 1;
             LoadRows();
         }
 

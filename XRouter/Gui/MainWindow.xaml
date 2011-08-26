@@ -4,8 +4,17 @@
         xmlns:local="clr-namespace:XRouter.Gui"
         xmlns:xrm="clr-namespace:XRouter.Gui.Xrm"
         WindowState="Maximized"
-        Title="XRouter - Configuration manager" Height="750" Width="1000" MinWidth="400" MinHeight="200" Loaded="Window_Loaded" >
+        Icon="/XRouter.Gui;component/Resources/xrouter.ico"
+        Title="XRouter - Configuration manager" Height="750" Width="1000" MinWidth="400" MinHeight="200" Loaded="Window_Loaded" Unloaded="Window_Unloaded">
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush>
+                <LinearGradientBrush.GradientStops>
+                    <GradientStop Color="#FF9CAAC1" Offset="0" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -14,12 +23,101 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ToolBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-            <Button Click="LoadFromServer_Click" ToolTip="Load application configuration from XRouter server">Load</Button>
-            <Button Click="SaveToServer_Click" ToolTip="Save application configuration to XRouter server">Save</Button>
-            <Button Click="Import_Click" ToolTip="Import application configuration from a file">Import</Button>
-            <Button Click="Export_Click" ToolTip="Export application configuration to a file">Export</Button>
-        </ToolBar>
+        <ToolBarTray Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Background="Transparent" Margin="5">
+            
+            <ToolBar BandIndex="0">
+                <ToolBar.Background>
+                    <LinearGradientBrush>
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStop Color="#FFBCC7D8" Offset="-1" />
+                            <GradientStop Color="White" Offset="2" />
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                </ToolBar.Background>
+                <Button Name="uiConnect" Click="uiConnect_Click" ToolTip="Connect to XRouter manager">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="24" Source="/XRouter.Gui;component/Resources/App-network-connection-manager-icon.png" />
+                        <TextBlock VerticalAlignment="Center">Connect</TextBlock>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+
+            <ToolBar BandIndex="1">
+                <ToolBar.Header>
+                    <TextBlock FontWeight="DemiBold" FontSize="13">Configuration:</TextBlock>
+                </ToolBar.Header>
+                <ToolBar.Background>
+                    <LinearGradientBrush>
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStop Color="#FFBCC7D8" Offset="-1" />
+                            <GradientStop Color="White" Offset="2" />
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                </ToolBar.Background>
+                <Button Click="LoadFromServer_Click" ToolTip="Load application configuration from XRouter server">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-arrow-down-icon.png" />
+                        <TextBlock VerticalAlignment="Center">Download</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="SaveToServer_Click" ToolTip="Save application configuration to XRouter server">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-arrow-up-icon.png" />
+                        <TextBlock VerticalAlignment="Center">Upload</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Name="uiNewConfig" Click="uiNewConfig_Click" ToolTip="Create new application configuration">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="24" Source="/XRouter.Gui;component/Resources/New-icon.png" />
+                        <TextBlock VerticalAlignment="Center">New</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="Import_Click" ToolTip="Import application configuration from a file">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="24" Source="/XRouter.Gui;component/Resources/folder-open-icon.png" />
+                        <TextBlock VerticalAlignment="Center">Import</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="Export_Click" ToolTip="Export application configuration to a file" Margin="0 0 5 0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-document-save-as-icon.png" />
+                        <TextBlock VerticalAlignment="Center">Export</TextBlock>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+            
+            <ToolBar BandIndex="2">
+                <ToolBar.Header>
+                    <TextBlock FontWeight="DemiBold" FontSize="13">XRouter:</TextBlock>
+                </ToolBar.Header>
+                <ToolBar.Background>
+                    <LinearGradientBrush>
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStop Color="#FFBCC7D8" Offset="-1" />
+                            <GradientStop Color="White" Offset="2" />
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                </ToolBar.Background>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Image Name="uiXRouterStatusIconIsRunning" Visibility="Collapsed" Height="20" VerticalAlignment="Center" Source="/XRouter.Gui;component/Resources/Action-ok-icon.png" />
+                    <Image Name="uiXRouterStatusIconIsStopped" Visibility="Collapsed" Height="20" VerticalAlignment="Center" Source="/XRouter.Gui;component/Resources/Remove-icon.png" />
+                    <Image Name="uiXRouterStatusIconUnknown" Visibility="Collapsed" Height="20" VerticalAlignment="Center" Source="/XRouter.Gui;component/Resources/Dialog-question-icon.png" />
+                    <TextBlock Name="uiXRouterStatusText" VerticalAlignment="Center">Unknown</TextBlock>
+                </StackPanel>
+                <Button Name="uiStartXRouter" Click="uiStartXRouter_Click" ToolTip="Start XRouter" Margin="10 0 0 0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-player-play-icon.png" />
+                        <TextBlock VerticalAlignment="Center">Start</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Name="uiStopXRouter" Click="uiStopXRouter_Click" ToolTip="Stop XRouter">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-player-stop-icon.png" />
+                        <TextBlock VerticalAlignment="Center">Stop</TextBlock>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
         
         <TabControl Grid.Row="1" Grid.Column="0">
             
