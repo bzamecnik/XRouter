@@ -16,6 +16,8 @@ namespace DaemonNT
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
+    using System.Security.Principal;
     using DaemonNT.Installation;
 
     /// <summary>
@@ -95,6 +97,8 @@ namespace DaemonNT
 
             try
             {
+                System.AppDomain.CurrentDomain.SetPrincipalPolicy(PrincipalPolicy.WindowsPrincipal);
+
                 switch (command)
                 {
                     case "run":
@@ -128,6 +132,13 @@ namespace DaemonNT
                         PrintUsage();
                         return;
                 }
+            }
+            catch (SecurityException)
+            {
+                Console.Error.WriteLine(string.Format(
+                    "Error: the '{0}' command requires administrator privileges.",
+                    command));
+                Environment.Exit(-2);
             }
             catch (Exception ex)
             {
@@ -169,8 +180,11 @@ namespace DaemonNT
         {
             Console.WriteLine(
 @"Usage: DaemonNT.exe [options] COMMAND [SERVICE_NAME]
-Available commands: debug, run, install, uninstall, start, stop, restart, status, list.
+Available commands: debug, run, install, uninstall, start, stop, restart,
+status, list.
 The 'run' command is indended only for the OS's service runner.
+The 'install', 'uninstall', 'start' and 'stop' commands require administrator
+privileges.
 SERVICE_NAME is needed for all commands except 'list'.
 Options:
   --config-file=CONFIG_FILE - path to configuration file");
