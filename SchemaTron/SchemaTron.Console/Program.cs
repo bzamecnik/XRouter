@@ -34,7 +34,6 @@ namespace SchemaTron.Console
             catch (Exception ex)
             {
                 System.Console.Error.WriteLine("Error: " + ex.Message);
-                System.Console.Error.WriteLine(ex.StackTrace);
             }
         }
 
