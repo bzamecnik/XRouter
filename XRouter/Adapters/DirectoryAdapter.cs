@@ -20,7 +20,7 @@ namespace XRouter.Adapters
     /// <remarks>
     /// <para>Each input, resp. output directory is called an input, resp.
     /// output endpoint.</para>
-    /// <para>XML files and text files (TODO) are supported.</para>
+    /// <para>XML files and text files are supported.</para>
     /// <para>Unreadable files or directories are ignored.</para>
     /// </remarks>
     [AdapterPlugin("Directory I/O adapter", "Reads and writes files from/into specified directories.")]
