@@ -1,4 +1,4 @@
-﻿/*! \mainpage DaemonNT - API reference
+/*! \mainpage DaemonNT - API reference
  *
  * %DaemonNT provides a environment for hosting programs as Windows services.
  * It can install services and control their running. %DaemonNT is designed to
@@ -167,12 +167,13 @@ namespace DaemonNT
 
         private static void PrintUsage()
         {
-            Console.WriteLine("Usage: DaemonNT.exe [options] COMMAND [SERVICE_NAME]");
-            Console.WriteLine("Available commands: debug, run, install, uninstall, start, stop, restart, status, list.");
-            Console.WriteLine("The 'run' command is indended only for the OS's service runner.");
-            Console.WriteLine("SERVICE_NAME is needed for all commands except 'list'.");
-            Console.WriteLine("Options:");
-            Console.WriteLine("  --config-file=CONFIG_FILE - path to configuration file");
+            Console.WriteLine(
+@"Usage: DaemonNT.exe [options] COMMAND [SERVICE_NAME]
+Available commands: debug, run, install, uninstall, start, stop, restart, status, list.
+The 'run' command is indended only for the OS's service runner.
+SERVICE_NAME is needed for all commands except 'list'.
+Options:
+  --config-file=CONFIG_FILE - path to configuration file");
         }
     }
 }
