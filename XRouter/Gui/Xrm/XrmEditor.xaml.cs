@@ -185,7 +185,7 @@ namespace XRouter.Gui.Xrm
         {
             TreeViewItem uiGroup = new TreeViewItem {
                 Tag = xGroup,
-                Header = xGroup.Attribute(XrmUri.NameAttributeName).Value
+                Header = new XrmNodeHeader(xGroup, new BitmapImage(new Uri("pack://application:,,,/XRouter.GUI;component/Resources/Actions-view-list-icons-icon.png")))
             };
 
             #region Create context menu
@@ -208,9 +208,12 @@ namespace XRouter.Gui.Xrm
 
         private TreeViewItem CreateUIItem(XElement xItem)
         {
+            string documentTypeName = xItem.Attribute(XrmUri.TypeAttributeName).Value;
+            var docTypeDescriptor = documentTypeDescriptors.FirstOrDefault(d => d.DocumentTypeName == documentTypeName);
+
             TreeViewItem uiItem = new TreeViewItem {
                 Tag = xItem,
-                Header = xItem.Attribute(XrmUri.NameAttributeName).Value
+                Header = new XrmNodeHeader(xItem, docTypeDescriptor.GetIconSource())
             };
 
             #region Create context menu
@@ -231,7 +234,11 @@ namespace XRouter.Gui.Xrm
             foreach (var docTypeDescriptorIterator in documentTypeDescriptors) {
                 var docTypeDescriptor = docTypeDescriptorIterator;
                 MenuItem uiDocType = new MenuItem {
-                    Header = docTypeDescriptor.DocumentTypeName
+                    Header = docTypeDescriptor.DocumentTypeName,
+                    Icon = new Image {
+                        Height = 20,
+                        Source = docTypeDescriptor.GetIconSource()
+                    }
                 };
                 uiDocType.Click += delegate {
                     XElement xItem = new XElement(XrmUri.ItemElementName);
@@ -251,7 +258,11 @@ namespace XRouter.Gui.Xrm
 
             uiAdd.Items.Add(new Separator());
             MenuItem uiAddGroup = new MenuItem {
-                Header = "Group"
+                Header = "Group",
+                Icon = new Image {
+                    Height = 20,
+                    Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.GUI;component/Resources/Actions-view-list-icons-icon.png"))
+                }
             };
             uiAddGroup.Click += delegate {
                 XElement xGroup = new XElement(XrmUri.GroupElementName);
@@ -311,7 +322,7 @@ namespace XRouter.Gui.Xrm
                     break;
                 };
                 xNode.SetAttributeValue(XrmUri.NameAttributeName, newName);
-                uiNode.Header = newName;
+                ((XrmNodeHeader)uiNode.Header).Update();
             };
             return uiRename;
         }

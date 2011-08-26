@@ -13,7 +13,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
-        <TreeView Grid.Column="0" Name="uiTree" SelectedItemChanged="uiTree_SelectedItemChanged" />
+        <TreeView Grid.Column="0" Name="uiTree" SelectedItemChanged="uiTree_SelectedItemChanged" FontSize="14" />
         
         <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns" Width="10" />
         

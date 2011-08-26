@@ -131,6 +131,9 @@
     <Compile Include="Xrm\XrmEditor.xaml.cs">
       <DependentUpon>XrmEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Xrm\XrmNodeHeader.xaml.cs">
+      <DependentUpon>XrmNodeHeader.xaml</DependentUpon>
+    </Compile>
     <Page Include="CommonControls\ListEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -146,10 +149,6 @@
     <Page Include="CommonControls\XrmUriEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ConfigurationControls\Adapter\AdapterConfigurationControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="ConfigurationControls\General\GeneralConfigurationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -206,9 +205,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ConfigurationControls\Adapter\AdapterConfigurationControl.xaml.cs">
-      <DependentUpon>AdapterConfigurationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ConfigurationControls\General\GeneralConfigurationControl.xaml.cs">
       <DependentUpon>GeneralConfigurationControl.xaml</DependentUpon>
@@ -312,6 +308,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Xrm\XrmEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xrm\XrmNodeHeader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -428,6 +428,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Dialog-question-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Actions-view-list-icons-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -135,7 +135,7 @@ namespace XRouter.Gui.ConfigurationControls.Gateway
                 },
                 Children = {
                     new Image {
-                        Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Actions-tool-animator-icon.png")),
+                        Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.Gui;component/Resources/Generic_Device.png")),
                         Height = 18,
                         Margin = new Thickness(8, 0, 0, 0)
                     },

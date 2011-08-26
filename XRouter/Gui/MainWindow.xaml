@@ -128,7 +128,14 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TreeView Grid.Row="0" Grid.Column="0" Name="uiConfigurationTree" Margin="5" Padding="5" SelectedItemChanged="uiConfigurationTree_SelectedItemChanged" />
+                    <TreeView Grid.Row="0" Grid.Column="0" Name="uiConfigurationTree" Margin="5" Padding="5" SelectedItemChanged="uiConfigurationTree_SelectedItemChanged" FontSize="16" FontWeight="Bold">
+                        <TreeView.Background>
+                            <LinearGradientBrush>
+                                <GradientStop Color="#FFBAC3D4" Offset="-2" />
+                                <GradientStop Color="#FFF9F9F9" Offset="1" />
+                            </LinearGradientBrush>
+                        </TreeView.Background>
+                    </TreeView>
                     <GridSplitter Grid.Row="0" Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns"/>
                     <ContentControl Name="uiConfigurationContainer" Grid.Row="0" Grid.Column="2" />
                 </Grid>
