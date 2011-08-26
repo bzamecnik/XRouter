@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace XRouter.Examples.Restaurant.DataGenerator
 {
-    // identifier are counted from 1
+    // identifiers are counted from 1
 
     class Program
     {
@@ -50,9 +50,6 @@ namespace XRouter.Examples.Restaurant.DataGenerator
             Console.WriteLine("Generating orders...");
             gen.GenerateOrders(orders, tables);
             Console.WriteLine("Orders have been generated");
-
-            Console.WriteLine("Press a key...");
-            Console.ReadKey();
         }
     }
 }

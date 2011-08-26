@@ -51,11 +51,15 @@ Name: "docs"; Description: "Documentation"; Types: full
 Name: "examples"; Description: "Examples"; Types: full
 Name: "examples\restaurant"; Description: "Restaurant"; Types: full
 
+[Tasks]
+Name: generateRestaurantData; Description: "Generate random input data for the Restaurant demo"; Components: examples\restaurant
+
 [Dirs]
 Name: "{app}\Logs"; Components: sw\xRouter
 Name: "C:\XRouter\DemoRestaurant"; Components: examples\restaurant
 Name: "C:\XRouter\DemoRestaurant\Pokladna"; Components: examples\restaurant
 Name: "C:\XRouter\DemoRestaurant\Tisk"; Components: examples\restaurant
+Name: "C:\XRouter\DemoRestaurant\InputData"; Components: examples\restaurant
 
 [Files]
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
@@ -90,6 +94,10 @@ Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.exe"; Excludes: "*vshost*
 ;Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.dll"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion; Components: examples\restaurant
 Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.exe.config"; Excludes: "*vshost*"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion; Components: examples\restaurant
 Source: "XRouterExamples\Restaurant\Data\*"; DestDir: "{app}\Examples\Restaurant\Data"; Flags: ignoreversion recursesubdirs; Components: examples\restaurant
+Source: "XRouterExamples\Restaurant\generate-demo-data.bat"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion recursesubdirs; Components: examples\restaurant
+
+[Run]
+Filename: "{app}\Examples\Restaurant\generate-demo-data.bat"; Description: "Generate random input data for the demo."; Flags: postinstall shellexec waituntilterminated; Tasks: generateRestaurantData
 
 [Icons]
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
