@@ -6,8 +6,9 @@
  * documented and released as an open-source software.
 
  * The %XRouter project consists of several subprojects:
- * \li %XRouter service - Light-weight XML router, the main project
- * \li %SchemaTron - Native C# validator of ISO Schematron language
+ * \li %XRouter service - light-weight extensible low-level XML router for
+ * .NET, the main project
+ * \li %SchemaTron - native C# validator of ISO Schematron language
  * \li %DaemonNT - Windows service hosting made easy
  * \li %ObjectConfigurator - reflection-based configuration utility
  * \li %SimpleDiagrammer - interactive visualizer of graphs
