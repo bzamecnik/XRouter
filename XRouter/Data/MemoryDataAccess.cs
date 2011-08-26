@@ -25,6 +25,10 @@ namespace XRouter.Data
         public MemoryDataAccess()
         {
             ConfigFileName = DefaultConfigFileName;
+
+            if (!File.Exists(ConfigFileName)) {
+                File.WriteAllText(ConfigFileName, ApplicationConfiguration.InitialContent);
+            }
         }
 
         public void Initialize(string connectionString)
