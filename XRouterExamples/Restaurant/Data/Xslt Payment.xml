@@ -5,7 +5,9 @@
       <s:Body>
         <GetReceipt xmlns="http://tempuri.org/">
           <payment xmlns:i="http://schemas.datacontract.org/2004/07/XRouter.Examples.Restaurant.RestaurantService">
-            <i:Table><xsl:value-of select="//table" /></i:Table>
+            <i:Table>
+              <xsl:value-of select="//table" />
+            </i:Table>
           </payment>
         </GetReceipt>
       </s:Body>
