@@ -119,12 +119,14 @@ namespace XRouter.Gui
         {
             ConfigManager.ClearConfiguration();
             UpdateUI();
+            uiStatusText.Text = "New configuration created.";
         }
 
         private void LoadFromServer_Click(object sender, RoutedEventArgs e)
         {
             if (ConfigManager.DownloadConfiguration(false)) {
                 UpdateUI();
+                uiStatusText.Text = "Configuration downloaded from server.";
             } else {
                 Connect();
             }
@@ -147,6 +149,7 @@ namespace XRouter.Gui
 
             SaveConfiguration();
             ConfigManager.UploadConfiguration(false);
+            uiStatusText.Text = "Configuration uploaded to server.";
         }
 
         private void Import_Click(object sender, RoutedEventArgs e)
@@ -167,6 +170,7 @@ namespace XRouter.Gui
                 }
                 ConfigManager.ReadConfiguration(xdoc, false);
                 UpdateUI();
+                uiStatusText.Text = "Configuration imported.";
             }
         }
 
@@ -181,6 +185,7 @@ namespace XRouter.Gui
             {
                 SaveConfiguration();
                 ConfigManager.Configuration.Content.XDocument.Save(dialog.FileName);
+                uiStatusText.Text = "Configuration exported.";
             }
         }
 
@@ -223,6 +228,7 @@ namespace XRouter.Gui
             }
             UpdateUI();
             UpdateXRouterStatus();
+            uiStatusText.Text = "Connected to XRouter manager.";
             return true;
         }
 

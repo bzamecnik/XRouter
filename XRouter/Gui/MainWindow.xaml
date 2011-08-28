@@ -18,6 +18,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>           
             <ColumnDefinition Width="*" />
@@ -157,5 +158,11 @@
                 <local:LogViewControl x:Name="uiEventLog" />
             </TabItem>
         </TabControl>
+        
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <TextBlock Name="uiStatusText"></TextBlock>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
