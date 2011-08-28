@@ -9,6 +9,7 @@
         <StackPanel Orientation="Horizontal">
             <Image Name="uiIcon" Height="20" VerticalAlignment="Center"/>
             <TextBlock Name="uiName" Margin="5 2 2 2" VerticalAlignment="Center"/>
+            <TextBlock Name="uiIsModified" Visibility="Collapsed" Margin="2 2 2 2" VerticalAlignment="Center">*</TextBlock>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -147,9 +147,10 @@ namespace XRouter.Gui
             }
             #endregion
 
-            SaveConfiguration();
-            ConfigManager.UploadConfiguration(false);
-            uiStatusText.Text = "Configuration uploaded to server.";
+            if (SaveConfiguration()) {
+                ConfigManager.UploadConfiguration(false);
+                uiStatusText.Text = "Configuration uploaded to server.";
+            }
         }
 
         private void Import_Click(object sender, RoutedEventArgs e)
@@ -183,9 +184,10 @@ namespace XRouter.Gui
             dialog.OverwritePrompt = true;
             if (dialog.ShowDialog() == true)
             {
-                SaveConfiguration();
-                ConfigManager.Configuration.Content.XDocument.Save(dialog.FileName);
-                uiStatusText.Text = "Configuration exported.";
+                if (SaveConfiguration()) {
+                    ConfigManager.Configuration.Content.XDocument.Save(dialog.FileName);
+                    uiStatusText.Text = "Configuration exported.";
+                }
             }
         }
 
@@ -207,8 +209,15 @@ namespace XRouter.Gui
             uiXrmEditor.LoadContent(ConfigManager.Configuration.GetXrmContent());
         }
 
-        private void SaveConfiguration()
+        private bool SaveConfiguration()
         {
+            XDocument XrmContent = uiXrmEditor.GetXrmContent();
+            if (XrmContent == null) {
+                uiXrmEditorTab.IsSelected = true;
+                return false;
+            }
+            ConfigManager.Configuration.SaveXrmContent(XrmContent.Root);
+
             #region Save configuration tree items
             var items = uiConfigurationTree.Items.OfType<TreeViewItem>().Select(i => (ConfigurationTreeItem)i.Tag);
             foreach (ConfigurationTreeItem item in items) {
@@ -216,7 +225,7 @@ namespace XRouter.Gui
             }
             #endregion
 
-            ConfigManager.Configuration.SaveXrmContent(uiXrmEditor.SaveContent().Root);
+            return true;
         }
 
         private bool Connect()

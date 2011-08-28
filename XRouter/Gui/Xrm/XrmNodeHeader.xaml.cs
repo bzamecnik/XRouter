@@ -21,20 +21,53 @@ namespace XRouter.Gui.Xrm
     /// </summary>
     public partial class XrmNodeHeader : UserControl
     {
-        private XElement xNode;
+        public XElement XNode { get; private set; }
+
+        public bool IsGroup {
+            get { return XNode.Name == XrmUri.GroupElementName; }
+        }
+
+        private bool _isModified = false;
+        public bool IsModified { 
+            get { return _isModified; }
+            set {
+                _isModified = value;
+                if (value) {
+                    uiIsModified.Visibility = Visibility.Visible;
+                } else {
+                    uiIsModified.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        public string Content { get; set; }
+
+        public string ContentFromXNode {
+            get { return XNode.Elements().First().ToString(); }
+        }
 
         public XrmNodeHeader(XElement xNode, ImageSource iconSource)
         {
             InitializeComponent();
 
-            this.xNode = xNode;
+            XNode = xNode;
+
+            if (!IsGroup) {
+                XElement xRoot = xNode.Elements().FirstOrDefault();
+                if (xRoot != null) {
+                    Content = xRoot.ToString();
+                } else {
+                    Content = "<root></root>";
+                }
+            }
+
             uiIcon.Source = iconSource;
             Update();
         }
 
         public void Update()
         {
-            uiName.Text = xNode.Attribute(XrmUri.NameAttributeName).Value;
+            uiName.Text = XNode.Attribute(XrmUri.NameAttributeName).Value;
         }
     }
 }

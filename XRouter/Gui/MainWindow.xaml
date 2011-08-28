@@ -142,7 +142,7 @@
                 </Grid>
             </TabItem>
             
-            <TabItem Header="XML Resources">
+            <TabItem Name="uiXrmEditorTab" Header="XML Resources">
                 <xrm:XrmEditor x:Name="uiXrmEditor" />
             </TabItem>
             
