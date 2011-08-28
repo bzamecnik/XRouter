@@ -56,6 +56,8 @@ Name: generateRestaurantData; Description: "Generate random input data for the R
 
 [Dirs]
 Name: "{app}\Logs"; Components: sw\xRouter
+Name: "{app}\AdapterPlugins"; Components: sw\xRouter
+Name: "{app}\ActionPlugins"; Components: sw\xRouter
 Name: "C:\XRouter\DemoRestaurant"; Components: examples\restaurant
 Name: "C:\XRouter\DemoRestaurant\Pokladna"; Components: examples\restaurant
 Name: "C:\XRouter\DemoRestaurant\Tisk"; Components: examples\restaurant
@@ -72,7 +74,7 @@ Source: "bin\{#BuildType}\RibbonControlsLibrary.dll"; DestDir: "{app}"; Flags: i
 Source: "bin\{#BuildType}\SchemaTron.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\schemaTron sw\xRouter sw\daemonNt
 Source: "bin\{#BuildType}\SchemaTron.Console.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\schemaTron\console
 Source: "bin\{#BuildType}\SimpleDiagrammer.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
-Source: "bin\{#BuildType}\XRouter.Adapters.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+Source: "bin\{#BuildType}\AdapterPlugins\XRouter.Adapters.dll"; DestDir: "{app}\AdapterPlugins\"; Flags: ignoreversion; Components: sw\xRouter
 Source: "bin\{#BuildType}\XRouter.Broker.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
 Source: "bin\{#BuildType}\XRouter.Common.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
 Source: "bin\{#BuildType}\XRouter.ComponentHosting.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
