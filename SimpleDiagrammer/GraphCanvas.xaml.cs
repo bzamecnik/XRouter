@@ -64,6 +64,16 @@ namespace SimpleDiagrammer
             layoutUpdateTimer.Stop();
         }
 
+        public object CreateDefaultLayoutConfiguration()
+        {
+            return layoutAlgorithm.CreateDefaultConfiguration();
+        }
+
+        public void ApplyLayoutConfiguration(object configuration)
+        {
+            layoutAlgorithm.ApplyConfiguration(configuration);
+        }
+
         private void UpdateDiagram()
         {
             #region Update nodes

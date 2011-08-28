@@ -31,6 +31,9 @@ namespace XRouter.Common.MessageFlowConfig
         [DataMember]
         public List<NodeConfiguration> Nodes { get; private set; }
 
+        [DataMember]
+        public SerializableXDocument LayoutConfiguration { get; set; }
+
         public MessageFlowConfiguration(string name, int version)
         {
             Guid = Guid.NewGuid();

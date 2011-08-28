@@ -21,6 +21,8 @@ using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Gui.Utils;
 using XRouter.Manager;
+using ObjectConfigurator;
+using System.Xml.Linq;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow
 {
@@ -39,6 +41,8 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
         internal MessageflowGraphPresenter MessageflowGraphPresenter { get; private set; }
 
         private GraphCanvas graphCanvas;
+
+        private ConfigurationEditor uiLayoutConfigEditor;
 
         public MessageflowConfigurationControl()
         {
@@ -59,6 +63,36 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             graphCanvas = MessageflowGraphPresenter.CreateGraphCanvas();
             uiDesignerContainer.Child = graphCanvas;
             uiDesignerContainer.ContextMenu = CreateGraphCanvasContextMenu();
+
+            PrepareLayoutConfiguration();
+        }
+
+        private void PrepareLayoutConfiguration()
+        {
+            object layoutConfiguration = graphCanvas.CreateDefaultLayoutConfiguration();
+            if (Messageflow.LayoutConfiguration != null) {
+                Configurator.LoadConfiguration(layoutConfiguration, Messageflow.LayoutConfiguration);
+            } else {
+                Messageflow.LayoutConfiguration = new SerializableXDocument(Configurator.SaveConfiguration(layoutConfiguration));
+            }
+            graphCanvas.ApplyLayoutConfiguration(layoutConfiguration);
+
+            uiLayoutConfigEditor = Configurator.CreateEditor(layoutConfiguration.GetType());
+            uiLayoutConfigEditor.LoadConfiguration(Messageflow.LayoutConfiguration);
+            uiLayoutConfigEditor.ConfigurationChanged += delegate {
+                XDocument xNewConfiguration = uiLayoutConfigEditor.SaveConfiguration();
+                bool isValid = true;
+                try {
+                    Configurator.LoadConfiguration(layoutConfiguration, xNewConfiguration);
+                } catch {
+                    isValid = false;
+                }
+                if (isValid) {
+                    Messageflow.LayoutConfiguration = new SerializableXDocument(xNewConfiguration);
+                    graphCanvas.ApplyLayoutConfiguration(layoutConfiguration);
+                }
+            };
+            uiLayoutConfigurationContainer.Child = uiLayoutConfigEditor;
         }
 
         private ContextMenu CreateGraphCanvasContextMenu()
@@ -138,6 +172,8 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                 NodeSelectionManager.MessageflowGraphPresenter = MessageflowGraphPresenter;
                 graphCanvas = MessageflowGraphPresenter.CreateGraphCanvas();
                 uiDesignerContainer.Child = graphCanvas;
+
+                PrepareLayoutConfiguration();
             }
         }
 

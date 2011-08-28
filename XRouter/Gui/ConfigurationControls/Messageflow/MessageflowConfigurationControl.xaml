@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="1000">
+             d:DesignHeight="300" d:DesignWidth="1000" Background="{x:Null}">
     <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -27,20 +27,20 @@
                 <Border.Background>
                     <LinearGradientBrush>
                         <GradientStop Color="Transparent" Offset="-1"/>
-                        <GradientStop Color="LightBlue" Offset="0.5"/>
+                        <GradientStop Color="#FFC3CDDC" Offset="0.5"/>
                         <GradientStop Color="Transparent" Offset="2"/>
                     </LinearGradientBrush>
                 </Border.Background>
                 <StackPanel Orientation="Horizontal">
-                    <Button Name="uiImport" Click="uiImport_Click" Margin="5" Padding="5 1 10 1">
+                    <Button Name="uiImport" Click="uiImport_Click" Margin="5" Padding="5 1 5 1">
                         <StackPanel Orientation="Horizontal">
-                            <Image Margin="0 0 5 0" Source="/XRouter.Gui;component/Resources/Actions-document-import-icon.png" Height="20" />
+                            <Image Margin="0 0 5 0" Source="/XRouter.Gui;component/Resources/Actions-document-import-icon.png" Height="16" />
                             <TextBlock VerticalAlignment="Center">Import</TextBlock>
                         </StackPanel>
                     </Button>
-                    <Button Name="uiExport" Click="uiExport_Click" Margin="5" Padding="5 1 10 1">
+                    <Button Name="uiExport" Click="uiExport_Click" Margin="5" Padding="5 1 5 1">
                         <StackPanel Orientation="Horizontal">
-                            <Image Margin="0 0 5 0" Source="/XRouter.Gui;component/Resources/Actions-document-export-icon.png" Height="20" />
+                            <Image Margin="0 0 5 0" Source="/XRouter.Gui;component/Resources/Actions-document-export-icon.png" Height="16" />
                             <TextBlock VerticalAlignment="Center">Export</TextBlock>
                         </StackPanel>
                     </Button>
@@ -48,8 +48,24 @@
             </Border>
         </Grid>
         <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" Background="LightGray" />
-        <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <Border Background="AliceBlue" Name="uiNodePropertiesContainer" />
-        </ScrollViewer>
+        <Grid Grid.Column="2" Background="#FFE3EFFB">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <Border Name="uiNodePropertiesContainer" />
+            </ScrollViewer>
+            <Border Grid.Row="1" Padding="5" Background="#FFE9EFFB" CornerRadius="5" BorderBrush="#FFCDDCEB" BorderThickness="1" Margin="3">
+                <Expander IsExpanded="False">
+                    <Expander.Header>
+                        <TextBlock FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center">Layout settings</TextBlock>
+                    </Expander.Header>
+                    <Border Name="uiLayoutConfigurationContainer" Margin="5">
+                        
+                    </Border>
+                </Expander>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

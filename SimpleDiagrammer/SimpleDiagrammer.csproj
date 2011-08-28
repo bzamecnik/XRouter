@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -56,6 +56,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+    <Compile Include="Layouts\ForceDirected\Configuration.cs" />
     <Compile Include="Support\MathUtils.cs" />
     <Compile Include="Tests\Test1\Edge.cs" />
     <Compile Include="Tests\Test1\MainControl.xaml.cs">
@@ -122,6 +123,12 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ObjectConfigurator\ObjectConfigurator.csproj">
+      <Project>{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}</Project>
+      <Name>ObjectConfigurator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
