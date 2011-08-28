@@ -36,7 +36,6 @@ namespace XRouter.Data
     public class PersistentStorage : IXmlStorage
     {
         private IDataAccess dataAccess;
-        private XDocument configXmlCache;
 
         private object _updateTokenLock = new object();
         /// <summary>
@@ -68,19 +67,16 @@ namespace XRouter.Data
 
         public XDocument GetApplicationConfiguration()
         {
-            if (configXmlCache == null) {
-                string configXml = dataAccess.LoadConfiguration();
-                if (configXml == null) {
-                    configXml = ApplicationConfiguration.InitialContent;
-                }
-                configXmlCache = XDocument.Parse(configXml);
+            string configXml = dataAccess.LoadConfiguration();
+            if (configXml == null) {
+                configXml = ApplicationConfiguration.InitialContent;
             }
-            return configXmlCache;
+            XDocument result = XDocument.Parse(configXml);
+            return result;
         }
 
         public void SaveApplicationConfiguration(XDocument config)
         {
-            configXmlCache = config;
             string configXml = config.ToString();
             dataAccess.SaveConfiguration(configXml);
         }

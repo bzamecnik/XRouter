@@ -283,9 +283,14 @@ namespace XRouter.Common
             {
                 string name = xAdapterType.Attribute(XName.Get("name")).Value;
                 string assemblyAndClrType = xAdapterType.Attribute(XName.Get("clr-type")).Value;
+                XAttribute xDescription = xAdapterType.Attribute(XName.Get("description"));
+                string description = string.Empty;
+                if (xDescription != null) {
+                    description = xDescription.Value;
+                }
                 XElement xConfigurationMetadata = xAdapterType.Element(XName.Get("class-metadata"));
                 ClassMetadata configurationMetadata = XSerializer.Deserialize<ClassMetadata>(xConfigurationMetadata);
-                AdapterType adapterType = new AdapterType(name, assemblyAndClrType, configurationMetadata);
+                AdapterType adapterType = new AdapterType(name, assemblyAndClrType, description, configurationMetadata);
                 result.Add(adapterType);
             }
             return result.ToArray();
@@ -310,9 +315,14 @@ namespace XRouter.Common
             }
 
             string assemblyAndClrType = xAdapterType.Attribute(XName.Get("clr-type")).Value;
+            XAttribute xDescription = xAdapterType.Attribute(XName.Get("description"));
+            string description = string.Empty;
+            if (xDescription != null) {
+                description = xDescription.Value;
+            }
             XElement xConfigurationMetadata = xAdapterType.Element(XName.Get("class-metadata"));
             ClassMetadata configurationMetadata = XSerializer.Deserialize<ClassMetadata>(xConfigurationMetadata);
-            AdapterType adapterType = new AdapterType(name, assemblyAndClrType, configurationMetadata);
+            AdapterType adapterType = new AdapterType(name, assemblyAndClrType, description, configurationMetadata);
             return adapterType;
         }
 
@@ -329,6 +339,7 @@ namespace XRouter.Common
             XElement xAdapterType = new XElement(XName.Get("adapter-type"));
             xAdapterType.SetAttributeValue(XName.Get("name"), adapterType.Name);
             xAdapterType.SetAttributeValue(XName.Get("clr-type"), adapterType.AssemblyAndClrType);
+            xAdapterType.SetAttributeValue(XName.Get("description"), adapterType.Description);
 
             XElement xConfigurationMetadata = new XElement(XName.Get("class-metadata"));
             XSerializer.Serializer(adapterType.ConfigurationMetadata, xConfigurationMetadata);
@@ -511,9 +522,14 @@ namespace XRouter.Common
             {
                 string name = xActionType.Attribute(XName.Get("name")).Value;
                 string assemblyAndClrType = xActionType.Attribute(XName.Get("clr-type")).Value;
+                XAttribute xDescription = xActionType.Attribute(XName.Get("description"));
+                string description = string.Empty;
+                if (xDescription != null) {
+                    description = xDescription.Value;
+                }
                 XElement xConfigurationMetadata = xActionType.Element(XName.Get("class-metadata"));
                 ClassMetadata configurationMetadata = XSerializer.Deserialize<ClassMetadata>(xConfigurationMetadata);
-                ActionType actionType = new ActionType(name, assemblyAndClrType, configurationMetadata);
+                ActionType actionType = new ActionType(name, assemblyAndClrType, description, configurationMetadata);
                 result.Add(actionType);
             }
             return result.ToArray();
@@ -538,9 +554,14 @@ namespace XRouter.Common
             }
 
             string assemblyAndClrType = xActionType.Attribute(XName.Get("clr-type")).Value;
+            XAttribute xDescription = xActionType.Attribute(XName.Get("description"));
+            string description = string.Empty;
+            if (xDescription != null) {
+                description = xDescription.Value;
+            }
             XElement xConfigurationMetadata = xActionType.Element(XName.Get("class-metadata"));
             ClassMetadata configurationMetadata = XSerializer.Deserialize<ClassMetadata>(xConfigurationMetadata);
-            ActionType actionType = new ActionType(name, assemblyAndClrType, configurationMetadata);
+            ActionType actionType = new ActionType(name, assemblyAndClrType, description, configurationMetadata);
             return actionType;
         }
 
@@ -557,6 +578,7 @@ namespace XRouter.Common
             XElement xActionType = new XElement(XName.Get("action-type"));
             xActionType.SetAttributeValue(XName.Get("name"), actionType.Name);
             xActionType.SetAttributeValue(XName.Get("clr-type"), actionType.ClrTypeAndAssembly);
+            xActionType.SetAttributeValue(XName.Get("description"), actionType.Description);
 
             XElement xConfigurationMetadata = new XElement(XName.Get("class-metadata"));
             XSerializer.Serializer(actionType.ConfigurationMetadata, xConfigurationMetadata);

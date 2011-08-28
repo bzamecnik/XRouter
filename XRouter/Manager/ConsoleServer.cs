@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.ServiceProcess;
@@ -7,6 +8,9 @@ using System.Xml;
 using System.Xml.Linq;
 using XRouter.Common;
 using XRouter.Data;
+using System.Reflection;
+using System.IO;
+using XRouter.Common.MessageFlowConfig;
 
 namespace XRouter.Manager
 {
@@ -18,6 +22,9 @@ namespace XRouter.Manager
         AddressFilterMode = AddressFilterMode.Any)]
     internal sealed class ConsoleServer : IConsoleServer
     {
+        private static readonly string AdapterPluginsDirectory = "AdapterPlugins";
+        private static readonly string ActionPluginsDirectory = "ActionPlugins";
+
         /// <summary>
         /// URI of the ConsoleServer web service which provides the main services.
         /// </summary>
@@ -96,6 +103,11 @@ namespace XRouter.Manager
             // init log readers
             this.eventLogReader = new EventLogReader(this.storagesInfo.LogsDirectory, this.serviceName);
             this.traceLogReader = new TraceLogReader(this.storagesInfo.LogsDirectory, this.serviceName);
+
+            ObjectConfigurator.Configurator.CustomItemTypes.Add(new TokenSelectionConfigurationItemType());
+            ObjectConfigurator.Configurator.CustomItemTypes.Add(new XRouter.Common.Xrm.XrmUriConfigurationItemType());
+            ObjectConfigurator.Configurator.CustomItemTypes.Add(new UriConfigurationItemType());
+            UpdatePlugins();
 
             // create WCF service on a new thread
             Exception exception = null;
@@ -229,6 +241,88 @@ namespace XRouter.Manager
             return storage.GetTokens(pageSize, pageNumber);
         }
 
+        public void UpdatePlugins()
+        {
+            XDocument xConfig = storage.GetApplicationConfiguration();
+            var config = new ApplicationConfiguration(xConfig);
+
+            string binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string adapterPluginsDirectoryFullPath = Path.Combine(binPath, AdapterPluginsDirectory);
+            string actionPluginsDirectoryFullPath = Path.Combine(binPath, ActionPluginsDirectory);
+            if (!Directory.Exists(adapterPluginsDirectoryFullPath)) {
+                Directory.CreateDirectory(adapterPluginsDirectoryFullPath);
+            }
+            if (!Directory.Exists(actionPluginsDirectoryFullPath)) {
+                Directory.CreateDirectory(actionPluginsDirectoryFullPath);
+            }
+
+            #region Update adapter plugins
+            AdapterType[] oldAdapterTypes = config.GetAdapterTypes();
+            foreach (AdapterType adapterType in oldAdapterTypes) {
+                config.RemoveAdapterType(adapterType.Name);
+            }
+            var adapterPlugins = PluginLoader.FindPlugins<AdapterPluginAttribute>(adapterPluginsDirectoryFullPath);
+            foreach (PluginInfo<AdapterPluginAttribute> adapterPlugin in adapterPlugins) {
+                AdapterType adapterType = new AdapterType(
+                    name: adapterPlugin.PluginAttribute.PluginName,
+                    assemblyAndClrType: adapterPlugin.TypeAndAssembly,
+                    description: adapterPlugin.PluginAttribute.PluginDescription,
+                    clrType: adapterPlugin.PluginType);
+                config.AddAdapterType(adapterType);
+            }
+            #endregion
+
+            #region Update action plugins
+            ActionType[] oldActionTypes = config.GetActionTypes();
+            foreach (ActionType actionType in oldActionTypes) {
+                config.RemoveActionType(actionType.Name);
+            }
+
+            var actionPlugins = PluginLoader.FindPlugins<ActionPluginAttribute>(adapterPluginsDirectoryFullPath).ToList();
+
+            #region Add built-in actions
+            Type sendMessageActionType = typeof(XRouter.Processor.BuiltInActions.SendMessageAction);
+            actionPlugins.Add(new PluginInfo<ActionPluginAttribute>(sendMessageActionType.Assembly, sendMessageActionType));
+            Type xsltTransformActionType = typeof(XRouter.Processor.BuiltInActions.XsltTransformationAction);
+            actionPlugins.Add(new PluginInfo<ActionPluginAttribute>(xsltTransformActionType.Assembly, xsltTransformActionType));
+            #endregion
+
+            foreach (PluginInfo<ActionPluginAttribute> actionPlugin in actionPlugins) {
+                ActionType actionType = new ActionType(
+                    name: actionPlugin.PluginAttribute.PluginName,
+                    assemblyAndClrType: actionPlugin.TypeAndAssembly,
+                    description: actionPlugin.PluginAttribute.PluginDescription,
+                    clrType: actionPlugin.PluginType);
+                config.AddActionType(actionType);
+            }
+            #endregion
+
+            XDocument xOldConfig = storage.GetApplicationConfiguration();
+            if (!CanBeEqual(xOldConfig, config.Content)) {
+                ChangeConfiguration(config);
+            }
+        }
         #endregion
+
+        private bool CanBeEqual(XDocument xdocument1, XDocument xdocument2)
+        {
+            byte[] hash1 = GetXDocumentHash(xdocument1);
+            byte[] hash2 = GetXDocumentHash(xdocument2);
+            return hash1.SequenceEqual(hash2);
+        }
+
+        private byte[] GetXDocumentHash(XDocument xdocument)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            using (XmlWriter xmlWriter = XmlWriter.Create(memoryStream)) {
+                xdocument.WriteTo(xmlWriter);
+            }
+            memoryStream.Position = 0;
+
+            var xfrm = new System.Security.Cryptography.Xml.XmlDsigC14NTransform(false);
+            xfrm.LoadInput(memoryStream);
+            byte[] result = xfrm.GetDigestedOutput(new System.Security.Cryptography.SHA1Managed());
+            return result;   
+        }
     }
 }

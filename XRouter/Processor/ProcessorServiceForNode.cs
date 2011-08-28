@@ -5,6 +5,7 @@ using XRouter.Common;
 using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.Xrm;
 using XRouter.Processor.MessageFlowParts;
+using XRouter.Common.MessageFlowConfig;
 
 namespace XRouter.Processor
 {

@@ -66,16 +66,6 @@ Details:
                     return false;
                 }
             }
-
-            ////TODO: remove
-            //Configuration.AddAdapterType(new AdapterType(
-            //    "Directory I/O adapter",
-            //    "XRouter.Adapters.DirectoryAdapter,XRouter.Adapters.dll",
-            //    new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.DirectoryAdapter))));
-            //Configuration.AddAdapterType(new AdapterType(
-            //    "HTTP client adapter",
-            //    "XRouter.Adapters.HttpClientAdapter,XRouter.Adapters.dll",
-            //    new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.HttpClientAdapter))));
         }
 
         public bool UploadConfiguration(bool throwOnError)

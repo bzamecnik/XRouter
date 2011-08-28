@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace XRouter.Processor
+namespace XRouter.Common.MessageFlowConfig
 {
     /// <summary>
     /// Marks a class as being an action plugin. It can attach a plugin name
@@ -15,7 +18,7 @@ namespace XRouter.Processor
         /// <remarks>This is not an identifier an can have an arbitrary foramat.
         /// </remarks>
         public string PluginName { get; private set; }
-        
+
         /// <summary>
         /// Action plugin description.
         /// </summary>
