@@ -37,10 +37,14 @@ namespace XRouter.Broker.Dispatching
 
             tokenDispatchingTaskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(
                 MaxTokenDispatchingConcurrencyLevel));
+
+            // NOTE: Checking for unresponsible processors and lost tokens
+            // has been disabled by a specification update.
+
             // NOTE: the thread must not die on and exceptions are handled inside
             // so it's not wrapped using TraceLog.WrapWithExceptionLogging()
-            backgroundCheckings = Task.Factory.StartNew(StartBackgroundCheckings,
-                TaskCreationOptions.LongRunning);
+            //backgroundCheckings = Task.Factory.StartNew(StartBackgroundCheckings,
+            //    TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
