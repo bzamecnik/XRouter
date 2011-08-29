@@ -13,10 +13,6 @@ namespace XRouter.Common
 
         public string TypeFullName { get; private set; }
 
-        public string TypeAndAssembly {
-            get { return string.Format("{0},{1}", TypeFullName, AssemblyFullPath); }
-        }
-
         public TPluginAttribute PluginAttribute { get; private set; }
 
         public Type PluginType { get; private set; }
