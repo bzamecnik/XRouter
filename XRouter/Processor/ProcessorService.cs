@@ -115,11 +115,6 @@ namespace XRouter.Processor
             }
         }
 
-        public double GetUtilization()
-        {
-            return 0.5d;
-        }
-
         public void AddWork(Token token)
         {
             TraceLog.Info("Processor received a token with GUID " + token.Guid);

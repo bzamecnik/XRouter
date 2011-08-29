@@ -22,13 +22,6 @@
         void Stop();
 
         /// <summary>
-        /// Obtains the percent of current utilization of a processor, ie. the
-        /// ration of its current load to its processing capacity.
-        /// </summary>
-        /// <returns>current processor utilization [0.0-1.0]</returns>
-        double GetUtilization();
-
-        /// <summary>
         /// Passes a token to the processor to be processed.
         /// </summary>
         /// <remarks>This method does not wait for the token to be actually

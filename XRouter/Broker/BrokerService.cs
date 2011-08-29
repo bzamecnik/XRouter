@@ -145,7 +145,7 @@ namespace XRouter.Broker
             {
                 token.State = TokenState.Received;
                 storage.SaveToken(token);
-                dispatcher.NotifyAboutNewToken(token);
+                dispatcher.Dispatch(token);
             }
         }
 
