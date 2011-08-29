@@ -285,7 +285,8 @@ namespace XRouter.Common
                 string assemblyAndClrType = xAdapterType.Attribute(XName.Get("clr-type")).Value;
                 XAttribute xDescription = xAdapterType.Attribute(XName.Get("description"));
                 string description = string.Empty;
-                if (xDescription != null) {
+                if (xDescription != null)
+                {
                     description = xDescription.Value;
                 }
                 XElement xConfigurationMetadata = xAdapterType.Element(XName.Get("class-metadata"));
@@ -317,7 +318,8 @@ namespace XRouter.Common
             string assemblyAndClrType = xAdapterType.Attribute(XName.Get("clr-type")).Value;
             XAttribute xDescription = xAdapterType.Attribute(XName.Get("description"));
             string description = string.Empty;
-            if (xDescription != null) {
+            if (xDescription != null)
+            {
                 description = xDescription.Value;
             }
             XElement xConfigurationMetadata = xAdapterType.Element(XName.Get("class-metadata"));
@@ -524,7 +526,8 @@ namespace XRouter.Common
                 string assemblyAndClrType = xActionType.Attribute(XName.Get("clr-type")).Value;
                 XAttribute xDescription = xActionType.Attribute(XName.Get("description"));
                 string description = string.Empty;
-                if (xDescription != null) {
+                if (xDescription != null)
+                {
                     description = xDescription.Value;
                 }
                 XElement xConfigurationMetadata = xActionType.Element(XName.Get("class-metadata"));
@@ -556,7 +559,8 @@ namespace XRouter.Common
             string assemblyAndClrType = xActionType.Attribute(XName.Get("clr-type")).Value;
             XAttribute xDescription = xActionType.Attribute(XName.Get("description"));
             string description = string.Empty;
-            if (xDescription != null) {
+            if (xDescription != null)
+            {
                 description = xDescription.Value;
             }
             XElement xConfigurationMetadata = xActionType.Element(XName.Get("class-metadata"));
@@ -685,6 +689,36 @@ namespace XRouter.Common
         #region Message flow
 
         /// <summary>
+        /// Gets the configuration of the current message flow.
+        /// </summary>
+        public MessageFlowConfiguration GetMessageFlow()
+        {
+            Guid guid = GetCurrentMessageFlowGuid();
+            return GetMessageFlow(guid);
+        }
+
+        /// <summary>
+        /// Updates the configuration of the current message flow.
+        /// </summary>
+        /// <remarks>
+        /// It removes any other message flows.
+        /// </remarks>
+        /// <param name="messageFlow"></param>
+        public void UpdateMessageFlow(MessageFlowConfiguration messageFlow)
+        {
+            // remove any previous message flow
+            var xOldMessageFlows = Content.XDocument.XPathSelectElements(
+                "/configuration/messageflows/messageflow");
+            foreach (var xMessageFlow in xOldMessageFlows)
+            {
+                xMessageFlow.Remove();
+            }
+
+            AddMessageFlow(messageFlow);
+            SetCurrentMessageFlowGuid(messageFlow.Guid);
+        }
+
+        /// <summary>
         /// Gets the GUID of the current message flow.
         /// </summary>
         /// <returns></returns>
@@ -701,7 +735,7 @@ namespace XRouter.Common
         /// </summary>
         /// <param name="guid">GUID of the new message flow to be set as the
         /// current one</param>
-        public void SetCurrentMessageFlowGuid(Guid guid)
+        private void SetCurrentMessageFlowGuid(Guid guid)
         {
             XElement xMessageFlows = Content.XDocument.XPathSelectElement("/configuration/messageflows");
             xMessageFlows.SetAttributeValue(XName.Get("current"), guid.ToString());
@@ -712,7 +746,7 @@ namespace XRouter.Common
         /// </summary>
         /// <param name="guid">GUID of the new message flow</param>
         /// <returns></returns>
-        public MessageFlowConfiguration GetMessageFlow(Guid guid)
+        private MessageFlowConfiguration GetMessageFlow(Guid guid)
         {
             string xpath = string.Format("/configuration/messageflows/messageflow[@guid='{0}']", guid);
             XElement xMessageFlow = Content.XDocument.XPathSelectElement(xpath);
@@ -748,7 +782,7 @@ namespace XRouter.Common
         /// Adds a configuration of a new message flow.
         /// </summary>
         /// <param name="messageFlow">new message flow configuration</param>
-        public void AddMessageFlow(MessageFlowConfiguration messageFlow)
+        private void AddMessageFlow(MessageFlowConfiguration messageFlow)
         {
             XElement xMessageFlow = new XElement(XName.Get("messageflow"));
             XSerializer.Serializer(messageFlow, xMessageFlow);

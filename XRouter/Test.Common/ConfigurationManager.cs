@@ -85,9 +85,8 @@ namespace XRouter.Test.Common
             // remove all message flows
             xConfig.XPathSelectElement("/configuration/messageflows").RemoveNodes();
 
-            // add current message flow
-            configuration.AddMessageFlow(messageFlow);
-            configuration.SetCurrentMessageFlowGuid(messageFlow.Guid);
+            // update current message flow
+            configuration.UpdateMessageFlow(messageFlow);
 
             // remove all previous XRM items
             xConfig.XPathSelectElement("/configuration/xml-resource-storage").RemoveNodes();
