@@ -104,7 +104,17 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                 Header = new TextBlock { Text = "Action", FontSize = 14, FontWeight = FontWeights.Bold }
             };
             menuItemAddActionNode.Click += delegate {
-                AddNode("Action", result, delegate { return new ActionNodeConfiguration(); });
+                AddNode("Action", result, delegate {
+                    ActionNodeConfiguration newActionNode = new ActionNodeConfiguration();
+                    #region Add a default action
+                    ActionType actionType = ConfigManager.Configuration.GetActionTypes().First();
+                    ActionConfiguration action = new ActionConfiguration(actionType.Name) {
+                        Configuration = new SerializableXDocument(new XDocument(new XElement(XName.Get("objectConfig"))))
+                    };
+                    newActionNode.Actions.Add(action);
+                    #endregion
+                    return newActionNode;
+                });
             };
 
             MenuItem menuItemAddCbrNode = new MenuItem {

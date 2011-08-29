@@ -85,9 +85,9 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
         private FrameworkElement AddAction()
         {
             ActionType actionType = nodeSelectionManager.AppConfig.GetActionTypes().First();
-            ActionConfiguration action = new ActionConfiguration(actionType.Name);
-            action.Configuration = new SerializableXDocument(new XDocument());
-            action.Configuration.XDocument.Add(new XElement(XName.Get("objectConfig")));
+            ActionConfiguration action = new ActionConfiguration(actionType.Name) {
+                Configuration = new SerializableXDocument(new XDocument(new XElement(XName.Get("objectConfig"))))
+            };
             node.Actions.Add(action);
 
             FrameworkElement actionRepresentation = CreateActionRepresentation(action);

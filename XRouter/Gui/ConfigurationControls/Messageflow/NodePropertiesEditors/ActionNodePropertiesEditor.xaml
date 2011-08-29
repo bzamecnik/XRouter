@@ -6,7 +6,7 @@
              xmlns:src="clr-namespace:XRouter.Gui.ConfigurationControls.Messageflow"
              xmlns:controls="clr-namespace:XRouter.Gui.CommonControls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="400" d:DesignWidth="300">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -66,7 +66,7 @@
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="3" Grid.ColumnSpan="2" Name="uiActionConfigurationRegion" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5">
+        <Border Grid.Row="4" Grid.ColumnSpan="2" Name="uiActionConfigurationRegion" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5">
             <Border.Background>
                 <LinearGradientBrush>
                     <GradientStop Color="LightSkyBlue" Offset="-1" />
