@@ -77,20 +77,23 @@ namespace XRouter.Gui.Xrm
 
             } else {
 
-                if (uiItemHeader.IsModified) {
-                    string content = uiItemHeader.Content;
-                    XDocument xDoc = Validate(content, uiItemHeader.XNode);
-                    if (xDoc == null) {
-                        ThreadUtils.InvokeLater(TimeSpan.FromSeconds(0.2), delegate {
-                            uiNode.IsSelected = true;
-                            Validate(content, uiItemHeader.XNode);
-                        });
-                        return false;
-                    }
-                    xActiveItem.Elements().First().Remove(); // remove old root of document
-                    xActiveItem.Add(xDoc.Root); // add new root of document
-                    uiItemHeader.IsModified = false;
+                string content = uiItemHeader.Content;
+                XDocument xDoc = Validate(content, uiItemHeader.XNode);
+                if (xDoc == null) {
+                    ThreadUtils.InvokeLater(TimeSpan.FromSeconds(0.2), delegate {
+                        TreeViewItem uiParent = uiNode.Parent as TreeViewItem;
+                        while (uiParent != null) {
+                            uiParent.IsExpanded = true;
+                            uiParent = uiParent.Parent as TreeViewItem;
+                        }
+                        uiNode.IsSelected = true;
+                        Validate(content, uiItemHeader.XNode);
+                    });
+                    return false;
                 }
+                uiItemHeader.XNode.Elements().First().Remove(); // remove old root of document
+                uiItemHeader.XNode.Add(xDoc.Root); // add new root of document
+                uiItemHeader.IsModified = false;
                 return true;
             }
         }
