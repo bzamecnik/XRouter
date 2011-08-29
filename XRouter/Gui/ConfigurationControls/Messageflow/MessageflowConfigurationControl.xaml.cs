@@ -104,7 +104,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                 Header = new TextBlock { Text = "Action", FontSize = 14, FontWeight = FontWeights.Bold }
             };
             menuItemAddActionNode.Click += delegate {
-                AddNode(result, delegate { return new ActionNodeConfiguration(); });
+                AddNode("Action", result, delegate { return new ActionNodeConfiguration(); });
             };
 
             MenuItem menuItemAddCbrNode = new MenuItem {
@@ -112,7 +112,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                 Header = new TextBlock { Text = "CBR", FontSize = 14, FontWeight = FontWeights.Bold }
             };
             menuItemAddCbrNode.Click += delegate {
-                AddNode(result, delegate { return new CbrNodeConfiguration(); });
+                AddNode("CBR", result, delegate { return new CbrNodeConfiguration(); });
             };
 
             MenuItem menuItemAddTerminatorNode = new MenuItem {
@@ -121,7 +121,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             };
             menuItemAddTerminatorNode.Click += delegate {
                 Point menuLocationOnCanvas = result.TranslatePoint(new Point(), graphCanvas.Canvas);
-                AddNode(result, delegate { return new TerminatorNodeConfiguration(); });
+                AddNode("Terminator", result, delegate { return new TerminatorNodeConfiguration(); });
             };
 
             MenuItem menuItemAdd = new MenuItem {
@@ -135,10 +135,19 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             return result;
         }
 
-        private void AddNode(ContextMenu menu, Func<NodeConfiguration> nodeFactory)
+        private void AddNode(string baseName, ContextMenu menu, Func<NodeConfiguration> nodeFactory)
         {
             NodeConfiguration node = nodeFactory();
-            node.Name = "New node";
+
+            #region Set unique name
+            int index = 1;
+            string[] existingNames = Messageflow.Nodes.Select(n => n.Name).ToArray();
+            while (existingNames.Contains(baseName + index.ToString())) {
+                index++;
+            }
+            node.Name  = baseName + index.ToString();
+            #endregion
+
             Point menuLocationOnCanvas = menu.TranslatePoint(new Point(), graphCanvas.Canvas);
             node.Location = menuLocationOnCanvas - graphCanvas.CanvasLocationOffset;
             Messageflow.Nodes.Add(node);

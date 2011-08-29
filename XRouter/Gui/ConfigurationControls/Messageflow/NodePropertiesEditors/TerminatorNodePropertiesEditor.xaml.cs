@@ -39,20 +39,24 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
             uiResultMessage.Selection = node.ResultMessageSelection;
         }
 
+        #region Name editing
+
         private void uiName_LostFocus(object sender, RoutedEventArgs e)
         {
-            node.Name = uiName.Text;
+            nodeSelectionManager.RenameNode(node, uiName);
         }
 
         private void uiName_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter) {
-                node.Name = uiName.Text;
+                nodeSelectionManager.RenameNode(node, uiName);
             }
             if (e.Key == Key.Escape) {
                 uiName.Text = node.Name;
             }
         }
+
+        #endregion
 
         private void uiReturnsResult_Click(object sender, RoutedEventArgs e)
         {

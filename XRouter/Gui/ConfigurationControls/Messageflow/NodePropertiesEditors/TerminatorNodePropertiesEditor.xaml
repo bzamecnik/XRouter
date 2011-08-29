@@ -10,6 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -25,9 +26,8 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-        <TextBlock Grid.Row="0" Grid.Column="0" Margin="15 5 0 5" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="13">Name:</TextBlock>
-        <TextBox Grid.Row="0" Grid.Column="1" Name="uiName" LostFocus="uiName_LostFocus" KeyDown="uiName_KeyDown" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="8 10 10 10" />
-
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" FontSize="16" FontWeight="Bold" Margin="10" HorizontalAlignment="Center">Terminating node</TextBlock>
+        
         <Border Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
             <Border.Background>
                 <LinearGradientBrush>
@@ -36,8 +36,19 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-        <TextBlock Grid.Row="1" Grid.Column="0" Margin="15 13 0 5" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" FontSize="13">Result message:</TextBlock>
-        <StackPanel  Grid.Row="1" Grid.Column="1">
+        <TextBlock Grid.Row="1" Grid.Column="0" Margin="15 5 0 5" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="13">Name:</TextBlock>
+        <TextBox Grid.Row="1" Grid.Column="1" Name="uiName" LostFocus="uiName_LostFocus" KeyDown="uiName_KeyDown" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="8 10 10 10" />
+
+        <Border Grid.Row="2" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSkyBlue" Offset="-1" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <TextBlock Grid.Row="2" Grid.Column="0" Margin="15 13 0 5" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" FontSize="13">Result message:</TextBlock>
+        <StackPanel  Grid.Row="2" Grid.Column="1">
             <controls:TokenSelectionEditor x:Name="uiResultMessage" Margin="10 10 10 0"/>
             
             <CheckBox Grid.Row="1" Grid.Column="1" Name="uiIsReturningOutput" Click="uiReturnsResult_Click" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 2 10 10" >
