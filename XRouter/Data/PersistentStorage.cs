@@ -36,6 +36,7 @@ namespace XRouter.Data
     public class PersistentStorage : IXmlStorage
     {
         private IDataAccess dataAccess;
+        private XDocument configXmlCache;
 
         private object _updateTokenLock = new object();
         /// <summary>
@@ -65,18 +66,38 @@ namespace XRouter.Data
 
         #region Application configuration
 
+        /// <summary>
+        /// Obtains the current application configuration.
+        /// </summary>
+        /// <remarks>
+        /// The configuration XML is cached and the method returns the same
+        /// reference in case the configuration did not change.
+        /// </remarks>
+        /// <returns></returns>
         public XDocument GetApplicationConfiguration()
         {
-            string configXml = dataAccess.LoadConfiguration();
-            if (configXml == null) {
-                configXml = ApplicationConfiguration.InitialContent;
+            if (configXmlCache == null)
+            {
+                string configXml = dataAccess.LoadConfiguration();
+                if (configXml == null)
+                {
+                    configXml = ApplicationConfiguration.InitialContent;
+                }
+                configXmlCache = XDocument.Parse(configXml);
             }
-            XDocument result = XDocument.Parse(configXml);
-            return result;
+            return configXmlCache;
         }
 
+        /// <summary>
+        /// Updates the application configuration.
+        /// </summary>
+        /// <remarks>
+        /// Also updates the cache.
+        /// </remarks>
+        /// <param name="config"></param>
         public void SaveApplicationConfiguration(XDocument config)
         {
+            configXmlCache = config;
             string configXml = config.ToString();
             dataAccess.SaveConfiguration(configXml);
         }
