@@ -34,12 +34,12 @@ namespace XRouter.Examples.Restaurant.DataGenerator
             for (int orderNumber = 1; orderNumber <= orderCount; ++orderNumber)
             {
                 XElement order = new XElement("order");
-                int tableId = random.Next(1, tableCount);
+                int tableId = random.Next(1, tableCount + 1);
                 order.Add(new XElement("table", tableId));
 
                 string ItemId;
                 int maxId;
-                if (random.Next(0, 1) == 0)
+                if (random.Next(2) == 0)
                 {
                     ItemId = "food";
                     maxId = MaxFoodId;
@@ -49,7 +49,7 @@ namespace XRouter.Examples.Restaurant.DataGenerator
                     ItemId = "drink";
                     maxId = MaxDrinkId;
                 }
-                ItemId += random.Next(1, maxId).ToString().PadLeft(4, '0');
+                ItemId += random.Next(1, maxId + 1).ToString().PadLeft(4, '0');
                 order.Add(new XElement("item", ItemId));
 
                 XDocument doc = new XDocument();
