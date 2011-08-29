@@ -38,7 +38,6 @@ namespace XRouter.Data
         private IDataAccess dataAccess;
         private XDocument configXmlCache;
 
-        private object _updateTokenLock = new object();
         /// <summary>
         /// A lock for updating tokens to ensure atomicity.
         /// </summary>
@@ -46,16 +45,7 @@ namespace XRouter.Data
         /// Currently no two tokens can be updated in parallel. Better would
         /// be to enable updating tokens with different GUIDs in parallel.
         /// </remarks>
-        private object UpdateTokenLock
-        {
-            get
-            {
-                if (_updateTokenLock == null) {
-                    _updateTokenLock = new object();
-                }
-                return _updateTokenLock;
-            }
-        }
+        private object updateTokenLock = new object();
 
         public PersistentStorage(string connectionString)
         {
@@ -133,7 +123,7 @@ namespace XRouter.Data
         /// token exists</returns>
         public Token UpdateToken(Guid tokenGuid, Action<Token> updater)
         {
-            lock (UpdateTokenLock) {
+            lock (updateTokenLock) {
                 Token token = GetToken(tokenGuid);
                 if (token == null) {
                     return null;
@@ -156,7 +146,7 @@ namespace XRouter.Data
         /// <param name="updater"></param>
         public void UpdateToken(Token token, Action<Token> updater)
         {
-            lock (UpdateTokenLock) {
+            lock (updateTokenLock) {
                 Token currentToken = GetToken(token.Guid);
                 updater(currentToken);
                 SaveToken(currentToken);

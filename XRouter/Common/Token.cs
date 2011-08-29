@@ -30,7 +30,7 @@ namespace XRouter.Common
 
         public DateTime Created {
             get {
-                lock (SyncLock) {
+                lock (syncLock) {
                     DateTime result;
                     if (!DateTime.TryParse(GetTokenAttribute("created"), System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
                     {
@@ -41,7 +41,7 @@ namespace XRouter.Common
                 }
             }
             private set {
-                lock (SyncLock) {
+                lock (syncLock) {
                     SetTokenAttribute("created", value.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
@@ -49,7 +49,7 @@ namespace XRouter.Common
 
         public DateTime Received {
             get {
-                lock (SyncLock) {
+                lock (syncLock) {
                     DateTime result;
                     if (!DateTime.TryParse(GetTokenAttribute("received"), System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
                     {
@@ -60,7 +60,7 @@ namespace XRouter.Common
                 }
             }
             private set {
-                lock (SyncLock) {
+                lock (syncLock) {
                     SetTokenAttribute("received", value.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
@@ -68,7 +68,7 @@ namespace XRouter.Common
 
         public DateTime Dispatched {
             get {
-                lock (SyncLock) {
+                lock (syncLock) {
                     DateTime result;
                     if (!DateTime.TryParse(GetTokenAttribute("dispatched"), System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
                     {
@@ -79,7 +79,7 @@ namespace XRouter.Common
                 }
             }
             private set {
-                lock (SyncLock) {
+                lock (syncLock) {
                     SetTokenAttribute("dispatched", value.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
@@ -87,7 +87,7 @@ namespace XRouter.Common
 
         public DateTime Finished {
             get {
-                lock (SyncLock)
+                lock (syncLock)
                 {
                     DateTime result;
                     if (!DateTime.TryParse(GetTokenAttribute("finished"), System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
@@ -99,24 +99,16 @@ namespace XRouter.Common
                 }
             }
             private set {
-                lock (SyncLock) {
+                lock (syncLock) {
                     SetTokenAttribute("finished", value.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
         }
 
-        private object _syncLock = new object();
         /// <summary>
         /// Lock for exclusive access to the token data.
         /// </summary>
-        private object SyncLock {
-            get {
-                if (_syncLock == null) {
-                    _syncLock = new object();
-                }
-                return _syncLock;
-            }
-        }
+        private object syncLock = new object();
 
         /// <summary>
         /// XML content of the token, including the original message and
@@ -133,13 +125,13 @@ namespace XRouter.Common
         /// <remarks>This property is synchronized and can block.</remarks>
         public TokenState State {
             get {
-                lock (SyncLock) {
+                lock (syncLock) {
                     TokenState result;
                     Enum.TryParse<TokenState>(GetTokenAttribute("state"), out result);
                     return result;
                 }
             } set {
-                lock (SyncLock) {
+                lock (syncLock) {
                     SetTokenAttribute("state", value.ToString());
                     switch (value) {
                         case TokenState.Received:
@@ -175,12 +167,12 @@ namespace XRouter.Common
         /// </remarks>
         public bool IsPersistent {
             get {
-                lock (SyncLock) {
+                lock (syncLock) {
                     return bool.Parse(GetTokenAttribute("is-persistent"));
                 }
             }
             set {
-                lock (SyncLock) {
+                lock (syncLock) {
                     SetTokenAttribute("is-persistent", value.ToString());
                 }
             }
@@ -192,11 +184,11 @@ namespace XRouter.Common
         /// <remarks>This property is synchronized and can block.</remarks>
         public DateTime Timeout {
             get {
-                lock (SyncLock) {
+                lock (syncLock) {
                     return DateTime.Parse(GetTokenAttribute("timeout"), CultureInfo.InvariantCulture);
                 }
             } set {
-                lock (SyncLock) {
+                lock (syncLock) {
                     SetTokenAttribute("timeout", value.ToString(CultureInfo.InvariantCulture));
                 }
             }
@@ -257,7 +249,7 @@ namespace XRouter.Common
         /// <returns>new token instance with the same</returns>
         public Token Clone()
         {
-            lock (SyncLock) {
+            lock (syncLock) {
                 Token result = new Token();
                 // TODO: make sure that Guid and Content are also cloned!
                 result.Guid = Guid;
@@ -274,7 +266,7 @@ namespace XRouter.Common
         /// <returns>may return null</returns>
         public EndpointAddress GetSourceAddress()
         {
-            lock (SyncLock) {
+            lock (syncLock) {
                 var xSourceAddress = Content.XDocument.XPathSelectElement("token/source-address");
                 if (xSourceAddress != null) {
                     string gateway = xSourceAddress.Attribute(XName.Get("gateway")).Value;
@@ -296,7 +288,7 @@ namespace XRouter.Common
         /// gateway/adapter/endpoint</paparam>
         public void SetSourceAddress(EndpointAddress sourceAddress)
         {
-            lock (SyncLock) {
+            lock (syncLock) {
                 var xSourceAddress = Content.XDocument.XPathSelectElement("token/source-address");
                 if (xSourceAddress == null) {
                     xSourceAddress = new XElement("source-address");
@@ -316,7 +308,7 @@ namespace XRouter.Common
         /// is no message flow state stored; never null</returns>
         public MessageFlowState GetMessageFlowState()
         {
-            lock (SyncLock) {
+            lock (syncLock) {
                 XElement xWorkFlowState = Content.XDocument.XPathSelectElement("token/messageflow-state");
                 MessageFlowState result = XSerializer.Deserialize<MessageFlowState>(xWorkFlowState);
                 if (result == null) {
@@ -347,7 +339,7 @@ namespace XRouter.Common
         /// <param name="messageFlowState">new message flow state</param>
         public void SetMessageFlowState(MessageFlowState messageFlowState)
         {
-            lock (SyncLock) {
+            lock (syncLock) {
                 XElement xWorkFlowState = Content.XDocument.XPathSelectElement("token/messageflow-state");
                 XSerializer.Serializer(messageFlowState, xWorkFlowState);
             }
@@ -360,7 +352,7 @@ namespace XRouter.Common
         /// <returns>source metadata; never null</returns>
         public XDocument GetSourceMetadata()
         {
-            lock (SyncLock)
+            lock (syncLock)
             {
                 XElement sourceMetadataElement = Content.XDocument.XPathSelectElement("token/source-metadata");
                 XDocument result = new XDocument();
@@ -386,7 +378,7 @@ namespace XRouter.Common
             if (sourceMetadata == null) {
                 return;
             }
-            lock (SyncLock) {
+            lock (syncLock) {
                 XElement sourceMetadataElement = Content.XDocument.XPathSelectElement("token/source-metadata");
                 sourceMetadataElement.Add(sourceMetadata.Root);
             }
@@ -401,7 +393,7 @@ namespace XRouter.Common
         /// </returns>
         public XElement GetMessage(string name)
         {
-            lock (SyncLock)
+            lock (syncLock)
             {
                 var message = Content.XDocument.XPathSelectElement(string.Format("token/messages/message[@name='{0}']", SecurityElement.Escape(name)));
                 return message;
@@ -416,7 +408,7 @@ namespace XRouter.Common
         /// <param name="message">XML contents of the new message</param>
         public void AddMessage(string name, XDocument message)
         {
-            lock (SyncLock) {
+            lock (syncLock) {
                 var xMessages = Content.XDocument.XPathSelectElement("token/messages");
                 XElement xMessage = new XElement(XName.Get("message"), message.Root);
                 xMessage.SetAttributeValue(XName.Get("name"), name);
@@ -437,7 +429,7 @@ namespace XRouter.Common
         /// <param name="stackTrace">exception stack trace</param>
         public void AddException(string sourceNodeName, string message, string stackTrace)
         {
-            lock (SyncLock) {
+            lock (syncLock) {
                 var xExceptions = Content.XDocument.XPathSelectElement("token/exceptions");
                 XElement xException = new XElement(XName.Get("exception"));
                 xException.SetAttributeValue(XName.Get("source-node"), sourceNodeName);
@@ -466,7 +458,7 @@ namespace XRouter.Common
         /// <param name="content">new content of the token</param>
         public void UpdateContent(XDocument content)
         {
-            lock (SyncLock)
+            lock (syncLock)
             {
                 Content = new SerializableXDocument(content);
             }
@@ -481,7 +473,7 @@ namespace XRouter.Common
         /// exists</returns>
         private string GetTokenAttribute(string name)
         {
-            lock (SyncLock) {
+            lock (syncLock) {
                 var tokenAttribute = Content.XDocument.XPathSelectElement("token").Attribute(XName.Get(name));
                 return (tokenAttribute != null) ? tokenAttribute.Value : null;
             }
@@ -496,7 +488,7 @@ namespace XRouter.Common
         /// <param name="value">token attribute null</param>
         private void SetTokenAttribute(string name, string value)
         {
-            lock (SyncLock) {
+            lock (syncLock) {
                 Content.XDocument.XPathSelectElement("token").SetAttributeValue(name, value);
             }
         }
