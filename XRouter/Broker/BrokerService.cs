@@ -79,17 +79,8 @@ namespace XRouter.Broker
 
         public ApplicationConfiguration GetConfiguration()
         {
-        public void UpdateConfiguration(ApplicationConfiguration config)
-        {
-            storage.SaveApplicationConfiguration(config.Content);
-
-            // TODO: why not just iterate over componentsAccessors.Values?
-            ComponentAccessor[] components = componentsAccessors.Values.ToArray();
-            foreach (var component in components)
-            {
-                var reducedConfig = config.GetReducedConfiguration(component.ConfigurationReduction);
-                component.UpdateConfig(reducedConfig);
-            }
+            XDocument configXml = storage.GetApplicationConfiguration();
+            return new ApplicationConfiguration(configXml);
         }
 
         IEnumerable<ProcessorAccessor> IBrokerServiceForDispatcher.GetProcessors()
