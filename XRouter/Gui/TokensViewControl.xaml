@@ -5,20 +5,43 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="800">
+    <UserControl.Background>
+        <LinearGradientBrush>
+            <GradientStop Color="LightSkyBlue" Offset="-2" />
+            <GradientStop Color="White" Offset="1" />
+        </LinearGradientBrush>
+    </UserControl.Background>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
-        <DataGrid Grid.Row="0" Name="uiTokens" MinHeight="300" ClipboardCopyMode="ExcludeHeader" SelectionMode="Single" SelectionUnit="Cell">
+
+        <DataGrid Grid.Row="0" Name="uiTokens" MinHeight="300" ClipboardCopyMode="ExcludeHeader" SelectionMode="Single" SelectionUnit="FullRow" SelectionChanged="uiTokens_SelectionChanged" CanUserSortColumns="False">
         </DataGrid>
         
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-            <TextBlock VerticalAlignment="Center">Page:</TextBlock>
-            <TextBlock Name="uiPageNumber" VerticalAlignment="Center" Margin="5 0 0 0">1</TextBlock>
-            <Button Click="PreviousPage_Click" Margin="5 0 0 0">Previous</Button>
-            <Button Click="NextPage_Click" Margin="5 0 0 0">Next</Button>
+            <TextBlock VerticalAlignment="Center" FontSize="16">Page:</TextBlock>
+            <TextBlock Name="uiPageNumber" VerticalAlignment="Center" Margin="5 0 0 0" FontSize="16" FontWeight="SemiBold">1</TextBlock>
+            <Button Click="PreviousPage_Click" Margin="5 0 0 0">
+                <Image Height="20" Source="/XRouter.Gui;component/Resources/back-icon.png" Margin="2 0 2 0"/>
+            </Button>
+            <Button Click="NextPage_Click" Margin="5 0 0 0">
+                <Image Height="20" Source="/XRouter.Gui;component/Resources/next-icon.png" Margin="2 0 2 0"/>
+            </Button>
         </StackPanel>
+
+        <TextBlock Grid.Row="2" Name="uiSelectedTokenHeader" Margin="10 0 10 5" FontSize="16" FontWeight="SemiBold">Selected token</TextBlock>
+
+        <TextBox Grid.Row="3" Name="uiSelectedToken" Margin="10 0 10 0" IsReadOnly="False" AcceptsReturn="True" FontFamily="Courier New" FontSize="16" BorderBrush="Gray" BorderThickness="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <TextBox.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="#FFE3EFFB" Offset="-0.5" />
+                    <GradientStop Color="white" Offset="1" />
+                </LinearGradientBrush>
+            </TextBox.Background>
+        </TextBox>
     </Grid>
 </UserControl>

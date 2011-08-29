@@ -5,11 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Background>
+        <LinearGradientBrush>
+            <GradientStop Color="LightSkyBlue" Offset="-2" />
+            <GradientStop Color="White" Offset="1" />
+        </LinearGradientBrush>
+    </UserControl.Background>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
@@ -23,14 +31,29 @@
             <Button Click="ApplyFilter_Click" VerticalAlignment="Center" Padding="5 1 5 1" Margin="10 0 0 0">Apply filter</Button>
         </StackPanel>
 
-        <DataGrid Grid.Row="1" Name="uiLogs" MinHeight="300" ClipboardCopyMode="ExcludeHeader" SelectionMode="Single" SelectionUnit="Cell">
+        <DataGrid Grid.Row="1" Name="uiLogs" MinHeight="300" ClipboardCopyMode="ExcludeHeader" SelectionMode="Single" SelectionUnit="FullRow" SelectionChanged="uiLogs_SelectionChanged" CanUserSortColumns="False">
         </DataGrid>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-            <TextBlock VerticalAlignment="Center">Page:</TextBlock>
-            <TextBlock Name="uiPageNumber" VerticalAlignment="Center" Margin="5 0 0 0">1</TextBlock>
-            <Button Click="PreviousPage_Click" Margin="5 0 0 0">Previous</Button>
-            <Button Click="NextPage_Click" Margin="5 0 0 0">Next</Button>
+            <TextBlock VerticalAlignment="Center" FontSize="16">Page:</TextBlock>
+            <TextBlock Name="uiPageNumber" VerticalAlignment="Center" Margin="5 0 0 0" FontSize="16" FontWeight="SemiBold">1</TextBlock>
+            <Button Click="PreviousPage_Click" Margin="5 0 0 0">
+                <Image Height="20" Source="/XRouter.Gui;component/Resources/back-icon.png" Margin="2 0 2 0"/>
+            </Button>
+            <Button Click="NextPage_Click" Margin="5 0 0 0">
+                <Image Height="20" Source="/XRouter.Gui;component/Resources/next-icon.png" Margin="2 0 2 0"/>
+            </Button>
         </StackPanel>
+        
+        <TextBlock Grid.Row="3" Name="uiSelectedMessageHeader" Margin="10 0 10 5" FontSize="16" FontWeight="SemiBold">Selected log message</TextBlock>
+
+        <TextBox Grid.Row="4" Name="uiSelectedMessage" Margin="10 0 10 0" IsReadOnly="False" AcceptsReturn="True" FontFamily="Courier New" FontSize="16" BorderBrush="Gray" BorderThickness="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <TextBox.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="#FFE3EFFB" Offset="-0.5" />
+                    <GradientStop Color="white" Offset="1" />
+                </LinearGradientBrush>
+            </TextBox.Background>
+        </TextBox>
     </Grid>
 </UserControl>
