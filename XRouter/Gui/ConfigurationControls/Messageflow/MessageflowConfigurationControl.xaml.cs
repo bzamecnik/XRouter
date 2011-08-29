@@ -56,7 +56,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
 
             NodeSelectionManager = new NodeSelectionManager(uiNodePropertiesContainer, ConfigManager);
 
-            Messageflow = ConfigManager.Configuration.GetMessageFlow(ConfigManager.Configuration.GetCurrentMessageFlowGuid());
+            Messageflow = ConfigManager.Configuration.GetMessageFlow();
             MessageflowGraphPresenter = new MessageflowGraphPresenter(Messageflow, NodeSelectionManager);
             NodeSelectionManager.MessageflowGraphPresenter = MessageflowGraphPresenter;
             
@@ -161,8 +161,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
         void IConfigurationControl.Save()
         {
             Messageflow.PromoteToNewVersion();
-            ConfigManager.Configuration.AddMessageFlow(Messageflow);
-            ConfigManager.Configuration.SetCurrentMessageFlowGuid(Messageflow.Guid);
+            ConfigManager.Configuration.UpdateMessageFlow(Messageflow);
         }
 
         private void uiImport_Click(object sender, RoutedEventArgs e)

@@ -104,8 +104,8 @@ Filename: "{app}\Examples\Restaurant\generate-demo-data.bat"; Description: "Gene
 [Icons]
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
-Name: "{group}\XRouter Configuration Manager"; Filename: "{app}\XRouter.Gui.exe"; WorkingDir: "{app}"
-Name: "{group}\DaemonNT Configuration Editor"; Filename: "{app}\DaemonNT.GUI.ConfigEditor.exe"; WorkingDir: "{app}"
+Name: "{group}\XRouter Configuration Manager GUI"; Filename: "{app}\XRouter.Gui.exe"; WorkingDir: "{app}"
+Name: "{group}\DaemonNT Configuration Editor GUI"; Filename: "{app}\DaemonNT.GUI.ConfigEditor.exe"; WorkingDir: "{app}"
 
 Name: "{group}\XRouter\Install XRouter as Windows Service"; Filename: "{app}\DaemonNT.exe"; WorkingDir: "{app}"; Parameters: "-w install {#XRouterServiceName}"
 Name: "{group}\XRouter\Uninstall XRouter as Windows Service"; Filename: "{app}\DaemonNT.exe"; WorkingDir: "{app}"; Parameters: "-w uninstall {#XRouterServiceName}"

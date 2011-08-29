@@ -17,7 +17,7 @@ namespace XRouter.Common
             List<PluginInfo<TPluginAttribute>> result = new List<PluginInfo<TPluginAttribute>>();
 
             foreach (string filePattern in PluginFilePatterns) {
-                var files = Directory.GetFiles(searchDirectoryPath, filePattern, SearchOption.AllDirectories);
+                var files = Directory.GetFiles(searchDirectoryPath, filePattern, SearchOption.TopDirectoryOnly);
                 foreach (string file in files) {
                     Type[] types;
                     try {
