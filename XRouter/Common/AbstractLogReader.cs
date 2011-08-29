@@ -57,10 +57,10 @@ namespace XRouter.Common
         /// ascendantly.
         /// </para>
         /// </remarks>
-        /// <param name="minDate">earliest date and time of log entries to be
-        /// selected</param>
-        /// <param name="maxDate">latest date and time of log entries to be
-        /// selected</param>
+        /// <param name="minDate">earliest date and time (inclusive) of log
+        /// entries to be selected</param>
+        /// <param name="maxDate">latest date and time (exclusive) of log
+        /// entries to be selected</param>
         /// <param name="logLevelFilter">log level flags of selected log
         /// entries</param>
         /// <param name="pageSize">size of one page of selected log entries
@@ -81,9 +81,7 @@ namespace XRouter.Common
             {
                 string fileName = Path.GetFileName(logFilePath);
                 DateTime date = GetDateFromLogFileName(fileName);
-                // TODO: how about the inclusions regarding the intercal bounds?
-                // >=, <= (potentially problematic) or >=, < or >, <=
-                if ((date >= minDate) && (date <= maxDate))
+                if ((date >= minDate) && (date < maxDate))
                 {
                     try
                     {

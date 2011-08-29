@@ -295,7 +295,8 @@ namespace XRouter.Manager
             var sendMessageActionInfo = new PluginInfo<ActionPluginAttribute>(sendMessageActionType.Assembly, sendMessageActionType);
             config.AddActionType(new ActionType(
                    name: sendMessageActionInfo.PluginAttribute.PluginName,
-                   assemblyAndClrType: String.Join(",", sendMessageActionInfo.TypeFullName, sendMessageActionInfo.AssemblyFullPath),
+                   assemblyAndClrType: String.Join(",", sendMessageActionInfo.TypeFullName,
+                   Path.GetFileName(sendMessageActionInfo.AssemblyFullPath)),
                    description: sendMessageActionInfo.PluginAttribute.PluginDescription,
                    clrType: sendMessageActionInfo.PluginType));
 
@@ -303,7 +304,8 @@ namespace XRouter.Manager
             var xsltTransformActionInfo = new PluginInfo<ActionPluginAttribute>(xsltTransformActionType.Assembly, xsltTransformActionType);
             config.AddActionType(new ActionType(
                    name: xsltTransformActionInfo.PluginAttribute.PluginName,
-                   assemblyAndClrType: String.Join(",", xsltTransformActionInfo.TypeFullName, xsltTransformActionInfo.AssemblyFullPath),
+                   assemblyAndClrType: String.Join(",", xsltTransformActionInfo.TypeFullName,
+                   Path.GetFileName(xsltTransformActionInfo.AssemblyFullPath)),
                    description: xsltTransformActionInfo.PluginAttribute.PluginDescription,
                    clrType: xsltTransformActionInfo.PluginType));
 

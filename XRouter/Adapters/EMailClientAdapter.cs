@@ -97,7 +97,14 @@ namespace XRouter.Adapters
                 throw new ArgumentNullException("Metadata argument must not be null.");
             }
 
-            attachmentName = metadata.Root.Value;
+            if ((metadata.Root != null) && !string.IsNullOrWhiteSpace(message.Root.Value))
+            {
+                attachmentName = metadata.Root.Value;
+            }
+            else
+            {
+                attachmentName = "message.xml";
+            }
 
             Encoding attachmentEncoding = Encoding.UTF8;
             if (message.Declaration != null)

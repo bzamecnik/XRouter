@@ -11,8 +11,8 @@ namespace XRouter.Manager
     /// </summary>
     /// <remarks>
     /// A report e-mail is send once a day at a configured time. It contains
-    /// the number of errors, warning in event log and trace log entries within
-    /// the last 24 hours.
+    /// the number of errors, warning in event log and trace log entries on
+    /// the previous day.
     /// </remarks>
     internal sealed class Reporter
     {
@@ -118,7 +118,7 @@ namespace XRouter.Manager
                         LastReporting = dt;
                         try
                         {
-                            DateTime max = new DateTime(dt.Year, dt.Month, dt.Day, time.Hours, time.Minutes, 0);
+                            DateTime max = new DateTime(dt.Year, dt.Month, dt.Day, 0, 0, 0);
                             DateTime min = max.AddDays(-1);
                             TraceLog.Info(string.Format("Creating report from logs at {0}", dt));
                             string report = this.CreateReport(dt, min, max);
