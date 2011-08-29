@@ -31,9 +31,12 @@ namespace XRouter.Broker.Dispatching
         private Task backgroundCheckings;
         private volatile bool isStopping;
 
+        Guid messageFlowGuid;
+
         internal Dispatcher(IBrokerServiceForDispatcher brokerService)
         {
             this.brokerService = brokerService;
+            messageFlowGuid = brokerService.GetConfiguration().GetCurrentMessageFlowGuid();
 
             tokenDispatchingTaskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(
                 MaxTokenDispatchingConcurrencyLevel));
@@ -55,7 +58,8 @@ namespace XRouter.Broker.Dispatching
         /// <param name="token"></param>
         public void NotifyAboutNewToken(Token token)
         {
-            DispatchAsync(token.Guid);
+            //DispatchAsync(token.Guid);
+            Dispatch(token.Guid);
         }
 
         private void DispatchAsync(Guid tokenGuid, Func<ProcessorAccessor, bool> filter = null)
@@ -83,7 +87,6 @@ namespace XRouter.Broker.Dispatching
             });
             #endregion
 
-            var config = brokerService.GetConfiguration();
             foreach (var processor in processorsByUtilization)
             {
                 if ((filter == null) || (filter(processor)))
@@ -100,7 +103,6 @@ namespace XRouter.Broker.Dispatching
                         // NOTE: it compares to default GUID returned by the new Guid()
                         if (messageflowState.MessageFlowGuid == new Guid())
                         {
-                            Guid messageFlowGuid = config.GetCurrentMessageFlowGuid();
                             token = brokerService.UpdateTokenMessageFlow(tokenGuid, messageFlowGuid);
                         }
                         try
