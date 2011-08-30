@@ -17,13 +17,13 @@
             </LinearGradientBrush>
         </Grid.Background>
         <StackPanel Margin="10 0 10 0">
-            <TextBlock Margin="20 20 20 25" FontSize="22" FontWeight="Bold" Foreground="DarkBlue">Connect to XRouter manager</TextBlock>
+            <TextBlock Margin="20 20 20 25" FontSize="22" FontWeight="Bold" Foreground="DarkBlue">Connect to XRouter Manager service</TextBlock>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Margin="10 0 15 0" FontSize="16" FontWeight="Bold">Addres</TextBlock>
+                <TextBlock Grid.Column="0" Margin="10 0 15 0" FontSize="16" FontWeight="Bold" ToolTip="URI of the ConsoleServer Web service running within the XRouter Manager">Address</TextBlock>
                 <ComboBox Grid.Column="1" Name="uiAddress" KeyDown="uiAddress_KeyDown" IsEditable="True" FontSize="14" Margin="0 0 10 0" VerticalAlignment="Center" />
             </Grid>
             <Grid>
