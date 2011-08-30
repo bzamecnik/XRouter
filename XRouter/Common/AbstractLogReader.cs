@@ -81,7 +81,7 @@ namespace XRouter.Common
             {
                 string fileName = Path.GetFileName(logFilePath);
                 DateTime date = GetDateFromLogFileName(fileName);
-                if ((date >= minDate) && (date < maxDate))
+                if ((date >= minDate) && (date <= maxDate))
                 {
                     try
                     {

@@ -23,19 +23,25 @@ namespace XRouter.Common
             LogLevelFilters logLevelFilter,
             ref List<EventLogEntry> matchingEntries)
         {
-            string[] lines = File.ReadAllLines(logFilePath);
-            foreach (string line in lines)
+            using (FileStream fileStream = new FileStream(logFilePath,
+                FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (StreamReader reader = new StreamReader(fileStream))
             {
-                if (line.Trim().Length == 0)
+                string line = reader.ReadLine();
+                while (line != null)
                 {
-                    // ignore empty lines
-                    continue;
-                }
-                EventLogEntry entry = new EventLogEntry(line, date);
-                if ((entry.Created >= minDate) && (entry.Created <= maxDate) &&
-                    IsMatchingLogLevelFilter(entry.LogLevel, logLevelFilter))
-                {
-                    matchingEntries.Add(entry);
+                    if (line.Trim().Length == 0)
+                    {
+                        // ignore empty lines
+                        continue;
+                    }
+                    EventLogEntry entry = new EventLogEntry(line, date);
+                    if ((entry.Created >= minDate) && (entry.Created <= maxDate) &&
+                        IsMatchingLogLevelFilter(entry.LogLevel, logLevelFilter))
+                    {
+                        matchingEntries.Add(entry);
+                    }
+                    line = reader.ReadLine();
                 }
             }
         }
