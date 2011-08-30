@@ -133,10 +133,10 @@
                         </LinearGradientBrush.GradientStops>
                     </LinearGradientBrush>
                 </ToolBar.Background>
-                <Button Name="uiManuals" Click="uiManuals_Click" ToolTip="Open folder with manuals"  Margin="0 0 5 0">
+                <Button Name="uiManuals" Click="uiManuals_Click" ToolTip="Open folder with documentation"  Margin="0 0 5 0">
                     <StackPanel Orientation="Horizontal">
                         <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-help-contents-icon.png" />
-                        <TextBlock VerticalAlignment="Center">Manuals</TextBlock>
+                        <TextBlock VerticalAlignment="Center">Documentation</TextBlock>
                     </StackPanel>
                 </Button>
                 <Button Name="uiAbout" Click="uiAbout_Click" ToolTip="About this program">

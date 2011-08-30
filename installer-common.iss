@@ -40,6 +40,7 @@ Name: "sw"; Description: "Program files"; Types: full custom
 Name: "sw\xRouter"; Description: "XRouter"; Types: full
 Name: "sw\xRouter\Service"; Description: "XRouter Service"; Types: full compact
 Name: "sw\xRouter\Manager"; Description: "XRouter Manager"; Types: full compact
+Name: "sw\xRouter\Database"; Description: "XRouter Database image"; Types: full compact
 Name: "sw\xRouter\Gui"; Description: "XRouter GUI"; Types: full
 Name: "sw\daemonNt"; Description: "DaemonNT"; Types: full
 Name: "sw\daemonNt\Console"; Description: "DaemonNT Console"; Types: full compact
@@ -53,6 +54,7 @@ Name: "examples\restaurant"; Description: "Restaurant"; Types: full
 
 [Tasks]
 Name: generateRestaurantData; Description: "Generate random input data for the Restaurant demo"; Components: examples\restaurant
+Name: copyExampleConfigs; Description: "Copy config files from example ones"; Components: sw\xRouter
 
 [Dirs]
 Name: "{app}\Logs"; Components: sw\xRouter
@@ -67,7 +69,7 @@ Name: "C:\XRouter\DemoRestaurant\InputData"; Components: examples\restaurant
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "bin\{#BuildType}\DaemonNT.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\daemonNt\Console
 Source: "bin\{#BuildType}\DaemonNT.GUI.ConfigEditor.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\daemonNt\Gui
-Source: "bin\{#BuildType}\DaemonNT.xml"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter\Service sw\xRouter\Manager
+Source: "bin\{#BuildType}\DaemonNT.xml"; DestDir: "{app}"; DestName: "DaemonNT.example.xml"; Flags: ignoreversion; Components: sw\xRouter\Service sw\xRouter\Manager
 Source: "bin\{#BuildType}\ICSharpCode.AvalonEdit.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter\Gui
 Source: "bin\{#BuildType}\ObjectConfigurator.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
 Source: "bin\{#BuildType}\RibbonControlsLibrary.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter\Gui
@@ -81,9 +83,11 @@ Source: "bin\{#BuildType}\XRouter.ComponentHosting.dll"; DestDir: "{app}"; Flags
 Source: "bin\{#BuildType}\XRouter.Data.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
 Source: "bin\{#BuildType}\XRouter.Gateway.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
 Source: "bin\{#BuildType}\XRouter.Gui.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter\Gui
-Source: "bin\{#BuildType}\XRouter.Gui.exe.config"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter\Gui
+Source: "bin\{#BuildType}\XRouter.Gui.exe.config"; DestDir: "{app}"; DestName: "XRouter.Gui.exe.example.config"; Flags: ignoreversion; Components: sw\xRouter\Gui
 Source: "bin\{#BuildType}\XRouter.Manager.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
 Source: "bin\{#BuildType}\XRouter.Processor.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+
+Source: "database\*"; DestDir: "{app}\database"; Flags: ignoreversion; Components: sw\xRouter\Database
 
 Source: "README"; DestName: "README.txt"; DestDir: "{app}\Documentation"; Flags: isreadme; Components: sw
 Source: "LICENSE"; DestName: "LICENSE.txt"; DestDir: "{app}\Documentation"; Components: sw
@@ -96,10 +100,12 @@ Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.exe"; Excludes: "*vshost*
 ;Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.dll"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion; Components: examples\restaurant
 Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.exe.config"; Excludes: "*vshost*"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion; Components: examples\restaurant
 Source: "XRouterExamples\Restaurant\Data\*"; DestDir: "{app}\Examples\Restaurant\Data"; Flags: ignoreversion recursesubdirs; Components: examples\restaurant
-Source: "XRouterExamples\Restaurant\generate-demo-data.bat"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion recursesubdirs; Components: examples\restaurant
+Source: "XRouterExamples\Restaurant\generate-demo-data.bat"; DestDir: "{app}"; Flags: ignoreversion; Components: examples\restaurant
+Source: "copy-example-configs.bat"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
 
 [Run]
 Filename: "{app}\Examples\Restaurant\generate-demo-data.bat"; Description: "Generate random input data for the demo."; Flags: postinstall shellexec waituntilterminated; Tasks: generateRestaurantData
+Filename: "{app}\copy-example-configs.bat"; Description: "Copy config files from example ones (DaemonNT.xml, GUI config)"; Flags: postinstall shellexec waituntilterminated runascurrentuser unchecked; Tasks: copyExampleConfigs
 
 [Icons]
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"

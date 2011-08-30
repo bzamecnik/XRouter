@@ -131,12 +131,7 @@ namespace XRouter.Common
         public void SaveComponentElements(ComponentType componentType, XElement xNewComponents)
         {
             string componentElementName = componentType.ToString().ToLower();
-            var xOldComponents = Content.XDocument.XPathSelectElements(
-                string.Format("/configuration/components/{0}", componentElementName));
-            foreach (var xComponent in xOldComponents)
-            {
-                xComponent.Remove();
-            }
+            RemoveElements(string.Format("/configuration/components/{0}", componentElementName));
 
             var xComponents = Content.XDocument.XPathSelectElement("/configuration/components");
             foreach (var xNewComponent in xNewComponents.Elements())
@@ -352,12 +347,8 @@ namespace XRouter.Common
 
             // if there is already an adapter with the same name replace the CLR type quietly
             // this maintains the uniqueness of the adapter types
-            var xExistingAdapterTypes = Content.XDocument.XPathSelectElements(
-                string.Format("/configuration/adapter-types/adapter-type[@name='{0}']", adapterType.Name));
-            foreach (var adapter in xExistingAdapterTypes)
-            {
-                adapter.Remove();
-            }
+            RemoveElements(string.Format(
+                "/configuration/adapter-types/adapter-type[@name='{0}']", adapterType.Name));
 
             xAdapterTypes.Add(xAdapterType);
         }
@@ -593,12 +584,8 @@ namespace XRouter.Common
 
             // if there is already an action with the same name replace the CLR type quietly
             // this maintains the uniqueness of the action types
-            var xExistingActionTypes = Content.XDocument.XPathSelectElements(
-                string.Format("/configuration/action-types/action-type[@name='{0}']", actionType.Name));
-            foreach (var action in xExistingActionTypes)
-            {
-                action.Remove();
-            }
+            RemoveElements(string.Format(
+                "/configuration/action-types/action-type[@name='{0}']", actionType.Name));
 
             xActionTypes.Add(xActionType);
         }
@@ -707,12 +694,7 @@ namespace XRouter.Common
         public void UpdateMessageFlow(MessageFlowConfiguration messageFlow)
         {
             // remove any previous message flow
-            var xOldMessageFlows = Content.XDocument.XPathSelectElements(
-                "/configuration/messageflows/messageflow");
-            foreach (var xMessageFlow in xOldMessageFlows)
-            {
-                xMessageFlow.Remove();
-            }
+            RemoveElements("/configuration/messageflows/messageflow");
 
             AddMessageFlow(messageFlow);
             SetCurrentMessageFlowGuid(messageFlow.Guid);
@@ -824,5 +806,18 @@ namespace XRouter.Common
         }
 
         #endregion
+
+        /// <summary>
+        /// Removes all XML elements found by the XPath query.
+        /// </summary>
+        /// <param name="xpath"></param>
+        private void RemoveElements(string xpath)
+        {
+            var xElements = Content.XDocument.XPathSelectElements(xpath).ToList();
+            foreach (var xElement in xElements)
+            {
+                xElement.Remove();
+            }
+        }
     }
 }
