@@ -17,7 +17,7 @@ namespace XRouter.Processor.BuiltInActions
     /// <remarks>
     /// The XSL transform is obtained from the XML resource manager.
     /// </remarks>
-    [ActionPlugin("Xslt transformer", "Does xslt tansformation of a specified message.")]
+    [ActionPlugin("XSLT transformer", "Transform a specified message with a XSL transformation.")]
     public class XsltTransformationAction : IActionPlugin
     {
         private IProcessorServiceForAction ProcessorService { get; set; }
