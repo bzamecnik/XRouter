@@ -13,6 +13,7 @@ using XRouter.Gui.Xrm;
 using System.Windows.Input;
 using System.ServiceProcess;
 using System.Windows.Threading;
+using System.Diagnostics;
 
 namespace XRouter.Gui
 {
@@ -21,6 +22,8 @@ namespace XRouter.Gui
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly string ManualsDirectoryName = "Documentation";
+
         internal ConfigurationManager ConfigManager { get; set; }
 
         private ConfigurationTreeItem currentConfigurationTreeItem;
@@ -288,6 +291,24 @@ namespace XRouter.Gui
                 uiXRouterStatusText.Text = "Failed to determine status";
                 uiXRouterStatusText.ToolTip = ex.Message;
             }
+        }
+
+        private void uiManuals_Click(object sender, RoutedEventArgs e)
+        {
+            string manualsDirectory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ManualsDirectoryName);
+            try {
+                Process.Start(manualsDirectory);
+            } catch (Exception ex) {
+                string messsage = string.Format("Cannot open directory \"{0}\".{1}{1}{2}", manualsDirectory, Environment.NewLine, ex.Message);
+                MessageBox.Show(messsage, "Open manuals", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void uiAbout_Click(object sender, RoutedEventArgs e)
+        {
+            AboutDialog dialog = new AboutDialog();
+            dialog.Owner = this;
+            dialog.ShowDialog();
         }
     }
 }

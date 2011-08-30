@@ -5,7 +5,10 @@
         xmlns:xrm="clr-namespace:XRouter.Gui.Xrm"
         WindowState="Maximized"
         Icon="/XRouter.Gui;component/Resources/xrouter.ico"
-        Title="XRouter - Configuration manager" Height="750" Width="1000" MinWidth="400" MinHeight="200" Loaded="Window_Loaded" Unloaded="Window_Unloaded">
+        Title="XRouter - Configuration manager" 
+        Width="1100" Height="750"
+        MinWidth="400" MinHeight="200" 
+        Loaded="Window_Loaded" Unloaded="Window_Unloaded">
     <Grid>
         <Grid.Background>
             <LinearGradientBrush>
@@ -115,6 +118,29 @@
                     <StackPanel Orientation="Horizontal">
                         <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-player-stop-icon.png" />
                         <TextBlock VerticalAlignment="Center">Stop</TextBlock>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+
+            <ToolBar BandIndex="3">
+                <ToolBar.Background>
+                    <LinearGradientBrush>
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStop Color="#FFBCC7D8" Offset="-1" />
+                            <GradientStop Color="White" Offset="2" />
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                </ToolBar.Background>
+                <Button Name="uiManuals" Click="uiManuals_Click" ToolTip="Open folder with manuals"  Margin="0 0 5 0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-help-contents-icon.png" />
+                        <TextBlock VerticalAlignment="Center">Manuals</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Name="uiAbout" Click="uiAbout_Click" ToolTip="About this program">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-help-about-icon.png" />
+                        <TextBlock VerticalAlignment="Center">About</TextBlock>
                     </StackPanel>
                 </Button>
             </ToolBar>
