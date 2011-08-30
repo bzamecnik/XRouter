@@ -5,7 +5,7 @@
         xmlns:xrm="clr-namespace:XRouter.Gui.Xrm"
         WindowState="Maximized"
         Icon="/XRouter.Gui;component/Resources/xrouter.ico"
-        Title="XRouter - Configuration manager" 
+        Title="XRouter GUI - Configuration manager" 
         Width="1100" Height="750"
         MinWidth="400" MinHeight="200" 
         Loaded="Window_Loaded" Unloaded="Window_Unloaded">
@@ -38,7 +38,7 @@
                         </LinearGradientBrush.GradientStops>
                     </LinearGradientBrush>
                 </ToolBar.Background>
-                <Button Name="uiConnect" Click="uiConnect_Click" ToolTip="Connect to XRouter manager">
+                <Button Name="uiConnect" Click="uiConnect_Click" ToolTip="Connect to the XRouter Manager service">
                     <StackPanel Orientation="Horizontal">
                         <Image Height="24" Source="/XRouter.Gui;component/Resources/App-network-connection-manager-icon.png" />
                         <TextBlock VerticalAlignment="Center">Connect</TextBlock>
@@ -58,31 +58,31 @@
                         </LinearGradientBrush.GradientStops>
                     </LinearGradientBrush>
                 </ToolBar.Background>
-                <Button Click="LoadFromServer_Click" ToolTip="Load application configuration from XRouter server">
+                <Button Click="LoadFromServer_Click" ToolTip="Load the application configuration from the XRouter Service">
                     <StackPanel Orientation="Horizontal">
                         <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-arrow-down-icon.png" />
                         <TextBlock VerticalAlignment="Center">Download</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Click="SaveToServer_Click" ToolTip="Save application configuration to XRouter server">
+                <Button Click="SaveToServer_Click" ToolTip="Save the application configuration to the XRouter Service">
                     <StackPanel Orientation="Horizontal">
                         <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-arrow-up-icon.png" />
                         <TextBlock VerticalAlignment="Center">Upload</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Name="uiNewConfig" Click="uiNewConfig_Click" ToolTip="Create new application configuration">
+                <Button Name="uiNewConfig" Click="uiNewConfig_Click" ToolTip="Create a new application configuration">
                     <StackPanel Orientation="Horizontal">
                         <Image Height="24" Source="/XRouter.Gui;component/Resources/New-icon.png" />
                         <TextBlock VerticalAlignment="Center">New</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Click="Import_Click" ToolTip="Import application configuration from a file">
+                <Button Click="Import_Click" ToolTip="Import the application configuration from a file">
                     <StackPanel Orientation="Horizontal">
                         <Image Height="24" Source="/XRouter.Gui;component/Resources/folder-open-icon.png" />
                         <TextBlock VerticalAlignment="Center">Import</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Click="Export_Click" ToolTip="Export application configuration to a file" Margin="0 0 5 0">
+                <Button Click="Export_Click" ToolTip="Export the application configuration to a file" Margin="0 0 5 0">
                     <StackPanel Orientation="Horizontal">
                         <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-document-save-as-icon.png" />
                         <TextBlock VerticalAlignment="Center">Export</TextBlock>
@@ -92,7 +92,7 @@
             
             <ToolBar BandIndex="2">
                 <ToolBar.Header>
-                    <TextBlock FontWeight="DemiBold" FontSize="13">XRouter:</TextBlock>
+                    <TextBlock FontWeight="DemiBold" FontSize="13">XRouter Service:</TextBlock>
                 </ToolBar.Header>
                 <ToolBar.Background>
                     <LinearGradientBrush>
@@ -102,7 +102,7 @@
                         </LinearGradientBrush.GradientStops>
                     </LinearGradientBrush>
                 </ToolBar.Background>
-                <Button Name="uiUpdateStatus" Click="uiUpdateStatus_Click" ToolTip="Click to update status">
+                <Button Name="uiUpdateStatus" Click="uiUpdateStatus_Click" ToolTip="Current status of the service. Click to refresh.">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Image Name="uiXRouterStatusIconIsRunning" Visibility="Collapsed" Height="20" VerticalAlignment="Center" Source="/XRouter.Gui;component/Resources/Action-ok-icon.png" />
                         <Image Name="uiXRouterStatusIconIsStopped" Visibility="Collapsed" Height="20" VerticalAlignment="Center" Source="/XRouter.Gui;component/Resources/Remove-icon.png" />
@@ -133,13 +133,13 @@
                         </LinearGradientBrush.GradientStops>
                     </LinearGradientBrush>
                 </ToolBar.Background>
-                <Button Name="uiManuals" Click="uiManuals_Click" ToolTip="Open folder with documentation"  Margin="0 0 5 0">
+                <Button Name="uiManuals" Click="uiManuals_Click" ToolTip="Open the documentation directory"  Margin="0 0 5 0">
                     <StackPanel Orientation="Horizontal">
                         <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-help-contents-icon.png" />
                         <TextBlock VerticalAlignment="Center">Documentation</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Name="uiAbout" Click="uiAbout_Click" ToolTip="About this program">
+                <Button Name="uiAbout" Click="uiAbout_Click" ToolTip="Information about the program">
                     <StackPanel Orientation="Horizontal">
                         <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-help-about-icon.png" />
                         <TextBlock VerticalAlignment="Center">About</TextBlock>
