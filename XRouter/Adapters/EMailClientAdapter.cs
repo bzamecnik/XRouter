@@ -25,27 +25,24 @@ namespace XRouter.Adapters
     [AdapterPlugin("E-mail sender adapter", "It can send e-mails with a XML message attached.")]
     public class EMailClientAdapter : Adapter
     {
-        [ConfigurationItem("SMTP host", "Host-name or IP adress of the SMTP server.", "")]
+        [ConfigurationItem("SMTP host", "Host name or IP address of the SMTP server.", "")]
         public string SmtpHost { set; get; }
 
         [ConfigurationItem("SMTP port", "Port where the SMTP server listens.", 0)]
         public int SmtpPort { set; get; }
 
-        // zde to bude chtit pridat validacni kod (tedy regex)
-        [ConfigurationItem("Sender address", "Source address of the e-mail message sender.", "@")]
+        [ConfigurationItem("Sender address", "Source address of the e-mail sender.", "@")]
         public string From { set; get; }
 
-        [ConfigurationItem("Sender name", "Display name of the e-mail message sender.", "XRouter")]
+        [ConfigurationItem("Sender name", "Display name of the e-mail sender.", "XRouter")]
         public string FromDisplayName { set; get; }
 
-        [ConfigurationItem("Subject", "The subject line of the e-mail message.", "")]
+        [ConfigurationItem("Subject", "Subject line of the e-mail.", "")]
         public string Subject { set; get; }
 
-        [ConfigurationItem("Body", "The message body.", "")]
+        [ConfigurationItem("Body", "The e-mail body.", "")]
         public string Body { set; get; }
 
-        // zde to bude chtit pridat validacni kod (regex na kazdy prvek kolekce)
-        // pozn.: pozor na to, ze dnes lze pouzivat v domenach i ruzne Unicode znaky!!
         [ConfigurationItem("Recipients", "A list of e-mail addresses of recipients of this e-mail message.", new[] { "@" })]
         public List<string> To { set; get; }
 
@@ -54,12 +51,9 @@ namespace XRouter.Adapters
             // NOTE: the adapter does not listen to receive any messages
         }
 
-        // podle meho nazoru by bylo lepsi, kdyby byla metadata objekt napr. Dictionary stringu, a to proto, abychom
-        // programatorovi trochu usnadnili praci a spis proto, aby to bylo vzdy stejne, tj. takhle tam muze vlozit
-        // cokoliv
         public override XDocument SendMessage(string endpointName, XDocument message, XDocument metadata)
         {
-            // create and init smtp client
+            // create and initialize an SMTP client
             SmtpClient smtp = new SmtpClient();
             smtp.Host = this.SmtpHost;
             if (this.SmtpPort != 0)
@@ -67,7 +61,7 @@ namespace XRouter.Adapters
                 smtp.Port = this.SmtpPort;
             }
 
-            // create and init email message
+            // create and initialize an email message
             MailMessage mailMessage = new MailMessage();
             mailMessage.From = new MailAddress(this.From, this.FromDisplayName);
             mailMessage.Subject = this.Subject;
@@ -83,7 +77,7 @@ namespace XRouter.Adapters
                 mailMessage.Attachments.Add(attachment);
             }
 
-            // send email message
+            // send the email message
             smtp.Send(mailMessage);
 
             return null;
