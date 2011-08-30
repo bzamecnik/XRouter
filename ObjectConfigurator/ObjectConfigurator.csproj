@@ -87,10 +87,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </None>
     <Compile Include="ICustomConfigurationItemType.cs" />
     <Compile Include="ICustomConfigurationValueEditor.cs" />
     <Compile Include="ItemTypes\BasicItemType.cs" />
@@ -121,14 +117,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ConfigurationEditor.xaml.cs">
       <DependentUpon>ConfigurationEditor.xaml</DependentUpon>
     </Compile>
@@ -137,10 +125,6 @@
     <Compile Include="ValueEditors\ValueEditor.cs" />
     <Compile Include="ValueEditors\TextualBasicValueEditor.cs" />
     <Compile Include="ItemMetadata.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Page Include="Tests\Test1\MainControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

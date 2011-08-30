@@ -8,17 +8,30 @@ using ObjectConfigurator.ValueValidators;
 
 namespace ObjectConfigurator
 {
+    /// <summary>
+    /// Describes configurable items of a certain class.
+    /// </summary>
     [DataContract]
     public class ClassMetadata
     {
+        /// <summary>
+        /// Full name of a class which is described by this instance.
+        /// </summary>
         [DataMember]
         public string ClrTypeFullName { get; private set; }
 
+        /// <summary>
+        /// Descriptions of all configurable items.
+        /// </summary>
         [DataMember]
         public ReadOnlyCollection<ItemMetadata> ConfigurableItems { get; private set; }
 
         private Type cachedClrType;
 
+        /// <summary>
+        /// Construct a metadata description for given class.
+        /// </summary>
+        /// <param name="clrType">A class to be described by constructed instance.</param>
         public ClassMetadata(Type clrType)
         {
             ClrTypeFullName = clrType.FullName;
@@ -27,6 +40,10 @@ namespace ObjectConfigurator
             ConfigurableItems = new ReadOnlyCollection<ItemMetadata>(GetItemsMetadata(clrType).ToArray());
         }
 
+        /// <summary>
+        /// Provides CLR type object of class described by this instance.
+        /// </summary>
+        /// <returns>CLR type object of class described by this instance.</returns>
         public Type GetClrType()
         {
             if (cachedClrType == null) {
