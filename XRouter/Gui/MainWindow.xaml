@@ -102,12 +102,14 @@
                         </LinearGradientBrush.GradientStops>
                     </LinearGradientBrush>
                 </ToolBar.Background>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Image Name="uiXRouterStatusIconIsRunning" Visibility="Collapsed" Height="20" VerticalAlignment="Center" Source="/XRouter.Gui;component/Resources/Action-ok-icon.png" />
-                    <Image Name="uiXRouterStatusIconIsStopped" Visibility="Collapsed" Height="20" VerticalAlignment="Center" Source="/XRouter.Gui;component/Resources/Remove-icon.png" />
-                    <Image Name="uiXRouterStatusIconUnknown" Visibility="Collapsed" Height="20" VerticalAlignment="Center" Source="/XRouter.Gui;component/Resources/Dialog-question-icon.png" />
-                    <TextBlock Name="uiXRouterStatusText" VerticalAlignment="Center">Unknown</TextBlock>
-                </StackPanel>
+                <Button Name="uiUpdateStatus" Click="uiUpdateStatus_Click" ToolTip="Click to update status">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Image Name="uiXRouterStatusIconIsRunning" Visibility="Collapsed" Height="20" VerticalAlignment="Center" Source="/XRouter.Gui;component/Resources/Action-ok-icon.png" />
+                        <Image Name="uiXRouterStatusIconIsStopped" Visibility="Collapsed" Height="20" VerticalAlignment="Center" Source="/XRouter.Gui;component/Resources/Remove-icon.png" />
+                        <Image Name="uiXRouterStatusIconUnknown" Visibility="Visible" Height="20" VerticalAlignment="Center" Source="/XRouter.Gui;component/Resources/Dialog-question-icon.png" />
+                        <TextBlock Name="uiXRouterStatusText" VerticalAlignment="Center" Margin="5 0 0 0">Unknown</TextBlock>
+                    </StackPanel>
+                </Button>
                 <Button Name="uiStartXRouter" Click="uiStartXRouter_Click" ToolTip="Start XRouter" Margin="10 0 0 0">
                     <StackPanel Orientation="Horizontal">
                         <Image Height="24" Source="/XRouter.Gui;component/Resources/Actions-player-play-icon.png" />

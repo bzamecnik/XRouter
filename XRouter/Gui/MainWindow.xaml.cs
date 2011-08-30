@@ -277,6 +277,11 @@ namespace XRouter.Gui
             #endregion
         }
 
+        private void uiUpdateStatus_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateXRouterStatus();
+        }
+
         private void UpdateXRouterStatus()
         {
             uiXRouterStatusIconIsRunning.Visibility = Visibility.Collapsed;
