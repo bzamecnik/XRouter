@@ -1,0 +1,100 @@
+XRouter - installation summary
+==============================
+
+There are two main components to be installed: program files and database. The
+order whether to install the database first or the program files first is not
+important. Just make sure you have the database prepared and accessible before
+you start the services or the XRouter Configration manager GUI.
+
+After the program files are installed the XRouter Service and XRouter Manager
+have to be installed as Windows Services.
+
+This is just a summary, up-to-date details can be found in the Administrator's
+guide. Also please refer to this guide for details on configuration and
+running the services and GUI.
+
+Installing program files
+------------------------
+
+In order to install the program files and additional files into the operating 
+system obtain and run the installer xrouter-setup.exe. Probably you will need 
+administrator privileges to do the latter. There is not much surprising in the 
+installer. First you have to accept the license. 
+
+Select the location where XRouter should be installed. The default value depends 
+on whether you are running 32-bit or 64-bit Windows, ie. C:\Program 
+Files\XRouter or C:\Program Files (x86)\XRouter. Of course you can specify 
+another location as well. 
+
+Specify the components which should be installed. The Full installation is 
+suitable for most purposes, while the compact installation only contains files 
+needed to run the XRouter Service and XRouter Manager, eg. on a separate 
+remotely configured node. Moreover, you can select an arbitrary configuration 
+and dependencies should be handled properly by the installer. 
+
+After the installation you can read the README file. The important commands are 
+accessible from the Start Menu (named XRouter by default). 
+
+Installing Windows services
+---------------------------
+
+If you plan to run XRouter and/or XRouter manager service, you should install 
+each one as a Windows service. It just creates a new identifier, associates it 
+with a command and some metadata. It does not copy any files. The installer does 
+not do this automatically since you might want some different service names or 
+multiple service instances. 
+
+The easiest way is to click on the provided link in the Start Menu and run as 
+Administrator: Install XRouter as Windows Service and Install XRouter Manager as 
+Windows Service. Those links assume the default service names xrouter and 
+xroutermanager. In case of multiple service instances or different names you 
+have to use DaemonNT.exe directly: 
+
+- run cmd.exe (as Administrator)
+- cd C:\Program Files (x86)\XRouter (or your main installation directory)
+- DaemonNT.exe install xrouter_service_name
+- DaemonNT.exe install xrouter_manager_service_name
+
+Please refer to the DaemonNT documentation for more details.
+
+Installing database
+-------------------
+
+For most of the following operations it is best you use SQL Management studio 
+which is a part of SQL Server, it is also assumed you are logged in the correct 
+instance as an administrator. If you have more than one instance of Microsoft 
+SQL Server on your server and the instance you intend to use for XRouter is not 
+the default one, add the instance name into the connection string in DaemonNT 
+configuration. 
+
+First, make sure your instance of the MS SQL Server has remote logins allowed: 
+
+- right-click on the connected instance in the Management Studio
+- go to Properties/Security
+- choose SQL Server and Windows Authentication Mode and hit OK
+
+Then you need to run the CreateLogin script which will create the 
+XRouter_AccessDB login used by the application that has the correct password 
+(that you may want to change, but make sure it corresponds with the one in the 
+connection string) and SID which is important for easier database deployment. 
+Make sure the newly created login is set as enabled: 
+
+- in the left panel expand Security/Logins
+- right-click on the newly created login
+- go to Properties/Status
+- choose Login: Enabled, and hit OK
+
+Then restore the provided .bak file and you are done, because thanks to the 
+login having the corresponding SID as the login on the server the backup was 
+made, all the security mappings are done automatically. To do the restore using 
+Management Studio: 
+
+- in the left panel right-click on Databases
+- choose Restore database...
+- in the dialog choose From device and click the “...” button
+- in the new dialog add the location of the .bak file, click OK
+- back in the previous dialog enter XRouter in the textbox labeled
+  To database: and click OK
+
+Further information about database usage may be found in the XRouter.Data
+chapter of the Programmer’s Guide.
