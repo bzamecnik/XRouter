@@ -147,8 +147,8 @@ namespace XRouter.Adapters
                 else
                 {
                     fileName = string.Format("{0}_{1}.{2}",
-                        (++counter).ToString().PadLeft(4, '0'),
                         DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss"),
+                        (++counter).ToString().PadLeft(4, '0'),
                         (saveOnlyText ? "txt": "xml"));
                 }
 
