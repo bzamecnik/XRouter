@@ -16,7 +16,7 @@ namespace XRouter.Processor.BuiltInActions
         private IProcessorServiceForAction processorService;
 
         #region Configuration
-        [ConfigurationItem("Taget gateway", null, "gateway")]
+        [ConfigurationItem("Target gateway", null, "gateway")]
         private string targetGatewayName;
 
         [ConfigurationItem("Target adapter", null, "directoryAdapter")]
