@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.ServiceProcess;
 using System.Windows.Threading;
 using System.Diagnostics;
+using XRouter.Gui.Utils;
 
 namespace XRouter.Gui
 {
@@ -252,7 +253,12 @@ namespace XRouter.Gui
                 string message = string.Format("Cannot start XRouter: " + ex.Message);
                 MessageBox.Show(message, "Starting XRouter failed", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            UpdateXRouterStatus();
+            #region Update status in 1 second and again in another 1 second
+            ThreadUtils.InvokeLater(TimeSpan.FromSeconds(1), delegate {
+                UpdateXRouterStatus();
+                ThreadUtils.InvokeLater(TimeSpan.FromSeconds(1), UpdateXRouterStatus);
+            });
+            #endregion
         }
 
         private void uiStopXRouter_Click(object sender, RoutedEventArgs e)
@@ -263,7 +269,12 @@ namespace XRouter.Gui
                 string message = string.Format("Cannot stop XRouter: " + ex.Message);
                 MessageBox.Show(message, "Stopping XRouter failed", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            UpdateXRouterStatus();
+            #region Update status in 1 second and again in another 1 second
+            ThreadUtils.InvokeLater(TimeSpan.FromSeconds(1), delegate {
+                UpdateXRouterStatus();
+                ThreadUtils.InvokeLater(TimeSpan.FromSeconds(1), UpdateXRouterStatus);
+            });
+            #endregion
         }
 
         private void UpdateXRouterStatus()
