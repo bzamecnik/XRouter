@@ -103,7 +103,7 @@ Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.exe"; Excludes: "*vshost*
 ;Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.dll"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion; Components: examples\restaurant
 Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.exe.config"; Excludes: "*vshost*"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion; Components: examples\restaurant
 Source: "XRouterExamples\Restaurant\Data\*"; DestDir: "{app}\Examples\Restaurant\Data"; Flags: ignoreversion recursesubdirs; Components: examples\restaurant
-Source: "XRouterExamples\Restaurant\generate-demo-data.bat"; DestDir: "{app}"; Flags: ignoreversion; Components: examples\restaurant
+Source: "XRouterExamples\Restaurant\generate-demo-data.bat"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion; Components: examples\restaurant
 
 Source: "XRouterExamples\SOASupport\bin\{#BuildType}\*.exe"; Excludes: "*vshost*"; DestDir: "{app}\Examples\SOASupport"; Flags: ignoreversion; Components: examples\soasupport
 
