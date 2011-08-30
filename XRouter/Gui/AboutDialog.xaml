@@ -29,7 +29,7 @@
                 <TextBlock Grid.Row="0" Grid.Column="1" FontSize="16" Margin="5">1.0</TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" FontSize="16" FontWeight="SemiBold" Margin="5" HorizontalAlignment="Right">Authors</TextBlock>
-                <TextBlock Grid.Row="1" Grid.Column="1" FontSize="16" Margin="5">XRouter team</TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="1" FontSize="16" Margin="5">The XRouter Team</TextBlock>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" FontSize="16" FontWeight="SemiBold" Margin="5" HorizontalAlignment="Right">Web</TextBlock>
                 <TextBlock Grid.Row="2" Grid.Column="1" FontSize="16" Margin="5">
