@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -51,6 +51,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -68,6 +69,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AboutDialog.xaml.cs">
+      <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CommonControls\ListEditor.xaml.cs">
       <DependentUpon>ListEditor.xaml</DependentUpon>
     </Compile>
@@ -105,9 +109,13 @@
     </Compile>
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="ConfigurationTreeItem.cs" />
+    <Compile Include="ConnectionDialog.xaml.cs">
+      <DependentUpon>ConnectionDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LogViewControl.xaml.cs">
       <DependentUpon>LogViewControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="Themes\Generic.xaml.cs">
       <DependentUpon>Generic.xaml</DependentUpon>
     </Compile>
@@ -126,6 +134,13 @@
     <Compile Include="Xrm\XrmEditor.xaml.cs">
       <DependentUpon>XrmEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Xrm\XrmNodeHeader.xaml.cs">
+      <DependentUpon>XrmNodeHeader.xaml</DependentUpon>
+    </Compile>
+    <Page Include="AboutDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CommonControls\ListEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -141,10 +156,6 @@
     <Page Include="CommonControls\XrmUriEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ConfigurationControls\Adapter\AdapterConfigurationControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="ConfigurationControls\General\GeneralConfigurationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -182,6 +193,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ConnectionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LogViewControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -197,9 +212,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ConfigurationControls\Adapter\AdapterConfigurationControl.xaml.cs">
-      <DependentUpon>AdapterConfigurationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ConfigurationControls\General\GeneralConfigurationControl.xaml.cs">
       <DependentUpon>GeneralConfigurationControl.xaml</DependentUpon>
@@ -306,6 +318,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Xrm\XrmNodeHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -382,49 +398,61 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Link.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\1446_envelope_stamp_clsd_32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\delete.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Generic_Device.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\XML_Schema.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\OrgChartHS.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\plus.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Button-exit-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Actions-tool-animator-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Actions-insert-link-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\link-go-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\nfs-unmount-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Actions-document-export-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Actions-document-import-icon.png" />
+    <Resource Include="Resources\Actions-insert-link-icon.png" />
+    <Resource Include="Resources\Actions-tool-animator-icon.png" />
+    <Resource Include="Resources\Button-exit-icon.png" />
+    <Resource Include="Resources\delete.png" />
+    <Resource Include="Resources\Generic_Device.png" />
+    <Resource Include="Resources\link-go-icon.png" />
+    <Resource Include="Resources\Link.png" />
+    <Resource Include="Resources\nfs-unmount-icon.png" />
+    <Resource Include="Resources\OrgChartHS.png" />
+    <Resource Include="Resources\plus.png" />
+    <Resource Include="Resources\XML_Schema.png" />
+    <Resource Include="Resources\xrouter.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\xrouter.ico" />
+    <Resource Include="Resources\Action-ok-icon.png" />
+    <Resource Include="Resources\Actions-arrow-down-icon.png" />
+    <Resource Include="Resources\Actions-arrow-up-icon.png" />
+    <Resource Include="Resources\Actions-document-save-as-icon.png" />
+    <Resource Include="Resources\Actions-player-play-icon.png" />
+    <Resource Include="Resources\Actions-player-stop-icon.png" />
+    <Resource Include="Resources\App-network-connection-manager-icon.png" />
+    <Resource Include="Resources\folder-open-icon.png" />
+    <Resource Include="Resources\Play-icon.png" />
+    <Resource Include="Resources\Remove-icon.png" />
+    <Resource Include="Resources\Stop-icon.png" />
+    <Resource Include="Resources\text_xml.png" />
+    <Resource Include="Resources\xml.png" />
+    <Resource Include="Resources\xsl.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\New-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Dialog-question-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Actions-view-list-icons-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\next-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\back-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Actions-help-contents-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Actions-help-about-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\xrouter-logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

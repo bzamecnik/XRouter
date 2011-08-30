@@ -11,6 +11,10 @@ using XRouter.Common.Xrm;
 using XRouter.Gui.CommonControls;
 using XRouter.Gui.Xrm;
 using System.Windows.Input;
+using System.ServiceProcess;
+using System.Windows.Threading;
+using System.Diagnostics;
+using XRouter.Gui.Utils;
 
 namespace XRouter.Gui
 {
@@ -19,14 +23,15 @@ namespace XRouter.Gui
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly string ManualsDirectoryName = "Documentation";
+
         internal ConfigurationManager ConfigManager { get; set; }
 
         private ConfigurationTreeItem currentConfigurationTreeItem;
 
-        private const string DaemonNtExecutableName = "DaemonNT.exe";
-        private const string DaemonNtArguments = "debug xroutermanager";
-
         private IConfigurationControl currentConfigurationControl;
+
+        private DispatcherTimer xrouterStatusChecking;
 
         public MainWindow()
         {
@@ -36,62 +41,9 @@ namespace XRouter.Gui
             Configurator.CustomItemTypes.Add(new XrmUriConfigurationItemType(() => new XrmUriEditor(ConfigManager)));
             Configurator.CustomItemTypes.Add(new UriConfigurationItemType(() => new UriEditor()));
 
-            #region Run XRouter Manager if it is not already available
-            try
-            {
-                ConfigManager.Connect();
-                // test the connection
-                ConfigManager.ConsoleServer.GetXRouterServiceStatus();
-            }
-            catch (Exception)
-            {
-                RunXRouterManager();
-                try
-                {
-                    ConfigManager.Connect();
-                    // test the connection
-                    ConfigManager.ConsoleServer.GetXRouterServiceStatus();
-                }
-                catch (Exception secondEx)
-                {
-                    MessageBox.Show(
-                        string.Format(
-@"It is not possible to connect to XRouter Manager server at:
-{0}.
-Details:
-{1}",
-                        ConfigManager.ConsoleServerUri, secondEx.Message),
-                        "Connection to XRouter Manager server");
-                }
-
-            }
-            #endregion
-
             InitializeComponent();
-        }
 
-        private static void RunXRouterManager()
-        {
-            string binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            string daemonNTPath = System.IO.Path.Combine(binPath, DaemonNtExecutableName);
-            var serverProcesss = new System.Diagnostics.ProcessStartInfo(daemonNTPath, DaemonNtArguments);
-            serverProcesss.WorkingDirectory = System.IO.Path.GetDirectoryName(daemonNTPath);
-            System.Diagnostics.Process.Start(serverProcesss);
-            System.Threading.Thread.Sleep(2000);
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            uiXrmEditor.Initialize(new XDocumentTypeDescriptor[] {
-                new Xrm.DocumentTypeDescriptors.GeneralXDocumentTypeDescriptor(),
-                new Xrm.DocumentTypeDescriptors.SchematronDocumentTypeDescriptor(),
-                new Xrm.DocumentTypeDescriptors.XsltDocumentTypeDescriptor(),
-            });
-
-            ConfigManager.LoadConfigurationFromServer();
-            LoadConfiguration();
-
-            #region Load tokens and log records
+            #region Initialize tokens and logs viewers
             uiTokens.Initialize(ConfigManager);
             uiTraceLog.Initialize(delegate(DateTime minDate, DateTime maxDate, LogLevelFilters levelFilter, int pageNumber, int pageSize) {
                 var logs = ConfigManager.ConsoleServer.GetTraceLogEntries(minDate, maxDate, levelFilter, pageSize, pageNumber);
@@ -104,6 +56,33 @@ Details:
                 return rows;
             });
             #endregion
+
+            #region Initialize XrmEditor
+            uiXrmEditor.Initialize(new XDocumentTypeDescriptor[] {
+                new Xrm.DocumentTypeDescriptors.GeneralXDocumentTypeDescriptor(),
+                new Xrm.DocumentTypeDescriptors.SchematronDocumentTypeDescriptor(),
+                new Xrm.DocumentTypeDescriptors.XsltDocumentTypeDescriptor(),
+            });
+            #endregion
+
+            #region XRouter status checking
+            xrouterStatusChecking = new DispatcherTimer(TimeSpan.FromSeconds(10), DispatcherPriority.Normal, delegate {
+                UpdateXRouterStatus();
+            }, Dispatcher);
+            xrouterStatusChecking.Start();
+            #endregion
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!Connect()) {
+                Close();
+            }
+        }
+
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
+        {
+            xrouterStatusChecking.Stop();
         }
 
         private TreeViewItem CreateUIItem(ConfigurationTreeItem item)
@@ -135,10 +114,26 @@ Details:
             uiConfigurationContainer.Content = currentConfigurationControl;
         }
 
+        private void uiConnect_Click(object sender, RoutedEventArgs e)
+        {
+            Connect();
+        }
+
+        private void uiNewConfig_Click(object sender, RoutedEventArgs e)
+        {
+            ConfigManager.ClearConfiguration();
+            UpdateUI();
+            uiStatusText.Text = "New configuration created.";
+        }
+
         private void LoadFromServer_Click(object sender, RoutedEventArgs e)
         {
-            ConfigManager.LoadConfigurationFromServer();
-            LoadConfiguration();
+            if (ConfigManager.DownloadConfiguration(false)) {
+                UpdateUI();
+                uiStatusText.Text = "Configuration downloaded from server.";
+            } else {
+                Connect();
+            }
         }
 
         private void SaveToServer_Click(object sender, RoutedEventArgs e)
@@ -156,8 +151,10 @@ Details:
             }
             #endregion
 
-            SaveConfiguration();
-            ConfigManager.SaveConfigurationToServer();
+            if (SaveConfiguration()) {
+                ConfigManager.UploadConfiguration(false);
+                uiStatusText.Text = "Configuration uploaded to server.";
+            }
         }
 
         private void Import_Click(object sender, RoutedEventArgs e)
@@ -176,8 +173,9 @@ Details:
                         "Import configuration");
                     return;
                 }
-                ConfigManager.Configuration = new ApplicationConfiguration(xdoc);
-                LoadConfiguration();
+                ConfigManager.ReadConfiguration(xdoc, false);
+                UpdateUI();
+                uiStatusText.Text = "Configuration imported.";
             }
         }
 
@@ -190,13 +188,19 @@ Details:
             dialog.OverwritePrompt = true;
             if (dialog.ShowDialog() == true)
             {
-                SaveConfiguration();
-                ConfigManager.Configuration.Content.XDocument.Save(dialog.FileName);
+                if (SaveConfiguration()) {
+                    ConfigManager.Configuration.Content.XDocument.Save(dialog.FileName);
+                    uiStatusText.Text = "Configuration exported.";
+                }
             }
         }
 
-        private void LoadConfiguration()
+        private void UpdateUI()
         {
+            uiTokens.UpdateTokens();
+            uiTraceLog.UpdateLogs();
+            uiEventLog.UpdateLogs();
+
             #region Update configuration tree
             uiConfigurationTree.Items.Clear();
             ConfigurationTreeItem root = ConfigManager.CreateConfigurationTreeRoot();
@@ -209,8 +213,15 @@ Details:
             uiXrmEditor.LoadContent(ConfigManager.Configuration.GetXrmContent());
         }
 
-        private void SaveConfiguration()
+        private bool SaveConfiguration()
         {
+            XDocument XrmContent = uiXrmEditor.GetXrmContent();
+            if (XrmContent == null) {
+                uiXrmEditorTab.IsSelected = true;
+                return false;
+            }
+            ConfigManager.Configuration.SaveXrmContent(XrmContent.Root);
+
             #region Save configuration tree items
             var items = uiConfigurationTree.Items.OfType<TreeViewItem>().Select(i => (ConfigurationTreeItem)i.Tag);
             foreach (ConfigurationTreeItem item in items) {
@@ -218,7 +229,102 @@ Details:
             }
             #endregion
 
-            ConfigManager.Configuration.SaveXrmContent(uiXrmEditor.SaveContent().Root);
+            return true;
+        }
+
+        private bool Connect()
+        {
+            ConnectionDialog dialog = new ConnectionDialog(ConfigManager);
+            dialog.Owner = this;
+            if (dialog.ShowDialog() != true) {
+                return false;
+            }
+            UpdateUI();
+            UpdateXRouterStatus();
+            uiStatusText.Text = "Connected to XRouter manager.";
+            return true;
+        }
+
+        private void uiStartXRouter_Click(object sender, RoutedEventArgs e)
+        {
+            try {
+                ConfigManager.ConsoleServer.StartXRouterService(10);
+            } catch (Exception ex) {
+                string message = string.Format("Cannot start XRouter: " + ex.Message);
+                MessageBox.Show(message, "Starting XRouter failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            #region Update status in 1 second and again in another 1 second
+            ThreadUtils.InvokeLater(TimeSpan.FromSeconds(1), delegate {
+                UpdateXRouterStatus();
+                ThreadUtils.InvokeLater(TimeSpan.FromSeconds(1), UpdateXRouterStatus);
+            });
+            #endregion
+        }
+
+        private void uiStopXRouter_Click(object sender, RoutedEventArgs e)
+        {
+            try {
+                ConfigManager.ConsoleServer.StopXRouterService(10);
+            } catch (Exception ex) {
+                string message = string.Format("Cannot stop XRouter: " + ex.Message);
+                MessageBox.Show(message, "Stopping XRouter failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            #region Update status in 1 second and again in another 1 second
+            ThreadUtils.InvokeLater(TimeSpan.FromSeconds(1), delegate {
+                UpdateXRouterStatus();
+                ThreadUtils.InvokeLater(TimeSpan.FromSeconds(1), UpdateXRouterStatus);
+            });
+            #endregion
+        }
+
+        private void uiUpdateStatus_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateXRouterStatus();
+        }
+
+        private void UpdateXRouterStatus()
+        {
+            uiXRouterStatusIconIsRunning.Visibility = Visibility.Collapsed;
+            uiXRouterStatusIconIsStopped.Visibility = Visibility.Collapsed;
+            uiXRouterStatusIconUnknown.Visibility = Visibility.Collapsed;
+            uiStartXRouter.IsEnabled = true;
+            uiStopXRouter.IsEnabled = true;
+            try {
+                string statusText = ConfigManager.ConsoleServer.GetXRouterServiceStatus();
+                uiXRouterStatusText.Text = statusText;
+                ServiceControllerStatus status = (ServiceControllerStatus)Enum.Parse(typeof(ServiceControllerStatus), statusText);
+                if (status == ServiceControllerStatus.Running) {
+                    uiXRouterStatusIconIsRunning.Visibility = Visibility.Visible;
+                    uiStartXRouter.IsEnabled = false;
+                } else {
+                    uiXRouterStatusIconIsStopped.Visibility = Visibility.Visible;
+                }
+                if (status == ServiceControllerStatus.Stopped) {
+                    uiStopXRouter.IsEnabled = false;
+                }
+            } catch (Exception ex) {
+                uiXRouterStatusIconUnknown.Visibility = Visibility.Visible;
+                uiXRouterStatusText.Text = "Failed to determine status";
+                uiXRouterStatusText.ToolTip = ex.Message;
+            }
+        }
+
+        private void uiManuals_Click(object sender, RoutedEventArgs e)
+        {
+            string manualsDirectory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ManualsDirectoryName);
+            try {
+                Process.Start(manualsDirectory);
+            } catch (Exception ex) {
+                string messsage = string.Format("Cannot open directory \"{0}\".{1}{1}{2}", manualsDirectory, Environment.NewLine, ex.Message);
+                MessageBox.Show(messsage, "Open manuals", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void uiAbout_Click(object sender, RoutedEventArgs e)
+        {
+            AboutDialog dialog = new AboutDialog();
+            dialog.Owner = this;
+            dialog.ShowDialog();
         }
     }
 }

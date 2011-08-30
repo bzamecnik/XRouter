@@ -10,6 +10,9 @@ using ObjectConfigurator.ValueValidators;
 
 namespace ObjectConfigurator
 {
+    /// <summary>
+    /// Kind of configurable item. Either field or property.
+    /// </summary>
     [DataContract]
     public enum ItemMemberKind
     {
@@ -19,6 +22,9 @@ namespace ObjectConfigurator
         Property
     }
 
+    /// <summary>
+    /// Metadata describing configurable item.
+    /// </summary>
     [DataContract]
     [KnownType(typeof(BasicItemType))]
     [KnownType(typeof(EnumItemType))]
@@ -30,35 +36,73 @@ namespace ObjectConfigurator
     [KnownType(typeof(RegexValidatorAttribute))]
     public class ItemMetadata
     {
+        /// <summary>
+        /// Metadata of a class to which this item belong to.
+        /// </summary>
         [DataMember]
         public ClassMetadata Owner { get; private set; }
 
+        /// <summary>
+        /// Description of type of this item.
+        /// </summary>
         [DataMember]
         public ItemType Type { get; private set; }
 
+        /// <summary>
+        /// Name of this item.
+        /// </summary>
         [DataMember]
         public string Name { get; private set; }
 
+        /// <summary>
+        /// User-friendly name of this item.
+        /// </summary>
         [DataMember]
         public string UserName { get; private set; }
 
+        /// <summary>
+        /// Description of this item.
+        /// </summary>
         [DataMember]
         public string UserDescription { get; private set; }
 
+        /// <summary>
+        /// Default value for this item. It is serialized in a content of an xml element.
+        /// </summary>
         [DataMember]
         public XElement SerializedDefaultValue { get; private set; }
 
+        /// <summary>
+        /// Validators required on this item.
+        /// </summary>
         [DataMember]
         public ReadOnlyCollection<ValueValidatorAttribute> Validators { get; private set; }
 
+        /// <summary>
+        /// Kind of configurable item. Either field or property.
+        /// </summary>
         [DataMember]
         public ItemMemberKind MemberKind { get; private set; }
 
+        /// <summary>
+        /// Constructs a metadata description for given field.
+        /// </summary>
+        /// <param name="owner">Metadata of owning class.</param>
+        /// <param name="field">Field representing configurable item.</param>
+        /// <param name="attribute">Attribute of configurable item attached to the field.</param>
+        /// <param name="validators">Required validators for configuration item.</param>
         public ItemMetadata(ClassMetadata owner, FieldInfo field, ConfigurationItemAttribute attribute, IEnumerable<ValueValidatorAttribute> validators)
             : this(owner, ItemMemberKind.Field, field.FieldType, field.Name, attribute, validators)
         {
         }
 
+        /// <summary>
+        ///  Constructs a metadata description for given property.
+        /// </summary>
+        /// <param name="owner">Metadata of owning class.</param>
+        /// <param name="property">Property representing configurable item.</param>
+        /// <param name="attribute">Attribute of configurable item attached to the property.</param>
+        /// <param name="validators">Required validators for configuration item.</param>
         public ItemMetadata(ClassMetadata owner, PropertyInfo property, ConfigurationItemAttribute attribute, IEnumerable<ValueValidatorAttribute> validators)
             : this(owner, ItemMemberKind.Property, property.PropertyType, property.Name, attribute, validators)
         {
@@ -103,6 +147,10 @@ namespace ObjectConfigurator
             }
         }
 
+        /// <summary>
+        /// Creates a new instance of default value for this type of configurable item.
+        /// </summary>
+        /// <returns>New default value instance.</returns>
         public object GetDefaultValue()
         {
             object result = Type.ReadFromXElement(SerializedDefaultValue);
@@ -177,6 +225,12 @@ namespace ObjectConfigurator
             }
         }
 
+        /// <summary>
+        /// Verifies if a given value satisfies all validators.
+        /// </summary>
+        /// <param name="value">A value to verify.</param>
+        /// <param name="errorDescription">In case of error, this is description of the error.</param>
+        /// <returns>True is value satisfies all validators.</returns>
         public bool IsValid(object value, out string errorDescription)
         {
             foreach (var validator in Validators) {
@@ -188,6 +242,11 @@ namespace ObjectConfigurator
             return true;
         }
 
+        /// <summary>
+        /// Get value from field or property of a target object.
+        /// </summary>
+        /// <param name="target">Target object.</param>
+        /// <returns>Read value.</returns>
         public object GetValue(object target)
         {
             BindingFlags instanceMemberBindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -207,6 +266,11 @@ namespace ObjectConfigurator
             }
         }
 
+        /// <summary>
+        /// Set value to a field or property of a target object.
+        /// </summary>
+        /// <param name="target">Target object.</param>
+        /// <param name="value">A value to set.</param>
         public void SetValue(object target, object value)
         {
             string errorDescription = string.Empty;
@@ -234,11 +298,21 @@ namespace ObjectConfigurator
             }
         }
 
+        /// <summary>
+        /// Writes given value into a content of an xml element.
+        /// </summary>
+        /// <param name="target">Target xml element.</param>
+        /// <param name="value">Value to be written in xml element.</param>
         public void WriteToXElement(XElement target, object value)
         {
             Type.WriteToXElement(target, value);
         }
 
+        /// <summary>
+        /// Reads a value from a content of an xml element.
+        /// </summary>
+        /// <param name="source">Source xml element.</param>
+        /// <returns>Read value.</returns>
         public object ReadFromXElement(XElement source)
         {
             return Type.ReadFromXElement(source);

@@ -21,6 +21,8 @@ using XRouter.Common.ComponentInterfaces;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Gui.Utils;
 using XRouter.Manager;
+using ObjectConfigurator;
+using System.Xml.Linq;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow
 {
@@ -40,6 +42,8 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
 
         private GraphCanvas graphCanvas;
 
+        private ConfigurationEditor uiLayoutConfigEditor;
+
         public MessageflowConfigurationControl()
         {
             InitializeComponent();
@@ -52,13 +56,43 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
 
             NodeSelectionManager = new NodeSelectionManager(uiNodePropertiesContainer, ConfigManager);
 
-            Messageflow = ConfigManager.Configuration.GetMessageFlow(ConfigManager.Configuration.GetCurrentMessageFlowGuid());
+            Messageflow = ConfigManager.Configuration.GetMessageFlow();
             MessageflowGraphPresenter = new MessageflowGraphPresenter(Messageflow, NodeSelectionManager);
             NodeSelectionManager.MessageflowGraphPresenter = MessageflowGraphPresenter;
             
             graphCanvas = MessageflowGraphPresenter.CreateGraphCanvas();
             uiDesignerContainer.Child = graphCanvas;
             uiDesignerContainer.ContextMenu = CreateGraphCanvasContextMenu();
+
+            PrepareLayoutConfiguration();
+        }
+
+        private void PrepareLayoutConfiguration()
+        {
+            object layoutConfiguration = graphCanvas.CreateDefaultLayoutConfiguration();
+            if (Messageflow.LayoutConfiguration != null) {
+                Configurator.LoadConfiguration(layoutConfiguration, Messageflow.LayoutConfiguration);
+            } else {
+                Messageflow.LayoutConfiguration = new SerializableXDocument(Configurator.SaveConfiguration(layoutConfiguration));
+            }
+            graphCanvas.ApplyLayoutConfiguration(layoutConfiguration);
+
+            uiLayoutConfigEditor = Configurator.CreateEditor(layoutConfiguration.GetType());
+            uiLayoutConfigEditor.LoadConfiguration(Messageflow.LayoutConfiguration);
+            uiLayoutConfigEditor.ConfigurationChanged += delegate {
+                XDocument xNewConfiguration = uiLayoutConfigEditor.SaveConfiguration();
+                bool isValid = true;
+                try {
+                    Configurator.LoadConfiguration(layoutConfiguration, xNewConfiguration);
+                } catch {
+                    isValid = false;
+                }
+                if (isValid) {
+                    Messageflow.LayoutConfiguration = new SerializableXDocument(xNewConfiguration);
+                    graphCanvas.ApplyLayoutConfiguration(layoutConfiguration);
+                }
+            };
+            uiLayoutConfigurationContainer.Child = uiLayoutConfigEditor;
         }
 
         private ContextMenu CreateGraphCanvasContextMenu()
@@ -70,7 +104,17 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                 Header = new TextBlock { Text = "Action", FontSize = 14, FontWeight = FontWeights.Bold }
             };
             menuItemAddActionNode.Click += delegate {
-                AddNode(result, delegate { return new ActionNodeConfiguration(); });
+                AddNode("Action", result, delegate {
+                    ActionNodeConfiguration newActionNode = new ActionNodeConfiguration();
+                    #region Add a default action
+                    ActionType actionType = ConfigManager.Configuration.GetActionTypes().First();
+                    ActionConfiguration action = new ActionConfiguration(actionType.Name) {
+                        Configuration = new SerializableXDocument(new XDocument(new XElement(XName.Get("objectConfig"))))
+                    };
+                    newActionNode.Actions.Add(action);
+                    #endregion
+                    return newActionNode;
+                });
             };
 
             MenuItem menuItemAddCbrNode = new MenuItem {
@@ -78,7 +122,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                 Header = new TextBlock { Text = "CBR", FontSize = 14, FontWeight = FontWeights.Bold }
             };
             menuItemAddCbrNode.Click += delegate {
-                AddNode(result, delegate { return new CbrNodeConfiguration(); });
+                AddNode("CBR", result, delegate { return new CbrNodeConfiguration(); });
             };
 
             MenuItem menuItemAddTerminatorNode = new MenuItem {
@@ -87,7 +131,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             };
             menuItemAddTerminatorNode.Click += delegate {
                 Point menuLocationOnCanvas = result.TranslatePoint(new Point(), graphCanvas.Canvas);
-                AddNode(result, delegate { return new TerminatorNodeConfiguration(); });
+                AddNode("Terminator", result, delegate { return new TerminatorNodeConfiguration(); });
             };
 
             MenuItem menuItemAdd = new MenuItem {
@@ -101,10 +145,19 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             return result;
         }
 
-        private void AddNode(ContextMenu menu, Func<NodeConfiguration> nodeFactory)
+        private void AddNode(string baseName, ContextMenu menu, Func<NodeConfiguration> nodeFactory)
         {
             NodeConfiguration node = nodeFactory();
-            node.Name = "New node";
+
+            #region Set unique name
+            int index = 1;
+            string[] existingNames = Messageflow.Nodes.Select(n => n.Name).ToArray();
+            while (existingNames.Contains(baseName + index.ToString())) {
+                index++;
+            }
+            node.Name  = baseName + index.ToString();
+            #endregion
+
             Point menuLocationOnCanvas = menu.TranslatePoint(new Point(), graphCanvas.Canvas);
             node.Location = menuLocationOnCanvas - graphCanvas.CanvasLocationOffset;
             Messageflow.Nodes.Add(node);
@@ -118,8 +171,7 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
         void IConfigurationControl.Save()
         {
             Messageflow.PromoteToNewVersion();
-            ConfigManager.Configuration.AddMessageFlow(Messageflow);
-            ConfigManager.Configuration.SetCurrentMessageFlowGuid(Messageflow.Guid);
+            ConfigManager.Configuration.UpdateMessageFlow(Messageflow);
         }
 
         private void uiImport_Click(object sender, RoutedEventArgs e)
@@ -138,6 +190,8 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
                 NodeSelectionManager.MessageflowGraphPresenter = MessageflowGraphPresenter;
                 graphCanvas = MessageflowGraphPresenter.CreateGraphCanvas();
                 uiDesignerContainer.Child = graphCanvas;
+
+                PrepareLayoutConfiguration();
             }
         }
 

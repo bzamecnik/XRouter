@@ -34,6 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
@@ -59,6 +60,10 @@
       <Name>DaemonNT</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\ObjectConfigurator\ObjectConfigurator.csproj">
+      <Project>{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}</Project>
+      <Name>ObjectConfigurator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\XRouter.Common.csproj">
       <Project>{3A775DC5-0596-46B1-95F8-6261D94F0A54}</Project>
       <Name>XRouter.Common</Name>
@@ -67,6 +72,10 @@
     <ProjectReference Include="..\Data\XRouter.Data.csproj">
       <Project>{873A6405-E524-4D55-B0F0-B125DE17655B}</Project>
       <Name>XRouter.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Processor\XRouter.Processor.csproj">
+      <Project>{69C0BC8F-EEF4-4DA8-B220-2B35AA20F273}</Project>
+      <Name>XRouter.Processor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

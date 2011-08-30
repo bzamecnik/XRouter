@@ -18,7 +18,7 @@ using System.Windows.Threading;
 namespace SimpleDiagrammer
 {
     /// <summary>
-    /// Interaction logic for GraphCanvas.xaml
+    /// A canvas for displaying graph.
     /// </summary>
     public partial class GraphCanvas : UserControl
     {
@@ -29,8 +29,14 @@ namespace SimpleDiagrammer
 
         private LayoutAlgorithm layoutAlgorithm;
 
+        /// <summary>
+        /// Canvas containing nodes and edges.
+        /// </summary>
         public Canvas Canvas { get; private set; }
 
+        /// <summary>
+        /// Difference between physical coordinates (Canvas - Left, Top) and logical coordinates (Node.Location).
+        /// </summary>
         public Vector CanvasLocationOffset { get; private set; }
 
         private DispatcherTimer layoutUpdateTimer;
@@ -62,6 +68,24 @@ namespace SimpleDiagrammer
         private void GraphCanvas_Unloaded(object sender, RoutedEventArgs e)
         {
             layoutUpdateTimer.Stop();
+        }
+
+        /// <summary>
+        /// Creates a default configuration object for layout algorithm.
+        /// </summary>
+        /// <returns>A default configuration object for layout algorithm.</returns>
+        public object CreateDefaultLayoutConfiguration()
+        {
+            return layoutAlgorithm.CreateDefaultConfiguration();
+        }
+
+        /// <summary>
+        /// Applies a configuration for layout algorithm from a configuration object.
+        /// </summary>
+        /// <param name="configuration">A configuration object.</param>
+        public void ApplyLayoutConfiguration(object configuration)
+        {
+            layoutAlgorithm.ApplyConfiguration(configuration);
         }
 
         private void UpdateDiagram()

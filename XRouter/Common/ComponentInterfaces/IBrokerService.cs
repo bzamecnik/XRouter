@@ -16,11 +16,5 @@
         /// </remarks>
         /// <returns>current configuration</returns>
         ApplicationConfiguration GetConfiguration();
-
-        /// <summary>
-        /// Updates the XRouter application configuration.
-        /// </summary>
-        /// <param name="config">new application configuration</param>
-        void UpdateConfiguration(ApplicationConfiguration configuration);
     }
 }

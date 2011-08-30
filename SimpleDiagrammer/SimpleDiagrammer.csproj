@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -52,10 +52,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </None>
+    <Compile Include="Layouts\ForceDirected\Configuration.cs" />
     <Compile Include="Support\MathUtils.cs" />
     <Compile Include="Tests\Test1\Edge.cs" />
     <Compile Include="Tests\Test1\MainControl.xaml.cs">
@@ -69,14 +66,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Edge.cs" />
     <Compile Include="EdgePresenter.cs" />
     <Compile Include="GraphCanvas.xaml.cs">
@@ -88,10 +77,6 @@
     <Compile Include="IInternalNodePresenter.cs" />
     <Compile Include="Layouts\LayoutAlgorithm.cs" />
     <Compile Include="Layouts\ForceDirected\ForceDirectedLayout.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Page Include="Tests\Test1\MainControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -122,6 +107,12 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ObjectConfigurator\ObjectConfigurator.csproj">
+      <Project>{EC74AAAE-225E-4367-AE4C-4A8E871B59CC}</Project>
+      <Name>ObjectConfigurator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

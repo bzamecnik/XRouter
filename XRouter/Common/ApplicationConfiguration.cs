@@ -131,12 +131,7 @@ namespace XRouter.Common
         public void SaveComponentElements(ComponentType componentType, XElement xNewComponents)
         {
             string componentElementName = componentType.ToString().ToLower();
-            var xOldComponents = Content.XDocument.XPathSelectElements(
-                string.Format("/configuration/components/{0}", componentElementName));
-            foreach (var xComponent in xOldComponents)
-            {
-                xComponent.Remove();
-            }
+            RemoveElements(string.Format("/configuration/components/{0}", componentElementName));
 
             var xComponents = Content.XDocument.XPathSelectElement("/configuration/components");
             foreach (var xNewComponent in xNewComponents.Elements())
@@ -283,9 +278,15 @@ namespace XRouter.Common
             {
                 string name = xAdapterType.Attribute(XName.Get("name")).Value;
                 string assemblyAndClrType = xAdapterType.Attribute(XName.Get("clr-type")).Value;
+                XAttribute xDescription = xAdapterType.Attribute(XName.Get("description"));
+                string description = string.Empty;
+                if (xDescription != null)
+                {
+                    description = xDescription.Value;
+                }
                 XElement xConfigurationMetadata = xAdapterType.Element(XName.Get("class-metadata"));
                 ClassMetadata configurationMetadata = XSerializer.Deserialize<ClassMetadata>(xConfigurationMetadata);
-                AdapterType adapterType = new AdapterType(name, assemblyAndClrType, configurationMetadata);
+                AdapterType adapterType = new AdapterType(name, assemblyAndClrType, description, configurationMetadata);
                 result.Add(adapterType);
             }
             return result.ToArray();
@@ -310,9 +311,15 @@ namespace XRouter.Common
             }
 
             string assemblyAndClrType = xAdapterType.Attribute(XName.Get("clr-type")).Value;
+            XAttribute xDescription = xAdapterType.Attribute(XName.Get("description"));
+            string description = string.Empty;
+            if (xDescription != null)
+            {
+                description = xDescription.Value;
+            }
             XElement xConfigurationMetadata = xAdapterType.Element(XName.Get("class-metadata"));
             ClassMetadata configurationMetadata = XSerializer.Deserialize<ClassMetadata>(xConfigurationMetadata);
-            AdapterType adapterType = new AdapterType(name, assemblyAndClrType, configurationMetadata);
+            AdapterType adapterType = new AdapterType(name, assemblyAndClrType, description, configurationMetadata);
             return adapterType;
         }
 
@@ -329,6 +336,7 @@ namespace XRouter.Common
             XElement xAdapterType = new XElement(XName.Get("adapter-type"));
             xAdapterType.SetAttributeValue(XName.Get("name"), adapterType.Name);
             xAdapterType.SetAttributeValue(XName.Get("clr-type"), adapterType.AssemblyAndClrType);
+            xAdapterType.SetAttributeValue(XName.Get("description"), adapterType.Description);
 
             XElement xConfigurationMetadata = new XElement(XName.Get("class-metadata"));
             XSerializer.Serializer(adapterType.ConfigurationMetadata, xConfigurationMetadata);
@@ -339,12 +347,8 @@ namespace XRouter.Common
 
             // if there is already an adapter with the same name replace the CLR type quietly
             // this maintains the uniqueness of the adapter types
-            var xExistingAdapterTypes = Content.XDocument.XPathSelectElements(
-                string.Format("/configuration/adapter-types/adapter-type[@name='{0}']", adapterType.Name));
-            foreach (var adapter in xExistingAdapterTypes)
-            {
-                adapter.Remove();
-            }
+            RemoveElements(string.Format(
+                "/configuration/adapter-types/adapter-type[@name='{0}']", adapterType.Name));
 
             xAdapterTypes.Add(xAdapterType);
         }
@@ -511,9 +515,15 @@ namespace XRouter.Common
             {
                 string name = xActionType.Attribute(XName.Get("name")).Value;
                 string assemblyAndClrType = xActionType.Attribute(XName.Get("clr-type")).Value;
+                XAttribute xDescription = xActionType.Attribute(XName.Get("description"));
+                string description = string.Empty;
+                if (xDescription != null)
+                {
+                    description = xDescription.Value;
+                }
                 XElement xConfigurationMetadata = xActionType.Element(XName.Get("class-metadata"));
                 ClassMetadata configurationMetadata = XSerializer.Deserialize<ClassMetadata>(xConfigurationMetadata);
-                ActionType actionType = new ActionType(name, assemblyAndClrType, configurationMetadata);
+                ActionType actionType = new ActionType(name, assemblyAndClrType, description, configurationMetadata);
                 result.Add(actionType);
             }
             return result.ToArray();
@@ -538,9 +548,15 @@ namespace XRouter.Common
             }
 
             string assemblyAndClrType = xActionType.Attribute(XName.Get("clr-type")).Value;
+            XAttribute xDescription = xActionType.Attribute(XName.Get("description"));
+            string description = string.Empty;
+            if (xDescription != null)
+            {
+                description = xDescription.Value;
+            }
             XElement xConfigurationMetadata = xActionType.Element(XName.Get("class-metadata"));
             ClassMetadata configurationMetadata = XSerializer.Deserialize<ClassMetadata>(xConfigurationMetadata);
-            ActionType actionType = new ActionType(name, assemblyAndClrType, configurationMetadata);
+            ActionType actionType = new ActionType(name, assemblyAndClrType, description, configurationMetadata);
             return actionType;
         }
 
@@ -557,6 +573,7 @@ namespace XRouter.Common
             XElement xActionType = new XElement(XName.Get("action-type"));
             xActionType.SetAttributeValue(XName.Get("name"), actionType.Name);
             xActionType.SetAttributeValue(XName.Get("clr-type"), actionType.ClrTypeAndAssembly);
+            xActionType.SetAttributeValue(XName.Get("description"), actionType.Description);
 
             XElement xConfigurationMetadata = new XElement(XName.Get("class-metadata"));
             XSerializer.Serializer(actionType.ConfigurationMetadata, xConfigurationMetadata);
@@ -567,12 +584,8 @@ namespace XRouter.Common
 
             // if there is already an action with the same name replace the CLR type quietly
             // this maintains the uniqueness of the action types
-            var xExistingActionTypes = Content.XDocument.XPathSelectElements(
-                string.Format("/configuration/action-types/action-type[@name='{0}']", actionType.Name));
-            foreach (var action in xExistingActionTypes)
-            {
-                action.Remove();
-            }
+            RemoveElements(string.Format(
+                "/configuration/action-types/action-type[@name='{0}']", actionType.Name));
 
             xActionTypes.Add(xActionType);
         }
@@ -663,6 +676,31 @@ namespace XRouter.Common
         #region Message flow
 
         /// <summary>
+        /// Gets the configuration of the current message flow.
+        /// </summary>
+        public MessageFlowConfiguration GetMessageFlow()
+        {
+            Guid guid = GetCurrentMessageFlowGuid();
+            return GetMessageFlow(guid);
+        }
+
+        /// <summary>
+        /// Updates the configuration of the current message flow.
+        /// </summary>
+        /// <remarks>
+        /// It removes any other message flows.
+        /// </remarks>
+        /// <param name="messageFlow"></param>
+        public void UpdateMessageFlow(MessageFlowConfiguration messageFlow)
+        {
+            // remove any previous message flow
+            RemoveElements("/configuration/messageflows/messageflow");
+
+            AddMessageFlow(messageFlow);
+            SetCurrentMessageFlowGuid(messageFlow.Guid);
+        }
+
+        /// <summary>
         /// Gets the GUID of the current message flow.
         /// </summary>
         /// <returns></returns>
@@ -679,7 +717,7 @@ namespace XRouter.Common
         /// </summary>
         /// <param name="guid">GUID of the new message flow to be set as the
         /// current one</param>
-        public void SetCurrentMessageFlowGuid(Guid guid)
+        private void SetCurrentMessageFlowGuid(Guid guid)
         {
             XElement xMessageFlows = Content.XDocument.XPathSelectElement("/configuration/messageflows");
             xMessageFlows.SetAttributeValue(XName.Get("current"), guid.ToString());
@@ -690,7 +728,7 @@ namespace XRouter.Common
         /// </summary>
         /// <param name="guid">GUID of the new message flow</param>
         /// <returns></returns>
-        public MessageFlowConfiguration GetMessageFlow(Guid guid)
+        private MessageFlowConfiguration GetMessageFlow(Guid guid)
         {
             string xpath = string.Format("/configuration/messageflows/messageflow[@guid='{0}']", guid);
             XElement xMessageFlow = Content.XDocument.XPathSelectElement(xpath);
@@ -726,7 +764,7 @@ namespace XRouter.Common
         /// Adds a configuration of a new message flow.
         /// </summary>
         /// <param name="messageFlow">new message flow configuration</param>
-        public void AddMessageFlow(MessageFlowConfiguration messageFlow)
+        private void AddMessageFlow(MessageFlowConfiguration messageFlow)
         {
             XElement xMessageFlow = new XElement(XName.Get("messageflow"));
             XSerializer.Serializer(messageFlow, xMessageFlow);
@@ -768,5 +806,18 @@ namespace XRouter.Common
         }
 
         #endregion
+
+        /// <summary>
+        /// Removes all XML elements found by the XPath query.
+        /// </summary>
+        /// <param name="xpath"></param>
+        private void RemoveElements(string xpath)
+        {
+            var xElements = Content.XDocument.XPathSelectElements(xpath).ToList();
+            foreach (var xElement in xElements)
+            {
+                xElement.Remove();
+            }
+        }
     }
 }

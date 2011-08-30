@@ -7,11 +7,12 @@ complex enterprise service bus (ESB) solutions. It is well-designed, written
 in C# for .NET, thoroughly documented and released as an open-source software.
 
 The XRouter project consists of several subprojects:
-- XRouter - XML router itself - routing service and a GUI
+- XRouter - light-weight extensible low-level XML router for .NET
+  - plus a configuration management GUI and a simple monitoring service
 - SchemaTron - Native C# validator of ISO Schematron language
 - DaemonNT - Windows service hosting made easy
 - ObjectConfigurator - reflection-based configuration utility
-- SimpleDiagrammer - interactive visualizer of graphs
+- SimpleDiagrammer - interactive visualizer of oriented graphs
 
 Homepage
 --------

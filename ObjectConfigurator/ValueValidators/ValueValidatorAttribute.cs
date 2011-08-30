@@ -5,10 +5,19 @@ using ObjectConfigurator.ItemTypes;
 
 namespace ObjectConfigurator.ValueValidators
 {
+    /// <summary>
+    /// Abstract validator of value for configuration items.
+    /// </summary>
     [DataContract]
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = true, AllowMultiple = true)]
     public abstract class ValueValidatorAttribute : Attribute
     {
+        /// <summary>
+        /// Evaluates if a given value is valid.
+        /// </summary>
+        /// <param name="value">A value to test.</param>
+        /// <param name="errorDescription">In case of error, this is description of the error.</param>
+        /// <returns></returns>
         public abstract bool IsValid(object value, out string errorDescription);
 
         protected bool AreElementsValidIfIsCollection(object value, out string errorDescription, out bool isCollection)

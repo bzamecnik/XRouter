@@ -105,17 +105,11 @@ namespace XRouter.Common
             }
         }
 
-        private object _syncLock = new object();
         /// <summary>
         /// Lock for exclusive access to the token data.
         /// </summary>
-        private object SyncLock {
-            get {
-                if (_syncLock == null) {
-                    _syncLock = new object();
-                }
-                return _syncLock;
-            }
+        private object SyncLock { 
+            get { return Content; }
         }
 
         /// <summary>

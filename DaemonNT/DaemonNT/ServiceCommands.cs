@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security;
+using System.Security.Permissions;
 using System.ServiceProcess;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -192,6 +192,7 @@ namespace DaemonNT
         /// </summary>
         /// <param name="serviceName">Service name</param>
         /// <returns>True if the service was successfully installed.</returns>
+        [PrincipalPermissionAttribute(SecurityAction.Demand, Role = @"BUILTIN\Administrators")]
         public bool Install(string serviceName)
         {
             if (InstallerServices.IsInstalled(serviceName))
@@ -232,6 +233,7 @@ namespace DaemonNT
         /// </summary>
         /// <param name="serviceName">Service name</param>
         /// <returns>True if the service was successfully uninstalled.</returns>
+        [PrincipalPermissionAttribute(SecurityAction.Demand, Role = @"BUILTIN\Administrators")]
         public bool Uninstall(string serviceName)
         {
             if (!InstallerServices.IsInstalled(serviceName))
@@ -263,6 +265,7 @@ namespace DaemonNT
         /// </remarks>
         /// <param name="serviceName">Service name</param>
         /// <returns>True if the service was successfully started.</returns>
+        [PrincipalPermissionAttribute(SecurityAction.Demand, Role = @"BUILTIN\Administrators")]
         public bool Start(string serviceName)
         {
             if (!InstallerServices.IsInstalled(serviceName))
@@ -327,6 +330,7 @@ namespace DaemonNT
         /// </remarks>
         /// <param name="serviceName">Service name</param>
         /// <returns>True if the service was successfully stopped.</returns>
+        [PrincipalPermissionAttribute(SecurityAction.Demand, Role = @"BUILTIN\Administrators")]
         public bool Stop(string serviceName)
         {
             if (!InstallerServices.IsInstalled(serviceName))

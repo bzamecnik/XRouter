@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="AbstractLogReader.cs" />
     <Compile Include="AdapterConfiguration.cs" />
+    <Compile Include="AdapterPluginAttribute.cs" />
     <Compile Include="AdapterType.cs" />
     <Compile Include="ApplicationConfiguration.cs" />
     <Compile Include="ComponentInterfaces\IBrokerService.cs" />
@@ -63,10 +64,13 @@
     <Compile Include="ComponentInterfaces\IComponentService.cs" />
     <Compile Include="ComponentInterfaces\IProcessorService.cs" />
     <Compile Include="LogLevelFilters.cs" />
+    <Compile Include="MessageFlowConfig\ActionPluginAttribute.cs" />
     <Compile Include="MessageFlowConfig\ActionType.cs" />
     <Compile Include="MessageFlowConfig\CbrNodeConfiguration.cs" />
     <Compile Include="MessageFlowConfig\EntryNodeConfiguration.cs" />
     <Compile Include="MessageFlowConfig\TokenSelectionConfigurationItemType.cs" />
+    <Compile Include="PluginInfo.cs" />
+    <Compile Include="PluginLoader.cs" />
     <Compile Include="ProcessorProvider.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="LimitedConcurrencyLevelTaskScheduler.cs" />

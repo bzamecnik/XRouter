@@ -3,51 +3,129 @@ using XRouter.Gui.ConfigurationControls.Gateway;
 using XRouter.Gui.ConfigurationControls.Messageflow;
 using XRouter.Gui.ConfigurationControls.Processor;
 using XRouter.Manager;
+using System.Xml.Linq;
+using System;
+using System.Windows;
+using XRouter.Common.MessageFlowConfig;
+using System.IO;
 
 namespace XRouter.Gui
 {
     class ConfigurationManager
     {
-        public static readonly string DefaultConsoleServerUri =
+        private static readonly string DefaultConsoleServerUri =
             "http://localhost:9090/XRouter.ConsoleService/ConsoleServer";
-        public string ConsoleServerUri { get; set; }
+
+        public string DefaultConsoleServerAddress {
+            get {
+                string result= System.Configuration.ConfigurationManager.AppSettings.Get("consoleServerUri");
+                if (result == null) {
+                    result = DefaultConsoleServerUri;
+                }
+                return result;
+            }
+        }
 
         public IConsoleServer ConsoleServer { get; private set; }
-        public ApplicationConfiguration Configuration { get; set; }
+        public ApplicationConfiguration Configuration { get; private set; }
 
         public ConfigurationManager()
         {
-            string uri = System.Configuration.ConfigurationManager.AppSettings.Get("consoleServerUri");
-            if (uri == null)
-            {
-                uri = DefaultConsoleServerUri;
+        }
+
+        public bool Connect(string consoleServerUri, bool throwOnError)
+        {
+            try {
+                ConsoleServer = ConsoleServerProxyProvider.GetConsoleServerProxy(consoleServerUri);
+                ConsoleServer.GetXRouterServiceStatus();
+                return true;
+            } catch (Exception ex) {
+                if (throwOnError) {
+                    throw;
+                } else {
+                    string message = string.Format(
+@"It is not possible to connect to XRouter Manager server at:
+{0}.
+Details:
+{1}", consoleServerUri, ex.Message);
+                    MessageBox.Show(ex.Message, "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
             }
-            ConsoleServerUri = uri;
         }
 
-        public void Connect()
+        public bool DownloadConfiguration(bool throwOnError)
         {
-            ConsoleServer = ConsoleServerProxyProvider.GetConsoleServerProxy(ConsoleServerUri);
+            try {
+                Configuration = ConsoleServer.GetConfiguration();
+                return true;
+            } catch (Exception ex) {
+                if (throwOnError) {
+                    throw;
+                } else {
+                    string message = string.Format("Cannot download configuration from XRouter manager: " + ex.Message);
+                    MessageBox.Show(ex.Message, "Operation failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+            }
         }
 
-        public void LoadConfigurationFromServer()
+        public bool UploadConfiguration(bool throwOnError)
         {
-            Configuration = ConsoleServer.GetConfiguration();
-
-            ////TODO: remove
-            //Configuration.AddAdapterType(new AdapterType(
-            //    "Directory I/O adapter",
-            //    "XRouter.Adapters.DirectoryAdapter,XRouter.Adapters.dll",
-            //    new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.DirectoryAdapter))));
-            //Configuration.AddAdapterType(new AdapterType(
-            //    "HTTP client adapter",
-            //    "XRouter.Adapters.HttpClientAdapter,XRouter.Adapters.dll",
-            //    new ObjectConfigurator.ClassMetadata(typeof(XRouter.Adapters.HttpClientAdapter))));
+            try {
+                ConsoleServer.ChangeConfiguration(Configuration);
+                return true;
+            } catch (Exception ex) {
+                if (throwOnError) {
+                    throw;
+                } else {
+                    string message = string.Format("Cannot upload configuration to XRouter manager: " + ex.Message);
+                    MessageBox.Show(ex.Message, "Operation failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+            }
         }
 
-        public void SaveConfigurationToServer()
+        public void ClearConfiguration()
         {
-            ConsoleServer.ChangeConfiguration(Configuration);
+            XDocument xConfig = XDocument.Parse(ApplicationConfiguration.InitialContent);
+            Configuration = new ApplicationConfiguration(xConfig);
+
+            #region Add built-in actions
+            Type sendMessageActionType = typeof(XRouter.Processor.BuiltInActions.SendMessageAction);
+            var sendMessageActionInfo = new PluginInfo<ActionPluginAttribute>(sendMessageActionType.Assembly, sendMessageActionType);
+            Configuration.AddActionType(new ActionType(
+                   name: sendMessageActionInfo.PluginAttribute.PluginName,
+                   assemblyAndClrType: String.Join(",", sendMessageActionInfo.TypeFullName,
+                   Path.GetFileName(sendMessageActionInfo.AssemblyFullPath)),
+                   description: sendMessageActionInfo.PluginAttribute.PluginDescription,
+                   clrType: sendMessageActionInfo.PluginType));
+
+            Type xsltTransformActionType = typeof(XRouter.Processor.BuiltInActions.XsltTransformationAction);
+            var xsltTransformActionInfo = new PluginInfo<ActionPluginAttribute>(xsltTransformActionType.Assembly, xsltTransformActionType);
+            Configuration.AddActionType(new ActionType(
+                   name: xsltTransformActionInfo.PluginAttribute.PluginName,
+                   assemblyAndClrType: String.Join(",", xsltTransformActionInfo.TypeFullName,
+                   Path.GetFileName(xsltTransformActionInfo.AssemblyFullPath)),
+                   description: xsltTransformActionInfo.PluginAttribute.PluginDescription,
+                   clrType: xsltTransformActionInfo.PluginType));
+            #endregion
+        }
+
+        public bool ReadConfiguration(XDocument xConfig, bool throwOnError)
+        {
+            try {
+                Configuration = new ApplicationConfiguration(xConfig);
+                return true;
+            } catch (Exception ex) {
+                if (throwOnError) {
+                    throw;
+                } else {
+                    string message = string.Format("Cannot read configuration: " + ex.Message);
+                    MessageBox.Show(ex.Message, "Operation failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+            }
         }
 
         public ConfigurationTreeItem CreateConfigurationTreeRoot()

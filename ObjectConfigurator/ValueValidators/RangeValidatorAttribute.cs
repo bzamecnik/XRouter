@@ -4,6 +4,11 @@ using System.Runtime.Serialization;
 
 namespace ObjectConfigurator.ValueValidators
 {
+    /// <summary>
+    /// Configuration item validator restricting range of numeric value.
+    /// If applied on a collection, items of this collection will be validated.
+    /// If applied on a dictionary, values of this dictionary will be validated.
+    /// </summary>
     [DataContract]
     [KnownType(typeof(SByte))]
     [KnownType(typeof(Int16))]
@@ -28,12 +33,21 @@ namespace ObjectConfigurator.ValueValidators
             typeof(Decimal)
         };
 
+        /// <summary>
+        /// Minimal allowed value.
+        /// </summary>
         [DataMember]
         public object Min { get; private set; }
 
+        /// <summary>
+        /// Maximal allowed value.
+        /// </summary>
         [DataMember]
         public object Max { get; private set; }
 
+        /// <summary>
+        /// Custom error description for user if this validation fails. If null, a default error description is used.
+        /// </summary>
         [DataMember]
         public string ErrorDescription { get; private set; }
 

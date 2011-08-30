@@ -13,14 +13,13 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
-        <TreeView Grid.Column="0" Name="uiTree" SelectedItemChanged="uiTree_SelectedItemChanged" />
+        <TreeView Grid.Column="0" Name="uiTree" SelectedItemChanged="uiTree_SelectedItemChanged" FontSize="14" />
         
         <GridSplitter Grid.Column="1" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns" Width="10" />
         
         <Grid Grid.Column="2">
             <DockPanel Name="uiEditorContainer">
                 <StackPanel DockPanel.Dock="Top" Margin="10" Orientation="Horizontal">
-                    <Button Padding="10 2 10 2" Click="Save_Click" Width="70" Margin="0 0 10 0">Save</Button>
                     <Button Padding="10 2 10 2" Click="Validate_Click" Width="70">Validate</Button>
                 </StackPanel>
                 <ScrollViewer DockPanel.Dock="Bottom" Margin="10 0 10 10" MaxHeight="120" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">

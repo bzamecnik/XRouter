@@ -28,7 +28,6 @@ namespace XRouter.Gui.Xrm
 
         private XElement xActiveItem;
         private TreeViewItem uiActiveItem;
-        private bool isActiveXmlChanged = false;
 
         public XrmEditor()
         {
@@ -52,36 +51,64 @@ namespace XRouter.Gui.Xrm
             ReloadTree();
         }
 
-        public XDocument SaveContent()
+        public XDocument GetXrmContent()
         {
+            foreach (TreeViewItem uiNode in uiTree.Items) {
+                if (!SaveItemContentRecursively(uiNode)) {
+                    MessageBox.Show("Cannot save XRM content when it contains errors.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return null;
+                }
+            }
+
             return XContent;
+        }
+
+        private bool SaveItemContentRecursively(TreeViewItem uiNode)
+        {
+            XrmNodeHeader uiItemHeader = (XrmNodeHeader)uiNode.Tag;
+
+            if (uiItemHeader.IsGroup) {
+                foreach (TreeViewItem uiChild in uiNode.Items) {
+                    if (!SaveItemContentRecursively(uiChild)) {
+                        return false;
+                    }
+                }
+                return true;
+
+            } else {
+
+                string content = uiItemHeader.Content;
+                XDocument xDoc = Validate(content, uiItemHeader.XNode);
+                if (xDoc == null) {
+                    ThreadUtils.InvokeLater(TimeSpan.FromSeconds(0.2), delegate {
+                        TreeViewItem uiParent = uiNode.Parent as TreeViewItem;
+                        while (uiParent != null) {
+                            uiParent.IsExpanded = true;
+                            uiParent = uiParent.Parent as TreeViewItem;
+                        }
+                        uiNode.IsSelected = true;
+                        Validate(content, uiItemHeader.XNode);
+                    });
+                    return false;
+                }
+                uiItemHeader.XNode.Elements().First().Remove(); // remove old root of document
+                uiItemHeader.XNode.Add(xDoc.Root); // add new root of document
+                uiItemHeader.IsModified = false;
+                return true;
+            }
         }
 
         private void SetActiveItem(XElement xItem, TreeViewItem uiItem)
         {
-            if ((xActiveItem != null) && (isActiveXmlChanged)) {
-                string oldItemName = xActiveItem.Attribute(XrmUri.NameAttributeName).Value;
-                string newItemName = xItem.Attribute(XrmUri.NameAttributeName).Value;
-                string message = string.Format("Active document \"{0}\" item is not saved. Do you want to switch to document \"{1}\" without saving?", oldItemName, newItemName);
-                var mbr = MessageBox.Show(message, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
-                if (mbr != MessageBoxResult.Yes) {
-                    ThreadUtils.InvokeLater(TimeSpan.FromSeconds(0.2), delegate {
-                        uiActiveItem.IsSelected = true;
-                    });
-                    return;
-                }
-            }
-
             xActiveItem = xItem;
             uiActiveItem = uiItem;
             if (xItem == null) {
                 uiEditorContainer.Visibility = Visibility.Collapsed;
-                isActiveXmlChanged = false;
                 return;
             }
 
-            uiEditor.Text = xItem.Elements().First().ToString();
-            isActiveXmlChanged = false;
+            XrmNodeHeader uiItemHeader = (XrmNodeHeader)uiItem.Tag;
+            uiEditor.Text = uiItemHeader.Content;
             uiValidationStatus.Text = string.Empty;
             uiEditorContainer.Visibility = Visibility.Visible;
         }
@@ -98,7 +125,8 @@ namespace XRouter.Gui.Xrm
                 return;
             }
 
-            XElement xSelectedItem = (XElement)uiSelectedItem.Tag;
+            XrmNodeHeader uiSelectedItemHeader = (XrmNodeHeader)uiSelectedItem.Tag;
+            XElement xSelectedItem = uiSelectedItemHeader.XNode;
             if (xSelectedItem.Name != XrmUri.ItemElementName) {
                 SetActiveItem(null, null);
                 return;
@@ -109,34 +137,26 @@ namespace XRouter.Gui.Xrm
 
         private void uiEditor_TextChanged(object sender, EventArgs e)
         {
-            isActiveXmlChanged = true;
-        }
-
-        private void Save_Click(object sender, RoutedEventArgs e)
-        {
-            XDocument xDoc = Validate();
-            if (xDoc == null) {
-                MessageBox.Show("Cannot save xml when it contains errors.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+            XrmNodeHeader uiActiveItemHeader = (XrmNodeHeader)uiActiveItem.Tag;
+            if (uiActiveItemHeader.Content != uiEditor.Text) {
+                uiActiveItemHeader.Content = uiEditor.Text;
+                uiActiveItemHeader.IsModified = uiActiveItemHeader.Content != uiActiveItemHeader.ContentFromXNode;
             }
-            xActiveItem.Elements().First().Remove(); // remove old root of document
-            xActiveItem.Add(xDoc.Root); // add new root of document
-            isActiveXmlChanged = false;
         }
 
         private void Validate_Click(object sender, RoutedEventArgs e)
         {
-            Validate();
+            Validate(uiEditor.Text, xActiveItem);
         }
 
-        private XDocument Validate()
+        private XDocument Validate(string content, XElement xItem)
         {
             bool isValid;
             string errorDescription = null;
 
             XDocument xDocument = null;
             try {
-                xDocument = XDocument.Parse(uiEditor.Text);
+                xDocument = XDocument.Parse(content);
                 isValid = true;
             } catch (Exception ex) {
                 errorDescription = "Xml is not well-formed: " + Environment.NewLine + ex.Message;
@@ -144,7 +164,7 @@ namespace XRouter.Gui.Xrm
             }
 
             if (isValid) {
-                string documentTypeName = xActiveItem.Attribute(XrmUri.TypeAttributeName).Value;
+                string documentTypeName = xItem.Attribute(XrmUri.TypeAttributeName).Value;
                 XDocumentTypeDescriptor docTypeDescriptor = documentTypeDescriptors.FirstOrDefault(d => d.DocumentTypeName == documentTypeName);
                 if (docTypeDescriptor == null) {
                     errorDescription = "Unknown document type: " + documentTypeName;
@@ -183,9 +203,10 @@ namespace XRouter.Gui.Xrm
 
         private TreeViewItem CreateUIGroup(XElement xGroup)
         {
+            XrmNodeHeader uiGroupHeader = new XrmNodeHeader(xGroup, new BitmapImage(new Uri("pack://application:,,,/XRouter.GUI;component/Resources/Actions-view-list-icons-icon.png")));
             TreeViewItem uiGroup = new TreeViewItem {
-                Tag = xGroup,
-                Header = xGroup.Attribute(XrmUri.NameAttributeName).Value
+                Tag = uiGroupHeader,
+                Header = uiGroupHeader
             };
 
             #region Create context menu
@@ -208,9 +229,13 @@ namespace XRouter.Gui.Xrm
 
         private TreeViewItem CreateUIItem(XElement xItem)
         {
+            string documentTypeName = xItem.Attribute(XrmUri.TypeAttributeName).Value;
+            var docTypeDescriptor = documentTypeDescriptors.FirstOrDefault(d => d.DocumentTypeName == documentTypeName);
+
+            XrmNodeHeader uiItemHeader = new XrmNodeHeader(xItem, docTypeDescriptor.GetIconSource());
             TreeViewItem uiItem = new TreeViewItem {
-                Tag = xItem,
-                Header = xItem.Attribute(XrmUri.NameAttributeName).Value
+                Tag = uiItemHeader,
+                Header = uiItemHeader
             };
 
             #region Create context menu
@@ -231,7 +256,11 @@ namespace XRouter.Gui.Xrm
             foreach (var docTypeDescriptorIterator in documentTypeDescriptors) {
                 var docTypeDescriptor = docTypeDescriptorIterator;
                 MenuItem uiDocType = new MenuItem {
-                    Header = docTypeDescriptor.DocumentTypeName
+                    Header = docTypeDescriptor.DocumentTypeName,
+                    Icon = new Image {
+                        Height = 20,
+                        Source = docTypeDescriptor.GetIconSource()
+                    }
                 };
                 uiDocType.Click += delegate {
                     XElement xItem = new XElement(XrmUri.ItemElementName);
@@ -251,7 +280,11 @@ namespace XRouter.Gui.Xrm
 
             uiAdd.Items.Add(new Separator());
             MenuItem uiAddGroup = new MenuItem {
-                Header = "Group"
+                Header = "Group",
+                Icon = new Image {
+                    Height = 20,
+                    Source = new BitmapImage(new Uri("pack://application:,,,/XRouter.GUI;component/Resources/Actions-view-list-icons-icon.png"))
+                }
             };
             uiAddGroup.Click += delegate {
                 XElement xGroup = new XElement(XrmUri.GroupElementName);
@@ -311,7 +344,7 @@ namespace XRouter.Gui.Xrm
                     break;
                 };
                 xNode.SetAttributeValue(XrmUri.NameAttributeName, newName);
-                uiNode.Header = newName;
+                ((XrmNodeHeader)uiNode.Header).Update();
             };
             return uiRename;
         }

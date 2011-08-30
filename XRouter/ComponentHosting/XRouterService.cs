@@ -6,11 +6,13 @@
  * documented and released as an open-source software.
 
  * The %XRouter project consists of several subprojects:
- * \li %XRouter service - Light-weight XML router, the main project
- * \li %SchemaTron - Native C# validator of ISO Schematron language
+ * \li %XRouter service - light-weight extensible low-level XML router for
+ * .NET, the main project, plus a configuration management GUI and a simple
+ * monitoring service
+ * \li %SchemaTron - native C# validator of ISO Schematron language
  * \li %DaemonNT - Windows service hosting made easy
  * \li %ObjectConfigurator - reflection-based configuration utility
- * \li %SimpleDiagrammer - interactive visualizer of graphs
+ * \li %SimpleDiagrammer - interactive visualizer of oriented graphs
  * 
  * Please find more information in the full documentation which can be found
  * at the project home page: http://assembla.com/spaces/xrouter .

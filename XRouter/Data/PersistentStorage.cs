@@ -38,7 +38,6 @@ namespace XRouter.Data
         private IDataAccess dataAccess;
         private XDocument configXmlCache;
 
-        private object _updateTokenLock = new object();
         /// <summary>
         /// A lock for updating tokens to ensure atomicity.
         /// </summary>
@@ -46,16 +45,7 @@ namespace XRouter.Data
         /// Currently no two tokens can be updated in parallel. Better would
         /// be to enable updating tokens with different GUIDs in parallel.
         /// </remarks>
-        private object UpdateTokenLock
-        {
-            get
-            {
-                if (_updateTokenLock == null) {
-                    _updateTokenLock = new object();
-                }
-                return _updateTokenLock;
-            }
-        }
+        private object updateTokenLock = new object();
 
         public PersistentStorage(string connectionString)
         {
@@ -66,11 +56,21 @@ namespace XRouter.Data
 
         #region Application configuration
 
+        /// <summary>
+        /// Obtains the current application configuration.
+        /// </summary>
+        /// <remarks>
+        /// The configuration XML is cached and the method returns the same
+        /// reference in case the configuration did not change.
+        /// </remarks>
+        /// <returns></returns>
         public XDocument GetApplicationConfiguration()
         {
-            if (configXmlCache == null) {
+            if (configXmlCache == null)
+            {
                 string configXml = dataAccess.LoadConfiguration();
-                if (configXml == null) {
+                if (configXml == null)
+                {
                     configXml = ApplicationConfiguration.InitialContent;
                 }
                 configXmlCache = XDocument.Parse(configXml);
@@ -78,6 +78,13 @@ namespace XRouter.Data
             return configXmlCache;
         }
 
+        /// <summary>
+        /// Updates the application configuration.
+        /// </summary>
+        /// <remarks>
+        /// Also updates the cache.
+        /// </remarks>
+        /// <param name="config"></param>
         public void SaveApplicationConfiguration(XDocument config)
         {
             configXmlCache = config;
@@ -116,7 +123,7 @@ namespace XRouter.Data
         /// token exists</returns>
         public Token UpdateToken(Guid tokenGuid, Action<Token> updater)
         {
-            lock (UpdateTokenLock) {
+            lock (updateTokenLock) {
                 Token token = GetToken(tokenGuid);
                 if (token == null) {
                     return null;
@@ -139,7 +146,7 @@ namespace XRouter.Data
         /// <param name="updater"></param>
         public void UpdateToken(Token token, Action<Token> updater)
         {
-            lock (UpdateTokenLock) {
+            lock (updateTokenLock) {
                 Token currentToken = GetToken(token.Guid);
                 updater(currentToken);
                 SaveToken(currentToken);

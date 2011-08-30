@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using XRouter.Common.Xrm;
+using XRouter.Common.MessageFlowConfig;
 
 namespace XRouter.Processor
 {
@@ -58,6 +59,7 @@ namespace XRouter.Processor
                 using (XmlWriter xmlWriter = XmlWriter.Create(memoryStream)) {
                     xdocument.WriteTo(xmlWriter);
                 }
+                memoryStream.Position = 0;
                 return memoryStream;
             } else {
                 //otherwise use the default behavior of the XmlUrlResolver class (resolve resources from source)

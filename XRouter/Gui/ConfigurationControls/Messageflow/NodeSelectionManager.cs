@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Controls;
 using XRouter.Common.MessageFlowConfig;
 using XRouter.Common;
+using System.Windows;
 
 namespace XRouter.Gui.ConfigurationControls.Messageflow
 {
@@ -80,6 +81,17 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow
             SelectedNode = selectedNode;
             NodeSelectedEventArgs nodeSelectedEventArgs = new NodeSelectedEventArgs(originalSelectedNode, selectedNode);
             NodeSelected(this, nodeSelectedEventArgs);
+        }
+
+        internal void RenameNode(NodeConfiguration node, TextBox uiName)
+        {
+            string[] existingNames = MessageflowGraphPresenter.Messageflow.Nodes.Where(n => n != node).Select(n => n.Name).ToArray();
+            if (existingNames.Contains(uiName.Text)) {
+                MessageBox.Show("Given name already exists. Please make sure that the node has a unique name.", "Node renaming", MessageBoxButton.OK, MessageBoxImage.Error);
+                uiName.Text = node.Name;
+                return;
+            }
+            node.Name = uiName.Text;
         }
     }
 }

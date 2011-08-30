@@ -12,21 +12,27 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
     {
         private static readonly Random random = new Random();
 
-        private const double ATTRACTION_CONSTANT = 0.1;		// spring constant
-        private const double REPULSION_CONSTANT = 5000;	// charge constant
+        internal Configuration Configuration { get; private set; }
 
+        private const double ATTRACTION_CONSTANT = 0.1;		// spring constant
+        private const double REPULSION_CONSTANT = 5000;	    // charge constant
         private const double DEFAULT_DAMPING = 0.5;
-        private const int DEFAULT_SPRING_LENGTH = 180; //120;
 
         private Dictionary<Node, NodeLayoutInfo> nodeToLayoutInfo = new Dictionary<Node, NodeLayoutInfo>();
 
         public override void UpdateLayout(IEnumerable<Node> nodes)
         {
+            if ((!Configuration.ApplyAttractionForce) && (!Configuration.ApplyRepulsionForce)) {
+                return;
+            }
+
             #region Separate overlapping nodes
-            foreach (Node node1 in nodes) {
-                foreach (Node node2 in nodes) {
-                    if ((node1 != node2) && (CalcDistance(node1.Location, node2.Location) < 1.0d)) {
-                        node1.Location += new Vector(random.NextDouble() * 100d - 50d, random.NextDouble() * 100d - 50d);
+            if (Configuration.ApplyRepulsionForce) {
+                foreach (Node node1 in nodes) {
+                    foreach (Node node2 in nodes) {
+                        if ((node1 != node2) && (CalcDistance(node1.Location, node2.Location) < 1.0d)) {
+                            node1.Location += new Vector(random.NextDouble() * 100d - 50d, random.NextDouble() * 100d - 50d);
+                        }
                     }
                 }
             }
@@ -51,19 +57,23 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
                 Vector netForce = new Vector(0, 0);
 
                 // determine repulsion between nodes
-                foreach (Node other in nodes) {
-                    if (other != current.Node) {
-                        netForce += CalcRepulsionForce(current.Node, other);
+                if (Configuration.ApplyRepulsionForce) {
+                    foreach (Node other in nodes) {
+                        if (other != current.Node) {
+                            netForce += CalcRepulsionForce(current.Node, other);
+                        }
                     }
                 }
 
                 // determine attraction caused by connections
-                foreach (Node child in current.Node.GetAdjacentNodes()) {
-                    netForce += CalcAttractionForce(current.Node, child, DEFAULT_SPRING_LENGTH);
-                }
-                foreach (Node parent in nodes) {
-                    if (parent.GetAdjacentNodes().Contains(current.Node)) {
-                        netForce += CalcAttractionForce(current.Node, parent, DEFAULT_SPRING_LENGTH);
+                if (Configuration.ApplyAttractionForce) {
+                    foreach (Node child in current.Node.GetAdjacentNodes()) {
+                        netForce += CalcAttractionForce(current.Node, child, Configuration.AttractionSpringLength);
+                    }
+                    foreach (Node parent in nodes) {
+                        if (parent.GetAdjacentNodes().Contains(current.Node)) {
+                            netForce += CalcAttractionForce(current.Node, parent, Configuration.AttractionSpringLength);
+                        }
                     }
                 }
 
@@ -175,6 +185,16 @@ namespace SimpleDiagrammer.Layouts.ForceDirected
             double x = length * Math.Cos((Math.PI / 180.0) * direction);
             double y = length * Math.Sin((Math.PI / 180.0) * direction);
             return new Vector(x, y);
+        }
+
+        public override object CreateDefaultConfiguration()
+        {
+            return new Configuration();
+        }
+
+        public override void ApplyConfiguration(object configuration)
+        {
+            Configuration = (Configuration)configuration;
         }
 
         /// <summary>

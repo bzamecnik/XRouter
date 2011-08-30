@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.ServiceProcess;
@@ -7,6 +8,9 @@ using System.Xml;
 using System.Xml.Linq;
 using XRouter.Common;
 using XRouter.Data;
+using System.Reflection;
+using System.IO;
+using XRouter.Common.MessageFlowConfig;
 
 namespace XRouter.Manager
 {
@@ -18,6 +22,9 @@ namespace XRouter.Manager
         AddressFilterMode = AddressFilterMode.Any)]
     internal sealed class ConsoleServer : IConsoleServer
     {
+        private static readonly string AdapterPluginsDirectory = "AdapterPlugins";
+        private static readonly string ActionPluginsDirectory = "ActionPlugins";
+
         /// <summary>
         /// URI of the ConsoleServer web service which provides the main services.
         /// </summary>
@@ -96,6 +103,11 @@ namespace XRouter.Manager
             // init log readers
             this.eventLogReader = new EventLogReader(this.storagesInfo.LogsDirectory, this.serviceName);
             this.traceLogReader = new TraceLogReader(this.storagesInfo.LogsDirectory, this.serviceName);
+
+            ObjectConfigurator.Configurator.CustomItemTypes.Add(new TokenSelectionConfigurationItemType());
+            ObjectConfigurator.Configurator.CustomItemTypes.Add(new XRouter.Common.Xrm.XrmUriConfigurationItemType());
+            ObjectConfigurator.Configurator.CustomItemTypes.Add(new UriConfigurationItemType());
+            UpdatePlugins();
 
             // create WCF service on a new thread
             Exception exception = null;
@@ -229,6 +241,128 @@ namespace XRouter.Manager
             return storage.GetTokens(pageSize, pageNumber);
         }
 
+        public void UpdatePlugins()
+        {
+            XDocument xConfig = storage.GetApplicationConfiguration();
+            // clone the config so that is can be later compared
+            XDocument xOldConfig = XDocument.Parse(xConfig.ToString());
+
+            var config = new ApplicationConfiguration(xConfig);
+
+            string binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string adapterPluginsDirectoryFullPath = Path.Combine(binPath, AdapterPluginsDirectory);
+            string actionPluginsDirectoryFullPath = Path.Combine(binPath, ActionPluginsDirectory);
+            if (!Directory.Exists(adapterPluginsDirectoryFullPath))
+            {
+                Directory.CreateDirectory(adapterPluginsDirectoryFullPath);
+            }
+            if (!Directory.Exists(actionPluginsDirectoryFullPath))
+            {
+                Directory.CreateDirectory(actionPluginsDirectoryFullPath);
+            }
+
+            #region Update adapter plugins
+            AdapterType[] oldAdapterTypes = config.GetAdapterTypes();
+            foreach (AdapterType adapterType in oldAdapterTypes)
+            {
+                config.RemoveAdapterType(adapterType.Name);
+            }
+            var adapterPlugins = PluginLoader.FindPlugins<AdapterPluginAttribute>(adapterPluginsDirectoryFullPath);
+            foreach (PluginInfo<AdapterPluginAttribute> adapterPlugin in adapterPlugins)
+            {
+                string assemblyAndClrType = GetTypeAndRelativeAssemblyPath(
+                    AdapterPluginsDirectory, adapterPlugin.AssemblyFullPath,
+                    adapterPlugin.TypeFullName);
+                AdapterType adapterType = new AdapterType(
+                    name: adapterPlugin.PluginAttribute.PluginName,
+                    assemblyAndClrType: assemblyAndClrType,
+                    description: adapterPlugin.PluginAttribute.PluginDescription,
+                    clrType: adapterPlugin.PluginType);
+                config.AddAdapterType(adapterType);
+            }
+            #endregion
+
+            #region Update action plugins
+            ActionType[] oldActionTypes = config.GetActionTypes();
+            foreach (ActionType actionType in oldActionTypes)
+            {
+                config.RemoveActionType(actionType.Name);
+            }
+
+            #region Add built-in actions
+
+            Type sendMessageActionType = typeof(XRouter.Processor.BuiltInActions.SendMessageAction);
+            var sendMessageActionInfo = new PluginInfo<ActionPluginAttribute>(sendMessageActionType.Assembly, sendMessageActionType);
+            config.AddActionType(new ActionType(
+                   name: sendMessageActionInfo.PluginAttribute.PluginName,
+                   assemblyAndClrType: String.Join(",", sendMessageActionInfo.TypeFullName,
+                   Path.GetFileName(sendMessageActionInfo.AssemblyFullPath)),
+                   description: sendMessageActionInfo.PluginAttribute.PluginDescription,
+                   clrType: sendMessageActionInfo.PluginType));
+
+            Type xsltTransformActionType = typeof(XRouter.Processor.BuiltInActions.XsltTransformationAction);
+            var xsltTransformActionInfo = new PluginInfo<ActionPluginAttribute>(xsltTransformActionType.Assembly, xsltTransformActionType);
+            config.AddActionType(new ActionType(
+                   name: xsltTransformActionInfo.PluginAttribute.PluginName,
+                   assemblyAndClrType: String.Join(",", xsltTransformActionInfo.TypeFullName,
+                   Path.GetFileName(xsltTransformActionInfo.AssemblyFullPath)),
+                   description: xsltTransformActionInfo.PluginAttribute.PluginDescription,
+                   clrType: xsltTransformActionInfo.PluginType));
+
+            #endregion
+
+            var actionPlugins = PluginLoader.FindPlugins<ActionPluginAttribute>(adapterPluginsDirectoryFullPath).ToList();
+
+            foreach (PluginInfo<ActionPluginAttribute> actionPlugin in actionPlugins)
+            {
+                string assemblyAndClrType = GetTypeAndRelativeAssemblyPath(
+                    ActionPluginsDirectory, actionPlugin.AssemblyFullPath,
+                    actionPlugin.TypeFullName);
+                ActionType actionType = new ActionType(
+                    name: actionPlugin.PluginAttribute.PluginName,
+                    assemblyAndClrType: assemblyAndClrType,
+                    description: actionPlugin.PluginAttribute.PluginDescription,
+                    clrType: actionPlugin.PluginType);
+                config.AddActionType(actionType);
+            }
+            #endregion
+
+
+            if (!CanBeEqual(xOldConfig, config.Content))
+            {
+                ChangeConfiguration(config);
+            }
+        }
+
+        private static string GetTypeAndRelativeAssemblyPath(string basePath, string fileAbsPath, string typeFullName)
+        {
+            string fileName = Path.GetFileName(fileAbsPath);
+            string relativeFilePath = Path.Combine(basePath, fileName);
+            string assemblyAndClrType = string.Format("{0},{1}", typeFullName, relativeFilePath);
+            return assemblyAndClrType;
+        }
         #endregion
+
+        private bool CanBeEqual(XDocument xdocument1, XDocument xdocument2)
+        {
+            byte[] hash1 = GetXDocumentHash(xdocument1);
+            byte[] hash2 = GetXDocumentHash(xdocument2);
+            return hash1.SequenceEqual(hash2);
+        }
+
+        private byte[] GetXDocumentHash(XDocument xdocument)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            using (XmlWriter xmlWriter = XmlWriter.Create(memoryStream))
+            {
+                xdocument.WriteTo(xmlWriter);
+            }
+            memoryStream.Position = 0;
+
+            var xfrm = new System.Security.Cryptography.Xml.XmlDsigC14NTransform(false);
+            xfrm.LoadInput(memoryStream);
+            byte[] result = xfrm.GetDigestedOutput(new System.Security.Cryptography.SHA1Managed());
+            return result;
+        }
     }
 }

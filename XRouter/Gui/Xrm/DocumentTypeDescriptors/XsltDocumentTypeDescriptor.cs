@@ -36,5 +36,10 @@ namespace XRouter.Gui.Xrm.DocumentTypeDescriptors
                 return false;
             }
         }
+
+        public override System.Windows.Media.ImageSource GetIconSource()
+        {
+            return new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/XRouter.GUI;component/Resources/xsl.png"));
+        }
     }
 }

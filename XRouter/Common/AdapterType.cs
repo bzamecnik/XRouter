@@ -1,4 +1,5 @@
 ﻿using ObjectConfigurator;
+using System;
 namespace XRouter.Common
 {
     /// <summary>
@@ -18,12 +19,23 @@ namespace XRouter.Common
         /// </summary>
         public string AssemblyAndClrType { get; private set; }
 
+        public string Description { get; private set; }
+
         public ClassMetadata ConfigurationMetadata { get; private set; }
 
-        public AdapterType(string name, string assemblyAndClrType, ClassMetadata configurationMetadata)
+        public AdapterType(string name, string assemblyAndClrType, string description, Type clrType)
         {
             Name = name;
             AssemblyAndClrType = assemblyAndClrType;
+            Description = description;
+            ConfigurationMetadata = new ClassMetadata(clrType);
+        }
+
+        public AdapterType(string name, string assemblyAndClrType, string description, ClassMetadata configurationMetadata)
+        {
+            Name = name;
+            AssemblyAndClrType = assemblyAndClrType;
+            Description = description;
             ConfigurationMetadata = configurationMetadata;
         }
     }

@@ -14,6 +14,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -29,8 +30,7 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-        <TextBlock Grid.Row="0" Grid.Column="0" Margin="15 5 0 5" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="13">Name:</TextBlock>
-        <TextBox Grid.Row="0" Grid.Column="1" Name="uiName" LostFocus="uiName_LostFocus" KeyDown="uiName_KeyDown" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="8 10 10 10" />
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" FontSize="16" FontWeight="Bold" Margin="10" HorizontalAlignment="Center">Content-based routing node</TextBlock>
 
         <Border Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
             <Border.Background>
@@ -40,10 +40,10 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-        <TextBlock Grid.Row="1" Grid.Column="0" Margin="15 5 0 5" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="13">Tested message:</TextBlock>
-        <controls:TokenSelectionEditor Grid.Row="1" Grid.Column="1" x:Name="uiTestedMessage" Margin="10" />
+        <TextBlock Grid.Row="1" Grid.Column="0" Margin="15 5 0 5" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="13">Name:</TextBlock>
+        <TextBox Grid.Row="1" Grid.Column="1" Name="uiName" LostFocus="uiName_LostFocus" KeyDown="uiName_KeyDown" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="8 10 10 10" />
 
-        <Border Grid.Row="2" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightBlue" Margin="5" >
+        <Border Grid.Row="2" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
             <Border.Background>
                 <LinearGradientBrush>
                     <GradientStop Color="LightSkyBlue" Offset="-1" />
@@ -51,10 +51,21 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-        <TextBlock Grid.Row="2" Grid.Column="0" Margin="15 5 0 5" FontWeight="Bold" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center">Default target:</TextBlock>
-        <src:TargetNodeSelector Grid.Row="2" Grid.Column="1" x:Name="uiDefaultTargetSelector" Margin="8 10 10 10" />
+        <TextBlock Grid.Row="2" Grid.Column="0" Margin="15 5 0 5" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="13">Tested message:</TextBlock>
+        <controls:TokenSelectionEditor Grid.Row="2" Grid.Column="1" x:Name="uiTestedMessage" Margin="10" />
 
-        <Border Grid.Row="3" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
+        <Border Grid.Row="3" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightBlue" Margin="5" >
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="LightSkyBlue" Offset="-1" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <TextBlock Grid.Row="3" Grid.Column="0" Margin="15 5 0 5" FontWeight="Bold" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center">Default target:</TextBlock>
+        <src:TargetNodeSelector Grid.Row="3" Grid.Column="1" x:Name="uiDefaultTargetSelector" Margin="8 10 10 10" />
+
+        <Border Grid.Row="4" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
             <Border.Background>
                 <LinearGradientBrush>
                     <GradientStop Color="LightSkyBlue" Offset="-1" />
@@ -67,7 +78,7 @@
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="4" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
+        <Border Grid.Row="5" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="1" BorderBrush="LightGray" Margin="5" >
             <Border.Background>
                 <LinearGradientBrush>
                     <GradientStop Color="LightSkyBlue" Offset="-1" />

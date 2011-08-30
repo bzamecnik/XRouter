@@ -33,8 +33,6 @@ namespace XRouter.Broker
         private Dispatching.Dispatcher dispatcher;
         private XmlResourceManager xmlResourceManager;
 
-        private ApplicationConfiguration appConfigCache;
-
         private object syncLock = new object();
 
         public BrokerService()
@@ -81,26 +79,8 @@ namespace XRouter.Broker
 
         public ApplicationConfiguration GetConfiguration()
         {
-            if (appConfigCache == null)
-            {
-                XDocument configXml = storage.GetApplicationConfiguration();
-                appConfigCache = new ApplicationConfiguration(configXml);
-            }
-            return appConfigCache;
-        }
-
-        public void UpdateConfiguration(ApplicationConfiguration config)
-        {
-            appConfigCache = config;
-            storage.SaveApplicationConfiguration(config.Content);
-
-            // TODO: why not just iterate over componentsAccessors.Values?
-            ComponentAccessor[] components = componentsAccessors.Values.ToArray();
-            foreach (var component in components)
-            {
-                var reducedConfig = config.GetReducedConfiguration(component.ConfigurationReduction);
-                component.UpdateConfig(reducedConfig);
-            }
+            XDocument configXml = storage.GetApplicationConfiguration();
+            return new ApplicationConfiguration(configXml);
         }
 
         IEnumerable<ProcessorAccessor> IBrokerServiceForDispatcher.GetProcessors()
@@ -127,6 +107,13 @@ namespace XRouter.Broker
             return storage.UpdateToken(tokenGuid, delegate(Token token)
             {
                 token.UpdateMessageFlowState(mfs => { mfs.AssignedProcessor = assignedProcessor; });
+                if (token.State != TokenState.Finished) {
+                    if (assignedProcessor != null) {
+                        token.State = TokenState.InProcessor;
+                    } else {
+                        token.State = TokenState.Received;
+                    }
+                }
             });
         }
 
@@ -158,7 +145,7 @@ namespace XRouter.Broker
             {
                 token.State = TokenState.Received;
                 storage.SaveToken(token);
-                dispatcher.NotifyAboutNewToken(token);
+                dispatcher.Dispatch(token);
             }
         }
 

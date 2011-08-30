@@ -65,13 +65,13 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
 
         private void uiName_LostFocus(object sender, RoutedEventArgs e)
         {
-            node.Name = uiName.Text;
+            nodeSelectionManager.RenameNode(node, uiName);
         }
 
         private void uiName_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter) {
-                node.Name = uiName.Text;
+                nodeSelectionManager.RenameNode(node, uiName);
             }
             if (e.Key == Key.Escape) {
                 uiName.Text = node.Name;
@@ -85,9 +85,9 @@ namespace XRouter.Gui.ConfigurationControls.Messageflow.NodePropertiesEditors
         private FrameworkElement AddAction()
         {
             ActionType actionType = nodeSelectionManager.AppConfig.GetActionTypes().First();
-            ActionConfiguration action = new ActionConfiguration(actionType.Name);
-            action.Configuration = new SerializableXDocument(new XDocument());
-            action.Configuration.XDocument.Add(new XElement(XName.Get("objectConfig")));
+            ActionConfiguration action = new ActionConfiguration(actionType.Name) {
+                Configuration = new SerializableXDocument(new XDocument(new XElement(XName.Get("objectConfig"))))
+            };
             node.Actions.Add(action);
 
             FrameworkElement actionRepresentation = CreateActionRepresentation(action);

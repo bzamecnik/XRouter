@@ -20,7 +20,7 @@ namespace XRouter.Adapters
     /// <remarks>
     /// <para>Each input, resp. output directory is called an input, resp.
     /// output endpoint.</para>
-    /// <para>XML files and text files (TODO) are supported.</para>
+    /// <para>XML files and text files are supported.</para>
     /// <para>Unreadable files or directories are ignored.</para>
     /// </remarks>
     [AdapterPlugin("Directory I/O adapter", "Reads and writes files from/into specified directories.")]
@@ -43,6 +43,8 @@ namespace XRouter.Adapters
 
         [ConfigurationItem("Save only text", null, false)]
         private bool saveOnlyText;
+
+        private int counter = 0;
 
         protected override void Run()
         {
@@ -144,7 +146,10 @@ namespace XRouter.Adapters
                 }
                 else
                 {
-                    fileName = string.Format("{0}_{1}.xml", DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss"), Guid.NewGuid().ToString());
+                    fileName = string.Format("{0}_{1}.{2}",
+                        DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss"),
+                        (++counter).ToString().PadLeft(4, '0'),
+                        (saveOnlyText ? "txt": "xml"));
                 }
 
                 TraceLog.Info(string.Format("Writing output file '{0}' into '{1}'", fileName, targetPath));
@@ -156,8 +161,6 @@ namespace XRouter.Adapters
                     output = message.ToString();
                 }
 
-                // TODO: generate unique file name (in case the file with the
-                // same name already exists)
                 File.WriteAllText(Path.Combine(targetPath, fileName), output);
             }
             else

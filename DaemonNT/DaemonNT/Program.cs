@@ -1,4 +1,4 @@
-﻿/*! \mainpage DaemonNT - API reference
+/*! \mainpage DaemonNT - API reference
  *
  * %DaemonNT provides a environment for hosting programs as Windows services.
  * It can install services and control their running. %DaemonNT is designed to
@@ -16,6 +16,8 @@ namespace DaemonNT
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
+    using System.Security.Principal;
     using DaemonNT.Installation;
 
     /// <summary>
@@ -35,12 +37,7 @@ namespace DaemonNT
         {
             #region Parse command-line arguments
 
-            // TODO: Lepe poresit parametry prikazove radky (az bude definitivne jiste,
-            // co vsechno bude v sobe DaemonNT obsahovat - pokud budeme napr. implementovat
-            // watchdog ci konfiguracni GUI)
-
-            // TODO:
-            // - if the argument parsing gets too complex better use a specialized library
+            // TODO: if the argument parsing gets too complex better use a specialized library
 
             List<string> arguments = new List<string>();
             arguments.AddRange(args);
@@ -57,6 +54,7 @@ namespace DaemonNT
             }
 
             ServiceCommands commands = new ServiceCommands();
+            bool waitAtFinishEnabled = false;
 
             // non-mandatory option parameters
             while ((arguments.Count > 0) && arguments[0].StartsWith("-"))
@@ -64,6 +62,10 @@ namespace DaemonNT
                 if (arguments[0].StartsWith("--config-file="))
                 {
                     commands.ConfigFile = arguments[0].Split(new[] { '=' }, 2)[1];
+                }
+                else if (arguments[0] == ("-w"))
+                {
+                    waitAtFinishEnabled = true;
                 }
                 arguments.RemoveAt(0);
             }
@@ -95,6 +97,8 @@ namespace DaemonNT
 
             try
             {
+                System.AppDomain.CurrentDomain.SetPrincipalPolicy(PrincipalPolicy.WindowsPrincipal);
+
                 switch (command)
                 {
                     case "run":
@@ -129,13 +133,37 @@ namespace DaemonNT
                         return;
                 }
             }
+            catch (SecurityException)
+            {
+                Console.Error.WriteLine(string.Format(
+                    "Error: the '{0}' command requires administrator privileges.",
+                    command));
+                ExitWithStatus(-2, waitAtFinishEnabled);
+            }
             catch (Exception ex)
             {
                 Console.Error.WriteLine("Error: {0}", ex.Message);
-                Environment.Exit(-1);
+                ExitWithStatus(-1, waitAtFinishEnabled);
             }
+            WaitAtFinish(waitAtFinishEnabled);
+            
 
             #endregion
+        }
+
+        private static void ExitWithStatus(int status, bool waitAtFinishEnabled)
+        {
+            WaitAtFinish(waitAtFinishEnabled);
+            Environment.Exit(-2);
+        }
+
+        private static void WaitAtFinish(bool waitAtFinishEnabled)
+        {
+            if (waitAtFinishEnabled)
+            {
+                Console.WriteLine("Press any key to exit...");
+                Console.ReadKey();
+            }
         }
 
         private static void CheckStatus(ServiceCommands commands, string serviceName)
@@ -167,12 +195,17 @@ namespace DaemonNT
 
         private static void PrintUsage()
         {
-            Console.WriteLine("Usage: DaemonNT.exe [options] COMMAND [SERVICE_NAME]");
-            Console.WriteLine("Available commands: debug, run, install, uninstall, start, stop, restart, status, list.");
-            Console.WriteLine("The 'run' command is indended only for the OS's service runner.");
-            Console.WriteLine("SERVICE_NAME is needed for all commands except 'list'.");
-            Console.WriteLine("Options:");
-            Console.WriteLine("  --config-file=CONFIG_FILE - path to configuration file");
+            Console.WriteLine(
+@"Usage: DaemonNT.exe [options] COMMAND [SERVICE_NAME]
+Available commands: debug, run, install, uninstall, start, stop, restart,
+status, list.
+The 'run' command is indended only for the OS's service runner.
+The 'install', 'uninstall', 'start' and 'stop' commands require administrator
+privileges.
+SERVICE_NAME is needed for all commands except 'list'.
+Options:
+  --config-file=CONFIG_FILE - path to configuration file
+  -w - wait at the end (do not close the console window)");
         }
     }
 }

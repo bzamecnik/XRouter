@@ -24,12 +24,23 @@ namespace XRouter.Common.MessageFlowConfig
         /// </summary>
         public string ClrTypeAndAssembly { get; private set; }
 
+        public string Description { get; private set; }
+
         public ClassMetadata ConfigurationMetadata { get; private set; }
 
-        public ActionType(string name, string assemblyAndClrType, ClassMetadata configurationMetadata)
+        public ActionType(string name, string assemblyAndClrType, string description, Type clrType)
         {
             Name = name;
             ClrTypeAndAssembly = assemblyAndClrType;
+            Description = description;
+            ConfigurationMetadata = new ClassMetadata(clrType);
+        }
+
+        public ActionType(string name, string assemblyAndClrType, string description, ClassMetadata configurationMetadata)
+        {
+            Name = name;
+            ClrTypeAndAssembly = assemblyAndClrType;
+            Description = description;
             ConfigurationMetadata = configurationMetadata;
         }
     }

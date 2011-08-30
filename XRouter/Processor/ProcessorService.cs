@@ -95,8 +95,7 @@ namespace XRouter.Processor
         {
             // NOTE: each SingleThreadProcessor must have its own message flow instance
             // since they might not be thread-safe
-            Guid messageFlowId = Configuration.GetCurrentMessageFlowGuid();
-            var config = Configuration.GetMessageFlow(messageFlowId);
+            var config = Configuration.GetMessageFlow();
             messageFlows = new MessageFlow[concurrentThreadsCount];
             for (int i = 0; i < concurrentThreadsCount; i++)
             {
@@ -114,11 +113,6 @@ namespace XRouter.Processor
                 tokensFinishedEvent.WaitOne(5000);
                 tokensToProcess.CompleteAdding();
             }
-        }
-
-        public double GetUtilization()
-        {
-            return 0.5d;
         }
 
         public void AddWork(Token token)
