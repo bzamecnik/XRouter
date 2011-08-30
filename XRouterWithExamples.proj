@@ -2,5 +2,6 @@
     <Target Name="Build">
         <MSBuild Projects="XRouter\XRouter.sln"/>
         <MSBuild Projects="XRouterExamples\Restaurant\XRouter.Examples.Restaurant.sln"/>
+        <MSBuild Projects="XRouterExamples\SOASupport\SOASupport.proj"/>
     </Target>
 </Project>

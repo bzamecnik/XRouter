@@ -51,6 +51,7 @@ Name: "sw\schemaTron\console"; Description: "SchemaTron Console"; Types: full
 Name: "docs"; Description: "Documentation"; Types: full
 Name: "examples"; Description: "Examples"; Types: full
 Name: "examples\restaurant"; Description: "Restaurant"; Types: full
+Name: "examples\soasupport"; Description: "SOA Support"; Types: full
 
 [Tasks]
 Name: generateRestaurantData; Description: "Generate random input data for the Restaurant demo"; Components: examples\restaurant
@@ -96,12 +97,15 @@ Source: "docs\XRouter\*"; Excludes: "dummy.txt,*.chw"; DestDir: "{app}\Documenta
 Source: "docs\DaemonNT\*"; Excludes: "dummy.txt,*.chw"; DestDir: "{app}\Documentation\DaemonNT"; Components: docs
 Source: "docs\SchemaTron\*"; Excludes: "dummy.txt,*.chw"; DestDir: "{app}\Documentation\SchemaTron"; Components: docs
 
+Source: "copy-example-configs.bat"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+
 Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.exe"; Excludes: "*vshost*"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion; Components: examples\restaurant
 ;Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.dll"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion; Components: examples\restaurant
 Source: "XRouterExamples\Restaurant\bin\{#BuildType}\*.exe.config"; Excludes: "*vshost*"; DestDir: "{app}\Examples\Restaurant"; Flags: ignoreversion; Components: examples\restaurant
 Source: "XRouterExamples\Restaurant\Data\*"; DestDir: "{app}\Examples\Restaurant\Data"; Flags: ignoreversion recursesubdirs; Components: examples\restaurant
 Source: "XRouterExamples\Restaurant\generate-demo-data.bat"; DestDir: "{app}"; Flags: ignoreversion; Components: examples\restaurant
-Source: "copy-example-configs.bat"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+
+Source: "XRouterExamples\SOASupport\bin\{#BuildType}\*.exe"; Excludes: "*vshost*"; DestDir: "{app}\Examples\SOASupport"; Flags: ignoreversion; Components: examples\soasupport
 
 [Run]
 Filename: "{app}\Examples\Restaurant\generate-demo-data.bat"; Description: "Generate random input data for the demo."; Flags: postinstall shellexec waituntilterminated; Tasks: generateRestaurantData

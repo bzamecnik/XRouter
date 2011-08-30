@@ -1,0 +1,6 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target Name="Build">
+        <MSBuild Projects="Provider\Provider.sln"/>
+        <MSBuild Projects="Requestor\Requestor.sln"/>
+    </Target>
+</Project>
