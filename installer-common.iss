@@ -40,6 +40,7 @@ Name: "sw"; Description: "Program files"; Types: full custom
 Name: "sw\xRouter"; Description: "XRouter"; Types: full
 Name: "sw\xRouter\Service"; Description: "XRouter Service"; Types: full compact
 Name: "sw\xRouter\Manager"; Description: "XRouter Manager"; Types: full compact
+Name: "sw\xRouter\Database"; Description: "XRouter Database image"; Types: full compact
 Name: "sw\xRouter\Gui"; Description: "XRouter GUI"; Types: full
 Name: "sw\daemonNt"; Description: "DaemonNT"; Types: full
 Name: "sw\daemonNt\Console"; Description: "DaemonNT Console"; Types: full compact
@@ -85,6 +86,8 @@ Source: "bin\{#BuildType}\XRouter.Gui.exe"; DestDir: "{app}"; Flags: ignoreversi
 Source: "bin\{#BuildType}\XRouter.Gui.exe.config"; DestDir: "{app}"; DestName: "XRouter.Gui.exe.example.config"; Flags: ignoreversion; Components: sw\xRouter\Gui
 Source: "bin\{#BuildType}\XRouter.Manager.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
 Source: "bin\{#BuildType}\XRouter.Processor.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: sw\xRouter
+
+Source: "database\*"; DestDir: "{app}\database"; Flags: ignoreversion; Components: sw\xRouter\Database
 
 Source: "README"; DestName: "README.txt"; DestDir: "{app}\Documentation"; Flags: isreadme; Components: sw
 Source: "LICENSE"; DestName: "LICENSE.txt"; DestDir: "{app}\Documentation"; Components: sw
