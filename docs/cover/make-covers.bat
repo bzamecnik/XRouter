@@ -1,5 +1,5 @@
 rem LaTeX is required (eg. the latest TexLive)
-pdfcslatex cover_main.tex
+pdfcslatex cover_00_main.tex
 pdfcslatex cover_01_definition.tex
 pdfcslatex cover_02_programmers_guide.tex
 pdfcslatex cover_03_users_guide.tex
