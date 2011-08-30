@@ -19,6 +19,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -29,10 +30,21 @@
                 <TextBlock Grid.Row="0" Grid.Column="1" FontSize="16" Margin="5">1.0</TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" FontSize="16" FontWeight="SemiBold" Margin="5" HorizontalAlignment="Right">Authors</TextBlock>
-                <TextBlock Grid.Row="1" Grid.Column="1" FontSize="16" Margin="5">The XRouter Team</TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="1" FontSize="16" Margin="5">
+                    <Hyperlink Click="Authors_Click">
+                        The XRouter Team
+                    </Hyperlink>
+                </TextBlock>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" FontSize="16" FontWeight="SemiBold" Margin="5" HorizontalAlignment="Right">Web</TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="0" FontSize="16" FontWeight="SemiBold" Margin="5" HorizontalAlignment="Right">License</TextBlock>
                 <TextBlock Grid.Row="2" Grid.Column="1" FontSize="16" Margin="5">
+                    <Hyperlink Click="License_Click">
+                        MIT License
+                    </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" FontSize="16" FontWeight="SemiBold" Margin="5" HorizontalAlignment="Right">Web</TextBlock>
+                <TextBlock Grid.Row="3" Grid.Column="1" FontSize="16" Margin="5">
                     <Hyperlink Click="Hyperlink_Click">
                         http://www.assembla.com/spaces/xrouter
                     </Hyperlink>
