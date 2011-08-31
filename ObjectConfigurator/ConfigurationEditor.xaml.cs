@@ -18,8 +18,14 @@ namespace ObjectConfigurator
 {
     public partial class ConfigurationEditor : UserControl
     {
+        /// <summary>
+        /// Metadata description of class which configuration items can be edited.
+        /// </summary>
         public ClassMetadata ClassMetadata { get; private set; }
 
+        /// <summary>
+        /// Raises when a configuration is changed by an user.
+        /// </summary>
         public event Action ConfigurationChanged = delegate { };
 
         private List<ValueEditor> valueEditors;
@@ -32,6 +38,10 @@ namespace ObjectConfigurator
             PrepareItemEditors();
         }
 
+        /// <summary>
+        /// Deserializes values from an xml document and display them in the editor.
+        /// </summary>
+        /// <param name="config">A configuration to load.</param>
         public void LoadConfiguration(XDocument config)
         {
             for (int i = 0; i < valueEditors.Count; i++) {
@@ -42,6 +52,10 @@ namespace ObjectConfigurator
             }
         }
 
+        /// <summary>
+        /// Takes values from the editor and serialize them into an xml document.
+        /// </summary>
+        /// <returns>Serialized values from the editor.</returns>
         public XDocument SaveConfiguration()
         {
             XElement xConfig = new XElement(Configurator.XName_RootElement);

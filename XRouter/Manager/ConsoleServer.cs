@@ -107,7 +107,7 @@ namespace XRouter.Manager
             ObjectConfigurator.Configurator.CustomItemTypes.Add(new TokenSelectionConfigurationItemType());
             ObjectConfigurator.Configurator.CustomItemTypes.Add(new XRouter.Common.Xrm.XrmUriConfigurationItemType());
             ObjectConfigurator.Configurator.CustomItemTypes.Add(new UriConfigurationItemType());
-            UpdatePlugins();
+            UpdatePluginsInApplicationConfiguration();
 
             // create WCF service on a new thread
             Exception exception = null;
@@ -241,14 +241,22 @@ namespace XRouter.Manager
             return storage.GetTokens(pageSize, pageNumber);
         }
 
-        public void UpdatePlugins()
+        public void UpdatePluginsInApplicationConfiguration()
         {
             XDocument xConfig = storage.GetApplicationConfiguration();
             // clone the config so that is can be later compared
             XDocument xOldConfig = XDocument.Parse(xConfig.ToString());
 
             var config = new ApplicationConfiguration(xConfig);
+            config = UpdatePlugins(config);
 
+            if (!CanBeEqual(xOldConfig, config.Content)) {
+                ChangeConfiguration(config);
+            }
+        }
+
+        public ApplicationConfiguration UpdatePlugins(ApplicationConfiguration config)
+        {
             string binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string adapterPluginsDirectoryFullPath = Path.Combine(binPath, AdapterPluginsDirectory);
             string actionPluginsDirectoryFullPath = Path.Combine(binPath, ActionPluginsDirectory);
@@ -325,13 +333,9 @@ namespace XRouter.Manager
                     clrType: actionPlugin.PluginType);
                 config.AddActionType(actionType);
             }
-            #endregion
-
-
-            if (!CanBeEqual(xOldConfig, config.Content))
-            {
-                ChangeConfiguration(config);
-            }
+            #endregion            
+        
+            return config;
         }
 
         private static string GetTypeAndRelativeAssemblyPath(string basePath, string fileAbsPath, string typeFullName)

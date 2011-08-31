@@ -241,25 +241,6 @@ namespace XRouter.Common
             Content.XDocument.Root.SetAttributeValue(XName.Get("guid"), guid.ToString());
         }
 
-        // TODO: Clone() is never used and also can't be successfully used
-        // in the Processor component -> better remove it
-
-        /// <summary>
-        /// Creates a new instance of Token by cloning this instance.
-        /// </summary>
-        /// <remarks>This method is synchronized and can block.</remarks>
-        /// <returns>new token instance with the same</returns>
-        public Token Clone()
-        {
-            lock (SyncLock) {
-                Token result = new Token();
-                // TODO: make sure that Guid and Content are also cloned!
-                result.Guid = Guid;
-                result.Content = Content;
-                return result;
-            }
-        }
-
         /// <summary>
         /// Obtains the address of the source endpoint which the input message
         /// originated from.
@@ -494,38 +475,5 @@ namespace XRouter.Common
                 Content.XDocument.XPathSelectElement("token").SetAttributeValue(name, value);
             }
         }
-
-        //public void SetInputAdapterVariable(string name, string value)
-        //{
-        //    var inputAdapterVariables = Content.XDocument.XPathSelectElement("token/metadata/source-adapter-variables");
-        //    var inputAdapterVariable = inputAdapterVariables.XPathSelectElement("variable[@name=]" + name);
-        //    if (inputAdapterVariable == null) {
-        //        inputAdapterVariable = new XElement("variable");
-        //        inputAdapterVariable.SetAttributeValue("name", name);
-        //        inputAdapterVariables.Add(inputAdapterVariable);
-        //    }
-        //    inputAdapterVariable.SetAttributeValue("value", value);
-        //}
-
-        //public string GetInputAdapterVariable(string name)
-        //{
-        //    var inputAdapterVariable = Content.XDocument.XPathSelectElement("token/metadata/source-adapter-variables/variable[@name=]" + name);
-        //    return inputAdapterVariable.Attribute(XName.Get("value")).Value;
-        //}
-
-        //private string GetMetadataAttribute(string name)
-        //{
-        //    var metedataAttribute = Content.XDocument.XPathSelectElement("token/metadata").Attribute(XName.Get(name));
-        //    if (metedataAttribute != null) {
-        //        return metedataAttribute.Value;
-        //    } else {
-        //        return null;
-        //    }
-        //}
-
-        //private void SetMetadataAttribute(string name, string value)
-        //{
-        //    Content.XDocument.XPathSelectElement("token/metadata").SetAttributeValue(name, value);
-        //}
     }
 }
