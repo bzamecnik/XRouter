@@ -1,1 +1,1 @@
-DataGenerator C:\XRouter\DemoRestaurant\InputData 10 2000 9 5
+DataGenerator C:\XRouter\DemoRestaurant\InputData 10 200 9 5
