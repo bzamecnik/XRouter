@@ -241,25 +241,6 @@ namespace XRouter.Common
             Content.XDocument.Root.SetAttributeValue(XName.Get("guid"), guid.ToString());
         }
 
-        // TODO: Clone() is never used and also can't be successfully used
-        // in the Processor component -> better remove it
-
-        /// <summary>
-        /// Creates a new instance of Token by cloning this instance.
-        /// </summary>
-        /// <remarks>This method is synchronized and can block.</remarks>
-        /// <returns>new token instance with the same</returns>
-        public Token Clone()
-        {
-            lock (SyncLock) {
-                Token result = new Token();
-                // TODO: make sure that Guid and Content are also cloned!
-                result.Guid = Guid;
-                result.Content = Content;
-                return result;
-            }
-        }
-
         /// <summary>
         /// Obtains the address of the source endpoint which the input message
         /// originated from.
