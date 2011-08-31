@@ -93,6 +93,7 @@ Source: "database\*"; DestDir: "{app}\database"; Flags: ignoreversion; Component
 Source: "README"; DestName: "README.txt"; DestDir: "{app}\Documentation"; Flags: isreadme; Components: sw
 Source: "LICENSE"; DestName: "LICENSE.txt"; DestDir: "{app}\Documentation"; Components: sw
 Source: "AUTHORS"; DestName: "AUTHORS.txt"; DestDir: "{app}\Documentation"; Components: sw
+Source: "docs\*.pdf"; DestDir: "{app}\Documentation"; Components: docs
 Source: "docs\XRouter\*"; Excludes: "dummy.txt,*.chw"; DestDir: "{app}\Documentation\XRouter"; Components: docs
 Source: "docs\DaemonNT\*"; Excludes: "dummy.txt,*.chw"; DestDir: "{app}\Documentation\DaemonNT"; Components: docs
 Source: "docs\SchemaTron\*"; Excludes: "dummy.txt,*.chw"; DestDir: "{app}\Documentation\SchemaTron"; Components: docs
