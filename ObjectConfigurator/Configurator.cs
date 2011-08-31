@@ -37,8 +37,18 @@ namespace ObjectConfigurator
         internal static readonly XName XName_ItemNameAttribute = XName.Get("name");
 
         private static List<ICustomConfigurationItemType> customItemTypes = new List<ICustomConfigurationItemType>();
+
+        /// <summary>
+        /// List of registered custom configurable item types.
+        /// To register new type, just add a new item to this list.
+        /// </summary>
         public static IList<ICustomConfigurationItemType> CustomItemTypes { get { return customItemTypes; } } 
 
+        /// <summary>
+        /// Gets values of configration items from object and serialize them into xml document.
+        /// </summary>
+        /// <param name="sourceObject">Object which values will be saved.</param>
+        /// <returns>An xml document containing serialized values of configuration items.</returns>
         public static XDocument SaveConfiguration(object sourceObject)
         {
             Type targetType = sourceObject.GetType();
@@ -59,6 +69,11 @@ namespace ObjectConfigurator
             return result;
         }
 
+        /// <summary>
+        /// Deserializes values of configuration items from xml document and inject them into an object.
+        /// </summary>
+        /// <param name="targetObject">A target object where values will be set.</param>
+        /// <param name="config">Source xml document.</param>
         public static void LoadConfiguration(object targetObject, XDocument config)
         {
             System.Diagnostics.Debug.Assert(config != null);
@@ -91,12 +106,22 @@ namespace ObjectConfigurator
             #endregion
         }
 
+        /// <summary>
+        /// Creates a WPF control for editing configuration items of given type.
+        /// </summary>
+        /// <param name="targetType">A type which configuration items will be edited.</param>
+        /// <returns>A new item editor.</returns>
         public static ConfigurationEditor CreateEditor(Type targetType)
         {
             ClassMetadata classMetadata = new ClassMetadata(targetType);
             return CreateEditor(classMetadata);
         }
 
+        /// <summary>
+        /// Creates a WPF control for editing configuration items of given type.
+        /// </summary>
+        /// <param name="classMetadata">A description of a type which configuration items will be edited.</param>
+        /// <returns>A new item editor.</returns>
         public static ConfigurationEditor CreateEditor(ClassMetadata classMetadata)
         {
             var result = new ConfigurationEditor(classMetadata);
