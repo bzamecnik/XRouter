@@ -63,6 +63,12 @@ namespace XRouter.Gui.ConfigurationControls.Gateway
 
         private FrameworkElement AddAdapter()
         {
+            AdapterType[] adapterTypes = ConfigManager.Configuration.GetAdapterTypes();
+            if (adapterTypes.Length == 0) {
+                MessageBox.Show("There are no adapter plugins so it is not possible to add adapter.", "Adding adapter", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+
             #region Create unique name
             var adapterNames = ConfigManager.Configuration.GetAdapterConfigurations(GatewayName).Select(a => a.AdapterName);
             int index = 1;
@@ -72,7 +78,7 @@ namespace XRouter.Gui.ConfigurationControls.Gateway
             string adapterName = "adapter" + index.ToString();
             #endregion
 
-            AdapterType adapterType = ConfigManager.Configuration.GetAdapterTypes().First();
+            AdapterType adapterType = adapterTypes.First();
             AdapterConfiguration adapter = new AdapterConfiguration(adapterName, GatewayName, adapterType.Name);
             adapter.Configuration = new SerializableXDocument(new XDocument());
             adapter.Configuration.XDocument.Add(new XElement(XName.Get("objectConfig")));

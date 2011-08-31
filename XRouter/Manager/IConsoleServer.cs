@@ -122,6 +122,9 @@ namespace XRouter.Manager
         Token[] GetTokens(int pageSize, int pageNumber);
 
         [OperationContract]
-        void UpdatePlugins();
+        void UpdatePluginsInApplicationConfiguration();
+
+        [OperationContract]
+        ApplicationConfiguration UpdatePlugins(ApplicationConfiguration config);
     }
 }

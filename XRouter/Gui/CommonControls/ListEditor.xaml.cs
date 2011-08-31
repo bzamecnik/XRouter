@@ -99,6 +99,9 @@ namespace XRouter.Gui.CommonControls
         private void uiAdd_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement item = ItemFactory();
+            if (item == null) {
+                return;
+            }
             AddItem(item);
             ItemAdded(item);
             uiItems.SelectedIndex = uiItems.Items.Count - 1;

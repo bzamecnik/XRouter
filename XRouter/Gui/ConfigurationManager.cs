@@ -88,28 +88,17 @@ Details:
 
         public void ClearConfiguration()
         {
-            XDocument xConfig = XDocument.Parse(ApplicationConfiguration.InitialContent);
-            Configuration = new ApplicationConfiguration(xConfig);
+            ApplicationConfiguration originalConfiguration = Configuration;
 
-            #region Add built-in actions
-            Type sendMessageActionType = typeof(XRouter.Processor.BuiltInActions.SendMessageAction);
-            var sendMessageActionInfo = new PluginInfo<ActionPluginAttribute>(sendMessageActionType.Assembly, sendMessageActionType);
-            Configuration.AddActionType(new ActionType(
-                   name: sendMessageActionInfo.PluginAttribute.PluginName,
-                   assemblyAndClrType: String.Join(",", sendMessageActionInfo.TypeFullName,
-                   Path.GetFileName(sendMessageActionInfo.AssemblyFullPath)),
-                   description: sendMessageActionInfo.PluginAttribute.PluginDescription,
-                   clrType: sendMessageActionInfo.PluginType));
-
-            Type xsltTransformActionType = typeof(XRouter.Processor.BuiltInActions.XsltTransformationAction);
-            var xsltTransformActionInfo = new PluginInfo<ActionPluginAttribute>(xsltTransformActionType.Assembly, xsltTransformActionType);
-            Configuration.AddActionType(new ActionType(
-                   name: xsltTransformActionInfo.PluginAttribute.PluginName,
-                   assemblyAndClrType: String.Join(",", xsltTransformActionInfo.TypeFullName,
-                   Path.GetFileName(xsltTransformActionInfo.AssemblyFullPath)),
-                   description: xsltTransformActionInfo.PluginAttribute.PluginDescription,
-                   clrType: xsltTransformActionInfo.PluginType));
-            #endregion
+            try {
+                XDocument xConfig = XDocument.Parse(ApplicationConfiguration.InitialContent);
+                Configuration = new ApplicationConfiguration(xConfig);
+                Configuration = ConsoleServer.UpdatePlugins(Configuration);
+            } catch (Exception ex) {
+                Configuration = originalConfiguration;
+                string message = string.Format("Cannot create new configuration: " + ex.Message);
+                MessageBox.Show(ex.Message, "Operation failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public bool ReadConfiguration(XDocument xConfig, bool throwOnError)
